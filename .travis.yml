@@ -1,0 +1,17 @@
+language: node_js
+
+node_js:
+  - "10"
+
+branches:
+  only:
+    - master
+
+before_script:
+  - npm i firebase-tools@7.3.2 -g
+  - npm install -g create-react-app
+  - cd functions; npm install; cd ..;
+  - npm install
+
+script:
+  - npm run travisDeploy
