@@ -1,6 +1,6 @@
 // src/js/actions/index.js
 
-import { ADD_ARTICLE } from "../constants/action-types";
+import { ADD_ARTICLE } from "../Constants/ActionTypes";
 
 //Recall from store/index.js that an action is a javascript object
 //That has a type and a payload (data)
