@@ -1,5 +1,5 @@
 import { createStore } from "redux";
-import rootReducer from "../reducers/index";
+import rootReducer from "../Reducers/index";
 
 //Store is a result from createStore
 //Which is a function from the react library
