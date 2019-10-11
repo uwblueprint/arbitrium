@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "decision-io",
+    "decisionio": "decision-io"
+  }
+}
