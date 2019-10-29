@@ -4,6 +4,8 @@ import { createBrowserHistory } from 'history';
 import Header from './Components/Header/Header';
 import Footer from './Components/Footer/Footer';
 import Home from './Components/Home/Home';
+import Application from './Components/Application/Application';
+import Comparison from './Components/Comparison/Comparison';
 import './App.css';
 
 const browserHistory = createBrowserHistory();
@@ -16,6 +18,9 @@ function App() {
         <Router history={browserHistory}>
           <Switch>
             <Route exact={true} path="/" component={Home}></Route>
+            <Route exact={true} path="/submissions" component={Home}></Route>
+            <Route path="/submissions/:organizationId" component={Application}></Route>
+            <Route path="/comparisons/:organizationId" component={Comparison}></Route>
           </Switch>
         </Router>
         <Footer/>
