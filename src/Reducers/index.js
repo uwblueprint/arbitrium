@@ -1,6 +1,6 @@
 // src/js/reducers/index.js
 
-import { ADD_ARTICLE, LOAD_APPLICATIONS } from "../Constants/ActionTypes";
+import { LOAD_APPLICATIONS } from "../Constants/ActionTypes";
 
 
 const initialState = {
@@ -11,6 +11,14 @@ const initialState = {
 //Reducers take 2 params, a state and an action
 //Notice how the initial state is passed as a default parameter
 function rootReducer(state = initialState, action) {
+  switch(action.type) {
+    case LOAD_APPLICATIONS:
+        return Object.assign({}, state, {
+          applications: action.payload || []
+        });
+      default:
+        return state;
+  }
 
 /*
   if (action.type === ADD_ARTICLE) {
@@ -27,15 +35,6 @@ function rootReducer(state = initialState, action) {
   //     articles: state.articles.concat(action.payload)
   //   });
   // }
-
-  switch(action.type) {
-    case LOAD_APPLICATIONS:
-        return Object.assign({}, state, {
-          applications: action.payload || []
-        });
-      default:
-        return state;
-  }
 
   //This returns the initial state
   // return state;
