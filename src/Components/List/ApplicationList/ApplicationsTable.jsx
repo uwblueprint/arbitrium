@@ -41,10 +41,8 @@ export class ApplicationList extends Component {
                     lastReviewed: 'October 13, 2019',
                     url: 'https://uwblueprint.org'
                 }
-            ]
+            ].sort((a,b) => (a.name > b.name) ? 1: -1)
         }
-
-
     }
 
     componentDidMount() {
@@ -54,7 +52,6 @@ export class ApplicationList extends Component {
     render() {
         //this is definetly bad practice, shouldn't setState in render() and also setState() should be called
         //leaving this here because the logic works
-        this.state.applications.sort((a,b) => (a.name > b.name) ? 1: -1);
         return (
             <Paper>
                 <Table>
