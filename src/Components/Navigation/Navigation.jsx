@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+
 import Drawer from '@material-ui/core/Drawer'
 import Button from '@material-ui/core/Button'
 import Select from '@material-ui/core/Select'
@@ -30,7 +32,7 @@ const useStyles = makeStyles({
     },
     // Header
     '& h2': {
-      margin: '12px 83px 16px 32px',
+      margin: '10px 83px 16px 32px',
       fontSize: '24px',
       fontWeight: 'normal',
       lineHeight: '28px',
@@ -63,8 +65,8 @@ const useStyles = makeStyles({
     '& button.nested.selected': {
       color: '#6202EE',
     },
-    // Company Selector
-    '& #company.MuiSelect-root': {
+    // organization Selector
+    '& #organization.MuiSelect-root': {
       textTransform: 'uppercase',
       fontWeight: 500,
       marginLeft: '24px',
@@ -72,7 +74,7 @@ const useStyles = makeStyles({
       margin: '4px 8px',
       padding: '10px 24px',
     },
-    '& #company ~ .MuiSelect-icon': {
+    '& #organization ~ .MuiSelect-icon': {
       color: '#000',
       marginRight: '33px',
     },
@@ -81,11 +83,11 @@ const useStyles = makeStyles({
 
 const Navigation = () => {
   const [workflow, setWorkflow] = useState('WorkFlow1')
-  const [company, setCompany] = useState('UW Blueprint')
+  const [organization, setOrganization] = useState('UW Blueprint')
 
   const sendAlert = e => window.alert(e.target.textContent)
   const changeWorkflow = e => setWorkflow(e.target.value)
-  const changeCompany = e => setCompany(e.target.value)
+  const changeOrganization = e => setOrganization(e.target.value)
 
   const classes = useStyles()
   return (
@@ -107,15 +109,19 @@ const Navigation = () => {
         </Select>
         <h2>SVP Perfect Pitch Candidates</h2>
         <hr />
-        <Button onClick={sendAlert}>All Applicants</Button>
-        <Button onClick={sendAlert} variant="contained" color="primary">
-          Application Submission
-        </Button>
+        <Link to="/">
+          <Button>All Applicants</Button>
+        </Link>
+        <Link to={`/submissions/${organization}`}>
+          <Button variant="contained" color="primary">
+            Application Submission
+          </Button>
+        </Link>
         <Select
-          id="company"
-          labelId="company-label"
-          value={company}
-          onChange={changeCompany}
+          id="organization"
+          labelId="organization-label"
+          value={organization}
+          onChange={changeOrganization}
           autoWidth
           disableUnderline
         >
@@ -136,7 +142,9 @@ const Navigation = () => {
         <Button onClick={sendAlert} className="nested">
           Market
         </Button>
-        <Button onClick={sendAlert}>Comparison</Button>
+        <Link to={`/comparisons/${organization}`}>
+          <Button>Comparison</Button>
+        </Link>
         <Button onClick={sendAlert}>Stacked Rankings</Button>
       </Drawer>
     </nav>
