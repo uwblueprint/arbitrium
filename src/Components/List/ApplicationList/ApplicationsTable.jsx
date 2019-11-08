@@ -1,7 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import { TableRow, TableHead, TableCell, TableBody, TableSortLabel } from '@material-ui/core';
+import { loadApplications } from '../../../Actions/index';
 
 export class ApplicationList extends Component {
     constructor(props) {
@@ -45,6 +47,10 @@ export class ApplicationList extends Component {
 
     }
 
+    componentDidMount() {
+        // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
+    }
+
     render() {
         //this is definetly bad practice, shouldn't setState in render() and also setState() should be called
         //leaving this here because the logic works
@@ -80,4 +86,13 @@ export class ApplicationList extends Component {
     }
 }
 
-export default ApplicationList
+
+const mapStateToProps = state => ({
+    applications: state.applications,
+  });
+
+const mapDispatchToProps = dispatch => ({
+    loadApplications: payload => dispatch(loadApplications(payload))
+  });
+
+export default connect(mapStateToProps, mapDispatchToProps)(ApplicationList)
