@@ -47,14 +47,14 @@ const data = [
             url: 'https://uwblueprint.org',
             stage: APPLICATION_STAGE.LETTER_OF_INTEREST
         }
-].sort((a,b) => (a.name > b.name) ? 1: -1);
+];
 
 export class ApplicationList extends Component {
 
     componentDidMount() {
         // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
         // Assume API returns the test data
-        this.props.loadApplications(data);
+        this.props.loadApplications(data.sort((a,b) => (a.name > b.name) ? 1: -1));
     }
 
     render() {
