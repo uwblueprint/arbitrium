@@ -2,6 +2,11 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+
+//Use this later for prod vs dev environment
+//// TODO: Uncomment when express is setup
+//const proxy = process.env.NODE_ENV === "production" ? process.env.REACT_APP_SERVER : "http://localhost:4000";
+
 function App() {
   return (
     <div className="App">
@@ -17,6 +22,7 @@ function App() {
           rel="noopener noreferrer"
         >
           Learn React
+
         </a>
       </header>
     </div>
