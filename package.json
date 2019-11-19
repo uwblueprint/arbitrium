@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^7.3.0",
     "nodemon": "^1.19.4",
@@ -12,14 +13,13 @@
     "react-scripts": "^3.1.2"
   },
   "scripts": {
-      "start": "react-scripts start",
-      "server": "node server --exec nodemon",
-      "build": "react-scripts build",
-      "test": "react-scripts test",
-      "eject": "react-scripts eject",
-      "dev": "run-p server start"
-    },
-
+    "start": "react-scripts start",
+    "server": "node server --exec nodemon",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "run-p server start"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
