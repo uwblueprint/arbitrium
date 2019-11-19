@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase": "^7.3.0",
+    "nodemon": "^1.19.4",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
     "react-router": "^5.1.2",

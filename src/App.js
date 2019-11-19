@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component}  from 'react';
 import { Router, Route, Switch } from 'react-router';
 import { createBrowserHistory } from 'history';
 import Header from './Components/Header/Header';
@@ -14,23 +14,49 @@ import './App.css';
 
 const browserHistory = createBrowserHistory();
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <Header/>
-        <Router history={browserHistory}>
-          <Switch>
-            <Route exact={true} path="/" component={Home}></Route>
-            <Route exact={true} path="/submissions" component={Home}></Route>
-            <Route path="/submissions/:organizationId" component={Application}></Route>
-            <Route path="/comparisons/:organizationId" component={Comparison}></Route>
-          </Switch>
-        </Router>
-        <Footer/>
-      </header>
-    </div>
-  );
-}
+export default class App extends Component {
 
-export default App;
+  constructor(props) {
+      super(props);
+
+  }
+
+  getQuestionsAPI= async () => {
+      const response = await fetch('http://localhost:4000/api/questions', {
+          method: 'GET',
+          headers : {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          }
+      });
+      const body = await response.json();
+      if (response.status !== 200) {
+          throw Error(body.message);
+      }
+      return body;
+  };
+
+  render() {
+    console.log(this.getQuestionsAPI);
+    return (
+      <div className="App">
+        <header className="App-header">
+          <Header/>
+          <Router history={browserHistory}>
+            <Switch>
+              <Route exact={true} path="/" component={Home}></Route>
+              <Route exact={true} path="/submissions" component={Home}></Route>
+              <Route path="/submissions/:organizationId" component={Application}></Route>
+              <Route path="/comparisons/:organizationId" component={Comparison}></Route>
+            </Switch>
+          </Router>
+          <Footer
+            getQuestionsAPI={this.getQuestionsAPI}
+            >
+          </Footer>
+
+        </header>
+      </div>
+    );
+  }
+}
