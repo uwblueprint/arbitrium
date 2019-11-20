@@ -1,12 +1,11 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
-
-import navigationReducer from "./navigation";
+import customReducerExample from "./customReducerExample";
 
 function createRootReducer(history) {
   return combineReducers({
     router: connectRouter(history),
-    navigation: navigationReducer
+    customReducerExample
   });
 }
 

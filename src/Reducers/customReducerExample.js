@@ -1,10 +1,8 @@
-import { SWITCH_VIEW } from "../Constants/ActionTypes";
+import { ADD_ARTICLE } from "../Constants/ActionTypes";
 
-const initialState = {
-  view: "HOME"
-};
+const initialState = {};
 
-function navigation(state = initialState, action) {
+function customReducer(state = initialState, action) {
   /*
   if (action.type === ADD_ARTICLE) {
     state.articles.push(action.payload);
@@ -21,7 +19,7 @@ function navigation(state = initialState, action) {
   //   });
   // }
   switch (action.type) {
-    case SWITCH_VIEW:
+    case ADD_ARTICLE:
       return {
         ...state,
         view: action.payload
@@ -31,4 +29,4 @@ function navigation(state = initialState, action) {
   }
 }
 
-export default navigation;
+export default customReducer;
