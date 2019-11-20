@@ -5,29 +5,36 @@ bodyParser = require('body-parser'),
 cors = require('cors');
 const app = express();
 
-//Could not get the syntax right in firebase.config
-//const FIREBASE_CONFIGS = require('./../firebase.config');
+const FIREBASE_CONFIGS = require('./../firebase.config');
 
+// Doesn't work with FIREBASE_CONFIGS.projectId for some reason
 firebase.initializeApp({
-  apiKey: "AIzaSyDWxBCf-A_uCeRpzhwyrF8HaVqHLUzEu_o",
-  authDomain: "decision-io.firebaseapp.com",
-  databaseURL: "https://decision-io.firebaseio.com",
+  apiKey: FIREBASE_CONFIGS.apiKey,
+  authDomain: FIREBASE_CONFIGS.authDomain,
+  databaseURL: FIREBASE_CONFIGS.databaseURL,
   projectId: "decision-io",
-  storageBucket: "decision-io.appspot.com",
-  messagingSenderId: "459036207338",
-  appId: "1:459036207338:web:f3d9b0ac292b36220dcf93",
-  measurementId: "G-T81P3BTJ1T"
+  storageBucket: FIREBASE_CONFIGS.storageBucket,
+  messagingSenderId: FIREBASE_CONFIGS.messagingSenderId,
+  appId: FIREBASE_CONFIGS.appId,
+  measurementId: FIREBASE_CONFIGS.measurementId
 });
 var db = firebase.firestore();
 
-app.get('/review/:userId/:appId', (req, res) => {
-  db.collection('reviews').get().then((querySnapshot) => {
-    querySnapshot.filter(review =>
-      review.userId === req.params.userId && review.appId === req.params.appId);
-    res.json(querySnapshot);
+app.get('/api/reviews/:userId/:appId', (req, res) => {
+  var col = db.collection('reviews');
+
+  var review;
+  col.get().then((querySnapshot) => {
+    querySnapshot.forEach(function(doc) {
+        const data = doc.data();
+        if (data['appId'] == req.params.appId && data['userId'] == req.params.userId) {
+          console.log(doc.id, " => ", data);
+          review = data;
+        }
+    });
+    res.json(review);
   }).catch(err => res.send(err));
 })
-
 
 //Get all documents in a collection
 app.get('/api/questions', (req, res) => {
