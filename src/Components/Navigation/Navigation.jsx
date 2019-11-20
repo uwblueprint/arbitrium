@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import { push } from "connected-react-router";
 
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import { Link } from "react-router-dom";
-
-import { switchView } from "../../Actions";
 
 import { makeStyles } from "@material-ui/core/styles";
 import "./Navigation.css";
@@ -86,17 +84,13 @@ const useStyles = makeStyles({
   }
 });
 
-const Navigation = ({ switchView }) => {
+const Navigation = ({ push }) => {
   const [workflow, setWorkflow] = useState("WorkFlow1");
   const [organization, setOrganization] = useState("UW Blueprint");
 
   const sendAlert = e => window.alert(e.target.textContent);
   const changeWorkflow = e => setWorkflow(e.target.value);
   const changeOrganization = e => setOrganization(e.target.value);
-  const navigate = e => {
-    e.preventDefault();
-    switchView(e.target.dataset.name);
-  };
 
   const classes = useStyles();
 
@@ -118,12 +112,9 @@ const Navigation = ({ switchView }) => {
           <MenuItem value="WorkFlow5">Workflow #5</MenuItem>
         </Select>
         <h2>SVP Perfect Pitch Candidates</h2>
-        <Button onClick={navigate} data-name="HOME">
-          All Applicants
-        </Button>
+        <Button onClick={() => push("/")}>All Applicants</Button>
         <Button
-          onClick={navigate}
-          data-name="APPLICATION"
+          onClick={() => push("/submissions")}
           variant="contained"
           color="primary"
         >
@@ -154,21 +145,13 @@ const Navigation = ({ switchView }) => {
         <Button onClick={sendAlert} className="nested">
           Market
         </Button>
-        <Link to={`/comparisons/${organization}`}>
-          <Button onClick={navigate} data-name="COMPARISON">
-            Comparison
-          </Button>
-        </Link>
+        <Button onClick={() => push(`/comparisons/${organization}`)}>
+          Comparison
+        </Button>
         <Button onClick={sendAlert}>Stacked Rankings</Button>
       </Drawer>
     </nav>
   );
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    switchView: view => dispatch(switchView(view))
-  };
-};
-
-export default connect(null, mapDispatchToProps)(Navigation);
+export default connect(null, { push })(Navigation);
