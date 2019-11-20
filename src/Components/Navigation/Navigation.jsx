@@ -1,95 +1,105 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from "react";
+import { connect } from "react-redux";
 
-import Drawer from '@material-ui/core/Drawer'
-import Button from '@material-ui/core/Button'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import { makeStyles } from '@material-ui/core/styles'
-import './Navigation.css'
+import Drawer from "@material-ui/core/Drawer";
+import Button from "@material-ui/core/Button";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import { Link } from "react-router-dom";
+
+import { switchView } from "../../Actions";
+
+import { makeStyles } from "@material-ui/core/styles";
+import "./Navigation.css";
 
 const useStyles = makeStyles({
   root: {
     // Entire Nav
-    '& .MuiDrawer-paper': {
+    "& .MuiDrawer-paper": {
       maxWidth: 304,
-      padding: '4px 0',
+      padding: "4px 0"
     },
     // Workflow Selector
-    '& #workflow.MuiSelect-root': {
-      textTransform: 'uppercase',
-      color: '#888888',
-      textAlign: 'left',
-      width: 'auto',
-      marginLeft: '32px',
-      paddingRight: '10px',
+    "& #workflow.MuiSelect-root": {
+      textTransform: "uppercase",
+      color: "#888888",
+      textAlign: "left",
+      width: "auto",
+      marginLeft: "32px",
+      fontSize: 14,
+      paddingRight: "10px"
     },
-    '& #workflow ~ .MuiSelect-icon': {
-      color: '#888888',
-      display: 'inline-block',
-      position: 'relative',
-      marginTop: '-12px',
+    "& #workflow ~ .MuiSelect-icon": {
+      color: "#888888",
+      display: "inline-block",
+      position: "relative",
+      marginTop: "-12px"
     },
     // Header
-    '& h2': {
-      margin: '10px 83px 16px 32px',
-      fontSize: '24px',
-      fontWeight: 'normal',
-      lineHeight: '28px',
-      fontFamily: 'Roboto',
-      textAlign: 'left',
+    "& h2": {
+      margin: "10px 83px 16px 32px",
+      fontSize: "24px",
+      fontWeight: "normal",
+      lineHeight: "28px",
+      fontFamily: "Roboto",
+      textAlign: "left"
     },
     // Divider
-    '& hr': {
-      width: '100%',
-      border: '0px solid #cccccc',
-      borderBottom: '1px solid #cccccc',
-      margin: 0,
+    "& hr": {
+      width: "100%",
+      border: "0px solid #cccccc",
+      borderBottom: "1px solid #cccccc",
+      margin: 0
     },
     // Buttons
-    '& button': {
-      textAlign: 'left',
-      textTransform: 'none',
-      padding: '10px 24px',
-      margin: '4px 8px',
-      width: 'calc(100% - 16px)',
+    "& button": {
+      textAlign: "left",
+      textTransform: "none",
+      padding: "10px 24px",
+      margin: "4px 8px",
+      width: "calc(100% - 16px)"
     },
-    '& button span': {
-      justifyContent: 'flex-start',
+    "& button span": {
+      justifyContent: "flex-start"
     },
-    '& button.nested': {
-      marginLeft: '24px',
-      color: '#888888',
-      width: 'calc(100% - 32px)',
+    "& button.nested": {
+      marginLeft: "24px",
+      color: "#888888",
+      width: "calc(100% - 32px)"
     },
-    '& button.nested.selected': {
-      color: '#6202EE',
+    "& button.nested.selected": {
+      color: "#6202EE"
     },
     // organization Selector
-    '& #organization.MuiSelect-root': {
-      textTransform: 'uppercase',
+    "& #organization.MuiSelect-root": {
+      textTransform: "uppercase",
       fontWeight: 500,
-      marginLeft: '24px',
-      textAlign: 'left',
-      margin: '4px 8px',
-      padding: '10px 24px',
+      marginLeft: "24px",
+      textAlign: "left",
+      margin: "4px 8px",
+      padding: "10px 24px"
     },
-    '& #organization ~ .MuiSelect-icon': {
-      color: '#000',
-      marginRight: '33px',
-    },
-  },
-})
+    "& #organization ~ .MuiSelect-icon": {
+      color: "#000",
+      marginRight: "33px"
+    }
+  }
+});
 
-const Navigation = () => {
-  const [workflow, setWorkflow] = useState('WorkFlow1')
-  const [organization, setOrganization] = useState('UW Blueprint')
+const Navigation = ({ switchView }) => {
+  const [workflow, setWorkflow] = useState("WorkFlow1");
+  const [organization, setOrganization] = useState("UW Blueprint");
 
-  const sendAlert = e => window.alert(e.target.textContent)
-  const changeWorkflow = e => setWorkflow(e.target.value)
-  const changeOrganization = e => setOrganization(e.target.value)
+  const sendAlert = e => window.alert(e.target.textContent);
+  const changeWorkflow = e => setWorkflow(e.target.value);
+  const changeOrganization = e => setOrganization(e.target.value);
+  const navigate = e => {
+    e.preventDefault();
+    switchView(e.target.dataset.name);
+  };
 
-  const classes = useStyles()
+  const classes = useStyles();
+
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
@@ -108,15 +118,17 @@ const Navigation = () => {
           <MenuItem value="WorkFlow5">Workflow #5</MenuItem>
         </Select>
         <h2>SVP Perfect Pitch Candidates</h2>
-        <hr />
-        <Link to="/">
-          <Button>All Applicants</Button>
-        </Link>
-        <Link to={`/submissions/${organization}`}>
-          <Button variant="contained" color="primary">
-            Application Submission
-          </Button>
-        </Link>
+        <Button onClick={navigate} data-name="HOME">
+          All Applicants
+        </Button>
+        <Button
+          onClick={navigate}
+          data-name="APPLICATION"
+          variant="contained"
+          color="primary"
+        >
+          Application Submission
+        </Button>
         <Select
           id="organization"
           labelId="organization-label"
@@ -143,12 +155,20 @@ const Navigation = () => {
           Market
         </Button>
         <Link to={`/comparisons/${organization}`}>
-          <Button>Comparison</Button>
+          <Button onClick={navigate} data-name="COMPARISON">
+            Comparison
+          </Button>
         </Link>
         <Button onClick={sendAlert}>Stacked Rankings</Button>
       </Drawer>
     </nav>
-  )
-}
+  );
+};
 
-export default Navigation
+const mapDispatchToProps = dispatch => {
+  return {
+    switchView: view => dispatch(switchView(view))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Navigation);

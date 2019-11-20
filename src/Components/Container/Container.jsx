@@ -1,12 +1,11 @@
-import React from 'react'
+import React from "react";
 
-const Container = ({ children, history }) => {
-  console.log(history)
+const Container = ({ children }) => {
   return (
     <div style={{ marginLeft: 305 }} id="container">
       {children}
     </div>
-  )
-}
+  );
+};
 
-export default Container
+export default Container;

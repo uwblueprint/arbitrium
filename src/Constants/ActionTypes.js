@@ -1,4 +1,2 @@
-// src/js/constants/action-types.js
-
-//This is an action type that we are delcaring as a constant
-export const ADD_ARTICLE = "ADD_ARTICLE";
+//This is an action type that we are declaring as a constant
+export const SWITCH_VIEW = "SWITCH_VIEW";
