@@ -11,7 +11,7 @@ import './App.css';
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
 //const proxy = process.env.NODE_ENV === "production" ? process.env.REACT_APP_SERVER : "http://localhost:4000";
-
+const proxy = "http://localhost:4000";
 const browserHistory = createBrowserHistory();
 
 export default class App extends Component {
@@ -19,11 +19,14 @@ export default class App extends Component {
   constructor(props) {
       super(props);
 
+      this.state = {
+          user: false
+      };
+
   }
 
-  getQuestionsAPI= async () => {
-      const response = await fetch('http://localhost:4000/api/questions', {
-          method: 'GET',
+  getQuestionsAPI = async () => {
+      const response = await fetch(proxy+'/api/questions', {
           headers : {
               'Content-Type': 'application/json',
               'Accept': 'application/json'
@@ -36,8 +39,20 @@ export default class App extends Component {
       return body;
   };
 
+  componentDidMount() {
+    //testing only
+    this.getQuestionsAPI().then((res) => {
+        let questions = [];
+        res.forEach((question) => {
+            console.log(question);
+            questions.push(question);
+        });
+        this.setState({ Questions: questions });
+    });
+  }
+
   render() {
-    console.log(this.getQuestionsAPI);
+    console.log(this.state.Questions);
     return (
       <div className="App">
         <header className="App-header">

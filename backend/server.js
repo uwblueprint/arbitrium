@@ -20,6 +20,14 @@ firebase.initializeApp({
 });
 var db = firebase.firestore();
 
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
+app.get('/', function(req, res){
+	res.send("root");
+});
+
 app.get('/api/reviews/:userId/:appId', (req, res) => {
   var col = db.collection('reviews');
 
@@ -39,13 +47,14 @@ app.get('/api/reviews/:userId/:appId', (req, res) => {
 //Get all documents in a collection
 app.get('/api/questions', (req, res) => {
   var col = db.collection('questions');
-
+  var questions = []
   col.get().then((querySnapshot) => {
     querySnapshot.forEach(function(doc) {
         // doc.data() is never undefined for query doc snapshots
         console.log(doc.id, " => ", doc.data());
+        questions.push(doc.data());
     });
-    res.json(querySnapshot);
+    res.json(questions);
   }).catch(err => res.send(err));
 })
 
