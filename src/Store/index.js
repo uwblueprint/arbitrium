@@ -1,11 +1,21 @@
-import { createStore } from "redux";
-import rootReducer from "../Reducers/index";
+import { createStore, applyMiddleware, compose } from "redux";
+import { createBrowserHistory } from "history";
+import { routerMiddleware } from "connected-react-router";
+
+import createRootReducer from "../Reducers/index";
 
 //Store is a result from createStore
 //Which is a function from the react library
+export const history = createBrowserHistory();
 
 //createStore takes in a reducer as the first argument
-const store = createStore(rootReducer);
+const store = createStore(
+  createRootReducer(history),
+  compose(
+    applyMiddleware(routerMiddleware(history)),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
+);
 
 //You can also pass in an initial state to createStore if you wanted
 //Which is useful for serverside rendering
