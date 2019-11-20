@@ -29,20 +29,19 @@ app.get('/', function(req, res){
 });
 
 app.get('/api/reviews/:userId/:appId', (req, res) => {
-  var col = db.collection('reviews');
+  const col = db.collection('reviews')
+                .where('userId', '==', Number(req.params.userId))
+                .where('appId', '==', Number(req.params.appId));
 
-  var review;
+  let review = {};
   col.get().then((querySnapshot) => {
     querySnapshot.forEach(function(doc) {
-        const data = doc.data();
-        if (data['appId'] == req.params.appId && data['userId'] == req.params.userId) {
-          console.log(doc.id, " => ", data);
-          review = data;
-        }
+        review = doc.data();
     });
     res.json(review);
   }).catch(err => res.send(err));
 })
+
 
 //Get all documents in a collection
 app.get('/api/questions', (req, res) => {
