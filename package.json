@@ -5,7 +5,9 @@
   "dependencies": {
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
-    "react-scripts": "^3.1.2"
+    "react-router": "^5.1.2",
+    "react-scripts": "^3.1.2",
+    "prop-types": "latest"
   },
   "scripts": {
     "start": "react-scripts start",

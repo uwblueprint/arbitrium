@@ -1,0 +1,14 @@
+.rating-cont{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.rating-rect{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4vh;
+    width: 4vh;
+    margin-left: 5px;
+    background: #CCCCCC;
+}
