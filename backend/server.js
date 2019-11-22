@@ -28,18 +28,42 @@ app.get('/', function(req, res){
 	res.send("root");
 });
 
-app.get('/api/reviews/:userId/:appId', (req, res) => {
-  const col = db.collection('reviews')
-                .where('userId', '==', Number(req.params.userId))
-                .where('appId', '==', Number(req.params.appId));
 
-  let review = {};
-  col.get().then((querySnapshot) => {
-    querySnapshot.forEach(function(doc) {
-        review = doc.data();
+function findReview(userId, appId) {
+  const col = db.collection('reviews')
+                .where('userId', '==', userId)
+                .where('appId', '==', appId);
+
+  return new Promise((resolve, reject) => {
+    let review = {};
+    col.get().then((querySnapshot) => {
+      querySnapshot.forEach(function(doc) {
+        review = {
+          id: doc.id,
+          data: doc.data()
+        }
+      });
+      resolve(review);
+    }).catch(err => {
+      reject(err);
     });
-    res.json(review);
-  }).catch(err => res.send(err));
+  })
+}
+
+app.get('/api/reviews/:userId/:appId', (req, res) => {
+  findReview(Number(req.params.userId), Number(req.params.appId))
+    .then(review => res.json(review.data));
+})
+
+app.put('/api/reviews/:userId/:appId/ratings', (req, res) => {
+  findReview(Number(req.params.userId), Number(req.params.appId))
+    .then(review => {
+        db.collection('reviews').doc(review.id).update({
+          questionRatings: req.body
+        }).then(() => res.send())
+          .catch(err => res.send(err));
+      // TODO: consider sending back updated object
+    });
 })
 
 

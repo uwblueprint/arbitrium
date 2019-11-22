@@ -9,7 +9,7 @@ const REVIEWS = [
         lastReviewed: '2019-11-14T03:24:00',
         questionRatings: [
             {
-                questionKey: 1,
+                questionId: 1,
                 rating: ''
             },
             {
