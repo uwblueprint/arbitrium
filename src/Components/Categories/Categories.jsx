@@ -25,12 +25,12 @@ const CategoryWrapper = styled.div`
   }
 `;
 
-const Categories = ({ categories }) => {
+const Categories = ({ categoryData }) => {
   return (
     <Wrapper>
       <h2>Administrative Categories</h2>
       <CategoryWrapper>
-        {categories.map(({ title, value }) => (
+        {categoryData.map(({ title, value }) => (
           <div className="category">
             <span className="title">{title}</span>
             <span className="value">{value}</span>

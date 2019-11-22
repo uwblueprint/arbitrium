@@ -3,6 +3,9 @@ import styled from "styled-components";
 
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Categories from "../Categories/Categories";
+import Files from "../Files/Files";
+
+import { MOCK_CATEGORY_DATA, MOCK_FILE_DATA } from "./mockData.json";
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -22,44 +25,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const MOCK_CATEGORY_DATA = [
-  {
-    title: "Category 1",
-    value: "Lorem ipsum dolor sit amet consectetur."
-  },
-  {
-    title: "Category 2",
-    value: "Lorem ipsum dolor sit amet consectetur."
-  },
-  {
-    title: "Category 3",
-    value: "Lorem ipsum dolor sit amet consectetur."
-  },
-  {
-    title: "Category 4",
-    value: "Lorem ipsum dolor sit amet consectetur."
-  },
-  {
-    title: "Category 5",
-    value: "Lorem ipsum dolor sit amet consectetur."
-  },
-  {
-    title: "Category 6",
-    value: "Lorem ipsum dolor sit amet consectetur."
-  },
-  {
-    title: "Category 7",
-    value: "Lorem ipsum dolor sit amet consectetur."
-  },
-  {
-    title: "Category 8",
-    value: "Lorem ipsum dolor sit amet consectetur."
-  },
-  {
-    title: "Category 9",
-    value: "Lorem ipsum dolor sit amet consectetur."
-  }
-];
 export default class Application extends Component {
   render() {
     return (
@@ -71,8 +36,9 @@ export default class Application extends Component {
         <Wrapper>
           <h1>UW Blueprint</h1>
           <hr />
-          <Categories categories={MOCK_CATEGORY_DATA} />
+          <Categories categoryData={MOCK_CATEGORY_DATA} />
           <hr />
+          <Files fileData={MOCK_FILE_DATA} />
           <hr />
           <hr />
         </Wrapper>
