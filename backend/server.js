@@ -5,7 +5,7 @@ bodyParser = require('body-parser'),
 cors = require('cors');
 const app = express();
 
-const FIREBASE_CONFIGS = require('./../firebase.config');
+const FIREBASE_CONFIGS = require('./firebase.config');
 
 // Doesn't work with FIREBASE_CONFIGS.projectId for some reason
 firebase.initializeApp({
