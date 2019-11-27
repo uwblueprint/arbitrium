@@ -1,7 +1,7 @@
 
 import fetch from 'cross-fetch';
 
-import {CHANGE_RATING, RECIEVE_QUESTIONS, REQUEST_QUESTIONS, REQUEST_OVERALL, RECIEVE_OVERALL, REQUEST_APPLICATION, RECIEVE_APPLICATION} from "../Constants/ActionTypes";
+import {CHANGE_RATING, RECEIVE_QUESTIONS, REQUEST_QUESTIONS, REQUEST_OVERALL, RECEIVE_OVERALL, REQUEST_APPLICATION, RECEIVE_APPLICATION} from "../Constants/ActionTypes";
 
 const proxy = "http://localhost:4000";
 
@@ -22,7 +22,7 @@ function requestQuestions() {
 
 function receiveQuestions(json) {
   return {
-    type: RECIEVE_QUESTIONS,
+    type: RECEIVE_QUESTIONS,
     questions: json.data.children.map(child => child.data),
     receivedAt: Date.now()
   }
@@ -49,7 +49,7 @@ function requestOverall(){
 
 function receiveOverall(json){
   return {
-    type: RECIEVE_OVERALL,
+    type: RECEIVE_OVERALL,
     data: json.data.children.map(child => child.data),
     receivedAt: Date.now()
   }
@@ -74,15 +74,15 @@ function requestApplication(){
   }
 }
 
-function recieveApplicaton(json){
+function receiveApplicaton(json){
   return {
-    type: RECIEVE_APPLICATION,
+    type: RECEIVE_APPLICATION,
     data: json.data.children.map(child => child.data),
     receivedAt: Date.now()
   }
 }
 
-function fetchApplication(){
+export function fetchApplication(){
   return dispatch => {
     dispatch(requestApplication());
     return fetch(proxy + "api/application", {
@@ -91,6 +91,6 @@ function fetchApplication(){
         'Accept': 'application/json'
       }
     }).then(response => response.json)
-        .then(json => dispatch(recieveApplicaton(json)))
+        .then(json => dispatch(receiveApplicaton(json)))
   }
 }

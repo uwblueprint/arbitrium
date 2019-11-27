@@ -3,9 +3,8 @@ import { createBrowserHistory } from 'history';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
-    RECIEVE_QUESTIONS,
-    REQUEST_QUESTIONS,
-    fetchQuestions
+    fetchOverall,
+    fetchApplication,
 } from '../../Actions/index'
 import Header from "../Header/Header";
 import {Route, Router, Switch} from "react-router";
@@ -24,7 +23,8 @@ class AsyncApp extends Component {
 
     componentDidMount(){
         const { dispatch } = this.props;
-        dispatch(fetchQuestions());
+        dispatch(fetchOverall());
+        dispatch(fetchApplication());
     }
 
     handleNextApplication(){

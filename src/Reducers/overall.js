@@ -19,7 +19,7 @@ const overallReducer = (state = initialState, action) => {
             return Object.assign({}, state, {
                isFetching: true
             });
-        case 'RECIEVE_OVERALL':
+        case 'RECEIVE_OVERALL':
             return Object.assign({}, state, state);
         default:
             return state
