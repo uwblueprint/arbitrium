@@ -31,14 +31,14 @@ const AddComment = () => {
     <CommentForm>
       <input type="text" name="comment" placeholder="Add a comment..." />
       <div className="buttonGroup">
-        <Button className="addcomment-cancel" color="#6202ee">
+        <Button className="addcomment-cancel" color="primary">
           cancel
         </Button>
         <Button
           type="submit"
           className="addcomment-submit"
           variant="contained"
-          color="#6202ee"
+          color="primary"
         >
           comment
         </Button>

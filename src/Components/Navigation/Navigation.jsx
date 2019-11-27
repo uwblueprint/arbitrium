@@ -117,7 +117,7 @@ const Navigation = ({ push }) => {
         <Button
           onClick={() => push(`/submissions/${organization}`)}
           variant="contained"
-          color="primary"
+          color="secondary"
         >
           Application Submission
         </Button>
