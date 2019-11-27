@@ -27,6 +27,10 @@ class AsyncApp extends Component {
         dispatch(fetchQuestions());
     }
 
+    handleNextApplication(){
+
+    }
+
     render(){
         return (
             <div className="App">

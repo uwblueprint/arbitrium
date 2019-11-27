@@ -5,13 +5,22 @@ const initialState = {
     overallRating: [],
     lastUpdated: [],
     progress: [],
-    rating: []
+    rating: [],
+    isFetching: false
 };
 
 const overallReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'CHANGE_RATING':
-            break;
+            return Object.assign({}, state, {
+                rating: action.rating,
+            });
+        case 'REQUEST_OVERALL':
+            return Object.assign({}, state, {
+               isFetching: true
+            });
+        case 'RECIEVE_OVERALL':
+            return Object.assign({}, state, state);
         default:
             return state
     }

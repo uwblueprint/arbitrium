@@ -7,13 +7,22 @@ const initialState = {
     questionComments: [],
     overallRating: [],
     overallComments: [],
-    appId: []
+    appId: [],
+    isFetching: false
 };
 
 const applicationReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'CHANGE_RATING':
-            break;
+            return Object.assign({}, state, {
+                questionRating: action.rating
+            });
+        case 'REQUEST_APPLICATION':
+            return Object.assign({}, state, {
+                isFetching: true
+            });
+        case 'RECEIVE_APPLICATION':
+            return Object.assign({}, state, state);
         default:
             return state
     }

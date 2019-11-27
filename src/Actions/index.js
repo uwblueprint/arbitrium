@@ -1,15 +1,9 @@
 
 import fetch from 'cross-fetch';
 
-import {ADD_ARTICLE, CHANGE_RATING, RECIEVE_QUESTIONS, REQUEST_QUESTIONS} from "../Constants/ActionTypes";
+import {CHANGE_RATING, RECIEVE_QUESTIONS, REQUEST_QUESTIONS, REQUEST_OVERALL, RECIEVE_OVERALL, REQUEST_APPLICATION, RECIEVE_APPLICATION} from "../Constants/ActionTypes";
 
 const proxy = "http://localhost:4000";
-
-//Recall from store/index.js that an action is a javascript object
-//That has a type and a payload (data)
-export function addArticle(payload) {
-  return { type: ADD_ARTICLE, payload }
-};
 
 //The reducer will use that string to determine how to calculate the next state
 //To avoid errors; declare the action types as constants :)
@@ -43,6 +37,60 @@ export function fetchQuestions(){
         'Accept': 'application/json'
       }
     }).then(response => response.json())
-        .then(json => dispatch(receiveQuestions()))
+        .then(json => dispatch(receiveQuestions(json)))
+  }
+}
+
+function requestOverall(){
+  return {
+    type: REQUEST_OVERALL
+  }
+}
+
+function receiveOverall(json){
+  return {
+    type: RECIEVE_OVERALL,
+    data: json.data.children.map(child => child.data),
+    receivedAt: Date.now()
+  }
+}
+
+export function fetchOverall() {
+  return dispatch => {
+    dispatch(requestOverall());
+    return fetch(proxy + 'api/overall', {
+      headers : {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }).then(response => response.json )
+        .then(json => dispatch(receiveOverall(json)))
+  }
+}
+
+function requestApplication(){
+  return {
+    type: REQUEST_APPLICATION
+  }
+}
+
+function recieveApplicaton(json){
+  return {
+    type: RECIEVE_APPLICATION,
+    data: json.data.children.map(child => child.data),
+    receivedAt: Date.now()
+  }
+}
+
+function fetchApplication(){
+  return dispatch => {
+    dispatch(requestApplication());
+    return fetch(proxy + "api/application", {
+      headers : {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }).then(response => response.json)
+        .then(json => dispatch(recieveApplicaton(json)))
   }
 }

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "prop-types": "latest",
     "react": "^16.10.1",
     "react-dom": "^16.10.1",
