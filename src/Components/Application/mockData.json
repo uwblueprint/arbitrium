@@ -44,5 +44,15 @@
       "title": "Category 9",
       "value": "Lorem ipsum dolor sit amet consectetur."
     }
-  ]
+  ],
+  "MOCK_RATING_DATA": {
+    "suggested": 4.6,
+    "comments": [
+      {
+        "author": "Joe Li",
+        "relativeTime": "3 days ago",
+        "text": "A lot of thought from this applicant. Minor room for improvement"
+      }
+    ]
+  }
 }

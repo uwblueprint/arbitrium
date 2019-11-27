@@ -4,8 +4,13 @@ import styled from "styled-components";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Categories from "../Categories/Categories";
 import Files from "../Files/Files";
+import Rating from "../Rating/Rating";
 
-import { MOCK_CATEGORY_DATA, MOCK_FILE_DATA } from "./mockData.json";
+import {
+  MOCK_CATEGORY_DATA,
+  MOCK_FILE_DATA,
+  MOCK_RATING_DATA
+} from "./mockData.json";
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -40,6 +45,7 @@ export default class Application extends Component {
           <hr />
           <Files fileData={MOCK_FILE_DATA} />
           <hr />
+          <Rating ratingData={MOCK_RATING_DATA} />
           <hr />
         </Wrapper>
       </>

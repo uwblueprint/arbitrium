@@ -115,7 +115,7 @@ const Navigation = ({ push }) => {
         <hr />
         <Button onClick={() => push("/")}>All Applicants</Button>
         <Button
-          onClick={() => push("/submissions")}
+          onClick={() => push(`/submissions/${organization}`)}
           variant="contained"
           color="primary"
         >
