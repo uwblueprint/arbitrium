@@ -31,19 +31,33 @@ app.get('/', function(req, res){
 
 function findReview(userId, appId) {
   const col = db.collection('reviews')
-                .where('userId', '==', userId)
-                .where('appId', '==', appId);
+                  .where('userId', '==', userId)
+                  .where('appId', '==', appId);
 
   return new Promise((resolve, reject) => {
     let review = {};
-    col.get().then((querySnapshot) => {
-      querySnapshot.forEach(function(doc) {
+    col.get().then(querySnapshot => {
+      querySnapshot.forEach(doc => {
         review = {
           id: doc.id,
           data: doc.data()
         }
       });
       resolve(review);
+    }).catch(err => reject(err));
+  })
+}
+
+function findApplicantName(appId) {
+  const col = db.collection('applications').where('appId', '==', appId);
+
+  return new Promise((resolve, reject) => {
+    let applicant;
+    col.get().then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        applicant = doc.data().applicant;
+      });
+      resolve(applicant);
     }).catch(err => {
       reject(err);
     });
@@ -58,7 +72,28 @@ function findReview(userId, appId) {
 
 //Returns the entire list of applications. To be called on load to show the
 //user the list of applications.
-app.get('/api/applications', (req, res) => {
+app.get('/api/applications/:userId', (req, res) => {
+  const reviewsCol = db.collection('reviews').where('userId', '==', Number(req.params.userId));
+  let responses = [];
+  reviewsCol.get().then((querySnapshot) => {
+    const numReviews = querySnapshot.size;
+    let applicantNameLookupCompleted = 0;
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      findApplicantName(Number(data.appId)).then(name => {
+        const response = {
+          applicantName: name,
+          rating: data.rating,
+          lastReviewed: data.lastReviewed
+        };
+        responses.push(response);
+        applicantNameLookupCompleted++;
+        if (applicantNameLookupCompleted === numReviews) {
+          res.json(responses)
+        }
+      }).catch(err => res.send(err));
+    })
+  }).catch(err => res.send(err));
 })
 
 //The only things we need to edit in an application is the comments
@@ -77,14 +112,16 @@ app.get('/api/reviews/:userId/:appId', (req, res) => {
     .then(review => res.json(review.data));
 })
 
+
+// Request body: array of questionId and rating pairs, e.g. [ {"questionId": 1, "rating": 5}]
 app.put('/api/reviews/:userId/:appId/ratings', (req, res) => {
   findReview(Number(req.params.userId), Number(req.params.appId))
     .then(review => {
         db.collection('reviews').doc(review.id).update({
           questionRatings: req.body
-        }).then(() => res.send())
+        }).then(() => findReview(Number(req.params.userId), Number(req.params.appId))
+                        .then(review => res.json(review)))
           .catch(err => res.send(err));
-      // TODO: consider sending back updated object
     });
 })
 
