@@ -8,7 +8,7 @@ export default class Footer extends Component {
     render(){
         return(
             <div className="footer_main">
-                <p>this is a footer</p>
+                <p>this is a footer yes it is</p>
             </div>
         )
     }

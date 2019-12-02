@@ -153,8 +153,10 @@ app.put('/api/reviews/:userId/:appId/ranking', (req, res) => {
 
 //Get all documents in a collection
 app.get('/api/questions', (req, res) => {
-  var col = db.collection('questions');
+  console.log("Called questions");
+  var col = db.collection('applications');
   var questions = []
+  console.log(col);
   col.get().then((querySnapshot) => {
     querySnapshot.forEach(function(doc) {
         // doc.data() is never undefined for query doc snapshots

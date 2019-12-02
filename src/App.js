@@ -30,6 +30,7 @@ export default class App extends Component {
           headers : {
               'Content-Type': 'application/json',
               'Accept': 'application/json'
+
           }
       });
       const body = await response.json();
@@ -41,7 +42,9 @@ export default class App extends Component {
 
   componentDidMount() {
     //testing only
+    console.log("Got questions");
     this.getQuestionsAPI().then((res) => {
+        console.log("Got questions");
         let questions = [];
         res.forEach((question) => {
             console.log(question);
