@@ -1,5 +1,6 @@
 function getEnvironment() {
  var environment = {
+   //Update the spreadsheat ID for the spreadsheet you are using (LOI or FULL) in google scripts
    spreadsheetID: "1jzsN2mLV6feAto_oM6IGsS-9fnHO4VB3cU2I2Q5Bw8w",
    firebaseUrl: "https://decision-io.firebaseio.com"
  };
@@ -54,11 +55,11 @@ function writeDataToFirebase(sheetID) {
 // formats data from spreadsheet to firebase
 function assign(obj, keyPath, value) {
   if (keyPath.length == 1) {
-    // TODO: format keyPath[0] into humpback notation here 
+    // TODO: format keyPath[0] into humpback notation here
     obj[keyPath[0]] = value;
   } else { // must be question
     if (!("questions" in obj)) obj["questions"] = [];
-    obj["questions"].push(value); 
+    obj["questions"].push(value);
   }
 }
 
