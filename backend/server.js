@@ -28,6 +28,17 @@ app.get('/', function(req, res){
 	res.send("root");
 });
 
+//A list of websites that can access the data for the api calls.
+var whitelist = ['http://localhost:3000', 'https://decision-io.firebaseapp.com', 'https://decision-io.web.app']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Access Denied (Cookie Monster)'))
+    }
+  }
+}
 
 function findReview(userId, appId) {
   const col = db.collection('reviews')
@@ -152,11 +163,9 @@ app.put('/api/reviews/:userId/:appId/ranking', (req, res) => {
 
 
 //Get all documents in a collection
-app.get('/api/questions', (req, res) => {
-  console.log("Called questions");
+app.get('/api/questions', cors(corsOptions), (req, res) => {
   var col = db.collection('applications');
   var questions = []
-  console.log(col);
   col.get().then((querySnapshot) => {
     querySnapshot.forEach(function(doc) {
         // doc.data() is never undefined for query doc snapshots
