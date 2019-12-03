@@ -11,14 +11,15 @@ const FIREBASE_CONFIGS = require('./firebase.config');
 firebase.initializeApp({
   apiKey: FIREBASE_CONFIGS.apiKey,
   authDomain: FIREBASE_CONFIGS.authDomain,
-  databaseURL: FIREBASE_CONFIGS.databaseURL,
+  databaseURL: "https://decision-io.firebaseio.com",
   projectId: "decision-io",
   storageBucket: FIREBASE_CONFIGS.storageBucket,
   messagingSenderId: FIREBASE_CONFIGS.messagingSenderId,
   appId: FIREBASE_CONFIGS.appId,
-  measurementId: FIREBASE_CONFIGS.measurementId
+  measurementId: FIREBASE_CONFIGS.measurementId,
 });
 var db = firebase.firestore();
+var realtime = firebase.database();
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -30,6 +31,8 @@ app.get('/', function(req, res){
 
 //A list of websites that can access the data for the api calls.
 var whitelist = ['http://localhost:3000', 'https://decision-io.firebaseapp.com', 'https://decision-io.web.app']
+//Include "cors(corsOptions)" to protect the endpoint
+//app.get('/api/questions', cors(corsOptions), (req, res) => {
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -107,9 +110,16 @@ app.get('/api/applications/:userId', (req, res) => {
   }).catch(err => res.send(err));
 })
 
+app.get('/api/applications/all', (req, res) => {
+  var applications = realtime.ref('1qvqKTZAUJqQ14QFeD9srxEmP8bFFdWIo3iW_nbiTRWk').once('value', function(snapshot) {
+    console.log(snapshot);
+    res.json(snapshot);
+  });
+  console.log(applications);
+})
+
 //The only things we need to edit in an application is the comments
 app.put('/api/comments/:appId/:questionId', (req, res) => {
-
 })
 app.put('/api/comments/:appId/overall', (req, res) => {
 

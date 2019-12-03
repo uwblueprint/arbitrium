@@ -1,4 +1,5 @@
 How does google forms to firebase work?
+- useful article: https://medium.com/firebase-developers/sheets-to-firebase-33132e31935b
 
 1. Create Google form
 2. Link the responses from a form to an excel sheet
@@ -24,3 +25,4 @@ Notes:
 - The questions on the form act as keys (so you can't use "$ # [ ] / or .")
 - The form can be embedded into a website if it doesn't have file uploads
 - Files are currently stored in saved file and it is currently a manual process to put them into firebase storage
+- We can migrate from firebase to mongo (just import to mongo as tsv). It won't be synced realtime
