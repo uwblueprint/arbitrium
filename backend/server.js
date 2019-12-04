@@ -84,6 +84,39 @@ function findApplicantName(appId) {
 //Endpoints for the user profile will probably be done via google authentication
 //May have store the user id in a cookie (not sure)
 
+app.post('/api/authenticate/createaccount', (req, res) => {
+  firebase.auth().createUserWithEmailAndPassword(req.body.email, req.body.password)
+    .then(user => {
+      // There is a getIdToken() method on the user object which generates a JWT token
+      // I think it makes since to send this to the frontend and then keep it in a cookie
+      // But having some trouble accessing methods and fields on user right now
+      res.json(user);
+    }).catch(error => {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log('Account creation failed with error code: ' + errorCode + ' and message: ' + errorMessage);
+    }
+  );
+})
+
+// Work in progress: Login endpoint
+// app.post('/api/authenticate/login', (req, res) => {
+//   firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
+//     .then(user => console.log(user))
+//     .catch(error => {
+//       var errorCode = error.code;
+//       var errorMessage = error.message;
+//       res.send('Login failed with error code: ' + errorCode + ' and message: ' + errorMessage);
+//   });
+//   const user = firebase.auth().currentUser;
+//   const token = user.getIdToken();
+//   const response = {
+//     'token': token,
+//     'uid': user.uid
+//   }
+//   res.json(response);
+// })
+
 //Returns the entire list of applications. To be called on load to show the
 //user the list of applications.
 app.get('/api/applications/:userId', (req, res) => {
