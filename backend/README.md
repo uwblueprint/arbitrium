@@ -1,9 +1,7 @@
 # Backend
 
 ## Secrets
-
 Create `firebase.config.js` inside the `backend` directory and copy in the following:
-
 ```
 const FIREBASE_CONFIGS = {
     apiKey: "XXXXX",
@@ -17,6 +15,15 @@ const FIREBASE_CONFIGS = {
 };
 
 module.exports = FIREBASE_CONFIGS;
+```
+
+Create `mongo.config.js` inside the `backend` directory and copy in the following:
+```
+const MONGO_CONFIGS = {
+  environment: "Development | Production",
+  mongoPassword: "XXXXX",
+  mongoUsername: "XXXXX"
+}
 ```
 
 Message a member of the Fall 2019 team for the actual secrets.

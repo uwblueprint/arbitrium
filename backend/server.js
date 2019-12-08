@@ -10,25 +10,9 @@ const FIREBASE_CONFIGS = require('./firebase.config');
 const MONGO_CONFIGS = require('./firebase.config');
 
 //------------------------------------------------------------------------------
-//
+//FIREBASE INIT
 //------------------------------------------------------------------------------
-
-USERNAME = MONGO_CONFIGS.mongoUsername
-PASS = MONGO_CONFIGS.mongoPassword
-ENV = MONGO_CONFIGS.environment
-
-// need this for promises
-mongoose.Promise = Promise;
-
-// connect to database server; if database doesn't exist, it will create it
-mongoose.connect(`mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.gcp.mongodb.net/${ENV}`,
-  { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
-    console.log('Mongo DB connection failed');
-  }).catch(err=>{
-    console.log('Mongo DB connection failed');
-    console.log(err.message);
-})
-
+console.log("Attempting to connect to Firebase")
 // Doesn't work with FIREBASE_CONFIGS.projectId for some reason
 firebase.initializeApp({
   apiKey: FIREBASE_CONFIGS.apiKey,
@@ -43,15 +27,62 @@ firebase.initializeApp({
 var db = firebase.firestore();
 var realtime = firebase.database();
 
+if (db != null && realtime != null){
+  console.log("Firebase DB connection successful")
+}
+else{
+  console.log("Firebase DB connection failed")
+}
+
+//------------------------------------------------------------------------------
+//MONGO INIT
+//------------------------------------------------------------------------------
+console.log("Attempting to connect to Mongo")
+USERNAME = MONGO_CONFIGS.mongoUsername
+PASS = MONGO_CONFIGS.mongoPassword
+ENV = MONGO_CONFIGS.environment
+
+// for debugging the database
+mongoose.set('debug', true);
+
+// connect to database server; if database doesn't exist, it will create it
+mongoose.connect(`mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.gcp.mongodb.net/${ENV}`,
+  { useNewUrlParser: true,
+    useUnifiedTopology: true
+  },()=>{
+    console.log('Mongo DB connection successful');
+    app.listen(4000, () => {
+      console.log("Server is listening on port:4000");
+    });
+  }).catch(err=>{
+    console.log('Mongo DB connection failed');
+    console.log(err.message);
+    console.log(err);
+})
+
+// need this for promises
+mongoose.Promise = Promise;
+
+
+//------------------------------------------------------------------------------
+//ENDPOINT INIT
+//------------------------------------------------------------------------------
+
+// allows us to access request body in a post or put
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
+
 app.get('/', function(req, res){
 	res.send("root");
 });
 
-//A list of websites that can access the data for the api calls.
+//------------------------------------------------------------------------------
+//MONGO INIT
+//------------------------------------------------------------------------------
+
+//A list of websites that can access the data for the api calls.(CORS)
 var whitelist = ['http://localhost:3000', 'https://decision-io.firebaseapp.com', 'https://decision-io.web.app']
 //Include "cors(corsOptions)" to protect the endpoint
 //Example: app.get('/api/questions', cors(corsOptions), (req, res) => {
@@ -240,7 +271,3 @@ app.get('/api/questions', cors(corsOptions), (req, res) => {
     res.json(questions);
   }).catch(err => res.send(err));
 })
-
-app.listen(4000, () => {
-  console.log("Server is listening on port:4000");
-});

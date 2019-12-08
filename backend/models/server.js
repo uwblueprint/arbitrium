@@ -12,10 +12,10 @@ mongoose.connect(`mongodb+srv://${USERNAME}:${PASS}@kidsability-vswng.mongodb.ne
   { useNewUrlParser: true },
   function (err) {
     if (err) {
-      console.log('DB connection failed');
+      console.log('Mongo DB connection failed');
       throw err;
   }
-  console.log("DB connection successful.");
+  console.log("Mongo DB connection successful.");
 });
 
 // need this for promises
