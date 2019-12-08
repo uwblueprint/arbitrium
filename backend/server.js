@@ -1,11 +1,33 @@
 const express = require("express");
 const firebase = require("firebase");
+mongoose = require('mongoose'),
 require("firebase/firestore");
 bodyParser = require('body-parser'),
 cors = require('cors');
 const app = express();
 
 const FIREBASE_CONFIGS = require('./firebase.config');
+const MONGO_CONFIGS = require('./firebase.config');
+
+//------------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------------
+
+USERNAME = MONGO_CONFIGS.mongoUsername
+PASS = MONGO_CONFIGS.mongoPassword
+ENV = MONGO_CONFIGS.environment
+
+// need this for promises
+mongoose.Promise = Promise;
+
+// connect to database server; if database doesn't exist, it will create it
+mongoose.connect(`mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.gcp.mongodb.net/${ENV}`,
+  { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
+    console.log('Mongo DB connection failed');
+  }).catch(err=>{
+    console.log('Mongo DB connection failed');
+    console.log(err.message);
+})
 
 // Doesn't work with FIREBASE_CONFIGS.projectId for some reason
 firebase.initializeApp({
@@ -32,7 +54,7 @@ app.get('/', function(req, res){
 //A list of websites that can access the data for the api calls.
 var whitelist = ['http://localhost:3000', 'https://decision-io.firebaseapp.com', 'https://decision-io.web.app']
 //Include "cors(corsOptions)" to protect the endpoint
-//app.get('/api/questions', cors(corsOptions), (req, res) => {
+//Example: app.get('/api/questions', cors(corsOptions), (req, res) => {
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -84,7 +106,7 @@ function findApplicantName(appId) {
 //Endpoints for the user profile will probably be done via google authentication
 //May have store the user id in a cookie (not sure)
 
-app.post('/api/authenticate/createaccount', (req, res) => {
+app.post('/api/authenticate/createaccount', cors(corsOptions), (req, res) => {
   firebase.auth().createUserWithEmailAndPassword(req.body.email, req.body.password)
     .then(user => {
       // There is a getIdToken() method on the user object which generates a JWT token
@@ -119,7 +141,7 @@ app.post('/api/authenticate/createaccount', (req, res) => {
 
 //Returns the entire list of applications. To be called on load to show the
 //user the list of applications.
-app.get('/api/applications/:userId', (req, res) => {
+app.get('/api/applications/:userId', cors(corsOptions), (req, res) => {
   const reviewsCol = db.collection('reviews').where('userId', '==', Number(req.params.userId));
   let responses = [];
   reviewsCol.get().then((querySnapshot) => {
@@ -143,7 +165,7 @@ app.get('/api/applications/:userId', (req, res) => {
   }).catch(err => res.send(err));
 })
 
-app.get('/api/applications/all', (req, res) => {
+app.get('/api/applications/all', cors(corsOptions), (req, res) => {
   var applications = realtime.ref('1qvqKTZAUJqQ14QFeD9srxEmP8bFFdWIo3iW_nbiTRWk').once('value', function(snapshot) {
     console.log(snapshot);
     res.json(snapshot);
@@ -152,7 +174,7 @@ app.get('/api/applications/all', (req, res) => {
 })
 
 //The only things we need to edit in an application is the comments
-app.put('/api/comments/:appId/:questionId', (req, res) => {
+app.put('/api/comments/:appId/:questionId', cors(corsOptions), (req, res) => {
 })
 app.put('/api/comments/:appId/overall', (req, res) => {
 
@@ -161,14 +183,14 @@ app.put('/api/comments/:appId/overall', (req, res) => {
 //Get a Review for a certain app for a certain user
 //Called when a user opens an app that they want to review.
 //ToDo: Is this pre-populated? Do we create if it doesn't exist?
-app.get('/api/reviews/:userId/:appId', (req, res) => {
+app.get('/api/reviews/:userId/:appId', cors(corsOptions), (req, res) => {
   findReview(Number(req.params.userId), Number(req.params.appId))
     .then(review => res.json(review.data));
 })
 
 
 // Request body: array of questionId and rating pairs, e.g. [ {"questionId": 1, "rating": 5}]
-app.put('/api/reviews/:userId/:appId/ratings', (req, res) => {
+app.put('/api/reviews/:userId/:appId/ratings', cors(corsOptions), (req, res) => {
   findReview(Number(req.params.userId), Number(req.params.appId))
     .then(review => {
         db.collection('reviews').doc(review.id).update({
@@ -193,7 +215,7 @@ app.put('/api/user/:appId/posChange, (req, res) => {
 
 //Or we can just keep it in the review
 
-app.put('/api/reviews/:userId/:appId/ranking', (req, res) => {
+app.put('/api/reviews/:userId/:appId/ranking', cors(corsOptions), (req, res) => {
   findReview(Number(req.params.userId), Number(req.params.appId))
     .then(review => {
         db.collection('reviews').doc(review.id).update({
