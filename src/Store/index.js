@@ -21,7 +21,7 @@ const store = createStore(
 //Which is useful for serverside rendering
 
 //IMPORTANT:
-//The state in redux fromes from reduces; whereas in react they come from components
+//The state in redux comes from reducers; whereas in react they come from components
 //Reducers produce the state of your application
 export default store;
 

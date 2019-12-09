@@ -1,6 +1,6 @@
 import React, {Component}  from 'react';
 import { Route, Switch } from 'react-router';
-//import { createBrowserHistory } from 'history';
+import { createBrowserHistory } from 'history';
 import Navigation from "./Components/Navigation/Navigation";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
@@ -22,7 +22,7 @@ const proxy = process.env.NODE_ENV === "production" ? process.env.REACT_APP_SERV
 
 
 //Are we using this?
-//const browserHistory = createBrowserHistory();
+const browserHistory = createBrowserHistory();
 
 export default class App extends Component {
 
