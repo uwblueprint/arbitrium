@@ -1,9 +1,11 @@
 {
-  "name": "tutorial",
+  "name": "arbitrium",
   "version": "0.1.0",
   "proxy": "http://localhost:4000",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "4.5.2",
+    "connected-react-router": "6.6.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^7.5.0",
@@ -13,7 +15,9 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router": "^5.1.2",
-    "react-scripts": "^3.2.0"
+    "react-router-dom": "5.1.2",
+    "react-scripts": "^3.2.0",
+    "styled-components": "^4.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

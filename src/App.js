@@ -1,18 +1,28 @@
 import React, {Component}  from 'react';
-import { Router, Route, Switch } from 'react-router';
-import { createBrowserHistory } from 'history';
-import Header from './Components/Header/Header';
-import Footer from './Components/Footer/Footer';
-import Home from './Components/Home/Home';
-import Application from './Components/Application/Application';
-import Comparison from './Components/Comparison/Comparison';
-import './App.css';
+import { Route, Switch } from 'react-router';
+//import { createBrowserHistory } from 'history';
+import Navigation from "./Components/Navigation/Navigation";
+import Header from "./Components/Header/Header";
+import Footer from "./Components/Footer/Footer";
+import Container from "./Components/Container/Container";
+import Home from "./Components/Home/Home";
+import Application from "./Components/Application/Application";
+import Comparison from "./Components/Comparison/Comparison";
+
+import { ConnectedRouter } from "connected-react-router";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "./theme";
+import { history } from "./Store";
+//import './App.css';
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
 const proxy = process.env.NODE_ENV === "production" ? process.env.REACT_APP_SERVER : "http://localhost:4000";
 //const proxy = "http://localhost:4000";
-const browserHistory = createBrowserHistory();
+
+
+//Are we using this?
+//const browserHistory = createBrowserHistory();
 
 export default class App extends Component {
 
@@ -57,24 +67,35 @@ export default class App extends Component {
   render() {
     console.log(this.state.Questions);
     return (
-      <div className="App">
-        <header className="App-header">
-          <Header/>
-          <Router history={browserHistory}>
-            <Switch>
-              <Route exact={true} path="/" component={Home}></Route>
-              <Route exact={true} path="/submissions" component={Home}></Route>
-              <Route path="/submissions/:organizationId" component={Application}></Route>
-              <Route path="/comparisons/:organizationId" component={Comparison}></Route>
-            </Switch>
-          </Router>
-          <Footer
-            getQuestionsAPI={this.getQuestionsAPI}
-            >
-          </Footer>
-
-        </header>
-      </div>
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          <Header />
+          <ConnectedRouter history={history}>
+            <>
+              <Navigation />
+              <Container>
+                <Switch>
+                  <Route exact={true} path="/" component={Home}></Route>
+                  <Route
+                    exact={true}
+                    path="/submissions"
+                    component={Home}
+                  ></Route>
+                  <Route
+                    path="/submissions/:organizationId"
+                    component={Application}
+                  ></Route>
+                  <Route
+                    path="/comparisons/:organizationId"
+                    component={Comparison}
+                  ></Route>
+                </Switch>
+              </Container>
+            </>
+          </ConnectedRouter>
+          <Footer getQuestionsAPI={this.getQuestionsAPI}/>
+        </div>
+      </ThemeProvider>
     );
   }
 }
