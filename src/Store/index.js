@@ -13,6 +13,8 @@ const store = createStore(
   createRootReducer(history),
   compose(
     applyMiddleware(routerMiddleware(history)),
+    //https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
+    //Install extension to remove "cannot read property apply of undefined"
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   )
 );

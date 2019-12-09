@@ -27,7 +27,7 @@ const Files = ({ fileData }) => {
       <h2>Files</h2>
       {fileData.map(({ name, size }) => (
         <FileButton>
-          📎
+          <span role="img" aria-label="fileIcon">📎</span>
           <span className="name">{name}</span>
           <span className="size">{`(${size.toLocaleString()} K)`}</span>
         </FileButton>
