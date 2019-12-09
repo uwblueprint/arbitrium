@@ -1,0 +1,58 @@
+{
+  "MOCK_FILE_DATA": [
+    { "name": "file.pdf", "size": 13956 },
+    { "name": "tax-return-statement-2019.pdf", "size": 13956 },
+    { "name": "financial-tax-form-document.pdf", "size": 13956 },
+    { "name": "statement-of-work.pdf", "size": 13956 },
+    { "name": "client-list.pdf", "size": 13956 },
+    { "name": "revenue-report.pdf", "size": 13956 }
+  ],
+  "MOCK_CATEGORY_DATA": [
+    {
+      "title": "Category 1",
+      "value": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "title": "Category 2",
+      "value": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "title": "Category 3",
+      "value": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "title": "Category 4",
+      "value": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "title": "Category 5",
+      "value": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "title": "Category 6",
+      "value": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "title": "Category 7",
+      "value": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "title": "Category 8",
+      "value": "Lorem ipsum dolor sit amet consectetur."
+    },
+    {
+      "title": "Category 9",
+      "value": "Lorem ipsum dolor sit amet consectetur."
+    }
+  ],
+  "MOCK_RATING_DATA": {
+    "suggested": 4.6,
+    "comments": [
+      {
+        "author": "Joe Li",
+        "relativeTime": "3 days ago",
+        "text": "A lot of thought from this applicant. Minor room for improvement"
+      }
+    ]
+  }
+}
