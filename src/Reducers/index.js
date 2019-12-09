@@ -1,24 +1,14 @@
-// src/js/reducers/index.js
+import { combineReducers } from "redux";
+import { connectRouter } from "connected-react-router";
+import customReducerExample from "./customReducerExample";
 
-import { LOAD_APPLICATIONS } from "../Constants/ActionTypes";
+function createRootReducer(history) {
+  return combineReducers({
+    router: connectRouter(history),
+    customReducerExample
+  });
+}
 
-
-const initialState = {
-  articles: [],
-  applications: []
-};
-
-//Reducers take 2 params, a state and an action
-//Notice how the initial state is passed as a default parameter
-function rootReducer(state = initialState, action) {
-  switch(action.type) {
-    case LOAD_APPLICATIONS:
-        return Object.assign({}, state, {
-          applications: action.payload || []
-        });
-      default:
-        return state;
-  }
 
 /*
   if (action.type === ADD_ARTICLE) {
@@ -38,12 +28,10 @@ function rootReducer(state = initialState, action) {
 
   //This returns the initial state
   // return state;
-};
 
 //Remember: reducers produce the state of the application
 
-export default rootReducer;
-
+export default createRootReducer;
 
 //Extra notes
 /*
