@@ -95,7 +95,7 @@ var corsOptions = {
     }
   }
 }
-
+ 
 function findReview(userId, appId) {
   const col = db.collection('reviews')
                   .where('userId', '==', userId)
