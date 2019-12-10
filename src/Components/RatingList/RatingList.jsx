@@ -26,28 +26,27 @@ const Wrapper = styled.div`
 
 const RatingList = () => (
   <Wrapper>
-    <button>
-      <div className="emojiRating"><span role="img" aria-label="1">🙁</span></div>
-      <div className="numberRating">1</div>
-    </button>
-    <button>
-      <div className="emojiRating"><span role="img" aria-label="2">😐</span></div>
-      <div className="numberRating">2</div>
-    </button>
-    <button>
-      <div className="emojiRating"><span role="img" aria-label="3">🙂</span></div>
-      <div className="numberRating">3</div>
-    </button>
-    <button>
-      <div className="emojiRating"><span role="img" aria-label="4">😃</span></div>
-      <div className="numberRating">4</div>
-    </button>
-    <button>
-      <div className="emojiRating"><span role="img" aria-label="5">😍</span></div>
-      <div className="numberRating">5</div>
-    </button>
+  <button>
+    <div className="emojiRating"><span role="img" aria-label="1">🙁</span></div>
+    <div className="numberRating">1</div>
+  </button>
+  <button>
+    <div className="emojiRating"><span role="img" aria-label="2">😐</span></div>
+    <div className="numberRating">2</div>
+  </button>
+  <button>
+    <div className="emojiRating"><span role="img" aria-label="3">🙂</span></div>
+    <div className="numberRating">3</div>
+  </button>
+  <button>
+    <div className="emojiRating"><span role="img" aria-label="4">😃</span></div>
+    <div className="numberRating">4</div>
+  </button>
+  <button>
+    <div className="emojiRating"><span role="img" aria-label="5">😍</span></div>
+    <div className="numberRating">5</div>
+  </button>
   </Wrapper>
 );
 
 export default RatingList;
- 

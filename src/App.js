@@ -29,6 +29,7 @@ export default class App extends Component {
   constructor(props) {
       super(props);
 
+
       this.state = {
           user: false
       };
@@ -40,7 +41,6 @@ export default class App extends Component {
           headers : {
               'Content-Type': 'application/json',
               'Accept': 'application/json'
-
           }
       });
       const body = await response.json();
