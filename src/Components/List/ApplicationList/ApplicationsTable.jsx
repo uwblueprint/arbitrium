@@ -4,6 +4,7 @@ import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import { TableRow, TableHead, TableCell, TableBody } from '@material-ui/core';
 import { loadApplications } from '../../../Actions/index';
+import "./ApplicationsTable.css";
 
 const APPLICATION_STAGE = {
     LETTER_OF_INTEREST: 0,
@@ -54,13 +55,25 @@ export class ApplicationList extends Component {
     componentDidMount() {
         // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
         // Assume API returns the test data
-        this.props.loadApplications(data.sort((a,b) => (a.name > b.name) ? 1: -1));
+
+        console.log("Loading applications")
+        console.log(this.props);
+
+        this.props.getAllApplicationsAPI().then((res) => {
+            console.log(res);
+            this.props.loadApplications(res)
+        });
+
+        console.log(this.props);
     }
 
     render() {
+      console.log(this.props);
         return (
+          <div className="application-list">
             <Paper>
-                <Table>
+                All Applicants
+                <Table className="table2">
                     <TableHead>
                         <TableRow>
                             <TableCell>Applicant Name</TableCell>
@@ -70,7 +83,8 @@ export class ApplicationList extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.applications.map(application => (
+                        {this.props.applications && this.props.applications.applications ?
+                          this.props.applications.applications.map(application => (
                             <TableRow hover>
                                 <TableCell component="th" scope="row">
                                     {application.name}
@@ -79,10 +93,14 @@ export class ApplicationList extends Component {
                                 <TableCell align="left">{application.lastReviewed}</TableCell>
                                 <TableCell align="left"><a rel="noopener noreferrer" target="_blank" href={application.url}>Open application</a></TableCell>
                             </TableRow>
-                        ))}
+
+                        ))
+                        : "hi"
+                      }
                     </TableBody>
                 </Table>
             </Paper>
+            </div>
         )
     }
 }

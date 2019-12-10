@@ -54,6 +54,20 @@ export default class App extends Component {
       return body;
   };
 
+  getAllApplicationsAPI = async () => {
+      const response = await fetch(proxy+'/api/applications/all', {
+          headers : {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          }
+      });
+      const body = await response.json();
+      if (response.status !== 200) {
+          throw Error(body.message);
+      }
+      return body;
+  };
+
   componentDidMount() {
     //testing only
     console.log("Got questions");
@@ -66,10 +80,31 @@ export default class App extends Component {
         });
         this.setState({ Questions: questions });
     });
+
+    console.log("Got Applications");
+    this.getAllApplicationsAPI().then((res) => {
+        console.log("Got Applications");
+        let apps = [];
+        res.forEach((app) => {
+            console.log(app);
+            apps.push(app);
+        });
+        this.setState({ Apps: apps });
+    });
+
   }
 
   render() {
+    const ApplicationsTablePage = (props) => {
+        return (
+            <ApplicationsTable
+              getAllApplicationsAPI = {this.getAllApplicationsAPI}
+            />
+        )
+    }
     console.log(this.state.Questions);
+    console.log(this.state.Apps);
+
     return (
       <ThemeProvider theme={theme}>
         <div className="App">
@@ -85,7 +120,7 @@ export default class App extends Component {
                   <Route
                     exact={true}
                     path="/applications"
-                    component={ApplicationsTable}
+                    component={ApplicationsTablePage}
                   ></Route>
                   <Route
                     path="/submissions/:organizationId"

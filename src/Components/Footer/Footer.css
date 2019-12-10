@@ -5,6 +5,7 @@
 	right: 0;
 	height: 20px;
 	width: 100%;
+	margin-left: var(--header-height);
 	background: white;
 	color: blue;
 }

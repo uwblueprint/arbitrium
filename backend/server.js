@@ -46,7 +46,7 @@ ENV = MONGO_CONFIGS.environment
 mongoose.set('debug', true);
 
 // connect to database server; if database doesn't exist, it will create it
-mongoose.connect(`mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.gcp.mongodb.net/${ENV}`,
+const mongo = mongoose.connect(`mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.gcp.mongodb.net/Development`,
   { useNewUrlParser: true,
     useUnifiedTopology: true
   },()=>{
@@ -79,7 +79,7 @@ app.get('/', function(req, res){
 });
 
 //------------------------------------------------------------------------------
-//MONGO INIT
+//CORS
 //------------------------------------------------------------------------------
 
 //A list of websites that can access the data for the api calls.(CORS)
@@ -88,14 +88,33 @@ var whitelist = ['http://localhost:3000', 'https://decision-io.firebaseapp.com',
 //Example: app.get('/api/questions', cors(corsOptions), (req, res) => {
 var corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+    if (whitelist.indexOf(origin) !== -1 || true) {
       callback(null, true)
     } else {
       callback(new Error('Access Denied (Cookie Monster)'))
     }
   }
 }
- 
+
+
+app.get('/api/applications/all', (req, res) => {
+  mongo.Applications.find()
+	.then(function(apps){
+    console.log(apps);
+		res.json(apps);
+	})
+	.catch(function(err){
+		res.send(err);
+	})
+  /*
+  var applications = realtime.ref('1qvqKTZAUJqQ14QFeD9srxEmP8bFFdWIo3iW_nbiTRWk').once('value', function(snapshot) {
+    console.log(snapshot);
+    res.json(snapshot);
+  });
+  console.log(applications);
+  */
+})
+
 function findReview(userId, appId) {
   const col = db.collection('reviews')
                   .where('userId', '==', userId)
@@ -194,14 +213,6 @@ app.get('/api/applications/:userId', cors(corsOptions), (req, res) => {
       }).catch(err => res.send(err));
     })
   }).catch(err => res.send(err));
-})
-
-app.get('/api/applications/all', cors(corsOptions), (req, res) => {
-  var applications = realtime.ref('1qvqKTZAUJqQ14QFeD9srxEmP8bFFdWIo3iW_nbiTRWk').once('value', function(snapshot) {
-    console.log(snapshot);
-    res.json(snapshot);
-  });
-  console.log(applications);
 })
 
 //The only things we need to edit in an application is the comments
