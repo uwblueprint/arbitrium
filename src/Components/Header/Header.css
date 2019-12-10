@@ -1,0 +1,53 @@
+:root {
+  --header-height: 56px;
+}
+
+.header-container {
+  position: fixed;
+  height: var(--header-height);
+  left: 0px;
+  right: 0px;
+  top: 0px;
+
+  background: #000000;
+  border-bottom: 1px solid #CCCCCC;
+}
+
+/*
+The margin-left is the same as maxWidth for the navbar in navigation.jsx
+Make it a variable... how?
+*/
+.header2-container {
+  position: fixed;
+  height: var(--header-height) + 2px ;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  margin-top: var(--header-height);
+  margin-left: 300px;
+
+  background: #FFFFFF;
+  border: 1px solid #CCCCCC;
+}
+
+.Arbitrium {
+  position: absolute;
+  width: 97px;
+  height: 28px;
+  left: 32px;
+  top: 14px;
+
+  /* H5/ Roboto Regular 24 */
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 28px;
+
+  color: #FFFFFF;
+}
+.logo-container {
+	float: left;
+	display: inline-block;
+}

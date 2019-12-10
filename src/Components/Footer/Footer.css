@@ -1,5 +1,14 @@
-.footer_main{
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
+.footer-container{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 20px;
+	width: 100%;
+	background: white;
+	color: blue;
+}
+
+.tagline {
+	font-size: 0.7em;
 }

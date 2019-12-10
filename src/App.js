@@ -3,16 +3,20 @@ import { Route, Switch } from 'react-router';
 import { createBrowserHistory } from 'history';
 import Navigation from "./Components/Navigation/Navigation";
 import Header from "./Components/Header/Header";
+import Header2 from "./Components/Header/Header2";
 import Footer from "./Components/Footer/Footer";
+import FlowSelector from "./Components/FlowSelector/FlowSelector";
 import Container from "./Components/Container/Container";
 import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
+import ApplicationsTable from './Components/List/ApplicationList/ApplicationsTable';
 import Comparison from "./Components/Comparison/Comparison";
 
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme";
 import { history } from "./Store";
+import "./App.css"
 //import './App.css';
 
 //Use this later for prod vs dev environment
@@ -69,17 +73,19 @@ export default class App extends Component {
     return (
       <ThemeProvider theme={theme}>
         <div className="App">
-          <Header />
+        <header className="App-header">
           <ConnectedRouter history={history}>
             <>
-              <Navigation />
+              <Navigation/>
+              <Header/>
+              <Header2/>
               <Container>
                 <Switch>
                   <Route exact={true} path="/" component={Home}></Route>
                   <Route
                     exact={true}
-                    path="/submissions"
-                    component={Home}
+                    path="/applications"
+                    component={ApplicationsTable}
                   ></Route>
                   <Route
                     path="/submissions/:organizationId"
@@ -94,6 +100,8 @@ export default class App extends Component {
             </>
           </ConnectedRouter>
           <Footer getQuestionsAPI={this.getQuestionsAPI}/>
+
+          </header>
         </div>
       </ThemeProvider>
     );
