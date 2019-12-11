@@ -19,7 +19,7 @@ Make it a variable... how?
 */
 .header2-container {
   position: fixed;
-  height: var(--header-height) + 2px ;
+  height: calc(var(--header-height) + 2px);
   left: 0px;
   right: 0px;
   top: 0px;

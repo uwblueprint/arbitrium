@@ -11,9 +11,7 @@ const initialState = {
 //Reducers take 2 params, a state and an action
 //Notice how the initial state is passed as a default parameter
 function applications(state = initialState, action) {
-  console.log("Called app reducer");
-  console.log(state);
-  console.log(action);
+  //console.log("Called app reducer");
   switch(action.type) {
     case LOAD_APPLICATIONS:
         return Object.assign({}, state, {
@@ -25,7 +23,7 @@ function applications(state = initialState, action) {
 }
 
 function navigation(state = initialState, action) {
-  console.log("Called navigationReducer");
+  //console.log("Called navigationReducer");
   switch (action.type) {
     case SWITCH_VIEW:
       return {

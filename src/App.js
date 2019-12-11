@@ -42,10 +42,6 @@ export default class App extends Component {
 
   getQuestionsAPI = async () => {
       const response = await fetch(proxy+'/api/questions', {
-          headers : {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-          }
       });
       const body = await response.json();
       if (response.status !== 200) {
@@ -92,9 +88,6 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    //testing only
-    console.log("We are here");
-
     /*
     console.log("Got questions");
     this.getQuestionsAPI().then((res) => {
@@ -106,7 +99,6 @@ export default class App extends Component {
         });
         this.setState({ Questions: questions });
     });
-    */
     console.log("Got Applications");
     this.getAllApplicationsAPI().then((res) => {
         console.log("Got Applications");
@@ -122,6 +114,7 @@ export default class App extends Component {
     this.postUserAPI(null).then((res) => {
         console.log("Done");
     });
+    */
 
   }
 
@@ -133,9 +126,6 @@ export default class App extends Component {
             />
         )
     }
-
-    console.log(this.state.Questions);
-    console.log(this.state.Apps);
 
     return (
       <ThemeProvider theme={theme}>

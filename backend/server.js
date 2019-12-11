@@ -6,7 +6,6 @@ bodyParser = require('body-parser');
 
 const core = require('cors');
 cors = require('cors');
-const router = express.Router();
 const app = express();
 
 const FIREBASE_CONFIGS = require('./firebase.config');
@@ -47,10 +46,12 @@ var whitelist = ['http://localhost:3000', 'https://decision-io.firebaseapp.com',
 //Example: app.get('/api/questions', cors(corsOptions), (req, res) => {
 var corsOptions = {
   origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1 || true) {
+    //if you do "if (whitelist.indexOf(origin) !== -1 || true) {"
+    //then you will be able to access it locally
+    if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
-      callback(new Error('Access Denied (Cookie Monster)'))
+      callback(new Error("Access Denied by the 'Cookie Monster' NOM NOM NOM"))
     }
   }
 }
@@ -63,16 +64,6 @@ var corsOptions = {
 //Each has their own file
 const applicationRoutes = require('./routes/applications');
 
-//prefix route for the routes
-app.use('/api/applications', applicationRoutes)
-
-
-const mongo = require('./mongo.js');
-
-//------------------------------------------------------------------------------
-//ENDPOINT INIT
-//------------------------------------------------------------------------------
-
 // allows us to access request body in a post or put
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
@@ -83,9 +74,23 @@ app.get('/', function(req, res){
 	res.send("root");
 });
 
+//FUCK CORS. FUCK FUCK FUCK FUCK FUCK FUCK FUCK
+//-GREG MAXIN
+//P.S: FUCK CORS
+//P.P.S: Long story short this "MONGO INIT" section must be in this order
+//https://codefor.life/FUCK-CORS-FUCKFUCKFUCKFUCK/
+
+//prefix route for the routes
+app.use('/api/applications', applicationRoutes)
+const mongo = require('./mongo.js');
+
 app.listen(4000, () => {
   console.log("Server is listening on port:4000");
 });
+
+//------------------------------------------------------------------------------
+//FIREBASE ENDPINTS
+//------------------------------------------------------------------------------
 
 //this also works
 /*
@@ -257,7 +262,7 @@ app.put('/api/reviews/:userId/:appId/ranking', cors(corsOptions), (req, res) => 
 
 
 //Get all documents in a collection
-app.get('/api/questions', cors(corsOptions), (req, res) => {
+app.get('/api/questions', (req, res) => {
   var col = db.collection('applications');
   var questions = []
   col.get().then((querySnapshot) => {

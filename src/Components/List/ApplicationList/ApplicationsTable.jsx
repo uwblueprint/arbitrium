@@ -87,10 +87,10 @@ export class ApplicationList extends Component {
                           this.props.applications.applications.map(application => (
                             <TableRow hover>
                                 <TableCell component="th" scope="row">
-                                    {application.name}
+                                    {application.City}
                                 </TableCell>
-                                <TableCell align="left">{application.rating}</TableCell>
-                                <TableCell align="left">{application.lastReviewed}</TableCell>
+                                <TableCell align="left">{application.Timestamp}</TableCell>
+                                <TableCell align="left">{application.Linkedin}</TableCell>
                                 <TableCell align="left"><a rel="noopener noreferrer" target="_blank" href={application.url}>Open application</a></TableCell>
                             </TableRow>
 

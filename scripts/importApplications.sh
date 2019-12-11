@@ -19,7 +19,7 @@ if [ "$#" -ne 2 ]; then
 fi
 
 mongoimport \
-  --host Cluster0-shard-0/cluster0-shard-00-00-kbiz0.gcp.mongodb.net:27017,cluster0-shard-00-01-kbiz0.gcp.mongodb.net:27017,cluster0-shard-00-02-kbiz0.gcp.mongodb.net:27017 \
+  --host Cluster0-shard-0/cluster0-shard-00-00-kbiz0.mongodb.net:27017,cluster0-shard-00-01-kbiz0.mongodb.net:27017,cluster0-shard-00-02-kbiz0.mongodb.net:27017 \
   --ssl \
   --username ${1} \
   --password ${2} \

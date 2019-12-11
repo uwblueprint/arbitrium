@@ -11,7 +11,7 @@ ENV = MONGO_CONFIGS.module.environment
 mongoose.set('debug', true);
 
 // connect to database server; if database doesn't exist, it will create it
-var mongo = mongoose.connect(`mongodb+srv://testing:attempt@cluster0-kbiz0.mongodb.net/sample_mflix`,
+var mongo = mongoose.connect(`mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.mongodb.net/${ENV}`,
   { useNewUrlParser: true,
     useUnifiedTopology: true },
   function (err) {
@@ -34,4 +34,4 @@ mongoose.Promise = Promise;
 
 //The collection that each export refers to is defined inside the /model/filename
 //If you are getting [] or undefined errors please make sure everything is named correctly
-module.exports.applications = require("./models/applications");
+module.exports.applications = require("./models/application");
