@@ -29,7 +29,7 @@ export default class Footer extends Component {
         });
     }
 
-    componentWillMount() {
+    componentDidMount() {
         //this.addVisitor();
     }
 

@@ -1,13 +1,16 @@
 const express = require("express");
 const firebase = require("firebase");
-mongoose = require('mongoose'),
+mongoose = require('mongoose');
 require("firebase/firestore");
-bodyParser = require('body-parser'),
+bodyParser = require('body-parser');
+
+const core = require('cors');
 cors = require('cors');
+const router = express.Router();
 const app = express();
 
 const FIREBASE_CONFIGS = require('./firebase.config');
-const MONGO_CONFIGS = require('./firebase.config');
+const MONGO_CONFIGS = require('./mongo.config');
 
 //------------------------------------------------------------------------------
 //FIREBASE INIT
@@ -35,50 +38,6 @@ else{
 }
 
 //------------------------------------------------------------------------------
-//MONGO INIT
-//------------------------------------------------------------------------------
-console.log("Attempting to connect to Mongo")
-USERNAME = MONGO_CONFIGS.mongoUsername
-PASS = MONGO_CONFIGS.mongoPassword
-ENV = MONGO_CONFIGS.environment
-
-// for debugging the database
-mongoose.set('debug', true);
-
-// connect to database server; if database doesn't exist, it will create it
-const mongo = mongoose.connect(`mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.gcp.mongodb.net/Development`,
-  { useNewUrlParser: true,
-    useUnifiedTopology: true
-  },()=>{
-    console.log('Mongo DB connection successful');
-    app.listen(4000, () => {
-      console.log("Server is listening on port:4000");
-    });
-  }).catch(err=>{
-    console.log('Mongo DB connection failed');
-    console.log(err.message);
-    console.log(err);
-})
-
-// need this for promises
-mongoose.Promise = Promise;
-
-
-//------------------------------------------------------------------------------
-//ENDPOINT INIT
-//------------------------------------------------------------------------------
-
-// allows us to access request body in a post or put
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.json());
-
-app.get('/', function(req, res){
-	res.send("root");
-});
-
-//------------------------------------------------------------------------------
 //CORS
 //------------------------------------------------------------------------------
 
@@ -96,24 +55,52 @@ var corsOptions = {
   }
 }
 
+//------------------------------------------------------------------------------
+//MONGO INIT
+//------------------------------------------------------------------------------
 
-app.get('/api/applications/all', (req, res) => {
-  mongo.Applications.find()
-	.then(function(apps){
-    console.log(apps);
-		res.json(apps);
+//Routes are endpoints defined for a specific collection
+//Each has their own file
+const applicationRoutes = require('./routes/applications');
+
+//prefix route for the routes
+app.use('/api/applications', applicationRoutes)
+
+
+const mongo = require('./mongo.js');
+
+//------------------------------------------------------------------------------
+//ENDPOINT INIT
+//------------------------------------------------------------------------------
+
+// allows us to access request body in a post or put
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
+
+app.get('/', function(req, res){
+	res.send("root");
+});
+
+app.listen(4000, () => {
+  console.log("Server is listening on port:4000");
+});
+
+//this also works
+/*
+app.get('/api/applications', cors(corsOptions), function(req, res){
+	//get all unique clinicians
+	//treats entire object as a dictionary key
+	mongo.applications.find()
+	.then(function(found){
+		res.json(found);
 	})
 	.catch(function(err){
 		res.send(err);
 	})
-  /*
-  var applications = realtime.ref('1qvqKTZAUJqQ14QFeD9srxEmP8bFFdWIo3iW_nbiTRWk').once('value', function(snapshot) {
-    console.log(snapshot);
-    res.json(snapshot);
-  });
-  console.log(applications);
-  */
-})
+});
+*/
 
 function findReview(userId, appId) {
   const col = db.collection('reviews')
@@ -276,7 +263,7 @@ app.get('/api/questions', cors(corsOptions), (req, res) => {
   col.get().then((querySnapshot) => {
     querySnapshot.forEach(function(doc) {
         // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
+        //console.log(doc.id, " => ", doc.data());
         questions.push(doc.data());
     });
     res.json(questions);

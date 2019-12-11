@@ -55,7 +55,7 @@ export default class App extends Component {
   };
 
   getAllApplicationsAPI = async () => {
-      const response = await fetch(proxy+'/api/applications/all', {
+      const response = await fetch(proxy+'/api/applications', {
           headers : {
               'Content-Type': 'application/json',
               'Accept': 'application/json'
@@ -68,8 +68,34 @@ export default class App extends Component {
       return body;
   };
 
+  postUserAPI = async (param) => {
+      const response = await fetch(proxy+'/api/applications', {
+          method: 'POST',
+          body: JSON.stringify({
+              username: "greg",
+              passwrd: "insecure"
+          }),
+          headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+          },
+      })
+
+      const body = await response.json();
+      if (response.status !== 201) {
+          console.log(response);
+          console.log("Error with posting saved-times");
+      }
+
+      console.log(body);
+      return body;
+  }
+
   componentDidMount() {
     //testing only
+    console.log("We are here");
+
+    /*
     console.log("Got questions");
     this.getQuestionsAPI().then((res) => {
         console.log("Got questions");
@@ -80,7 +106,7 @@ export default class App extends Component {
         });
         this.setState({ Questions: questions });
     });
-
+    */
     console.log("Got Applications");
     this.getAllApplicationsAPI().then((res) => {
         console.log("Got Applications");
@@ -90,6 +116,11 @@ export default class App extends Component {
             apps.push(app);
         });
         this.setState({ Apps: apps });
+    });
+
+    console.log("Is post user aPI getting run?");
+    this.postUserAPI(null).then((res) => {
+        console.log("Done");
     });
 
   }
@@ -102,6 +133,7 @@ export default class App extends Component {
             />
         )
     }
+
     console.log(this.state.Questions);
     console.log(this.state.Apps);
 
