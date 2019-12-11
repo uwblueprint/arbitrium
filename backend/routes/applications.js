@@ -6,8 +6,6 @@ const db = require('../mongo.js');
 
 router.get('/', function(req, res){
 
-	//get all unique clinicians
-	//treats entire object as a dictionary key
 	db.applications.find()
 	.then(function(found){
 		res.json(found);
