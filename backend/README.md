@@ -24,6 +24,8 @@ const MONGO_CONFIGS = {
   mongoPassword: "XXXXX",
   mongoUsername: "XXXXX"
 }
+
+exports.module = MONGO_CONFIGS;
 ```
 
 Message a member of the Fall 2019 team for the actual secrets.
