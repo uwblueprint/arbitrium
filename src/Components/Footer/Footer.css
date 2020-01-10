@@ -1,0 +1,15 @@
+.footer-container{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 20px;
+	width: 100%;
+	margin-left: var(--header-height);
+	background: white;
+	color: blue;
+}
+
+.tagline {
+	font-size: 0.7em;
+}

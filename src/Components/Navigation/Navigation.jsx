@@ -14,8 +14,11 @@ const useStyles = makeStyles({
   root: {
     // Entire Nav
     "& .MuiDrawer-paper": {
-      maxWidth: 304,
-      padding: "4px 0"
+      marginTop: "56px",
+      maxWidth: "300px",
+      padding: "4px 0",
+      position: "fixed",
+      marginBottom: "50px"
     },
     // Workflow Selector
     "& #workflow.MuiSelect-root": {
@@ -113,7 +116,7 @@ const Navigation = ({ push }) => {
         </Select>
         <h2>SVP Perfect Pitch Candidates</h2>
         <hr />
-        <Button onClick={() => push("/")}>All Applicants</Button>
+        <Button onClick={() => push("/applications")}>All Applicants</Button>
         <Button
           onClick={() => push(`/submissions/${organization}`)}
           variant="contained"

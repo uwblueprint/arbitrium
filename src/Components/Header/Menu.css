@@ -1,0 +1,44 @@
+.menu-wrapper {
+  display: inline-block;
+  margin: 0;
+  background: rgb(237, 238, 244);
+  padding: 1em;
+  list-style-type: none;
+  width: 100%;
+  min-height: 2em;
+  max-height: 100px;
+  padding: 0px;
+  font-size: 2em;
+  font-family: Open Sans;
+  font-style: normal;
+  text-align: center;
+}
+
+.navbar-default {
+  background: white;
+}
+
+.navbar-collapse {
+  background: white !important;
+  z-index: 1000000000;
+  min-width: 100px;
+}
+
+.navbar-brand {
+  font-weight: bold;
+  float: left;
+}
+.navbar-nav {
+  margin-right: auto;
+  margin-left: auto;
+  width: 70%;
+  max-width: 100%;
+  min-width: 730px;
+}
+.find-time {
+  padding-right: 5em;
+}
+
+.logout {
+  padding-right: 5em;
+}
