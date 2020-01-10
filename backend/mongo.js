@@ -29,7 +29,7 @@ var mongo = mongoose.connect(`mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.m
 mongoose.Promise = Promise;
 
 // require the schema
-//When you made a database call you will do something like
+//When you make a database call you will do something like
 //db.applications.find({})
 
 //The collection that each export refers to is defined inside the /model/filename

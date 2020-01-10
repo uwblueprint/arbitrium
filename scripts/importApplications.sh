@@ -5,7 +5,6 @@
 # Argument
 #   ${1} - Mongo db username
 #   ${2} - Mongo db password
-#   ${3} - Production or Development Database
 # Ask Greg or Karissa for Mongo db credentials and for SVP.csv
 # SVP.csv can be found by downloading form responses
 
