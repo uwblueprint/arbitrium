@@ -71,7 +71,7 @@ export class ApplicationList extends Component {
       console.log(this.props);
         return (
           <div className="application-list">
-            <Paper>
+            <Paper align = "left">
                 All Applicants
                 <Table className="table2">
                     <TableHead>
