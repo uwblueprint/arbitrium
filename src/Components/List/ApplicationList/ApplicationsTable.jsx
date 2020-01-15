@@ -56,19 +56,13 @@ export class ApplicationList extends Component {
         // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
         // Assume API returns the test data
 
-        console.log("Loading applications")
-        console.log(this.props);
-
         this.props.getAllApplicationsAPI().then((res) => {
-            console.log(res);
             this.props.loadApplications(res)
         });
-
-        console.log(this.props);
     }
 
     render() {
-      console.log(this.props);
+        console.log(this.props)
         return (
           <div className="application-list">
             <Paper>
@@ -91,9 +85,8 @@ export class ApplicationList extends Component {
                                 </TableCell>
                                 <TableCell align="left">{application.Timestamp}</TableCell>
                                 <TableCell align="left">{application.Linkedin}</TableCell>
-                                <TableCell align="left"><a rel="noopener noreferrer" target="_blank" href={application.url}>Open application</a></TableCell>
+                                <TableCell align="left"><a rel="noopener noreferrer" target="_blank" href={'submissions/'+application._id}>Open application</a></TableCell>
                             </TableRow>
-
                         ))
                         : "hi"
                       }
