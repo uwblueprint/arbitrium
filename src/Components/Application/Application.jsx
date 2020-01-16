@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 
-import FlowSelector from "../FlowSelector/FlowSelector";
 import Categories from "../Categories/Categories";
+import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
+import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 
@@ -63,6 +64,8 @@ export default class Application extends Component {
           <Categories categoryData={MOCK_CATEGORY_DATA} />
           <hr />
           <Files fileData={MOCK_FILE_DATA} />
+          <hr />
+          <DecisionCanvas />
           <hr />
           <Rating ratingData={MOCK_RATING_DATA} />
           <hr />

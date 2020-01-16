@@ -5,47 +5,68 @@ const Wrapper = styled.div`
   margin-bottom: 20px;
   button {
     border: 0;
-    outline: 0;
-    background: transparent;
-    text-align: center;
     font-family: inherit;
+    background: transparent;
+    margin-right: 8px;
+    outline: 0;
     padding: 0;
+    text-align: center;
+    :hover {
+      cursor: pointer;
+    }
   }
   margin-top: 8px;
   .emojiRating {
-    padding: 3px;
-    margin-right: 8px;
-    font-size: 16px;
     background: #cccccc;
+    font-size: 24px;
+    line-height: 24px;
+    padding: 3px;
   }
   .numberRating {
     margin-top: 4px;
-    margin-right: 8px;
+    margin-left; auto;
+    margin-right; auto;
   }
 `;
 
-const RatingList = () => (
+const ratings = [
+  {
+    icon: "🙁",
+    value: 1
+  },
+  {
+    icon: "😐",
+    value: 2
+  },
+  {
+    icon: "🙂",
+    value: 3
+  },
+  {
+    icon: "🙁",
+    value: 4
+  },
+  {
+    icon: "😍",
+    value: 5
+  }
+];
+
+const RatingList = ({ onRatingChange, selectedRating }) => (
   <Wrapper>
-  <button>
-    <div className="emojiRating"><span role="img" aria-label="1">🙁</span></div>
-    <div className="numberRating">1</div>
-  </button>
-  <button>
-    <div className="emojiRating"><span role="img" aria-label="2">😐</span></div>
-    <div className="numberRating">2</div>
-  </button>
-  <button>
-    <div className="emojiRating"><span role="img" aria-label="3">🙂</span></div>
-    <div className="numberRating">3</div>
-  </button>
-  <button>
-    <div className="emojiRating"><span role="img" aria-label="4">😃</span></div>
-    <div className="numberRating">4</div>
-  </button>
-  <button>
-    <div className="emojiRating"><span role="img" aria-label="5">😍</span></div>
-    <div className="numberRating">5</div>
-  </button>
+    {ratings.map(rate => (
+      <button
+        onClick={() => onRatingChange && onRatingChange(rate.value)}
+        style={selectedRating === rate.value ? { border: "solid 1px" } : null}
+      >
+        <div className="emojiRating">
+          <span role="img" aria-label={`${rate.value}`}>
+            {rate.icon}
+          </span>
+        </div>
+        <div className="numberRating">{rate.value}</div>
+      </button>
+    ))}
   </Wrapper>
 );
 
