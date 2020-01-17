@@ -6,6 +6,7 @@ import FlowSelector from "../FlowSelector/FlowSelector";
 import Categories from "../Categories/Categories";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
+import PageLayout from "../PageLayout/PageLayout";
 
 import {
   MOCK_CATEGORY_DATA,
@@ -49,7 +50,7 @@ const ApplicationSelector = styled.div`
 export default class Application extends Component {
   render() {
     return (
-      <>
+      <PageLayout>
         <FlowSelector>
           <button>1. Letter of Interest</button>
           <button disabled>2. Full Application</button>
@@ -73,7 +74,7 @@ export default class Application extends Component {
             </Button>
           </ApplicationSelector>
         </Wrapper>
-      </>
+      </PageLayout>
     );
   }
 }

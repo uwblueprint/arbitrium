@@ -4,6 +4,7 @@ import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import { TableRow, TableHead, TableCell, TableBody } from '@material-ui/core';
 import { loadApplications } from '../../../Actions/index';
+import PageLayout from "../../PageLayout/PageLayout";
 import "./ApplicationsTable.css";
 
 const APPLICATION_STAGE = {
@@ -70,6 +71,7 @@ export class ApplicationList extends Component {
     render() {
       console.log(this.props);
         return (
+          <PageLayout>
           <div className="application-list">
             <Paper>
                 All Applicants
@@ -100,7 +102,8 @@ export class ApplicationList extends Component {
                     </TableBody>
                 </Table>
             </Paper>
-            </div>
+          </div>
+          </PageLayout>
         )
     }
 }

@@ -1,13 +1,8 @@
 import React, {Component}  from 'react';
-import { Route, Switch } from 'react-router';
+import { Route, Switch, Redirect } from 'react-router';
 import { createBrowserHistory } from 'history';
-import Navigation from "./Components/Navigation/Navigation";
-import Header from "./Components/Header/Header";
-import Header2 from "./Components/Header/Header2";
-import Footer from "./Components/Footer/Footer";
-import FlowSelector from "./Components/FlowSelector/FlowSelector";
-import Container from "./Components/Container/Container";
 import Home from "./Components/Home/Home";
+import Login from "./Components/Login/Login";
 import Application from "./Components/Application/Application";
 import ApplicationsTable from './Components/List/ApplicationList/ApplicationsTable';
 import Comparison from "./Components/Comparison/Comparison";
@@ -17,7 +12,6 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme";
 import { history } from "./Store";
 import "./App.css"
-//import './App.css';
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
@@ -31,13 +25,24 @@ const browserHistory = createBrowserHistory();
 export default class App extends Component {
 
   constructor(props) {
-      super(props);
+    super(props);
 
+    //TODO: dummy authentication state
+    this.state = {
+      isAuthenticated : false
+    }
+  }
 
-      this.state = {
-          user: false
-      };
+  login = () => {
+    this.setState({
+      isAuthenticated : true
+    });
+  }
 
+  logout = () => {
+    this.setState({
+      isAuthenticated : false
+    });
   }
 
   getQuestionsAPI = async () => {
@@ -119,6 +124,8 @@ export default class App extends Component {
   }
 
   render() {
+    const {isAuthenticated} = this.state;
+
     const ApplicationsTablePage = (props) => {
         return (
             <ApplicationsTable
@@ -127,37 +134,41 @@ export default class App extends Component {
         )
     }
 
+    const PrivateRoute = ({component: Component, ...rest }) => {
+      return (<Route {...rest} render={(props) => (
+        isAuthenticated === true
+          ? <Component {...props} />
+          : <Redirect to='/login' />
+      )} />);
+    }
+
     return (
       <ThemeProvider theme={theme}>
         <div className="App">
-        <header className="App-header">
-          <ConnectedRouter history={history}>
-            <>
-              <Navigation/>
-              <Header/>
-              <Header2/>
-              <Container>
-                <Switch>
-                  <Route exact={true} path="/" component={Home}></Route>
-                  <Route
-                    exact={true}
-                    path="/applications"
-                    component={ApplicationsTablePage}
-                  ></Route>
-                  <Route
-                    path="/submissions/:organizationId"
-                    component={Application}
-                  ></Route>
-                  <Route
-                    path="/comparisons/:organizationId"
-                    component={Comparison}
-                  ></Route>
-                </Switch>
-              </Container>
-            </>
-          </ConnectedRouter>
-          <Footer getQuestionsAPI={this.getQuestionsAPI}/>
-
+          <header className="App-header">
+            <ConnectedRouter history={history}>
+              <Switch>
+                <Route
+                  exact={true}
+                  path="/login"
+                  render={(props) => <Login {...props} login={this.login} logout={this.logout} isAuthenticated={isAuthenticated}/> }
+                ></Route>
+                <PrivateRoute
+                  exact={true}
+                  path="/applications"
+                  component={ApplicationsTablePage}
+                ></PrivateRoute>
+                <PrivateRoute
+                  path="/submissions/:organizationId"
+                  component={Application}
+                ></PrivateRoute>
+                <PrivateRoute
+                  path="/comparisons/:organizationId"
+                  component={Comparison}
+                ></PrivateRoute>
+                <PrivateRoute isAuthenticated={isAuthenticated} texact={true} path="/" component={Home}></PrivateRoute>
+              </Switch>
+            </ConnectedRouter>
           </header>
         </div>
       </ThemeProvider>

@@ -7,7 +7,7 @@
   max-width: 864px;
 }
 
-.MuiPaper-root.MuiPaper-rounded {
+.application-list .MuiPaper-root.MuiPaper-rounded {
   margin-left: calc(304px + 5vw);
 }
 
