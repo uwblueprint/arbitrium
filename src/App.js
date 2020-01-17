@@ -11,32 +11,16 @@ import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
 import ApplicationsTable from './Components/List/ApplicationList/ApplicationsTable';
 import Comparison from "./Components/Comparison/Comparison";
-
-import withFirebaseAuth from 'react-with-firebase-auth'
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
-
+import Login from "./Authentication/login.js"
+import { AuthProvider } from "./Authentication/Auth";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme";
 import { history } from "./Store";
 import "./App.css"
+import PrivateRoute from "./Authentication/PrivateRoute";
 //import './App.css';
 
-const FIREBASE_CONFIGS = require('./firebase.config');
-
-firebase.initializeApp({
-  apiKey: "AIzaSyDWxBCf-A_uCeRpzhwyrF8HaVqHLUzEu_o",
-  authDomain: FIREBASE_CONFIGS.authDomain,
-  databaseURL: "https://decision-io.firebaseio.com",
-  projectId: "decision-io",
-  storageBucket: FIREBASE_CONFIGS.storageBucket,
-  messagingSenderId: FIREBASE_CONFIGS.messagingSenderId,
-  appId: FIREBASE_CONFIGS.appId,
-  measurementId: FIREBASE_CONFIGS.measurementId,
-});
-
-const firebaseAppAuth = firebase.auth();
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
@@ -47,7 +31,7 @@ const proxy = process.env.NODE_ENV === "production" ? process.env.REACT_APP_SERV
 //Are we using this?
 const browserHistory = createBrowserHistory();
 
-class App extends Component {
+export default class App extends Component {
 
   constructor(props) {
       super(props);
@@ -108,42 +92,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    /*
-    console.log("Got questions");
-    this.getQuestionsAPI().then((res) => {
-        console.log("Got questions");
-        let questions = [];
-        res.forEach((question) => {
-            console.log(question);
-            questions.push(question);
-        });
-        this.setState({ Questions: questions });
-    });
-    console.log("Got Applications");
-    this.getAllApplicationsAPI().then((res) => {
-        console.log("Got Applications");
-        let apps = [];
-        res.forEach((app) => {
-            console.log(app);
-            apps.push(app);
-        });
-        this.setState({ Apps: apps });
-    });
-
-    console.log("Is post user aPI getting run?");
-    this.postUserAPI(null).then((res) => {
-        console.log("Done");
-    });
-    */
-
+      //empty
   }
-
-  firebaseAppAuth.signInWithEmailAndPassword(email, password).catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  // ...
-});
 
   render() {
     const ApplicationsTablePage = (props) => {
@@ -159,31 +109,36 @@ class App extends Component {
       <ThemeProvider theme={theme}>
         <div className="App">
         <header className="App-header">
+          <AuthProvider>
           <ConnectedRouter history={history}>
             <>
-              <Navigation/>
               <Header/>
-              <Header2/>
               <Container>
                 <Switch>
-                  <Route exact={true} path="/" component={Home}></Route>
-                  <Route
+                  <PrivateRoute exact={true} path="/" component={Home}></PrivateRoute>
+                  <PrivateRoute
                     exact={true}
                     path="/applications"
                     component={ApplicationsTablePage}
-                  ></Route>
+                  ></PrivateRoute>
                   <Route
+                    exact={true}
+                    path="/login"
+                    component={Login}
+                  ></Route>
+                  <PrivateRoute
                     path="/submissions/:organizationId"
                     component={Application}
-                  ></Route>
-                  <Route
+                  ></PrivateRoute>
+                  <PrivateRoute
                     path="/comparisons/:organizationId"
                     component={Comparison}
-                  ></Route>
+                  ></PrivateRoute>
                 </Switch>
               </Container>
             </>
           </ConnectedRouter>
+          </AuthProvider>
           <Footer getQuestionsAPI={this.getQuestionsAPI}/>
 
           </header>
@@ -192,7 +147,3 @@ class App extends Component {
     );
   }
 }
-
-export default withFirebaseAuth({
-  firebaseAppAuth,
-})(App);

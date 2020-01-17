@@ -17,14 +17,14 @@ const MONGO_CONFIGS = require('./mongo.config');
 console.log("Attempting to connect to Firebase")
 // Doesn't work with FIREBASE_CONFIGS.projectId for some reason
 firebase.initializeApp({
-  apiKey: FIREBASE_CONFIGS.apiKey,
-  authDomain: FIREBASE_CONFIGS.authDomain,
+  apiKey: process.env.REACT_APP_FIREBASE_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
   databaseURL: "https://decision-io.firebaseio.com",
   projectId: "decision-io",
-  storageBucket: FIREBASE_CONFIGS.storageBucket,
-  messagingSenderId: FIREBASE_CONFIGS.messagingSenderId,
-  appId: FIREBASE_CONFIGS.appId,
-  measurementId: FIREBASE_CONFIGS.measurementId,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 });
 var db = firebase.firestore();
 var realtime = firebase.database();
