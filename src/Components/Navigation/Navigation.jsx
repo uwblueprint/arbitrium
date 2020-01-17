@@ -145,7 +145,7 @@ const Navigation = ({ pathname, push }) => {
         <Button onClick={() => push(`/comparisons/${organization}`)}>
           Comparison
         </Button>
-        <Button onClick={sendAlert}>Stacked Rankings</Button>
+        <Button onClick={() => push('/rankings')}>Stacked Rankings</Button>
       </Drawer>
     </nav>
   );

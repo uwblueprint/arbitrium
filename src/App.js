@@ -120,7 +120,7 @@ class App extends Component {
         <header className="App-header">
           <ConnectedRouter history={history}>
             <>
-              <Navigation/>
+            <Navigation/>
               <Header/>
               <Header2/>
               <Container>
@@ -138,6 +138,10 @@ class App extends Component {
                   <Route
                     path="/comparisons/:organizationId"
                     component={Comparison}
+                  ></Route>
+                  <Route
+                    path="/rankings"
+                    component={StackedRankings}
                   ></Route>
                 </Switch>
               </Container>
