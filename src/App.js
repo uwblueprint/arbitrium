@@ -12,12 +12,31 @@ import Application from "./Components/Application/Application";
 import ApplicationsTable from './Components/List/ApplicationList/ApplicationsTable';
 import Comparison from "./Components/Comparison/Comparison";
 
+import withFirebaseAuth from 'react-with-firebase-auth'
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme";
 import { history } from "./Store";
 import "./App.css"
 //import './App.css';
+
+const FIREBASE_CONFIGS = require('./firebase.config');
+
+firebase.initializeApp({
+  apiKey: "AIzaSyDWxBCf-A_uCeRpzhwyrF8HaVqHLUzEu_o",
+  authDomain: FIREBASE_CONFIGS.authDomain,
+  databaseURL: "https://decision-io.firebaseio.com",
+  projectId: "decision-io",
+  storageBucket: FIREBASE_CONFIGS.storageBucket,
+  messagingSenderId: FIREBASE_CONFIGS.messagingSenderId,
+  appId: FIREBASE_CONFIGS.appId,
+  measurementId: FIREBASE_CONFIGS.measurementId,
+});
+
+const firebaseAppAuth = firebase.auth();
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
@@ -28,7 +47,7 @@ const proxy = process.env.NODE_ENV === "production" ? process.env.REACT_APP_SERV
 //Are we using this?
 const browserHistory = createBrowserHistory();
 
-export default class App extends Component {
+class App extends Component {
 
   constructor(props) {
       super(props);
@@ -39,6 +58,7 @@ export default class App extends Component {
       };
 
   }
+
 
   getQuestionsAPI = async () => {
       const response = await fetch(proxy+'/api/questions', {
@@ -118,6 +138,13 @@ export default class App extends Component {
 
   }
 
+  firebaseAppAuth.signInWithEmailAndPassword(email, password).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // ...
+});
+
   render() {
     const ApplicationsTablePage = (props) => {
         return (
@@ -128,6 +155,7 @@ export default class App extends Component {
     }
 
     return (
+
       <ThemeProvider theme={theme}>
         <div className="App">
         <header className="App-header">
@@ -164,3 +192,7 @@ export default class App extends Component {
     );
   }
 }
+
+export default withFirebaseAuth({
+  firebaseAppAuth,
+})(App);

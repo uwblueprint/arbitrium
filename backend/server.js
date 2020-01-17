@@ -29,6 +29,7 @@ firebase.initializeApp({
 var db = firebase.firestore();
 var realtime = firebase.database();
 
+
 if (db != null && realtime != null){
   console.log("Firebase DB connection successful")
 }
