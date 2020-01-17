@@ -166,7 +166,7 @@ export default class App extends Component {
                   path="/comparisons/:organizationId"
                   component={Comparison}
                 ></PrivateRoute>
-                <PrivateRoute isAuthenticated={isAuthenticated} texact={true} path="/" component={Home}></PrivateRoute>
+                <PrivateRoute exact={true} path="/" component={Home}></PrivateRoute>
               </Switch>
             </ConnectedRouter>
           </header>

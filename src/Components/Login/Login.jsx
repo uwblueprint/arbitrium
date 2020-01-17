@@ -30,7 +30,6 @@ const StyledCard = styled(Card)`
 
   //Center
   margin: 0 auto;
-  margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -50,7 +49,6 @@ const StyledCard = styled(Card)`
     color: black;
   }
 `;
-
 
 export default function Login({login, logout, isAuthenticated}) {
 
@@ -78,7 +76,7 @@ export default function Login({login, logout, isAuthenticated}) {
   };
 
   if(isAuthenticated){
-    return (<Redirect to='/' />)
+    return (<Redirect to='/applications' />)
   }else{
     return(
       <StyledCard>
