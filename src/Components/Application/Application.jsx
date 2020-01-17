@@ -21,7 +21,7 @@ class Application extends Component {
   //transpilers will ensure data is converted to form usable by components 
 
   transpileCategoryData = (applications=null) =>{
-    //todo when rating data is made available, currently leverages mock data
+    //todo when category data is made available, currently leverages mock data
     return MOCK_CATEGORY_DATA;
     //example implementation
     //return Object.keys(applications[this.props.id])
@@ -29,7 +29,7 @@ class Application extends Component {
     //.map(adminCategory=>{title: adminCategory, value: applications[this.props.id][adminCategory]});
   }
   transpileFileData = (applications=null) => {
-    //todo when rating data is made available, currently leverages mock data
+    //todo when file data is made available, currently leverages mock data
     return MOCK_FILE_DATA;
   }
   transpileRatingData = (applications=null) =>{
