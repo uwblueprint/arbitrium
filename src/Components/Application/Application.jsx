@@ -23,6 +23,10 @@ class Application extends Component {
   transpileCategoryData = (applications=null) =>{
     //todo when rating data is made available, currently leverages mock data
     return MOCK_CATEGORY_DATA;
+    //example implementation
+    //return Object.keys(applications[this.props.id])
+    //.filter(category=>allCategories.indexOf(category)!=-1)
+    //.map(adminCategory=>{title: adminCategory, value: applications[this.props.id][adminCategory]});
   }
   transpileFileData = (applications=null) => {
     //todo when rating data is made available, currently leverages mock data
