@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import { TableRow, TableHead, TableCell, TableBody } from '@material-ui/core';
-import { loadApplications } from '../../../Actions/index';
 import "./ApplicationsTable.css";
 
 const APPLICATION_STAGE = {
@@ -50,22 +48,7 @@ const data = [
         }
 ];
 
-export class ApplicationList extends Component {
-
-    componentDidMount() {
-        // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
-        // Assume API returns the test data
-
-        console.log("Loading applications")
-        console.log(this.props);
-
-        this.props.getAllApplicationsAPI().then((res) => {
-            console.log(res);
-            this.props.loadApplications(res)
-        });
-
-        console.log(this.props);
-    }
+export default class ApplicationList extends Component {
 
     render() {
       console.log(this.props);
@@ -105,13 +88,3 @@ export class ApplicationList extends Component {
     }
 }
 
-
-const mapStateToProps = state => ({
-    applications: state.applications,
-  });
-
-const mapDispatchToProps = dispatch => ({
-    loadApplications: payload => dispatch(loadApplications(payload))
-  });
-
-export default connect(mapStateToProps, mapDispatchToProps)(ApplicationList);
