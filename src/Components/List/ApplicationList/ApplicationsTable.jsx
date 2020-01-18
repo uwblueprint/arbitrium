@@ -66,8 +66,8 @@ export default class ApplicationList extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.applications && this.props.applications.applications ?
-                          this.props.applications.applications.map(application => (
+                        {this.props.applications ?
+                          this.props.applications.map(application => (
                             <TableRow hover>
                                 <TableCell component="th" scope="row">
                                     {application.City}
@@ -78,7 +78,7 @@ export default class ApplicationList extends Component {
                             </TableRow>
 
                         ))
-                        : "hi"
+                        : "ERROR LOADING APPLICATIONS FROM DATABASE"
                       }
                     </TableBody>
                 </Table>
@@ -87,4 +87,3 @@ export default class ApplicationList extends Component {
         )
     }
 }
-

@@ -51,7 +51,7 @@ class App extends Component {
     });
   }
 
-  //various APIs to query database and populate pages with data 
+  //various APIs to query database and populate pages with data
 
   getQuestionsAPI = async () => {
       const response = await fetch(proxy+'/api/questions', {
@@ -102,9 +102,14 @@ class App extends Component {
 
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
+
+    console.log(this.props)
+
     const getWrappedComponent = (ApplicationComponent) => {
         const WrappedComponent= <ApplicationComponent
-              //add common props here 
+          //Passing the applications as a prop
+          applications = {this.props.applications.applications}
+          //add common props here
         />
         return WrappedComponent;
     }
@@ -147,7 +152,7 @@ class App extends Component {
   }
 }
 
-//connecting applications to redux 
+//connecting applications to redux
 
 const mapStateToProps = state => ({
   applications: state.applications,
@@ -158,36 +163,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
-
-
-
-/*
-  componentDidMount() {
-    
-    console.log("Got questions");
-    this.getQuestionsAPI().then((res) => {
-        console.log("Got questions");
-        let questions = [];
-        res.forEach((question) => {
-            console.log(question);
-            questions.push(question);
-        });
-        this.setState({ Questions: questions });
-    });
-    console.log("Got Applications");
-    this.getAllApplicationsAPI().then((res) => {
-        console.log("Got Applications");
-        let apps = [];
-        res.forEach((app) => {
-            console.log(app);
-            apps.push(app);
-        });
-        this.setState({ Apps: apps });
-    });
-
-    console.log("Is post user aPI getting run?");
-    this.postUserAPI(null).then((res) => {
-        console.log("Done");
-    });
-  }
-      */
