@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 
-import FlowSelector from "../FlowSelector/FlowSelector";
 import Categories from "../Categories/Categories";
+import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
+import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 
@@ -18,7 +19,7 @@ import { connect } from 'react-redux';
 
 class Application extends Component {
 
-  //transpilers will ensure data is converted to form usable by components 
+  //transpilers will ensure data is converted to form usable by components
 
   transpileCategoryData = (applications=null) =>{
     //todo when category data is made available, currently leverages mock data
@@ -53,6 +54,8 @@ class Application extends Component {
           <Categories categoryData={this.transpileCategoryData(this.props.applications)} />
           <hr />
           <Files fileData={this.transpileFileData(this.props.applications)} />
+          <hr />
+          <DecisionCanvas />
           <hr />
           <Rating ratingData={this.transpileRatingData(this.props.applications)} />
           <hr />
