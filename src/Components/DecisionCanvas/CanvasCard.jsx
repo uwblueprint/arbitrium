@@ -95,7 +95,7 @@ function CanvasCard({
       <CardContent classes={{ root: classes.content }}>
         <Collapse
           classes={{ container: classes.collapse }}
-          collapsedHeight="40px"
+          collapsedHeight="75px"
           in={expanded}
           timeout="auto"
         >
