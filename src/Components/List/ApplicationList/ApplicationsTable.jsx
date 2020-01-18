@@ -52,6 +52,8 @@ export default class ApplicationList extends Component {
 
     render() {
       console.log(this.props);
+      //Pre-calculate the applications array before rendering
+
         return (
           <div className="application-list">
             <Paper>
@@ -70,13 +72,12 @@ export default class ApplicationList extends Component {
                           this.props.applications.map(application => (
                             <TableRow hover>
                                 <TableCell component="th" scope="row">
-                                    {application.City}
+                                    {application[ 'Organization Name']}
                                 </TableCell>
-                                <TableCell align="left">{application.Timestamp}</TableCell>
-                                <TableCell align="left">{application.Linkedin}</TableCell>
+                                <TableCell align="left">{application['rating'] || "0/5" }</TableCell>
+                                <TableCell align="left">{application['last reviewed'] || "never" }</TableCell>
                                 <TableCell align="left"><a rel="noopener noreferrer" target="_blank" href={application.url}>Open application</a></TableCell>
                             </TableRow>
-
                         ))
                         : "ERROR LOADING APPLICATIONS FROM DATABASE"
                       }
