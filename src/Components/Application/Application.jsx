@@ -14,6 +14,70 @@ import {
   MOCK_RATING_DATA
 } from "./mockData.json";
 
+import { connect } from 'react-redux';
+
+
+class Application extends Component {
+
+  //transpilers will ensure data is converted to form usable by components
+
+  transpileCategoryData = (applications=null) =>{
+    //todo when category data is made available, currently leverages mock data
+    return MOCK_CATEGORY_DATA;
+    //example implementation
+    //return Object.keys(applications[this.props.id])
+    //.filter(category=>allCategories.indexOf(category)!=-1)
+    //.map(adminCategory=>{title: adminCategory, value: applications[this.props.id][adminCategory]});
+  }
+  transpileFileData = (applications=null) => {
+    //todo when file data is made available, currently leverages mock data
+    return MOCK_FILE_DATA;
+  }
+  transpileRatingData = (applications=null) =>{
+    //todo when rating data is made available, currently leverages mock data
+    return MOCK_RATING_DATA;
+  }
+
+  render() {
+    return (
+      <div className='pagecontainer'>
+         <FlowSelector>
+          <button>1. Letter of Interest</button>
+          <button disabled>2. Full Application</button>
+        </FlowSelector>
+        <Wrapper>
+          <h1>
+            <Button className="all-applicants">&lt; All Applicants</Button>
+            UW Blueprint
+          </h1>
+          <hr />
+          <Categories categoryData={this.transpileCategoryData(this.props.applications)} />
+          <hr />
+          <Files fileData={this.transpileFileData(this.props.applications)} />
+          <hr />
+          <DecisionCanvas />
+          <hr />
+          <Rating ratingData={this.transpileRatingData(this.props.applications)} />
+          <hr />
+          <ApplicationSelector>
+            <Button color="primary">Previous Applicant</Button>
+            <Button variant="contained" color="primary">
+              Next Applicant
+            </Button>
+          </ApplicationSelector>
+        </Wrapper>
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  applications: state.applications,
+});
+
+export default connect(mapStateToProps, null)(Application)
+
+
 const Wrapper = styled.div`
   margin: 0 auto;
   max-width: 800px;
@@ -46,37 +110,3 @@ const ApplicationSelector = styled.div`
     border-radius: 0px;
   }
 `;
-
-export default class Application extends Component {
-  render() {
-    return (
-      <>
-        <FlowSelector>
-          <button>1. Letter of Interest</button>
-          <button disabled>2. Full Application</button>
-        </FlowSelector>
-        <Wrapper>
-          <h1>
-            <Button className="all-applicants">&lt; All Applicants</Button>
-            UW Blueprint
-          </h1>
-          <hr />
-          <Categories categoryData={MOCK_CATEGORY_DATA} />
-          <hr />
-          <Files fileData={MOCK_FILE_DATA} />
-          <hr />
-          <DecisionCanvas />
-          <hr />
-          <Rating ratingData={MOCK_RATING_DATA} />
-          <hr />
-          <ApplicationSelector>
-            <Button color="primary">Previous Applicant</Button>
-            <Button variant="contained" color="primary">
-              Next Applicant
-            </Button>
-          </ApplicationSelector>
-        </Wrapper>
-      </>
-    );
-  }
-}
