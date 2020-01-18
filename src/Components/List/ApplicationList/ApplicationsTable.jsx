@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import Table from '@material-ui/core/Table';
 import Paper from '@material-ui/core/Paper';
 import { TableRow, TableHead, TableCell, TableBody } from '@material-ui/core';
-import { loadApplications } from '../../../Actions/index';
 import "./ApplicationsTable.css";
 
 const APPLICATION_STAGE = {
@@ -50,22 +48,7 @@ const data = [
         }
 ];
 
-export class ApplicationList extends Component {
-
-    componentDidMount() {
-        // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
-        // Assume API returns the test data
-
-        console.log("Loading applications")
-        console.log(this.props);
-
-        this.props.getAllApplicationsAPI().then((res) => {
-            console.log(res);
-            this.props.loadApplications(res)
-        });
-
-        console.log(this.props);
-    }
+export default class ApplicationList extends Component {
 
     render() {
       console.log(this.props);
@@ -85,11 +68,8 @@ export class ApplicationList extends Component {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.applications && this.props.applications.applications ?
-                          this.props.applications.applications.filter(function (app) {
-                              console.log(app.__v)
-                              return app.__v || app.__v == 0 ? false : true
-                          }).map(application => (
+                        {this.props.applications ?
+                          this.props.applications.map(application => (
                             <TableRow hover>
                                 <TableCell component="th" scope="row">
                                     {application[ 'Organization Name']}
@@ -99,7 +79,7 @@ export class ApplicationList extends Component {
                                 <TableCell align="left"><a rel="noopener noreferrer" target="_blank" href={application.url}>Open application</a></TableCell>
                             </TableRow>
                         ))
-                        : "Error Loading Applications"
+                        : "ERROR LOADING APPLICATIONS FROM DATABASE"
                       }
                     </TableBody>
                 </Table>
@@ -108,14 +88,3 @@ export class ApplicationList extends Component {
         )
     }
 }
-
-
-const mapStateToProps = state => ({
-    applications: state.applications,
-  });
-
-const mapDispatchToProps = dispatch => ({
-    loadApplications: payload => dispatch(loadApplications(payload))
-  });
-
-export default connect(mapStateToProps, mapDispatchToProps)(ApplicationList);
