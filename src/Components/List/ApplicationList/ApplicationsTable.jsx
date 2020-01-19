@@ -4,12 +4,12 @@ import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
-import { loadApplications } from "../../../Actions/index";
 
 const APPLICATION_STAGE = {
   LETTER_OF_INTEREST: 0,
   FULL_APPLICATION: 1
 };
+
 
 const Wrapper = styled.div`
   margin-top: 150px;
@@ -27,73 +27,53 @@ const Wrapper = styled.div`
     border: 1px solid #cccccc;
   }
 `;
-export class ApplicationList extends Component {
-  componentDidMount() {
-    // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
-    // Assume API returns the test data
 
-    console.log("Loading applications");
-    console.log(this.props);
+export default class ApplicationList extends Component {
 
-    this.props.getAllApplicationsAPI().then(res => {
-      console.log(res);
-      this.props.loadApplications(res);
-    });
+    render() {
+      console.log(this.props);
+      //Pre-calculate the applications array before rendering
 
-    console.log(this.props);
-  }
-
-  render() {
-    return (
-      <Wrapper className="application-list">
-        <Paper>
-          <h1>All Applicants</h1>
-          <Table className="table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Applicant Name</TableCell>
-                <TableCell align="left">Rating</TableCell>
-                <TableCell align="left">Last reviewed</TableCell>
-                <TableCell align="left"></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.props.applications && this.props.applications.applications
-                ? this.props.applications.applications.map(application => (
-                    <TableRow hover>
-                      <TableCell component="th" scope="row">
-                        {application.City}
-                      </TableCell>
-                      <TableCell align="left">
-                        {application.Timestamp}
-                      </TableCell>
-                      <TableCell align="left">{application.Linkedin}</TableCell>
-                      <TableCell align="left">
-                        <a
-                          rel="noopener noreferrer"
-                          target="_blank"
-                          href={application.url}
-                        >
-                          Open application
-                        </a>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : "hi"}
-            </TableBody>
-          </Table>
-        </Paper>
-      </Wrapper>
-    );
-  }
+        return (
+          <Wrapper className="application-list">
+            <Paper>
+              <h1>All Applicants</h1>
+              <Table className="table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Applicant Name</TableCell>
+                    <TableCell align="left">Rating</TableCell>
+                    <TableCell align="left">Last reviewed</TableCell>
+                    <TableCell align="left"></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {this.props.applications ?
+                    this.props.applications.map(application => (
+                        <TableRow hover>
+                          <TableCell component="th" scope="row">
+                            {application.City}
+                          </TableCell>
+                          <TableCell align="left">
+                            {application.Timestamp}
+                          </TableCell>
+                          <TableCell align="left">{application.Linkedin}</TableCell>
+                          <TableCell align="left">
+                            <a
+                              rel="noopener noreferrer"
+                              target="_blank"
+                              href={application.url}
+                            >
+                              Open application
+                            </a>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    : "ERROR LOADING APPLICATIONS FROM DATABASE"}
+                </TableBody>
+              </Table>
+            </Paper>
+          </Wrapper>
+        )
+    }
 }
-
-const mapStateToProps = state => ({
-  applications: state.applications
-});
-
-const mapDispatchToProps = dispatch => ({
-  loadApplications: payload => dispatch(loadApplications(payload))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ApplicationList);
