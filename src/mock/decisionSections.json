@@ -1,0 +1,27 @@
+[
+  {
+    "id": "ownership",
+    "questions": ["q1-ownership", "q2-ownership"],
+    "title": "Ownership"
+  },
+  {
+    "id": "problem",
+    "questions": ["q1-problem", "q2-problem"],
+    "title": "Problem"
+  },
+  {
+    "id": "business-model",
+    "questions": ["q1-bus", "q2-bus"],
+    "title": "Business Model"
+  },
+  {
+    "id": "product",
+    "questions": ["q1-prod", "q2-prod"],
+    "title": "Product"
+  },
+  {
+    "id": "market",
+    "questions": ["q1-market", "q2-market"],
+    "title": "Market"
+  }
+]

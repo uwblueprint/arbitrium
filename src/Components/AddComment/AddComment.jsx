@@ -26,13 +26,13 @@ const CommentForm = styled.form`
   }
 `;
 
-const AddComment = () => {
+const AddComment = ({ placeholder, primaryLabel, secondaryLabel }) => {
   return (
     <CommentForm>
-      <input type="text" name="comment" placeholder="Add a comment..." />
+      <input type="text" name="comment" placeholder={placeholder} />
       <div className="buttonGroup">
         <Button className="addcomment-cancel" color="primary">
-          cancel
+          {secondaryLabel}
         </Button>
         <Button
           type="submit"
@@ -40,7 +40,7 @@ const AddComment = () => {
           variant="contained"
           color="primary"
         >
-          comment
+          {primaryLabel}
         </Button>
       </div>
     </CommentForm>

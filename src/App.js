@@ -15,6 +15,8 @@ import Login from "./Authentication/login.js"
 import { AuthProvider } from "./Authentication/Auth";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
+import { connect } from 'react-redux';
+import { loadApplications } from './Actions/index';
 import theme from "./theme";
 import { history } from "./Store";
 import "./App.css"
@@ -31,18 +33,29 @@ const proxy = process.env.NODE_ENV === "production" ? process.env.REACT_APP_SERV
 //Are we using this?
 const browserHistory = createBrowserHistory();
 
-export default class App extends Component {
+class App extends Component {
 
   constructor(props) {
       super(props);
-
-
       this.state = {
           user: false
       };
-
   }
 
+  componentDidMount() {
+    // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
+    // Assume API returns the test data
+
+    console.log("Loading applications on app load...")
+    //this process is beind done here since multiple components require the same applications data
+    //components that update the fetched data can initiate an update via a POST call, then update the redux store.
+    this.getAllApplicationsAPI().then((res) => {
+        console.log(res);
+        this.props.loadApplications(res)
+    });
+  }
+
+  //various APIs to query database and populate pages with data
 
   getQuestionsAPI = async () => {
       const response = await fetch(proxy+'/api/questions', {
@@ -91,17 +104,18 @@ export default class App extends Component {
       return body;
   }
 
-  componentDidMount() {
-      //empty
-  }
-
+  //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
-    const ApplicationsTablePage = (props) => {
-        return (
-            <ApplicationsTable
-              getAllApplicationsAPI = {this.getAllApplicationsAPI}
-            />
-        )
+
+    console.log(this.props)
+
+    const getWrappedComponent = (ApplicationComponent) => {
+        const WrappedComponent= <ApplicationComponent
+          //Passing the applications as a prop
+          applications = {this.props.applications.applications}
+          //add common props here
+        />
+        return WrappedComponent;
     }
 
     return (
@@ -119,7 +133,7 @@ export default class App extends Component {
                   <PrivateRoute
                     exact={true}
                     path="/applications"
-                    component={ApplicationsTablePage}
+                    component={()=>getWrappedComponent(ApplicationsTable)}
                   ></PrivateRoute>
                   <Route
                     exact={true}
@@ -128,9 +142,9 @@ export default class App extends Component {
                   ></Route>
                   <PrivateRoute
                     path="/submissions/:organizationId"
-                    component={Application}
+                    component={()=>getWrappedComponent(Application)}
                   ></PrivateRoute>
-                  <PrivateRoute
+                    <PrivateRoute
                     path="/comparisons/:organizationId"
                     component={Comparison}
                   ></PrivateRoute>
@@ -147,3 +161,15 @@ export default class App extends Component {
     );
   }
 }
+
+//connecting applications to redux
+
+const mapStateToProps = state => ({
+  applications: state.applications,
+});
+
+const mapDispatchToProps = dispatch => ({
+  loadApplications: payload => dispatch(loadApplications(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

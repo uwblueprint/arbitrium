@@ -4,3 +4,8 @@
   border: 2px solid red;
   border-bottom: 1px solid #CCCCCC;
 }
+
+.pagecontainer{
+  display: flex;
+  
+}

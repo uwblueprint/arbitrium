@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
 
+import SectionList from "../../mock/decisionSections.json";
+
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
@@ -9,7 +11,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import { makeStyles } from "@material-ui/core/styles";
 import "./Navigation.css";
-
 const useStyles = makeStyles({
   root: {
     // Entire Nav
@@ -87,7 +88,7 @@ const useStyles = makeStyles({
   }
 });
 
-const Navigation = ({ push }) => {
+const Navigation = ({ pathname, push }) => {
   const [workflow, setWorkflow] = useState("WorkFlow1");
   const [organization, setOrganization] = useState("UW Blueprint");
 
@@ -96,6 +97,7 @@ const Navigation = ({ push }) => {
   const changeOrganization = e => setOrganization(e.target.value);
 
   const classes = useStyles();
+  const isApplicationReview = pathname.includes("/submissions/");
 
   return (
     <nav>
@@ -114,7 +116,7 @@ const Navigation = ({ push }) => {
           <MenuItem value="WorkFlow4">Workflow #4</MenuItem>
           <MenuItem value="WorkFlow5">Workflow #5</MenuItem>
         </Select>
-        <h2>SVP Applicants</h2>
+        <h2> { " SVP Applications! " } </h2>
         <hr />
         <Button onClick={() => push("/applications")}>All Applicants</Button>
         <Button
@@ -134,21 +136,12 @@ const Navigation = ({ push }) => {
         >
           <MenuItem value="UW Blueprint">UW Blueprint</MenuItem>
         </Select>
-        <Button onClick={sendAlert} className="nested selected">
-          Ownership
-        </Button>
-        <Button onClick={sendAlert} className="nested">
-          Problem
-        </Button>
-        <Button onClick={sendAlert} className="nested">
-          Business Model
-        </Button>
-        <Button onClick={sendAlert} className="nested">
-          Product
-        </Button>
-        <Button onClick={sendAlert} className="nested">
-          Market
-        </Button>
+        {isApplicationReview &&
+          SectionList.map(section => (
+            <Button key={section.title} className="nested selected">
+              {section.title}
+            </Button>
+          ))}
         <Button onClick={() => push(`/comparisons/${organization}`)}>
           Comparison
         </Button>
@@ -158,4 +151,9 @@ const Navigation = ({ push }) => {
   );
 };
 
-export default connect(null, { push })(Navigation);
+export default connect(
+  state => ({
+    pathname: state.router.location.pathname
+  }),
+  { push }
+)(Navigation);
