@@ -12,7 +12,7 @@ const Login = ({ history }) => {
         await firebaseApp
           .auth()
           .signInWithEmailAndPassword(email.value, password.value);
-        history.push("/");
+        history.push("/applications");
       } catch (error) {
         alert(error);
       }

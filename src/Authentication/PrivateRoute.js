@@ -22,8 +22,6 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
     )
     : (
       <>
-      <Navigation/>
-      <Header2/>
       <h1> Please Login! </h1>
       <Redirect to={"/login"} />
       </>
