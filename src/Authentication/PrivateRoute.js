@@ -12,20 +12,24 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
         <>
         <Navigation/>
         <Header2/>
+        <Route
+          {...rest}
+          render={routeProps =>
+              <RouteComponent {...routeProps} />
+          }
+        />
         </>
     )
-    :
+    : (
+      <>
+      <Navigation/>
+      <Header2/>
+      <h1> Please Login! </h1>
+      <Redirect to={"/login"} />
+      </>
+    )
 
-    <Route
-      {...rest}
-      render={routeProps =>
-        !!currentUser ? (
-          <RouteComponent {...routeProps} />
-        ) : (
-          <Redirect to={"/login"} />
-        )
-      }
-    />
+
   );
 };
 
