@@ -1,8 +1,10 @@
+
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
 
 import SectionList from "../../mock/decisionSections.json";
+import NavigationList from "../../mock/navigationSections.json";
 
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
@@ -118,11 +120,28 @@ const Navigation = ({ pathname, push }) => {
         </Select>
         <h2>SVP Perfect Pitch Candidates</h2>
         <hr />
-        <Button onClick={() => push("/applications")}>All Applicants</Button>
-        <Button
-          onClick={() => push(`/submissions/${organization}`)}
+        <Button id="all_applications" onClick={() => {
+          NavigationList.map(section => {
+              document.getElementById(section.id).style.color = "black";
+              document.getElementById(section.id).style.backgroundColor = "white";
+            });
+            document.getElementById("all_applications").style.color = "#6202EE";
+            document.getElementById("all_applications").style.backgroundColor = "#ECE0FD";
+            push("/applications");
+        }}>
+          All Applicants
+        </Button>
+        <Button id="application_submission"
+          onClick={() => {
+            NavigationList.map(section => {
+              document.getElementById(section.id).style.color = "black";
+              document.getElementById(section.id).style.backgroundColor = "white";
+            });
+            document.getElementById("application_submission").style.color = "#6202EE";
+            document.getElementById("application_submission").style.backgroundColor = "#ECE0FD";
+            push(`/submissions/${organization}`)
+          }}
           variant="contained"
-          color="secondary"
         >
           Application Submission
         </Button>
@@ -138,14 +157,32 @@ const Navigation = ({ pathname, push }) => {
         </Select>
         {isApplicationReview &&
           SectionList.map(section => (
-            <Button key={section.title} className="nested selected">
+            <Button id={section.title} key={section.title} className="nested" onClick={() => {
+              SectionList.map(section => (document.getElementById(section.title).style.color = "#888888"));
+              document.getElementById(section.title).style.color = "#6202EE";
+            }}>
               {section.title}
             </Button>
           ))}
-        <Button onClick={() => push(`/comparisons/${organization}`)}>
+        <Button id="comparison" onClick={() => {
+          NavigationList.map(section => {
+            document.getElementById(section.id).style.color = "black";
+            document.getElementById(section.id).style.backgroundColor = "white";
+          });
+          document.getElementById("comparison").style.color = "#6202EE";
+          document.getElementById("comparison").style.backgroundColor = "#ECE0FD";
+          push(`/comparisons/${organization}`)
+        }}>
           Comparison
         </Button>
-        <Button onClick={sendAlert}>Stacked Rankings</Button>
+        <Button id="stacked_rankings" onClick={() => {
+          NavigationList.map(section => {
+            document.getElementById(section.id).style.color = "black";
+            document.getElementById(section.id).style.backgroundColor = "white";
+          });
+          document.getElementById("stacked_rankings").style.color = "#6202EE";
+          document.getElementById("stacked_rankings").style.backgroundColor = "#ECE0FD";
+        }}>Stacked Rankings</Button>
       </Drawer>
     </nav>
   );
