@@ -1,4 +1,3 @@
-import { push } from "connected-react-router";
 import React, { Component } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -48,7 +47,7 @@ class Application extends Component {
         </FlowSelector>
         <Wrapper>
           <h1>
-            <Button className="all-applicants" onClick={() => push("/applications")}>
+            <Button className="all-applicants" onClick={() => window.location.href='/applications'}>
               &lt; All Applicants
             </Button>
             <br />UW Blueprint
