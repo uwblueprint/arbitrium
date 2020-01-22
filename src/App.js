@@ -29,6 +29,8 @@ const proxy = process.env.NODE_ENV === "production" ? process.env.REACT_APP_SERV
 //Are we using this?
 const browserHistory = createBrowserHistory();
 
+//const currentRoute = withRouter(props => <)
+
 class App extends Component {
 
   constructor(props) {
@@ -100,7 +102,7 @@ class App extends Component {
       return body;
   }
 
-  //wraps common prop under given componenent (likely that many components wll require common props)
+  //wraps common prop under given componenent (likely that many components will require common props)
   render() {
 
     console.log(this.props)
