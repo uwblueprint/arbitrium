@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
@@ -121,14 +120,16 @@ const Navigation = ({ pathname, push }) => {
         <h2>SVP Perfect Pitch Candidates</h2>
         <hr />
         <Button id="all_applications" onClick={() => {
-          NavigationList.map(section => {
+            NavigationList.map(section => {
               document.getElementById(section.id).style.color = "black";
               document.getElementById(section.id).style.backgroundColor = "white";
             });
             document.getElementById("all_applications").style.color = "#6202EE";
             document.getElementById("all_applications").style.backgroundColor = "#ECE0FD";
             push("/applications");
-        }}>
+          }}
+          variant="contained"
+        >
           All Applicants
         </Button>
         <Button id="application_submission"
@@ -141,7 +142,6 @@ const Navigation = ({ pathname, push }) => {
             document.getElementById("application_submission").style.backgroundColor = "#ECE0FD";
             push(`/submissions/${organization}`)
           }}
-          variant="contained"
         >
           Application Submission
         </Button>
@@ -164,17 +164,6 @@ const Navigation = ({ pathname, push }) => {
               {section.title}
             </Button>
           ))}
-        <Button id="comparison" onClick={() => {
-          NavigationList.map(section => {
-            document.getElementById(section.id).style.color = "black";
-            document.getElementById(section.id).style.backgroundColor = "white";
-          });
-          document.getElementById("comparison").style.color = "#6202EE";
-          document.getElementById("comparison").style.backgroundColor = "#ECE0FD";
-          push(`/comparisons/${organization}`)
-        }}>
-          Comparison
-        </Button>
         <Button id="stacked_rankings" onClick={() => {
           NavigationList.map(section => {
             document.getElementById(section.id).style.color = "black";
