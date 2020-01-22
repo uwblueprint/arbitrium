@@ -63,6 +63,7 @@ var corsOptions = {
 //Routes are endpoints defined for a specific collection
 //Each has their own file
 const applicationRoutes = require('./routes/applications');
+const ratingsRoutes = require('./routes/ratings');
 
 // allows us to access request body in a post or put
 app.use(cors(corsOptions));
@@ -82,6 +83,7 @@ app.get('/', function(req, res){
 
 //prefix route for the routes
 app.use('/api/applications', applicationRoutes)
+app.use('/api/ratings', ratingsRoutes)
 const mongo = require('./mongo.js');
 
 app.listen(4000, () => {
