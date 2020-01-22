@@ -1,58 +1,63 @@
 import React from "react";
-import styled from "styled-components";
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { makeStyles } from "@material-ui/core";
+import DragHandle from "@material-ui/icons/DragIndicator";
 
 const useStyles = makeStyles({
+  drag: {
+    display: "inline-block",
+    color: "#DADADA",
+    marginRight: 26
+  },
   root: {
-    marginLeft: "168px",
     maxWidth: 800,
-    minHeight: 56,
-    borderRadius: 5,
-    boxShadow: "1px 1px 2px 1px #cccccc",
-    marginBottom: 12
+    height: 56,
+    borderRadius: 0,
+    boxShadow: "0px 2px 3px 1px #cccccc"
   },
-
+  content: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    "& div": {
+      display: "inline-block",
+      flexGrow: 1,
+      fontSize: 14,
+      fontWeight: "normal",
+      lineHeight: "100%"
+    }
+  },
   company: {
-    float: "left",
-    marginLeft: "64px",
-    color: "#000",
-    fontFamily: "Roboto",
-    lineHeight: "20px",
-    fontSize: "14px",
-    fontWeight: "normal"
+    textAlign: "left"
   },
-
   rating: {
-    float: "left",
-    marginLeft: "213px",
-    color: "#000",
-    fontFamily: "Roboto",
-    lineHeight: "20px",
-    fontSize: "14px",
-    fontWeight: "normal"
+    textAlign: "center"
   },
-
   link: {
-    float: "right",
-    color: "#000",
-    fontFamily: "Roboto",
-    lineHeight: "20px",
-    fontSize: "14px",
-    fontWeight: "normal"
+    textAlign: "right",
+    "& a": {
+      fontSize: 14,
+      fontWeight: "normal",
+      lineHeight: "inherit"
+    }
   }
 });
 
-function RankingCard() {
+function RankingCard({ companyName, rating }) {
   const classes = useStyles();
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} elevation={0}>
       <CardContent>
-        <div className={classes.company}>a company</div>
-        <div className={classes.rating}>Your Rating: 5/5</div>
-        <div className={classes.link}>link here</div>
+        <div className={classes.content}>
+          <DragHandle className={classes.drag} />
+          <div className={classes.company}>{companyName}</div>
+          <div className={classes.rating}>Your Rating: {rating}/5</div>
+          <div className={classes.link}>
+            <a>Open Application</a>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

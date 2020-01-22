@@ -83,7 +83,7 @@ function CanvasCard({
 }) {
   const classes = useStyles();
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} elevation={0}>
       <ClickableHeader
         action={
           <ExpandMoreIcon className={expanded ? classes.expandOpen : null} />
