@@ -7,6 +7,10 @@ import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
+//column categories
+import {fileCategories, adminCategories, ratingCategories } from "./column_categories"
+
+//import templates
 
 import {
   MOCK_CATEGORY_DATA,
@@ -21,17 +25,19 @@ class Application extends Component {
 
   //transpilers will ensure data is converted to form usable by components
 
+  getRelevantCategories = (categoryType) => (
+    Object.keys(applications[this.props.id])
+    .filter(category=>categoryType.indexOf(category)!=-1)
+  )
+
   transpileCategoryData = (applications=null) =>{
     //todo when category data is made available, currently leverages mock data
-    return MOCK_CATEGORY_DATA;
-    //example implementation
-    //return Object.keys(applications[this.props.id])
-    //.filter(category=>allCategories.indexOf(category)!=-1)
-    //.map(adminCategory=>{title: adminCategory, value: applications[this.props.id][adminCategory]});
+    return this.getRelevantCategories(adminCategories)
+          .map(adminCategory=>({title: adminCategory, value: applications[this.props.id][adminCategory]}));
   }
   transpileFileData = (applications=null) => {
-    //todo when file data is made available, currently leverages mock data
-    return MOCK_FILE_DATA;
+    return this.getRelevantCategories(fileCategories)
+          .map((fileCategory, index) =>({name: fileCategory, size: index*500}));
   }
   transpileRatingData = (applications=null) =>{
     //todo when rating data is made available, currently leverages mock data
