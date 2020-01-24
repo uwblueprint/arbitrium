@@ -25,26 +25,32 @@ class Application extends Component {
 
   //transpilers will ensure data is converted to form usable by components
 
-  getRelevantCategories = (categoryType) => (
-    Object.keys(applications[this.props.id])
-    .filter(category=>categoryType.indexOf(category)!=-1)
+  getApplicationDetails = () => {
+    return this.props.applications.applications.filter(application=>application['_id']===this.props.match.params.organizationId)[0]
+  }
+
+  applicantExists = () => (
+    this.getApplicationDetails() !== undefined
   )
 
-  transpileCategoryData = (applications=null) =>{
+  transpileCategoryData = () =>{
     //todo when category data is made available, currently leverages mock data
-    return this.getRelevantCategories(adminCategories)
-          .map(adminCategory=>({title: adminCategory, value: applications[this.props.id][adminCategory]}));
+    const applicant = this.getApplicationDetails();
+    return Object.keys(adminCategories)
+          .map(adminCategory=>({title: adminCategory, value: applicant[adminCategory]}));
   }
-  transpileFileData = (applications=null) => {
-    return this.getRelevantCategories(fileCategories)
-          .map((fileCategory, index) =>({name: fileCategory, size: index*500}));
+  transpileFileData = () => {
+    const applicant = this.getApplicationDetails();
+    return Object.keys(fileCategories)
+          .map((fileCategory, index)=>({name: fileCategory, link: applicant[fileCategory], size: index*500}));
   }
-  transpileRatingData = (applications=null) =>{
+  transpileRatingData = () =>{
     //todo when rating data is made available, currently leverages mock data
     return MOCK_RATING_DATA;
   }
 
   render() {
+    console.log(this.props)
     return (
       <div className='pagecontainer'>
          <FlowSelector>
@@ -57,14 +63,18 @@ class Application extends Component {
             UW Blueprint
           </h1>
           <hr />
-          <Categories categoryData={this.transpileCategoryData(this.props.applications)} />
-          <hr />
-          <Files fileData={this.transpileFileData(this.props.applications)} />
-          <hr />
-          <DecisionCanvas />
-          <hr />
-          <Rating ratingData={this.transpileRatingData(this.props.applications)} />
-          <hr />
+          {this.props.applications.applications.length>0 && this.applicantExists() ? 
+          <div className="application-information">
+            <Categories categoryData={this.transpileCategoryData()} />
+            <hr />
+            <Files fileData={this.transpileFileData()} />
+            <hr />
+            <DecisionCanvas />
+            <hr />
+            <Rating ratingData={this.transpileRatingData()} />
+            <hr />
+          </div>
+           : null}
           <ApplicationSelector>
             <Button color="primary">Previous Applicant</Button>
             <Button variant="contained" color="primary">
@@ -82,7 +92,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, null)(Application)
-
 
 const Wrapper = styled.div`
   margin: 0 auto;

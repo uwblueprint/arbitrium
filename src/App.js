@@ -100,19 +100,18 @@ class App extends Component {
       return body;
   }
 
+  getWrappedComponent = (props,ApplicationComponent) => {
+    const WrappedComponent= <ApplicationComponent
+      //Passing the applications as a prop
+      applications = {this.props.applications.applications}
+      //add common props here
+      {...props}
+    />
+    return WrappedComponent;
+  }
+
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
-
-    console.log(this.props)
-
-    const getWrappedComponent = (ApplicationComponent) => {
-        const WrappedComponent= <ApplicationComponent
-          //Passing the applications as a prop
-          applications = {this.props.applications.applications}
-          //add common props here
-        />
-        return WrappedComponent;
-    }
 
     return (
       <ThemeProvider theme={theme}>
@@ -129,11 +128,11 @@ class App extends Component {
                   <Route
                     exact={true}
                     path="/applications"
-                    render={()=>getWrappedComponent(ApplicationsTable)}
+                    render={(props)=>this.getWrappedComponent(props,ApplicationsTable)}
                   ></Route>
                   <Route
                     path="/submissions/:organizationId"
-                    render={()=>getWrappedComponent(Application)}
+                    render={(props)=>this.getWrappedComponent(props,Application)}
                   ></Route>
                   <Route
                     path="/comparisons/:organizationId"
