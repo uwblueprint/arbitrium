@@ -4,7 +4,7 @@ import styled from "styled-components";
 import RankingCard from "./RankingCard"
 
 const Wrapper = styled.div`
-    margin-top: 200px
+    margin-top: 148px
 `
 
 function StackedRankings() {

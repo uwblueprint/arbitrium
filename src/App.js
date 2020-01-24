@@ -11,6 +11,7 @@ import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
 import ApplicationsTable from './Components/List/ApplicationList/ApplicationsTable';
 import Comparison from "./Components/Comparison/Comparison";
+import StackedRankings from "./Components/StackedRankings/StackedRankings"
 
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
