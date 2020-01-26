@@ -15,6 +15,8 @@ import {
 } from "./mockData.json";
 
 import { connect } from 'react-redux';
+import { NotificationRvHookup } from "material-ui/svg-icons";
+import Rubric from "../Rubric/Rubric";
 
 
 class Application extends Component {
@@ -57,6 +59,7 @@ class Application extends Component {
           <hr />
           <Files fileData={this.transpileFileData(this.props.applications)} />
           <hr />
+          <Rubric /> 
           <DecisionCanvas />
           <hr />
           <Rating ratingData={this.transpileRatingData(this.props.applications)} />

@@ -84,7 +84,7 @@ const Navigation = ({ pathname, push }) => {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2>SVP Perfect Pitch Candidates</h2>
+        <h2> { " SVP Applications! " } </h2>
         <hr />
         <Button onClick={() => push("/applications")}>All Applicants</Button>
         <Button
