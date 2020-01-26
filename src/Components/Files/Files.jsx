@@ -25,10 +25,10 @@ const Files = ({ fileData }) => {
   return (
     <div>
       <h2>Files</h2>
-      {fileData.map(({ name, size }) => (
+      {fileData.map(({ name, size, link }) => (
         <FileButton>
           <span role="img" aria-label="fileIcon">📎</span>
-          <span className="name">{name}</span>
+          <span className="name"><a target='_blank' href={link}> {name}</a></span>
           <span className="size">{`(${size.toLocaleString()} K)`}</span>
         </FileButton>
       ))}

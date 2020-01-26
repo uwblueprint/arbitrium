@@ -106,20 +106,19 @@ class App extends Component {
       return body;
   }
 
-  //wraps common prop under given componenent (likely that many components will require common props)
+  getWrappedComponent = (props,ApplicationComponent) => {
+    const WrappedComponent= <ApplicationComponent
+      //Passing the applications as a prop
+      applications = {this.props.applications.applications}
+      history={history}
+      //add common props here
+      {...props}
+    />
+    return WrappedComponent;
+  }
+
+  //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
-
-    console.log(this.props)
-
-    const getWrappedComponent = (ApplicationComponent) => {
-        const WrappedComponent= <ApplicationComponent
-          //Passing the applications as a prop
-          applications = {this.props.applications.applications}
-          history={history}
-          //add common props here
-        />
-        return WrappedComponent;
-    }
 
     return (
 
@@ -136,7 +135,7 @@ class App extends Component {
                   <PrivateRoute
                     exact={true}
                     path="/applications"
-                    component={()=>getWrappedComponent(ApplicationsTable)}
+                    component={(props)=>this.getWrappedComponent(props,ApplicationsTable)}
                   ></PrivateRoute>
                   <Route
                     exact={true}
@@ -145,7 +144,7 @@ class App extends Component {
                   ></Route>
                   <PrivateRoute
                     path="/submissions/:organizationId"
-                    component={()=>getWrappedComponent(Application)}
+                    component={(props)=>this.getWrappedComponent(props,Application)}
                   ></PrivateRoute>
                     <PrivateRoute
                     path="/comparisons/:organizationId"

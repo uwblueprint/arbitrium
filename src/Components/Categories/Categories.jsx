@@ -8,13 +8,13 @@ const Wrapper = styled.div`
 
 const CategoryWrapper = styled.div`
   display: grid;
-  grid-template-columns: 390px 390px;
+  grid-template-columns: 450px 450px;
   grid-column-gap: 10px;
   font-size: 14px;
   margin: 10px 0;
   .category {
     display: grid;
-    grid-template-columns: 100px 290px;
+    grid-template-columns: 200px 250px;
     margin: 10px 0;
   }
   .title {
