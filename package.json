@@ -33,7 +33,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "server": "node server --exec nodemon",
+    "server": "cd backend && node server --exec nodemon",
     "build": "react-scripts build",
     "test": "react-scripts test -watchAll=false --forceExit",
     "eject": "react-scripts eject",

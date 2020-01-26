@@ -8,7 +8,7 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
   const {currentUser} = useContext(AuthContext);
   return (
 
-    !!currentUser ? (
+    currentUser ? (
         <>
         <Navigation/>
         <Header2/>
