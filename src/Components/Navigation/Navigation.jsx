@@ -116,7 +116,7 @@ const Navigation = ({ pathname, push }) => {
           <MenuItem value="WorkFlow4">Workflow #4</MenuItem>
           <MenuItem value="WorkFlow5">Workflow #5</MenuItem>
         </Select>
-        <h2>SVP Perfect Pitch Candidates</h2>
+        <h2> { " SVP Applications! " } </h2>
         <hr />
         <Button onClick={() => push("/applications")}>All Applicants</Button>
         <Button
