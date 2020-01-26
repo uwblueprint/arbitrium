@@ -4,6 +4,8 @@ import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
+import { withRouter, Redirect } from "react-router";
+import { push } from "connected-react-router";
 
 const APPLICATION_STAGE = {
   LETTER_OF_INTEREST: 0,
@@ -13,7 +15,6 @@ const APPLICATION_STAGE = {
 
 const Wrapper = styled.div`
   margin-top: 150px;
-  text-align: left;
   padding: 0 136px;
   h1 {
     font-size: 24px;
@@ -56,7 +57,10 @@ export default class ApplicationList extends Component {
                               </TableCell>
                               <TableCell align="left">{application['rating'] || "0/5" }</TableCell>
                               <TableCell align="left">{application['last reviewed'] || "never" }</TableCell>
-                              <TableCell align="left"><a rel="noopener noreferrer" target="_blank" href={application.url}>Open application</a></TableCell>
+                              <TableCell align="left">
+                                <button rel="noopener noreferrer" target="_blank" onClick={() => {this.props.history.push('submissions/'+application._id)}}>Open application
+                                </button>
+                                </TableCell>
                           </TableRow>
                       ))
                     : "ERROR LOADING APPLICATIONS FROM DATABASE"}

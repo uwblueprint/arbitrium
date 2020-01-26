@@ -11,15 +11,20 @@ import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
 import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTable";
 import Comparison from "./Components/Comparison/Comparison";
-import StackedRankings from "./Components/StackedRankings/StackedRankings";
 
+import StackedRankings from "./Components/StackedRankings/StackedRankings";
+import Login from "./Authentication/login.js"
+import { AuthProvider } from "./Authentication/Auth";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { loadApplications } from "./Actions/index";
 import theme from "./theme";
 import { history } from "./Store";
-import "./App.css";
+import "./App.css"
+import PrivateRoute from "./Authentication/PrivateRoute";
+//import './App.css';
+
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
@@ -31,6 +36,8 @@ const proxy =
 
 //Are we using this?
 const browserHistory = createBrowserHistory();
+
+//const currentRoute = withRouter(props => <)
 
 class App extends Component {
   constructor(props) {
@@ -101,6 +108,17 @@ class App extends Component {
     return body;
   };
 
+  getWrappedComponent = (props,ApplicationComponent) => {
+    const WrappedComponent= <ApplicationComponent
+      //Passing the applications as a prop
+      applications = {this.props.applications.applications}
+      history={history}
+      //add common props here
+      {...props}
+    />
+    return WrappedComponent;
+  }
+
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
     console.log(this.props);
@@ -117,36 +135,46 @@ class App extends Component {
     };
 
     return (
+
       <ThemeProvider theme={theme}>
         <div className="App">
-          <header className="App-header">
-            <ConnectedRouter history={history}>
-              <>
-                <Navigation />
-                <Header />
-                <Header2 />
-                <Container>
-                  <Switch>
-                    <Route exact={true} path="/" component={Home}></Route>
-                    <Route
-                      exact={true}
-                      path="/applications"
-                      render={() => getWrappedComponent(ApplicationsTable)}
-                    ></Route>
-                    <Route
-                      path="/submissions/:organizationId"
-                      render={() => getWrappedComponent(Application)}
-                    ></Route>
-                    <Route
-                      path="/comparisons/:organizationId"
-                      component={Comparison}
-                    ></Route>
-                    <Route path="/rankings" component={StackedRankings}></Route>
-                  </Switch>
-                </Container>
-              </>
-            </ConnectedRouter>
-            <Footer getQuestionsAPI={this.getQuestionsAPI} />
+        <header className="App-header">
+          <AuthProvider>
+          <ConnectedRouter history={history}>
+            <>
+              <Header/>
+              <Container>
+                <Switch>
+                  <PrivateRoute exact={true} path="/" component={Home}></PrivateRoute>
+                  <PrivateRoute
+                    exact={true}
+                    path="/applications"
+                    component={(props)=>this.getWrappedComponent(props,ApplicationsTable)}
+                  ></PrivateRoute>
+                  <Route
+                    exact={true}
+                    path="/login"
+                    component={Login}
+                  ></Route>
+                  <PrivateRoute
+                    path="/submissions/:organizationId"
+                    component={(props)=>this.getWrappedComponent(props,Application)}
+                  ></PrivateRoute>
+                    <PrivateRoute
+                    path="/comparisons/:organizationId"
+                    component={Comparison}
+                  ></PrivateRoute>
+                  <PrivateRoute
+                    path="/rankings"
+                    component={(props)=>this.getWrappedComponent(props,StackedRankings)}
+                  ></PrivateRoute>
+                </Switch>
+              </Container>
+            </>
+          </ConnectedRouter>
+          </AuthProvider>
+          <Footer getQuestionsAPI={this.getQuestionsAPI}/>
+
           </header>
         </div>
       </ThemeProvider>

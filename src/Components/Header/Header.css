@@ -40,7 +40,25 @@ Make it a variable... how?
   top: 14px;
 
   /* H5/ Roboto Regular 24 */
+  float: right;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 28px;
 
+  color: #FFFFFF;
+}
+.UserDisplay {
+
+  margin-top: 14px;
+  margin-right: 14px;
+  height: 28px;
+  left: 32px;
+  top: 14px;
+
+  /* H5/ Roboto Regular 24 */
+  float: right;
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;

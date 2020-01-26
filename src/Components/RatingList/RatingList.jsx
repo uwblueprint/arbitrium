@@ -31,7 +31,7 @@ const Wrapper = styled.div`
 
 const ratings = [
   {
-    icon: "🙁",
+    icon: "😕",
     value: 1
   },
   {
@@ -43,7 +43,7 @@ const ratings = [
     value: 3
   },
   {
-    icon: "🙁",
+    icon: "😄",
     value: 4
   },
   {
