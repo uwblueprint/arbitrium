@@ -22,22 +22,6 @@ const useStyles = makeStyles({
       position: "fixed",
       marginBottom: "50px"
     },
-    // Workflow Selector
-    "& #workflow.MuiSelect-root": {
-      textTransform: "uppercase",
-      color: "#888888",
-      textAlign: "left",
-      width: "auto",
-      marginLeft: "32px",
-      fontSize: 14,
-      paddingRight: "10px"
-    },
-    "& #workflow ~ .MuiSelect-icon": {
-      color: "#888888",
-      display: "inline-block",
-      position: "relative",
-      marginTop: "-12px"
-    },
     // Header
     "& h2": {
       margin: "10px 83px 16px 32px",
@@ -90,11 +74,9 @@ const useStyles = makeStyles({
 });
 
 const Navigation = ({ pathname, push }) => {
-  const [workflow, setWorkflow] = useState("WorkFlow1");
   const [organization, setOrganization] = useState("UW Blueprint");
 
   const sendAlert = e => window.alert(e.target.textContent);
-  const changeWorkflow = e => setWorkflow(e.target.value);
   const changeOrganization = e => setOrganization(e.target.value);
 
   const classes = useStyles();
@@ -103,21 +85,7 @@ const Navigation = ({ pathname, push }) => {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <Select
-          id="workflow"
-          labelId="workflow-label"
-          value={workflow}
-          onChange={changeWorkflow}
-          autoWidth
-          disableUnderline
-        >
-          <MenuItem value="WorkFlow1">Workflow</MenuItem>
-          <MenuItem value="WorkFlow2">Workflow #2</MenuItem>
-          <MenuItem value="WorkFlow3">Workflow #3</MenuItem>
-          <MenuItem value="WorkFlow4">Workflow #4</MenuItem>
-          <MenuItem value="WorkFlow5">Workflow #5</MenuItem>
-        </Select>
-        <h2>SVP Perfect Pitch Candidates</h2>
+        <h2> { " SVP Applications! " } </h2>
         <hr />
         <Button id="all_applications" onClick={() => {
             NavigationList.map(section => {

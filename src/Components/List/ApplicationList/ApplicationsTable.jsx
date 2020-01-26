@@ -13,7 +13,6 @@ const APPLICATION_STAGE = {
 
 const Wrapper = styled.div`
   margin-top: 150px;
-  text-align: left;
   padding: 0 136px;
   h1 {
     font-size: 24px;
