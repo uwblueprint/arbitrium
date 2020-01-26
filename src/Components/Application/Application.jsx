@@ -9,6 +9,7 @@ import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 //column categories
 import {fileCategories, adminCategories, ratingCategories } from "./column_categories"
+import { push } from "connected-react-router";
 
 //import templates
 
@@ -19,6 +20,8 @@ import {
 } from "./mockData.json";
 
 import { connect } from 'react-redux';
+import { NotificationRvHookup } from "material-ui/svg-icons";
+import Rubric from "../Rubric/Rubric";
 
 
 class Application extends Component {
@@ -59,11 +62,14 @@ class Application extends Component {
         </FlowSelector>
         <Wrapper>
           <h1>
-            <Button className="all-applicants">&lt; All Applicants</Button>
-            UW Blueprint
+            <Button className="all-applicants" onClick={() => push("/applications")}>
+              &lt; All Applicants
+            </Button>
+            <br />UW Blueprint
           </h1>
+          <Rubric />
           <hr />
-          {this.props.applications.applications.length>0 && this.applicantExists() ? 
+          {this.props.applications.applications.length>0 && this.applicantExists() ?
           <div className="application-information">
             <Categories categoryData={this.transpileCategoryData()} />
             <hr />

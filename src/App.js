@@ -11,7 +11,8 @@ import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
 import ApplicationsTable from './Components/List/ApplicationList/ApplicationsTable';
 import Comparison from "./Components/Comparison/Comparison";
-
+import Login from "./Authentication/login.js"
+import { AuthProvider } from "./Authentication/Auth";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from 'react-redux';
@@ -19,6 +20,9 @@ import { loadApplications } from './Actions/index';
 import theme from "./theme";
 import { history } from "./Store";
 import "./App.css"
+import PrivateRoute from "./Authentication/PrivateRoute";
+//import './App.css';
+
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
@@ -28,6 +32,8 @@ const proxy = process.env.NODE_ENV === "production" ? process.env.REACT_APP_SERV
 
 //Are we using this?
 const browserHistory = createBrowserHistory();
+
+//const currentRoute = withRouter(props => <)
 
 class App extends Component {
 
@@ -104,6 +110,7 @@ class App extends Component {
     const WrappedComponent= <ApplicationComponent
       //Passing the applications as a prop
       applications = {this.props.applications.applications}
+      history={history}
       //add common props here
       {...props}
     />
@@ -114,34 +121,40 @@ class App extends Component {
   render() {
 
     return (
+
       <ThemeProvider theme={theme}>
         <div className="App">
         <header className="App-header">
+          <AuthProvider>
           <ConnectedRouter history={history}>
             <>
-              <Navigation/>
               <Header/>
-              <Header2/>
               <Container>
                 <Switch>
-                  <Route exact={true} path="/" component={Home}></Route>
-                  <Route
+                  <PrivateRoute exact={true} path="/" component={Home}></PrivateRoute>
+                  <PrivateRoute
                     exact={true}
                     path="/applications"
-                    render={(props)=>this.getWrappedComponent(props,ApplicationsTable)}
-                  ></Route>
+                    component={(props)=>this.getWrappedComponent(props,ApplicationsTable)}
+                  ></PrivateRoute>
                   <Route
+                    exact={true}
+                    path="/login"
+                    component={Login}
+                  ></Route>
+                  <PrivateRoute
                     path="/submissions/:organizationId"
-                    render={(props)=>this.getWrappedComponent(props,Application)}
-                  ></Route>
-                  <Route
+                    component={(props)=>this.getWrappedComponent(props,Application)}
+                  ></PrivateRoute>
+                    <PrivateRoute
                     path="/comparisons/:organizationId"
                     component={Comparison}
-                  ></Route>
+                  ></PrivateRoute>
                 </Switch>
               </Container>
             </>
           </ConnectedRouter>
+          </AuthProvider>
           <Footer getQuestionsAPI={this.getQuestionsAPI}/>
 
           </header>
