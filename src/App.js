@@ -115,6 +115,7 @@ class App extends Component {
         const WrappedComponent= <ApplicationComponent
           //Passing the applications as a prop
           applications = {this.props.applications.applications}
+          history={history}
           //add common props here
         />
         return WrappedComponent;
