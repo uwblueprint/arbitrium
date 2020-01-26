@@ -8,10 +8,10 @@
   left: 0px;
   right: 0px;
   top: 0px;
-  z-index: 100;
+  z-index: 1;
 
   background: #000000;
-  border-bottom: 1px solid #CCCCCC;
+  border-bottom: 1px solid #cccccc;
 }
 
 /*
@@ -27,8 +27,9 @@ Make it a variable... how?
   margin-top: var(--header-height);
   margin-left: 300px;
 
-  background: #FFFFFF;
-  border: 1px solid #CCCCCC;
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  z-index: 1;
 }
 
 .Arbitrium {
@@ -64,9 +65,9 @@ Make it a variable... how?
   font-size: 24px;
   line-height: 28px;
 
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .logo-container {
-	float: left;
-	display: inline-block;
+  float: left;
+  display: inline-block;
 }

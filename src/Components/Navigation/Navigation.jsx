@@ -139,6 +139,7 @@ const Navigation = ({ pathname, push }) => {
           });
           document.getElementById("stacked_rankings").style.color = "#6202EE";
           document.getElementById("stacked_rankings").style.backgroundColor = "#ECE0FD";
+          push(`/rankings`)
         }}>Stacked Rankings</Button>
       </Drawer>
     </nav>
