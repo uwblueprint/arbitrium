@@ -7,6 +7,7 @@ import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
+import { push } from "connected-react-router";
 
 import {
   MOCK_CATEGORY_DATA,
@@ -49,12 +50,12 @@ class Application extends Component {
         </FlowSelector>
         <Wrapper>
           <h1>
-            <Button className="all-applicants" onClick={() => window.location.href='/applications'}>
+            <Button className="all-applicants" onClick={() => push("/applications")}>
               &lt; All Applicants
             </Button>
             <br />UW Blueprint
           </h1>
-          <Rubric /> 
+          <Rubric />
           <hr />
           <Categories categoryData={this.transpileCategoryData(this.props.applications)} />
           <hr />
