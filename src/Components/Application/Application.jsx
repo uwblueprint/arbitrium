@@ -54,12 +54,12 @@ class Application extends Component {
             </Button>
             <br />UW Blueprint
           </h1>
+          <Rubric /> 
           <hr />
           <Categories categoryData={this.transpileCategoryData(this.props.applications)} />
           <hr />
           <Files fileData={this.transpileFileData(this.props.applications)} />
           <hr />
-          <Rubric /> 
           <DecisionCanvas />
           <hr />
           <Rating ratingData={this.transpileRatingData(this.props.applications)} />
