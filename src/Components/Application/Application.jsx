@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { compose } from "redux";
+import { withRouter } from 'react-router';
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 
@@ -29,7 +31,7 @@ class Application extends Component {
   //transpilers will ensure data is converted to form usable by components
 
   getApplicationDetails = () => {
-    return this.props.applications.applications.filter(application=>application['_id']===this.props.match.params.organizationId)[0]
+    return this.props.applications.filter(application=>application['_id']===this.props.match.params.organizationId)[0]
   }
 
   applicantExists = () => (
@@ -52,8 +54,18 @@ class Application extends Component {
     return MOCK_RATING_DATA;
   }
 
+  findApplicationIndex = (applications) => {
+    const { organizationId } = this.props.match.params;
+    return applications.map(e => e._id).indexOf(organizationId);
+  }
+
   render() {
-    console.log(this.props)
+    const { applications, push } = this.props;
+
+    const currentAppIndex = applications!=null ? this.findApplicationIndex(applications) : null;
+    const previousApplication = (applications && currentAppIndex > 0) ? "/submissions/"+applications[currentAppIndex-1]['_id'] : null;
+    const nextApplication = (applications && currentAppIndex < applications.length-1) ? "/submissions/"+applications[currentAppIndex+1]['_id'] : null;
+
     return (
       <div className='pagecontainer'>
          <FlowSelector>
@@ -69,7 +81,7 @@ class Application extends Component {
           </h1>
           <Rubric />
           <hr />
-          {this.props.applications.applications.length>0 && this.applicantExists() ?
+          {applications.length>0 && this.applicantExists() ?
           <div className="application-information">
             <Categories categoryData={this.transpileCategoryData()} />
             <hr />
@@ -82,8 +94,10 @@ class Application extends Component {
           </div>
            : null}
           <ApplicationSelector>
-            <Button color="primary">Previous Applicant</Button>
-            <Button variant="contained" color="primary">
+            <Button color="primary" disabled={!previousApplication} onClick={() => {previousApplication && push(previousApplication)}}>
+              Previous Applicant
+            </Button>
+            <Button variant="contained" color="primary" disabled={!nextApplication} onClick={() => {nextApplication && push(nextApplication)}}>
               Next Applicant
             </Button>
           </ApplicationSelector>
@@ -94,10 +108,13 @@ class Application extends Component {
 }
 
 const mapStateToProps = state => ({
-  applications: state.applications,
+  applications: state.applications.applications,
 });
 
-export default connect(mapStateToProps, null)(Application)
+export default compose(
+  withRouter,
+  connect(mapStateToProps, {push})
+)(Application);
 
 const Wrapper = styled.div`
   margin: 0 auto;
