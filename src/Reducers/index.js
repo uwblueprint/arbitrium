@@ -1,10 +1,12 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 import customReducerExample from "./customReducerExample";
-import { LOAD_REVIEWS,
-         LOAD_STACKEDRANKINGS,
-         LOAD_APPLICATIONS,
-         SWITCH_VIEW } from "../Constants/ActionTypes";
+import {
+  LOAD_REVIEWS,
+  LOAD_STACKED_RANKINGS,
+  LOAD_APPLICATIONS,
+  SWITCH_VIEW
+} from "../Constants/ActionTypes";
 
 const initialState = {
   articles: [],
@@ -17,19 +19,19 @@ const initialState = {
 //Notice how the initial state is passed as a default parameter
 function applications(state = initialState, action) {
   //console.log("Called app reducer");
-  switch(action.type) {
+  switch (action.type) {
     case LOAD_APPLICATIONS:
-        return Object.assign({}, state, {
-          applications: action.payload || []
-        });
+      return Object.assign({}, state, {
+        applications: action.payload || []
+      });
     case LOAD_REVIEWS:
-        return Object.assign({}, state, {
-          reviews: action.payload || []
-        });
-    case LOAD_STACKEDRANKINGS:
-        return Object.assign({}, state, {
-          stackedRankings: action.payload || []
-        });
+      return Object.assign({}, state, {
+        reviews: action.payload || []
+      });
+    case LOAD_STACKED_RANKINGS:
+      return Object.assign({}, state, {
+        stackedRankings: action.payload || []
+      });
     default:
       return state;
   }
@@ -61,7 +63,6 @@ function createRootReducer(history) {
 
 //Remember: reducers produce the state of the application
 export default createRootReducer;
-
 
 //Extra notes
 /*
