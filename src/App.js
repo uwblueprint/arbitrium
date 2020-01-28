@@ -121,21 +121,9 @@ class App extends Component {
 
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
-    console.log(this.props);
-
-    const getWrappedComponent = ApplicationComponent => {
-      const WrappedComponent = (
-        <ApplicationComponent
-          //Passing the applications as a prop
-          applications={this.props.applications.applications}
-          //add common props here
-        />
-      );
-      return WrappedComponent;
-    };
+    console.log("UPDATED VERSION");
 
     return (
-
       <ThemeProvider theme={theme}>
         <div className="App">
         <header className="App-header">
