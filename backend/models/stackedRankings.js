@@ -2,6 +2,12 @@ var mongoose = require("mongoose");
 
 //We will only read from applications so we don't need to define a schema
 
+var application = new mongoose.Schema({
+  appId: {
+    type: mongoose.Schema.ObjectId
+  }
+});
+
 var stackedSchema = new mongoose.Schema(
   {
     userId: {
@@ -9,14 +15,8 @@ var stackedSchema = new mongoose.Schema(
     },
     applications: [application]
   },
-  { collection: "Ratings" }
+  { collection: "StackedRankings" }
 );
-
-var application = new mongoose.Schema({
-  appId: {
-    type: String
-  }
-});
 
 var Stackings = mongoose.model("Stackings", stackedSchema);
 

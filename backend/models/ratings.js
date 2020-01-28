@@ -22,7 +22,7 @@ var question = new mongoose.Schema({
 var reviewSchema = new mongoose.Schema(
   {
     applicationId: {
-      type: String
+      type: mongoose.Schema.ObjectId
     },
     userId: {
       type: String
@@ -36,7 +36,7 @@ var reviewSchema = new mongoose.Schema(
     },
     questionList: [question]
   },
-  { collection: "Ratings" }
+  { collection: "Reviews" }
 );
 
 var Ratings = mongoose.model("Ratings", reviewSchema);

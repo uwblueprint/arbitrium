@@ -21,17 +21,11 @@ function applications(state = initialState, action) {
   //console.log("Called app reducer");
   switch (action.type) {
     case LOAD_APPLICATIONS:
-      return Object.assign({}, state, {
-        applications: action.payload || []
-      });
+      return { ...state, applications: action.payload || [] };
     case LOAD_REVIEWS:
-      return Object.assign({}, state, {
-        reviews: action.payload || []
-      });
+      return { ...state, reviews: action.payload };
     case LOAD_STACKED_RANKINGS:
-      return Object.assign({}, state, {
-        stackedRankings: action.payload || []
-      });
+      return { ...state, stackedRankings: action.payload || [] };
     default:
       return state;
   }

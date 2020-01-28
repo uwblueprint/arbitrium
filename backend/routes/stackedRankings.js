@@ -4,10 +4,63 @@ const express = require("express");
 const router = express.Router();
 const db = require("../mongo.js");
 
-router.get("/", function(req, res) {
-  db.stackings
-    .find()
+router.get("/:userid", function(req, res) {
+  db.stackedRankings
+    .aggregate([
+      {
+        $match: { userId: req.params.userid }
+      },
+      {
+        $unwind: "$applications"
+      },
+      {
+        $lookup: {
+          from: "Reviews",
+          let: { appId: "$applications.appId", userId: "$userId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$applicationId", "$$appId"] },
+                    { $eq: ["$userId", "$$userId"] }
+                  ]
+                }
+              }
+            },
+            { $project: { rating: 1 } }
+          ],
+          as: "ratingInfo"
+        }
+      },
+      {
+        $lookup: {
+          from: "Applications",
+          let: { appId: "$applications.appId" },
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$appId"] } } },
+            { $project: { "Organization Name": 1 } }
+          ],
+          as: "applicationInfo"
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              "$$ROOT",
+              { $arrayElemAt: ["$ratingInfo", 0] },
+              { $arrayElemAt: ["$applicationInfo", 0] }
+            ]
+          }
+        }
+      },
+      {
+        $project: { applications: 0, applicationInfo: 0, ratingInfo: 0 }
+      }
+    ])
     .then(function(found) {
+      console.log(found);
       res.json(found);
     })
     .catch(function(err) {
@@ -16,13 +69,12 @@ router.get("/", function(req, res) {
 });
 
 router.post("/", function(req, res) {
-  var rating = {
-    applicationId: res.applicationId,
-    userId: res.userId,
-    rating: res.rating
+  const stacked = {
+    userId: req.body.userId,
+    applications: req.body.rankings
   };
-  db.stackings
-    .create(rating)
+  db.stackedRankings
+    .updateOne({ userId: req.body.userId }, stacked, { upsert: true })
     // status code 201 means created
     .then(function(newSchedule) {
       res.status(201).json(newSchedule);
