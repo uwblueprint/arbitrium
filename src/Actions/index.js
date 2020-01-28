@@ -2,6 +2,7 @@
 
 import {
   LOAD_STACKED_RANKINGS,
+  LOAD_REVIEWS,
   LOAD_APPLICATIONS,
   SWITCH_VIEW
 } from "../Constants/ActionTypes";
@@ -21,7 +22,7 @@ export function loadApplications(payload) {
 }
 
 export function loadReviews(payload) {
-  return { type: LOAD_APPLICATIONS, payload };
+  return { type: LOAD_REVIEWS, payload };
 }
 
 export function loadStackedRankings(payload) {

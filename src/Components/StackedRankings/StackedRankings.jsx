@@ -1,10 +1,14 @@
-import React, { useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
+import { connect } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import classNames from "classnames";
 import styled from "styled-components";
+import { makeStyles } from "@material-ui/core";
 
 import RankingCard from "./RankingCard";
-import { makeStyles } from "@material-ui/core";
+
+import { updateStackedAPI } from "../../requests/update";
+import { loadStackedRankings } from "../../Actions/index";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -97,17 +101,28 @@ function reorder(list, startIndex, endIndex) {
   return result;
 }
 
-const dummy = Array(100)
-  .fill(1)
-  .map((e, i) => ({ text: "item " + (i + 1), id: `${i}` }));
+function StackedRankings({
+  applications,
+  loadStackedRankings,
+  rankings,
+  user
+}) {
+  useEffect(() => {
+    if (applications.length === 0) return;
+    if (rankings.length !== applications.length) {
+      const initApps = applications.map(app => ({ appId: app._id }));
+      updateStackedAPI({
+        userId: user.uid,
+        rankings: initApps
+      }).then(res => {});
+    }
+  }, []);
 
-function StackedRankings() {
   const classes = useStyles();
   // TODO: replace this with list from store or props when connecting to DB :)
-  const [orgList, setOrgList] = useState(dummy);
   const shouldTranslate = useRef(false);
 
-  const numOrgs = orgList.length;
+  const numOrgs = rankings.length;
   const column = useMemo(() => {
     const numbers = [];
     for (let i = 0; i < numOrgs; ++i) {
@@ -132,11 +147,11 @@ function StackedRankings() {
       return;
     }
     const reorderedList = reorder(
-      orgList,
+      rankings,
       result.source.index,
       result.destination.index
     );
-    setOrgList(reorderedList);
+    loadStackedRankings(reorderedList);
   };
 
   const onBeforeDragStart = provided => {
@@ -165,9 +180,9 @@ function StackedRankings() {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {orgList.map((item, index) => (
-                  <React.Fragment key={item.id}>
-                    <Draggable draggableId={item.id} index={index}>
+                {rankings.map((item, index) => (
+                  <React.Fragment key={item._id}>
+                    <Draggable draggableId={item._id} index={index}>
                       {provided => (
                         <div
                           className={classes.draggableCard}
@@ -175,7 +190,10 @@ function StackedRankings() {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          <RankingCard companyName={item.text} />
+                          <RankingCard
+                            companyName={item["Organization Name"]}
+                            rating={item.rating}
+                          />
                         </div>
                       )}
                     </Draggable>
@@ -200,4 +218,15 @@ function StackedRankings() {
   );
 }
 
-export default StackedRankings;
+const mapStateToProps = state => {
+  return {
+    applications: state.applications.applications,
+    rankings: state.applications.stackedRankings
+  };
+};
+
+const mapDispatchToProps = dispatch => ({
+  loadStackedRankings: payload => dispatch(loadStackedRankings(payload))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(StackedRankings);

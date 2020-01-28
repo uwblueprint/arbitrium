@@ -1,23 +1,22 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router";
 import { createBrowserHistory } from "history";
-import Navigation from "./Components/Navigation/Navigation";
 import Header from "./Components/Header/Header";
 import Header2 from "./Components/Header/Header2";
 import Footer from "./Components/Footer/Footer";
-import FlowSelector from "./Components/FlowSelector/FlowSelector";
 import Container from "./Components/Container/Container";
 import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
 import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTable";
 import Comparison from "./Components/Comparison/Comparison";
+import { AuthProvider } from "./Authentication/Auth";
 
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import Login from "./Authentication/login.js";
-import { AuthProvider } from "./Authentication/Auth";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import moment from "moment";
 import {
   loadApplications,
   loadReviews,
@@ -45,74 +44,34 @@ const browserHistory = createBrowserHistory();
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      user: false
-    };
   }
 
   componentDidMount() {
     console.log("Loading applications on app load...");
     //this process is being done here since multiple components require the same applications data
-    //components that update the fetched data can initiate an update via a POST call, then update the redux store.
     this.getAllApplicationsAPI().then(res => {
       console.log(res);
       this.props.loadApplications(res);
     });
-
-    this.getAllReviewsAPI().then(res => {
-      console.log(res);
-      this.props.loadReviews(res);
-    });
-
-    this.getAllStackingsAPI().then(res => {
-      console.log(res);
-      this.props.loadStackedRankings(res);
-    });
   }
 
+  onAuthStateChange = async currentUser => {
+    if (currentUser != false) {
+      this.getAllReviewsAPI(currentUser).then(res => {
+        this.props.loadReviews(res);
+      });
+      this.getAllStackingsAPI(currentUser)
+        .then(res => {
+          console.log(res);
+          this.props.loadStackedRankings(res);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
+  };
+
   //various APIs to query database and populate pages with data
-
-  getAllApplicationsAPI = async () => {
-      const response = await fetch(proxy+'/api/applications', {
-          headers : {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-          }
-      });
-      const body = await response.json();
-      if (response.status !== 200) {
-          throw Error(body.message);
-      }
-      return body;
-  };
-
-  getAllReviewsAPI = async () => {
-      const response = await fetch(proxy+'/api/ratings', {
-          headers : {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-          }
-      });
-      const body = await response.json();
-      if (response.status !== 200) {
-        throw Error(body.message);
-      }
-      return body;
-    };
-
-  getAllStackingsAPI = async () => {
-      const response = await fetch(proxy+'/api/stackings', {
-          headers : {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-          }
-      });
-      const body = await response.json();
-      if (response.status !== 200) {
-          throw Error(body.message);
-      }
-      return body;
-  };
 
   getAllApplicationsAPI = async () => {
     const response = await fetch(proxy + "/api/applications", {
@@ -128,11 +87,13 @@ class App extends Component {
     return body;
   };
 
-  getAllReviewsAPI = async () => {
-    const response = await fetch(proxy + "/api/ratings", {
+  getAllReviewsAPI = async user => {
+    const token = await user.getIdToken();
+    const response = await fetch(proxy + `/api/ratings/${user.uid}`, {
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json"
+        Accept: "application/json",
+        authorization: `Bearer ${token}`
       }
     });
     const body = await response.json();
@@ -147,7 +108,7 @@ class App extends Component {
       method: "POST",
       body: JSON.stringify({
         username: "greg",
-        passwrd: "insecure"
+        password: "insecure"
       }),
       headers: {
         Accept: "application/json",
@@ -161,8 +122,8 @@ class App extends Component {
     return body;
   };
 
-  getAllStackingsAPI = async () => {
-    const response = await fetch(proxy + "/api/stackings", {
+  getAllStackingsAPI = async user => {
+    const response = await fetch(proxy + `/api/stackings/${user.uid}`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
@@ -184,66 +145,12 @@ class App extends Component {
   questionList:
   */
 
-  updateReviewAPI = async databody => {
-    const response = await fetch(proxy + "/api/ratings", {
-      method: "POST",
-      body: JSON.stringify(databody),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      }
-    });
-
-    const body = await response.json();
-    if (response.status !== 201) {
-      console.log(response);
-      console.log("Error with posting ratings");
-    }
-
-  updateStackedAPI = async (databody) => {
-      const response = await fetch(proxy+'/api/stackings', {
-          method: 'POST',
-          body: JSON.stringify(databody),
-          headers: {
-             'Accept': 'application/json',
-             'Content-Type': 'application/json',
-          },
-      })
-      const body = await response.json();
-      if (response.status !== 201) {
-        console.log(response);
-        console.log("Error with posting StackedRanking");
-      }
-
-      console.log(body);
-      return body;
-    };
-
-  updateStackedAPI = async databody => {
-    const response = await fetch(proxy + "/api/stackings", {
-      method: "POST",
-      body: JSON.stringify(databody),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      }
-    });
-
-    const body = await response.json();
-    if (response.status !== 201) {
-      console.log(response);
-      console.log("Error with posting ratings");
-    }
-    console.log(body);
-    return body;
-  };
-
   getWrappedComponent = (props, ApplicationComponent) => {
     const WrappedComponent = (
       <ApplicationComponent
         //Passing the applications as a prop
-        applications={this.props.applications.applications}
         history={history}
+        applications={this.props.applications.applications}
         //add common props here
         {...props}
       />
@@ -261,43 +168,17 @@ class App extends Component {
     lastReviewed:
     questionList:
     */
-    let comments = []
+    let comments = [];
     comments.push({
       lastReviewed: moment.now(),
       value: "Wow this is really good"
-    })
-    let review = {
-      applicationId: "XXX",
-      userId: "YYY",
-      rating: 4,
-      comments: [
-        ["A", "B"],
-        ["B", "C"]
-      ],
-      lastReviewed: "Tomorrow",
-      questionList: ["Y", ["G", "J"], "U"]
-    };
-
-    //this.updateReviewAPI(review);
-
-    const getWrappedComponent = ApplicationComponent => {
-      const WrappedComponent = (
-        <ApplicationComponent
-          //Passing the applications as a prop
-          applications={this.props.applications.applications}
-          reviews={this.props.applications.reviews}
-          stackedRankings={this.props.applications.stackedRankings}
-          //add common props here
-        />
-      );
-      return WrappedComponent;
-    };
+    });
 
     return (
       <ThemeProvider theme={theme}>
         <div className="App">
           <header className="App-header">
-            <AuthProvider>
+            <AuthProvider onAuthStateChange={this.onAuthStateChange}>
               <ConnectedRouter history={history}>
                 <>
                   <Header />
@@ -332,9 +213,7 @@ class App extends Component {
                       ></PrivateRoute>
                       <PrivateRoute
                         path="/rankings"
-                        component={props =>
-                          this.getWrappedComponent(props, StackedRankings)
-                        }
+                        component={StackedRankings}
                       ></PrivateRoute>
                     </Switch>
                   </Container>

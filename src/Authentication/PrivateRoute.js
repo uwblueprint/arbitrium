@@ -5,33 +5,24 @@ import Navigation from "../Components/Navigation/Navigation";
 import Header2 from "../Components/Header/Header2";
 
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
-  const {currentUser} = useContext(AuthContext);
-  return (
-
-    currentUser ? (
-        <>
-        <Navigation/>
-        <Header2/>
-        <Route
-          {...rest}
-          render={routeProps =>
-              <RouteComponent
-              user = {currentUser}
-              {...routeProps} />
-          }
-        />
-        </>
-    )
-    : (
-      <>
+  const { currentUser } = useContext(AuthContext);
+  return currentUser ? (
+    <>
+      <Navigation />
+      <Header2 />
+      <Route
+        {...rest}
+        render={routeProps => (
+          <RouteComponent {...routeProps} user={currentUser} />
+        )}
+      />
+    </>
+  ) : (
+    <>
       <h1> Please Login! </h1>
-      <Redirect to={"/login"} />
-      </>
-    )
-
-
+      <Redirect to="/login" />
+    </>
   );
 };
 
-
-export default PrivateRoute
+export default PrivateRoute;
