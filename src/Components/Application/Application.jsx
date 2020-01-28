@@ -10,6 +10,11 @@ import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
+//column categories
+import {fileCategories, adminCategories, ratingCategories } from "./column_categories"
+import { push } from "connected-react-router";
+
+//import templates
 
 import {
   MOCK_CATEGORY_DATA,
@@ -18,25 +23,34 @@ import {
 } from "./mockData.json";
 
 import { connect } from 'react-redux';
+import { NotificationRvHookup } from "material-ui/svg-icons";
+import Rubric from "../Rubric/Rubric";
 
 
 class Application extends Component {
 
   //transpilers will ensure data is converted to form usable by components
 
-  transpileCategoryData = (applications=null) =>{
+  getApplicationDetails = () => {
+    return this.props.applications.applications.filter(application=>application['_id']===this.props.match.params.organizationId)[0]
+  }
+
+  applicantExists = () => (
+    this.getApplicationDetails() !== undefined
+  )
+
+  transpileCategoryData = () =>{
     //todo when category data is made available, currently leverages mock data
-    return MOCK_CATEGORY_DATA;
-    //example implementation
-    //return Object.keys(applications[this.props.id])
-    //.filter(category=>allCategories.indexOf(category)!=-1)
-    //.map(adminCategory=>{title: adminCategory, value: applications[this.props.id][adminCategory]});
+    const applicant = this.getApplicationDetails();
+    return Object.keys(adminCategories)
+          .map(adminCategory=>({title: adminCategory, value: applicant[adminCategory]}));
   }
-  transpileFileData = (applications=null) => {
-    //todo when file data is made available, currently leverages mock data
-    return MOCK_FILE_DATA;
+  transpileFileData = () => {
+    const applicant = this.getApplicationDetails();
+    return Object.keys(fileCategories)
+          .map((fileCategory, index)=>({name: fileCategory, link: applicant[fileCategory], size: index*500}));
   }
-  transpileRatingData = (applications=null) =>{
+  transpileRatingData = () =>{
     //todo when rating data is made available, currently leverages mock data
     return MOCK_RATING_DATA;
   }
@@ -61,18 +75,25 @@ class Application extends Component {
         </FlowSelector>
         <Wrapper>
           <h1>
-            <Button className="all-applicants">&lt; All Applicants</Button>
-            UW Blueprint
+            <Button className="all-applicants" onClick={() => push("/applications")}>
+              &lt; All Applicants
+            </Button>
+            <br />UW Blueprint
           </h1>
+          <Rubric />
           <hr />
-          <Categories categoryData={this.transpileCategoryData(applications)} />
-          <hr />
-          <Files fileData={this.transpileFileData(applications)} />
-          <hr />
-          <DecisionCanvas />
-          <hr />
-          <Rating ratingData={this.transpileRatingData(applications)} />
-          <hr />
+          {this.props.applications.applications.length>0 && this.applicantExists() ?
+          <div className="application-information">
+            <Categories categoryData={this.transpileCategoryData()} />
+            <hr />
+            <Files fileData={this.transpileFileData()} />
+            <hr />
+            <DecisionCanvas />
+            <hr />
+            <Rating ratingData={this.transpileRatingData()} />
+            <hr />
+          </div>
+           : null}
           <ApplicationSelector>
             <Button color="primary" disabled={!previousApplication} onClick={() => {previousApplication && push(previousApplication)}}>Previous Applicant</Button>
             <Button variant="contained" disabled={!nextApplication} color="primary" onClick={() => {nextApplication && push(nextApplication)}}>
