@@ -7,8 +7,8 @@ import Header2 from "../Components/Header/Header2";
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
   const {currentUser} = useContext(AuthContext);
   return (
-
-    currentUser ? (
+    //note use of triple equality to faciliate type checking (refer to auth.js default React hook value)
+    currentUser!==false ? (currentUser!==null ? (
         <>
         <Navigation/>
         <Header2/>
@@ -25,9 +25,7 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
       <h1> Please Login! </h1>
       <Redirect to={"/login"} />
       </>
-    )
-
-
+    )) : null
   );
 };
 
