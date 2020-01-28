@@ -1,11 +1,16 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 import customReducerExample from "./customReducerExample";
-import { LOAD_APPLICATIONS, SWITCH_VIEW } from "../Constants/ActionTypes";
+import { LOAD_REVIEWS,
+         LOAD_STACKEDRANKINS,
+         LOAD_APPLICATIONS,
+         SWITCH_VIEW } from "../Constants/ActionTypes";
 
 const initialState = {
   articles: [],
-  applications: []
+  applications: [],
+  reviews: [],
+  stackedRankings: []
 };
 
 //Reducers take 2 params, a state and an action
@@ -17,8 +22,16 @@ function applications(state = initialState, action) {
         return Object.assign({}, state, {
           applications: action.payload || []
         });
-      default:
-        return state;
+    case LOAD_REVIEWS:
+        return Object.assign({}, state, {
+          reviews: action.payload || []
+        });
+    case LOAD_STACKEDRANKINS:
+        return Object.assign({}, state, {
+          stackedRankings: action.payload || []
+        });
+    default:
+      return state;
   }
 }
 

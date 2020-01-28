@@ -35,3 +35,5 @@ mongoose.Promise = Promise;
 //The collection that each export refers to is defined inside the /model/filename
 //If you are getting [] or undefined errors please make sure everything is named correctly
 module.exports.applications = require("./models/application");
+module.exports.reviews = require("./models/ratings");
+//module.exports.applications = require("./models/application");

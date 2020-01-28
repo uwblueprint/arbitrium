@@ -15,7 +15,7 @@ import Comparison from "./Components/Comparison/Comparison";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from 'react-redux';
-import { loadApplications } from './Actions/index';
+import { loadApplications, loadReviews, loadStackedRankings } from './Actions/index';
 import theme from "./theme";
 import { history } from "./Store";
 import "./App.css"
@@ -39,29 +39,29 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
-    // Assume API returns the test data
 
     console.log("Loading applications on app load...")
-    //this process is beind done here since multiple components require the same applications data
+    //this process is being done here since multiple components require the same applications data
     //components that update the fetched data can initiate an update via a POST call, then update the redux store.
     this.getAllApplicationsAPI().then((res) => {
         console.log(res);
         this.props.loadApplications(res)
     });
+
+    this.getAllReviewsAPI().then((res) => {
+        console.log(res);
+        this.props.loadReviews(res)
+    });
+
+    this.getAllStackingsAPI().then((res) => {
+        console.log(res);
+        this.props.loadStackedRankings(res)
+    });
+
+
   }
 
   //various APIs to query database and populate pages with data
-
-  getQuestionsAPI = async () => {
-      const response = await fetch(proxy+'/api/questions', {
-      });
-      const body = await response.json();
-      if (response.status !== 200) {
-          throw Error(body.message);
-      }
-      return body;
-  };
 
   getAllApplicationsAPI = async () => {
       const response = await fetch(proxy+'/api/applications', {
@@ -77,13 +77,47 @@ class App extends Component {
       return body;
   };
 
-  postUserAPI = async (param) => {
-      const response = await fetch(proxy+'/api/applications', {
+  getAllReviewsAPI = async () => {
+      const response = await fetch(proxy+'/api/ratings', {
+          headers : {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          }
+      });
+      const body = await response.json();
+      if (response.status !== 200) {
+          throw Error(body.message);
+      }
+      return body;
+  };
+
+  getAllStackingsAPI = async () => {
+      const response = await fetch(proxy+'/api/stackings', {
+          headers : {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+          }
+      });
+      const body = await response.json();
+      if (response.status !== 200) {
+          throw Error(body.message);
+      }
+      return body;
+  };
+
+  /*
+  applicationId:
+  userId: "insecure"
+  rating:
+  comments:
+  lastReviewed:
+  questionList:
+  */
+
+  updateReviewAPI = async (databody) => {
+      const response = await fetch(proxy+'/api/ratings', {
           method: 'POST',
-          body: JSON.stringify({
-              username: "greg",
-              passwrd: "insecure"
-          }),
+          body: JSON.stringify(databody),
           headers: {
              'Accept': 'application/json',
              'Content-Type': 'application/json',
@@ -93,7 +127,27 @@ class App extends Component {
       const body = await response.json();
       if (response.status !== 201) {
           console.log(response);
-          console.log("Error with posting saved-times");
+          console.log("Error with posting ratings");
+      }
+
+      console.log(body);
+      return body;
+  }
+
+  updateStackedAPI = async (databody) => {
+      const response = await fetch(proxy+'/api/stackings', {
+          method: 'POST',
+          body: JSON.stringify(databody),
+          headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+          },
+      })
+
+      const body = await response.json();
+      if (response.status !== 201) {
+          console.log(response);
+          console.log("Error with posting ratings");
       }
 
       console.log(body);
@@ -102,6 +156,24 @@ class App extends Component {
 
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
+    /*
+    applicationId:
+    userId: "insecure"
+    rating:
+    comments:
+    lastReviewed:
+    questionList:
+    */
+    let review = {
+      applicationId: "XXX",
+      userId: "YYY",
+      rating: 4,
+      comments: [["A","B"],["B","C"]],
+      lastReviewed: "Tomorrow",
+      questionList: ["Y",["G","J"],"U"]
+    }
+
+    //this.updateReviewAPI(review);
 
     console.log(this.props)
 
@@ -109,6 +181,8 @@ class App extends Component {
         const WrappedComponent= <ApplicationComponent
           //Passing the applications as a prop
           applications = {this.props.applications.applications}
+          reviews = {this.props.applications.reviews}
+          stackedRankings = {this.props.applications.stackedRankings}
           //add common props here
         />
         return WrappedComponent;

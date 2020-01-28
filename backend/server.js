@@ -48,7 +48,7 @@ var corsOptions = {
   origin: function (origin, callback) {
     //if you do "if (whitelist.indexOf(origin) !== -1 || true) {"
     //then you will be able to access it locally
-    if (whitelist.indexOf(origin) !== -1) {
+    if (whitelist.indexOf(origin) !== -1 || true) {
       callback(null, true)
     } else {
       callback(new Error("Access Denied by the 'Cookie Monster' NOM NOM NOM"))
@@ -64,6 +64,7 @@ var corsOptions = {
 //Each has their own file
 const applicationRoutes = require('./routes/applications');
 const ratingsRoutes = require('./routes/ratings');
+const stackedRoutes = require('./routes/stackedRankings')
 
 // allows us to access request body in a post or put
 app.use(cors(corsOptions));
@@ -84,6 +85,7 @@ app.get('/', function(req, res){
 //prefix route for the routes
 app.use('/api/applications', applicationRoutes)
 app.use('/api/ratings', ratingsRoutes)
+app.use('/api/stackings', stackedRoutes)
 const mongo = require('./mongo.js');
 
 app.listen(4000, () => {
@@ -164,24 +166,6 @@ app.post('/api/authenticate/createaccount', cors(corsOptions), (req, res) => {
     }
   );
 })
-
-// Work in progress: Login endpoint
-// app.post('/api/authenticate/login', (req, res) => {
-//   firebase.auth().signInWithEmailAndPassword(req.body.email, req.body.password)
-//     .then(user => console.log(user))
-//     .catch(error => {
-//       var errorCode = error.code;
-//       var errorMessage = error.message;
-//       res.send('Login failed with error code: ' + errorCode + ' and message: ' + errorMessage);
-//   });
-//   const user = firebase.auth().currentUser;
-//   const token = user.getIdToken();
-//   const response = {
-//     'token': token,
-//     'uid': user.uid
-//   }
-//   res.json(response);
-// })
 
 //Returns the entire list of applications. To be called on load to show the
 //user the list of applications.
