@@ -16,8 +16,8 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res){
-	console.log(res)
-	db.reviews.create(res)
+	console.log(req.body)
+	db.reviews.create(req.body)
 
 	// status code 201 means created
 	.then(function(newSchedule){

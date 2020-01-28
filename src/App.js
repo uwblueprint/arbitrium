@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { loadApplications, loadReviews, loadStackedRankings } from './Actions/index';
 import theme from "./theme";
 import { history } from "./Store";
+import moment from "moment";
 import "./App.css"
 
 //Use this later for prod vs dev environment
@@ -117,6 +118,7 @@ class App extends Component {
   */
 
   updateReviewAPI = async (databody) => {
+     console.log("Calling Update Reviews")
       const response = await fetch(proxy+'/api/ratings', {
           method: 'POST',
           body: JSON.stringify(databody),
@@ -166,13 +168,22 @@ class App extends Component {
     lastReviewed:
     questionList:
     */
+    let comments = []
+    comments.push({
+      lastReviewed: moment.now(),
+      value: "Wow this is really good"
+    })
     let review = {
       applicationId: "XXX",
       userId: "YYY",
       rating: 4,
-      comments: [["A","B"],["B","C"]],
-      lastReviewed: "Tomorrow",
-      questionList: ["Y",["G","J"],"U"]
+      comments: comments,
+      lastReviewed: moment.now(),
+      questionList: {
+        questionId:"Y",
+        notes: comments,
+        lastReviewed: moment.now()
+      }
     }
 
     //this.updateReviewAPI(review);
@@ -232,10 +243,13 @@ class App extends Component {
 
 const mapStateToProps = state => ({
   applications: state.applications,
+  reviews: state.reviews
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadApplications: payload => dispatch(loadApplications(payload))
+  loadApplications: payload => dispatch(loadApplications(payload)),
+  loadReviews: payload => dispatch(loadReviews(payload)),
+  loadStackedRankings: payload => dispatch(loadStackedRankings(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

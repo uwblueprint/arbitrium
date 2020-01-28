@@ -36,5 +36,5 @@ mongoose.Promise = Promise;
 //If you are getting [] or undefined errors please make sure everything is named correctly
 module.exports.applications = require("./models/application");
 module.exports.reviews = require("./models/ratings");
-module.exports.stackings = require("/models/stackedRankings")
+module.exports.stackings = require("./models/stackedRankings")
 //module.exports.applications = require("./models/application");

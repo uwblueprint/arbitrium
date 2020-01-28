@@ -34,9 +34,9 @@ var reviewSchema = new mongoose.Schema({
     type: String
   },
   questionList: [question]
-}, { collection: 'Ratings' });
+}, { collection: 'Reviews' });
 
 
-var Ratings = mongoose.model('Ratings', reviewSchema);
+var Reviews = mongoose.model('Reviews', reviewSchema);
 
-module.exports = Ratings;
+module.exports = Reviews;
