@@ -6,7 +6,7 @@ const db = require('../mongo.js');
 
 router.get('/', function(req, res){
 
-	db.ratings.find()
+	db.stackings.find()
 	.then(function(found){
 		res.json(found);
 	})
@@ -21,7 +21,7 @@ router.post('/', function(req, res){
     userId: res.userId,
     rating: res.rating
 	}
-	db.ratings.create(rating)
+	db.stackings.create(rating)
 
 	// status code 201 means created
 	.then(function(newSchedule){

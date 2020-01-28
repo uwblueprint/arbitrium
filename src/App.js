@@ -48,10 +48,12 @@ class App extends Component {
         this.props.loadApplications(res)
     });
 
+    /*
     this.getAllReviewsAPI().then((res) => {
         console.log(res);
         this.props.loadReviews(res)
     });
+    */
 
     this.getAllStackingsAPI().then((res) => {
         console.log(res);

@@ -1,8 +1,8 @@
 // src/js/actions/index.js
 
 import { LOAD_REVIEWS,
-         LOAD_STACKEDRANKINS,
-         LOAD_APPLICATIONS, 
+         LOAD_STACKEDRANKINGS,
+         LOAD_APPLICATIONS,
          SWITCH_VIEW } from "../Constants/ActionTypes";
 
 //Recall from store/index.js that an action is a javascript object
@@ -20,9 +20,9 @@ export function loadApplications(payload) {
 };
 
 export function loadReviews(payload) {
-  return { type: LOAD_APPLICATIONS, payload }
+  return { type: LOAD_REVIEWS, payload }
 };
 
 export function loadStackedRankings(payload) {
-  return { type: LOAD_APPLICATIONS, payload }
+  return { type: LOAD_STACKEDRANKINGS, payload }
 };

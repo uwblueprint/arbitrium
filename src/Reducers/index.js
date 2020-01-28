@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 import customReducerExample from "./customReducerExample";
 import { LOAD_REVIEWS,
-         LOAD_STACKEDRANKINS,
+         LOAD_STACKEDRANKINGS,
          LOAD_APPLICATIONS,
          SWITCH_VIEW } from "../Constants/ActionTypes";
 
@@ -26,7 +26,7 @@ function applications(state = initialState, action) {
         return Object.assign({}, state, {
           reviews: action.payload || []
         });
-    case LOAD_STACKEDRANKINS:
+    case LOAD_STACKEDRANKINGS:
         return Object.assign({}, state, {
           stackedRankings: action.payload || []
         });
