@@ -56,7 +56,7 @@ export default class ApplicationList extends Component {
                               </TableCell>
                               <TableCell align="left">{application['rating'] || "0/5" }</TableCell>
                               <TableCell align="left">{application['last reviewed'] || "never" }</TableCell>
-                              <TableCell align="left"><a rel="noopener noreferrer" target="_blank" href={application.url}>Open application</a></TableCell>
+                              <TableCell align="left"><a rel="noopener noreferrer" target="_blank" href={"/submissions/"+application['_id']}>Open application</a></TableCell>
                           </TableRow>
                       ))
                     : "ERROR LOADING APPLICATIONS FROM DATABASE"}
