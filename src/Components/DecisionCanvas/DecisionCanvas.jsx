@@ -108,8 +108,8 @@ function DecisionCanvas() {
             <div className="questions">
               <h3>Question(s):</h3>
               <ol>
-                {section.questions.map(question => (
-                  <li>{question}</li>
+                {section.questions.map((question, i) => (
+                  <li key={i}>{question}</li>
                 ))}
               </ol>
             </div>
