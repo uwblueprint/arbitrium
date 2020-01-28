@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useContext, useState } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 
@@ -7,6 +7,7 @@ import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
+import { AuthContext } from "../../Authentication/Auth.js";
 //column categories
 import {fileCategories, adminCategories, ratingCategories } from "./column_categories"
 import { push } from "connected-react-router";
@@ -23,8 +24,16 @@ import { connect } from 'react-redux';
 import { NotificationRvHookup } from "material-ui/svg-icons";
 import Rubric from "../Rubric/Rubric";
 
-
 class Application extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      userId: "",
+      appId: "",
+      reviewId: ""
+    };
+  }
 
   //transpilers will ensure data is converted to form usable by components
 
@@ -52,7 +61,30 @@ class Application extends Component {
     return MOCK_RATING_DATA;
   }
 
+  handleReviewUpdate = (type, data) => {
+
+  }
+
+  componentDidMount() {
+    let appId = this.getApplicationDetails()._id;
+    let userId = this.props.user.uid;
+    this.setState({appId: appId })
+    this.setState({userId: userId})
+    let reviews = this.props.applications.reviews.filter(function(item){
+      return item.applicationId == appId && item.userId == userId;
+    })
+    console.log(reviews)
+    this.setState({review: reviews[0]})
+  }
+
+
+
+
   render() {
+    console.log("Application ID");
+    console.log(this.getApplicationDetails()._id);
+    console.log("UserId");
+    console.log(this.props.user.uid)
     console.log(this.props)
     return (
       <div className='pagecontainer'>

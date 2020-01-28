@@ -15,7 +15,9 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
         <Route
           {...rest}
           render={routeProps =>
-              <RouteComponent {...routeProps} />
+              <RouteComponent
+              user = {currentUser}
+              {...routeProps} />
           }
         />
         </>
