@@ -32,7 +32,6 @@ const proxy =
   process.env.NODE_ENV === "production"
     ? process.env.REACT_APP_SERVER
     : "http://localhost:4000";
-//const proxy = "http://localhost:4000";
 
 //Are we using this?
 const browserHistory = createBrowserHistory();
@@ -55,7 +54,6 @@ class App extends Component {
     //this process is beind done here since multiple components require the same applications data
     //components that update the fetched data can initiate an update via a POST call, then update the redux store.
     this.getAllApplicationsAPI().then(res => {
-      console.log(res);
       this.props.loadApplications(res);
     });
   }
@@ -100,11 +98,9 @@ class App extends Component {
 
     const body = await response.json();
     if (response.status !== 201) {
-      console.log(response);
       console.log("Error with posting saved-times");
     }
 
-    console.log(body);
     return body;
   };
 
@@ -121,21 +117,7 @@ class App extends Component {
 
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
-    console.log(this.props);
-
-    const getWrappedComponent = ApplicationComponent => {
-      const WrappedComponent = (
-        <ApplicationComponent
-          //Passing the applications as a prop
-          applications={this.props.applications.applications}
-          //add common props here
-        />
-      );
-      return WrappedComponent;
-    };
-
     return (
-
       <ThemeProvider theme={theme}>
         <div className="App">
         <header className="App-header">

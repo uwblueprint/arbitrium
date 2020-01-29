@@ -13,7 +13,7 @@ const Signout = styled.div`
   button {
     text-transform: uppercase;
     margin-left: 20px;
-    
+
   }
 `;
 
@@ -21,8 +21,6 @@ const UserDisplay = () => {
 
   const { currentUser } = useContext(AuthContext);
 
-  
-  console.log(currentUser)
   if (currentUser != null) {
     return (
       <div>
