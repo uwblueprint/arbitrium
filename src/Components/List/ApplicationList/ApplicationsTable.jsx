@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import { withRouter, Redirect } from "react-router";
 import { push } from "connected-react-router";
+import Button from "@material-ui/core/Button";
 
 const APPLICATION_STAGE = {
   LETTER_OF_INTEREST: 0,
@@ -27,6 +28,12 @@ const Wrapper = styled.div`
   table.MuiTable-root {
     border: 1px solid #cccccc;
   }
+  button {
+    height: fit-content;
+    max-width: 200px;
+    padding: 10px 16px;
+    text-transform: uppercase;
+  }
 `;
 
 export default class ApplicationList extends Component {
@@ -42,10 +49,10 @@ export default class ApplicationList extends Component {
               <Table className="table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Applicant Name</TableCell>
-                    <TableCell align="left">Rating</TableCell>
-                    <TableCell align="left">Last reviewed</TableCell>
-                    <TableCell align="left"></TableCell>
+                    <TableCell style={{width: "25%"}}>Applicant Name</TableCell>
+                    <TableCell style={{width: "25%"}} align="left">Rating</TableCell>
+                    <TableCell style={{width: "25%"}} align="left">Last reviewed</TableCell>
+                    <TableCell style={{width: "25%"}} align="left"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
