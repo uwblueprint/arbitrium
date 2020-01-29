@@ -7,7 +7,6 @@ const UserDisplay = () => {
 
   const { currentUser } = useContext(AuthContext);
 
-  console.log(currentUser)
   if (currentUser != null) {
     return (
       <div> { currentUser.email }
