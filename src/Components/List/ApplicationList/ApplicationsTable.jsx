@@ -55,8 +55,8 @@ export default class ApplicationList extends Component {
                               <TableCell component="th" scope="row">
                                   {application[ 'Organization Name']}
                               </TableCell>
-                              <TableCell align="left">{application['rating'] || "0/5" }</TableCell>
-                              <TableCell align="left">{application['last reviewed'] || "never" }</TableCell>
+                              <TableCell align="left">{application['rating'] || "Not Rated" }</TableCell>
+                              <TableCell align="left">{application['last reviewed'] || "Never" }</TableCell>
                               <TableCell align="left">
                                 <button rel="noopener noreferrer" target="_blank" onClick={() => {this.props.history.push('submissions/'+application._id)}}>Open application
                                 </button>
