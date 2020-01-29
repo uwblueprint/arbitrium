@@ -29,10 +29,10 @@ const Wrapper = styled.div`
     border: 1px solid #cccccc;
   }
   button {
-    height: fit-content;
     max-width: 200px;
-    padding: 10px 16px;
+    padding: 5px 5px;
     text-transform: uppercase;
+    font-size: 15px;
   }
 `;
 
@@ -62,12 +62,12 @@ export default class ApplicationList extends Component {
                               <TableCell component="th" scope="row">
                                   {application[ 'Organization Name']}
                               </TableCell>
-                              <TableCell align="left">{application['rating'] || "0/5" }</TableCell>
-                              <TableCell align="left">{application['last reviewed'] || "never" }</TableCell>
-                              <TableCell align="right">
-                                <Button variant="contained" color="primary" rel="noopener noreferrer" target="_blank" onClick={() => 
-                                  {this.props.history.push('submissions/'+application._id)}}>Open application</Button>
-                                </TableCell>
+                              <TableCell align="left">{application['rating'] || "Not Rated" }</TableCell>
+                              <TableCell align="left">{application['last reviewed'] || "Never" }</TableCell>
+                              <TableCell align="left">
+                                <Button variant="contained" color="primary"  target="_blank" value="OpenApplication" onClick={() =>
+                                    {this.props.history.push('submissions/'+application._id)}}>Open</Button>
+                              </TableCell>
                           </TableRow>
                       ))
                     : "ERROR LOADING APPLICATIONS FROM DATABASE"}
