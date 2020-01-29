@@ -85,7 +85,7 @@ const Navigation = ({ pathname, push }) => {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> { " SVP Applications! " } </h2>
+        <h2> { " SVP Investee Grant Candidates " } </h2>
         <hr />
         <Button id="all_applications" onClick={() => {
             NavigationList.map(section => {
