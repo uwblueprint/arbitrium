@@ -129,6 +129,8 @@ const Navigation = ({ pathname, push }) => {
             <Button id={section.title} key={section.title} className="nested" onClick={() => {
               SectionList.map(section => (document.getElementById(section.title).style.color = "#888888"));
               document.getElementById(section.title).style.color = "#6202EE";
+              document.getElementById("canvas_" + section.title).scrollIntoView({ behavior: 'smooth', block: 'center' });
+
             }}>
               {section.title}
             </Button>
