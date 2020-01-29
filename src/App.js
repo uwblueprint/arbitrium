@@ -4,7 +4,6 @@ import { createBrowserHistory } from "history";
 import Navigation from "./Components/Navigation/Navigation";
 import Header from "./Components/Header/Header";
 import Header2 from "./Components/Header/Header2";
-import Footer from "./Components/Footer/Footer";
 import FlowSelector from "./Components/FlowSelector/FlowSelector";
 import Container from "./Components/Container/Container";
 import Home from "./Components/Home/Home";
@@ -155,7 +154,6 @@ class App extends Component {
             </>
           </ConnectedRouter>
           </AuthProvider>
-          <Footer getQuestionsAPI={this.getQuestionsAPI}/>
 
           </header>
         </div>
