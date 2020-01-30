@@ -66,7 +66,7 @@ class Application extends Component {
   }
 
   componentDidMount() {
-    let appId = this.getApplicationDetails()._id;
+    let appId = this.getApplicationDetails() ? this.getApplicationDetails()._id : null
     let userId = this.props.user.uid;
     this.setState({appId: appId })
     this.setState({userId: userId})

@@ -9,6 +9,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Footer from "../Footer/Footer";
 
 import { makeStyles } from "@material-ui/core/styles";
 import "./Navigation.css";
@@ -85,7 +86,7 @@ const Navigation = ({ pathname, push }) => {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> { " SVP Applications! " } </h2>
+        <h2> { " SVP Investee Grant Candidates " } </h2>
         <hr />
         <Button id="all_applications" onClick={() => {
             NavigationList.map(section => {
@@ -128,6 +129,8 @@ const Navigation = ({ pathname, push }) => {
             <Button id={section.title} key={section.title} className="nested" onClick={() => {
               SectionList.map(section => (document.getElementById(section.title).style.color = "#888888"));
               document.getElementById(section.title).style.color = "#6202EE";
+              document.getElementById("canvas_" + section.title).scrollIntoView({ behavior: 'smooth', block: 'center' });
+
             }}>
               {section.title}
             </Button>
@@ -141,6 +144,7 @@ const Navigation = ({ pathname, push }) => {
           document.getElementById("stacked_rankings").style.backgroundColor = "#ECE0FD";
           push(`/rankings`)
         }}>Stacked Rankings</Button>
+        <Footer></Footer>
       </Drawer>
     </nav>
   );

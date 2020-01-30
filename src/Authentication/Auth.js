@@ -4,7 +4,8 @@ import firebaseApp from "./firebase.js";
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  //leverage falsy value to ensure asynchronicity of auth status on page reload. 
+  const [currentUser, setCurrentUser] = useState(false);
 
   //React hook
   useEffect(() => {

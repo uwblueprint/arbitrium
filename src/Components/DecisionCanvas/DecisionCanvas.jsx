@@ -99,6 +99,7 @@ function DecisionCanvas() {
         <CanvasCard
           expanded={expandArray[index]}
           key={section.title}
+          id={"canvas_" + section.title}
           onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
           onLinkClick={() => dispatch({ type: "EXPAND", index })}
           rating={0}
