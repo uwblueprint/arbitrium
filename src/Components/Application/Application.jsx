@@ -9,7 +9,11 @@ import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 import { AuthContext } from "../../Authentication/Auth.js";
 //column categories
-import {fileCategories, adminCategories, ratingCategories } from "./column_categories"
+import {
+  fileCategories,
+  adminCategories,
+  ratingCategories
+} from "./column_categories";
 import { push } from "connected-react-router";
 
 //import templates
@@ -20,12 +24,11 @@ import {
   MOCK_RATING_DATA
 } from "./mockData.json";
 
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import { NotificationRvHookup } from "material-ui/svg-icons";
 import Rubric from "../Rubric/Rubric";
 
 class Application extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -39,25 +42,36 @@ class Application extends Component {
   //transpilers will ensure data is converted to form usable by components
 
   getApplicationDetails = () => {
-    return this.props.applications.applications.filter(application=>application['_id']===this.props.match.params.organizationId)[0]
-  }
+    console.log("wtf");
+    console.log(this.props.applications);
 
-  applicantExists = () => (
-    this.getApplicationDetails() !== undefined
-  )
+    return this.props.applications.applications.filter(
+      application =>
+        application["_id"] === this.props.match.params.organizationId
+    )[0];
+  };
 
-  transpileCategoryData = () =>{
+  applicantExists = () => this.getApplicationDetails() !== undefined;
+
+  transpileCategoryData = () => {
     //todo when category data is made available, currently leverages mock data
     const applicant = this.getApplicationDetails();
-    return Object.keys(adminCategories)
-          .map(adminCategory=>({title: adminCategory, value: applicant[adminCategory]}));
-  }
+    return Object.keys(adminCategories).map(adminCategory => ({
+      title: adminCategory,
+      value: applicant[adminCategory]
+    }));
+  };
+
   transpileFileData = () => {
     const applicant = this.getApplicationDetails();
-    return Object.keys(fileCategories)
-          .map((fileCategory, index)=>({name: fileCategory, link: applicant[fileCategory], size: index*500}));
-  }
-  transpileRatingData = () =>{
+    return Object.keys(fileCategories).map((fileCategory, index) => ({
+      name: fileCategory,
+      link: applicant[fileCategory],
+      size: index * 500
+    }));
+  };
+
+  transpileRatingData = () => {
     //todo when rating data is made available, currently leverages mock data
     return MOCK_RATING_DATA;
   }
@@ -169,9 +183,9 @@ class Application extends Component {
     let userId = this.state.userId
     let reviews = this.props.applications.reviews.filter(function(item){
       return item.applicationId == appId && item.userId == userId;
-    })
-    console.log(reviews)
-    this.setState({review: reviews[0]})
+    });
+    console.log(reviews);
+    this.setState({ review: reviews[0] });
   }
 
   componentDidMount() {
@@ -191,20 +205,24 @@ class Application extends Component {
     console.log("Application ID");
     console.log(this.getApplicationDetails()._id);
     console.log("UserId");
-    console.log(this.props.user.uid)
-    console.log(this.props)
+    console.log(this.props.user.uid);
+    console.log(this.props);
     return (
-      <div className='pagecontainer'>
-         <FlowSelector>
+      <div className="pagecontainer">
+        <FlowSelector>
           <button>1. Letter of Interest</button>
           <button disabled>2. Full Application</button>
         </FlowSelector>
         <Wrapper>
           <h1>
-            <Button className="all-applicants" onClick={() => push("/applications")}>
+            <Button
+              className="all-applicants"
+              onClick={() => push("/applications")}
+            >
               &lt; All Applicants
             </Button>
-            <br />UW Blueprint
+            <br />
+            UW Blueprint
           </h1>
           <Rubric />
           <hr />
@@ -233,10 +251,10 @@ class Application extends Component {
 }
 
 const mapStateToProps = state => ({
-  applications: state.applications,
+  applications: state.applications
 });
 
-export default connect(mapStateToProps, null)(Application)
+export default connect(mapStateToProps, null)(Application);
 
 const Wrapper = styled.div`
   margin: 0 auto;

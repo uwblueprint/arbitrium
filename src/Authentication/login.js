@@ -3,19 +3,16 @@ import { withRouter, Redirect } from "react-router";
 import firebaseApp from "./firebase.js";
 import { AuthContext } from "./Auth.js";
 
-
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { Link } from 'react-router-dom';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import CardActions from '@material-ui/core/CardActions';
-
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import CardActions from "@material-ui/core/CardActions";
 
 const CommentForm = styled.form`
   .textFields {
@@ -41,35 +38,34 @@ const StyledCard = styled(Card)`
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   -webkit-box-shadow: -1px 1px 5px 1px #ccc;
-  -moz-box-shadow:    -1px 1px 5px 1px #ccc;
-  box-shadow:         -1px 1px 5px 1px #ccc;
+  -moz-box-shadow: -1px 1px 5px 1px #ccc;
+  box-shadow: -1px 1px 5px 1px #ccc;
 
-  .MuiCardHeader-title{
+  .MuiCardHeader-title {
     font-size: 3rem;
   }
-  .MuiCardHeader-root{
+  .MuiCardHeader-root {
     padding-bottom: 5px;
   }
-  .MuiCardHeader-subheader{
+  .MuiCardHeader-subheader {
     color: black;
   }
   .MuiInputLabel-outlined.MuiInputLabel-shrink {
-    transform: translate(14px, -14px) scale(0.75)
+    transform: translate(14px, -14px) scale(0.75);
   }
 `;
 
 const Login = ({ history }) => {
-
-
   const [values, setValues] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     errorEmail: false,
     errorPassword: false
   });
 
   const errorEmailMessage = "Couldn't find your account";
-  const errorPasswordMessage = "Wrong password. Try again or click Forgot password";
+  const errorPasswordMessage =
+    "Wrong password. Try again or click Forgot password";
 
   const handleLogin = useCallback(
     async event => {
@@ -89,7 +85,9 @@ const Login = ({ history }) => {
 
   const { currentUser } = useContext(AuthContext);
 
- 
+  if (currentUser) {
+    return <Redirect to={history.goBack()} />;
+  }
 
   function validateForm() {
     return values.email.length > 0 && values.password.length > 0;
@@ -103,12 +101,9 @@ const Login = ({ history }) => {
     setValues({ ...values, [prop]: event.target.value });
   };
 
-  if (currentUser!==null && currentUser!==false) {
-    return <Redirect to={'/applications'} />;
-  } else if (currentUser!==false){
-  return(
+  return (
     <StyledCard>
-      <CardHeader title="arbitrium" subheader="Sign-In"/>
+      <CardHeader title="arbitrium" subheader="Sign-In" />
       <CardContent>
         <CommentForm onSubmit={handleLogin}>
           <FormControl variant="outlined" className="textFields">
@@ -117,25 +112,29 @@ const Login = ({ history }) => {
               required
               autoFocus
               id="email"
-              type={'text'}
+              type={"text"}
               value={values.email}
-              onChange={handleChange('email')}
+              onChange={handleChange("email")}
             />
-            <FormHelperText>{values.errorEmail ? errorEmailMessage : ''}</FormHelperText>
+            <FormHelperText>
+              {values.errorEmail ? errorEmailMessage : ""}
+            </FormHelperText>
           </FormControl>
           <FormControl variant="outlined" className="textFields">
             <InputLabel htmlFor="password">Password</InputLabel>
             <OutlinedInput
               required
               id="password"
-              type={'password'}
+              type={"password"}
               value={values.password}
-              onChange={handleChange('password')}
+              onChange={handleChange("password")}
             />
-            <FormHelperText>{values.errorPassword ? errorPasswordMessage : ''}</FormHelperText>
+            <FormHelperText>
+              {values.errorPassword ? errorPasswordMessage : ""}
+            </FormHelperText>
           </FormControl>
           <CardActions>
-            <Link onClick={handleForgotPassword}>Forgot Password?</Link>
+            <Button onClick={handleForgotPassword}>Forgot Password?</Button>
             <Button
               type="submit"
               disabled={!validateForm()}
@@ -148,8 +147,7 @@ const Login = ({ history }) => {
         </CommentForm>
       </CardContent>
     </StyledCard>
-  )
-  } else return null;
+  );
 };
 
 export default withRouter(Login);
