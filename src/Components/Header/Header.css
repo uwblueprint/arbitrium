@@ -47,6 +47,8 @@ Make it a variable... how?
   font-size: 24px;
   line-height: 28px;
 
+  text-transform: lowercase;
+
   color: #FFFFFF;
 }
 .UserDisplay {

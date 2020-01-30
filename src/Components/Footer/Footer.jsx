@@ -14,7 +14,7 @@ export default class Footer extends Component {
             <header>
                 <div className="footer-container">
                     <div className="tagline"> {madeby}
-                        <a href="https://uwblueprint.org/" target="_blank">UW Blueprint</a>
+                        <a href="https://uwblueprint.org/" style={{ textDecoration: "none", color: "#888888"}} target="_blank">UW Blueprint</a>
                     </div>
                 </div>
             </header>

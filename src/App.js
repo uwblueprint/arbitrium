@@ -4,6 +4,7 @@ import { createBrowserHistory } from "history";
 import Header from "./Components/Header/Header";
 import Header2 from "./Components/Header/Header2";
 import Footer from "./Components/Footer/Footer";
+import FlowSelector from "./Components/FlowSelector/FlowSelector";
 import Container from "./Components/Container/Container";
 import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
@@ -34,7 +35,6 @@ const proxy =
   process.env.NODE_ENV === "production"
     ? process.env.REACT_APP_SERVER
     : "http://localhost:4000";
-//const proxy = "http://localhost:4000";
 
 //Are we using this?
 const browserHistory = createBrowserHistory();
@@ -50,7 +50,6 @@ class App extends Component {
     console.log("Loading applications on app load...");
     //this process is being done here since multiple components require the same applications data
     this.getAllApplicationsAPI().then(res => {
-      console.log(res);
       this.props.loadApplications(res);
     });
   }
@@ -220,7 +219,6 @@ class App extends Component {
                 </>
               </ConnectedRouter>
             </AuthProvider>
-            <Footer getQuestionsAPI={this.getQuestionsAPI} />
           </header>
         </div>
       </ThemeProvider>

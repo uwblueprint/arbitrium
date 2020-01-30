@@ -47,13 +47,15 @@ const useStyles = makeStyles({
 
 function RankingCard({ companyName, rating }) {
   const classes = useStyles();
+  let notRatingStyle = {}
   return (
     <Card className={classes.root} elevation={0}>
-      <CardContent>
+      <CardContent style={!rating ? {backgroundColor: '#929292'}: {backgroundColor: '#F4F4F4'}}>
         <div className={classes.content}>
           <DragHandle className={classes.drag} />
           <div className={classes.company}>{companyName}</div>
-          <div className={classes.rating}>Your Rating: {rating}/5</div>
+          {!rating && <div className={classes.rating}>Your Rating: Not Rated</div>}
+          {rating && <div className={classes.rating}>Your Rating: {rating}/5</div>}
           <div className={classes.link}>
             <a>Open Application</a>
           </div>

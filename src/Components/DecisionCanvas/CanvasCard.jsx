@@ -76,6 +76,8 @@ const useStyles = makeStyles({
 function CanvasCard({
   children,
   expanded,
+  key,
+  id,
   onHeaderClick,
   onLinkClick,
   rating,
@@ -90,6 +92,7 @@ function CanvasCard({
         }
         classes={{ title: classes.title }}
         title={title}
+        id={id}
         onClick={onHeaderClick}
       />
       <CardContent classes={{ root: classes.content }}>

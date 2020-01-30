@@ -4,12 +4,13 @@
 	left: 0;
 	right: 0;
 	height: 20px;
-	width: 100%;
-	margin-left: var(--header-height);
+	width: 300px;
 	background: white;
 	color: blue;
+	z-index: 2000;
 }
 
 .tagline {
 	font-size: 0.7em;
+	color: #888888;
 }

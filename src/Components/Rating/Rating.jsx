@@ -7,7 +7,9 @@ import Comment from "../Comment/Comment";
 import AddComment from "../AddComment/AddComment";
 
 const StyledPaper = styled(Paper)`
-  box-shadow: 1px 1px 3px #cccccc;
+  font-size: 14px;
+  box-shadow: 0 2px 4px 2px #cccccc;
+  padding: 20px;
   border-radius: 1px;
   display: block;
   text-align: left;

@@ -9,6 +9,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Footer from "../Footer/Footer";
 
 import { makeStyles } from "@material-ui/core/styles";
 import "./Navigation.css";
@@ -82,7 +83,7 @@ function Navigation({ pathname, push, showStackedRankings }) {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> {" SVP Applications! "} </h2>
+        <h2> { " SVP Investee Grant Candidates " } </h2>
         <hr />
         <Button
           id="all_applications"
@@ -95,6 +96,9 @@ function Navigation({ pathname, push, showStackedRankings }) {
             document.getElementById("all_applications").style.color = "#6202EE";
             document.getElementById("all_applications").style.backgroundColor =
               "#ECE0FD";
+            document.getElementById("stacked_rankings").style.color = "black";
+            document.getElementById("stacked_rankings").style.backgroundColor =
+                "white";
             push("/applications");
           }}
           variant="contained"
@@ -141,7 +145,7 @@ function Navigation({ pathname, push, showStackedRankings }) {
                     (document.getElementById(section.title).style.color =
                       "#888888")
                 );
-                document.getElementById(section.title).style.color = "#6202EE";
+                //document.getElementById(section.title).style.color = "#6202EE";
               }}
             >
               {section.title}
