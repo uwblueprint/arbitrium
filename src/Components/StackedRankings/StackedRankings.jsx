@@ -114,7 +114,9 @@ function StackedRankings({
       updateStackedAPI({
         userId: user.uid,
         rankings: initApps
-      }).then(res => {});
+      }).catch(e => {
+        console.error(e);
+      });
     }
   }, []);
 
@@ -151,7 +153,16 @@ function StackedRankings({
       result.source.index,
       result.destination.index
     );
-    loadStackedRankings(reorderedList);
+    updateStackedAPI({
+      userId: user.uid,
+      rankings: reorderedList.map(app => ({ appId: app._id }))
+    })
+      .then(() => {
+        loadStackedRankings(reorderedList);
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   const onBeforeDragStart = provided => {
