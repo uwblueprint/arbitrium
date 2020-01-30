@@ -73,7 +73,7 @@ function expandArrayReducer(expandedArr, { type, index }) {
   });
 }
 
-function DecisionCanvas() {
+function DecisionCanvas({update}) {
   const [expandArray, dispatch] = useReducer(
     expandArrayReducer,
     SectionList.map(() => false)
@@ -104,6 +104,7 @@ function DecisionCanvas() {
           onLinkClick={() => dispatch({ type: "EXPAND", index })}
           rating={0}
           title={section.title}
+          update={update}
         >
           <CardBody>
             <div className="questions">

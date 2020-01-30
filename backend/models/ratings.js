@@ -10,13 +10,13 @@ var comment = new mongoose.Schema({
 });
 
 var question = new mongoose.Schema({
-  questionId: {
+  id: {
     type: String
   },
   notes: [comment],
-	lastReviewed: {
-		type: String
-	},
+	rating: {
+		type: Number
+	}
 });
 
 var reviewSchema = new mongoose.Schema({

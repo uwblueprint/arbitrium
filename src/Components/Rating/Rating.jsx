@@ -5,6 +5,7 @@ import styled from "styled-components";
 import RatingList from "../RatingList/RatingList";
 import Comment from "../Comment/Comment";
 import AddComment from "../AddComment/AddComment";
+import SectionRating from "../DecisionCanvas/SectionRating";
 
 const StyledPaper = styled(Paper)`
   font-size: 14px;
@@ -26,7 +27,7 @@ const StyledPaper = styled(Paper)`
   }
 `;
 
-const Rating = ({ ratingData: { suggested, comments } }) => {
+const Rating = ({ ratingData: { suggested, comments}, update }) => {
   return (
     <StyledPaper>
       <h3>Suggested Rating</h3>
@@ -38,7 +39,11 @@ const Rating = ({ ratingData: { suggested, comments } }) => {
       <p className="rating-info">
         Your rating will be weighed with your peers.
       </p>
-      <RatingList />
+      <SectionRating
+        id="master"
+        update={update}
+      >
+      </SectionRating>
       <h3>Comment</h3>
       <p className="rating-info">
         Your comments will be visible only to the admin.
@@ -50,6 +55,8 @@ const Rating = ({ ratingData: { suggested, comments } }) => {
         placeholder={"Add a comment..."}
         primaryLabel="Comment"
         secondaryLabel="Cancel"
+        update={update}
+        id="master"
       />
     </StyledPaper>
   );

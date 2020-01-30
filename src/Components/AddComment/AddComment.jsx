@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState }  from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 
@@ -26,19 +26,26 @@ const CommentForm = styled.form`
   }
 `;
 
-const AddComment = ({ placeholder, primaryLabel, secondaryLabel }) => {
+function AddComment({ placeholder, primaryLabel, secondaryLabel, update, id }) {
+
+  const [text, setText] = useState("");
+
   return (
     <CommentForm>
-      <input type="text" name="comment" placeholder={placeholder} />
+      <input
+        type="text"
+        name="comment"
+        value={text}
+        placeholder={placeholder}
+        onChange={e => setText(e.target.value)}/>
       <div className="buttonGroup">
-        <Button className="addcomment-cancel" color="primary">
+        <Button className="addcomment-cancel" color="primary" onClick={() => {setText("")}}>
           {secondaryLabel}
         </Button>
         <Button
-          type="submit"
-          className="addcomment-submit"
           variant="contained"
           color="primary"
+          onClick={() => {update("comment", {text, id})}}
         >
           {primaryLabel}
         </Button>

@@ -19,7 +19,7 @@ const SectionWrapper = styled.div`
   }
 `;
 
-function SectionComments({ comments, ...rest }) {
+function SectionComments({ comments, id, update, ...rest }) {
   return (
     <SectionWrapper>
       <div className="header">
@@ -35,6 +35,8 @@ function SectionComments({ comments, ...rest }) {
         placeholder={"Add a note..."}
         primaryLabel="Add a note"
         secondaryLabel="Cancel"
+        update={update}
+        id={id}
       />
     </SectionWrapper>
   );

@@ -57,7 +57,7 @@ const RatingList = ({ onRatingChange, selectedRating }) => (
     {ratings.map(rate => (
       <button
         onClick={() => onRatingChange && onRatingChange(rate.value)}
-        style={selectedRating === rate.value ? { border: "solid 1px" } : null}
+        style={selectedRating === rate.value ? { border: "solid 3px" } : null}
       >
         <div className="emojiRating">
           <span role="img" aria-label={`${rate.value}`}>

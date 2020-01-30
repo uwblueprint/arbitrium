@@ -81,7 +81,8 @@ function CanvasCard({
   onHeaderClick,
   onLinkClick,
   rating,
-  title
+  title,
+  update
 }) {
   const classes = useStyles();
   return (
@@ -103,8 +104,17 @@ function CanvasCard({
           timeout="auto"
         >
           {children}
-          <SectionRating />
-          <SectionComments comments={MOCK_RATING_DATA.comments} />
+          <SectionRating
+            id={id}
+            update={update}
+          >
+          </SectionRating>
+          <SectionComments
+            comments={MOCK_RATING_DATA.comments} 
+            id={id}
+            update={update}
+          >
+          </SectionComments>
         </Collapse>
         {!expanded && (
           <ReadMoreLink

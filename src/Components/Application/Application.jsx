@@ -1,7 +1,7 @@
 import React, { Component, useContext, useState } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-
+import moment from 'moment'
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
@@ -31,7 +31,8 @@ class Application extends Component {
     this.state = {
       userId: "",
       appId: "",
-      reviewId: ""
+      reviewId: "",
+      review: null
     };
   }
 
@@ -61,21 +62,127 @@ class Application extends Component {
     return MOCK_RATING_DATA;
   }
 
+  //Types:
+  //Notes update - {questionId, notes}
+  //Rating update - {questionId, rating}
+  //Comment update - comment
+  //rating update - rating
   handleReviewUpdate = (type, data) => {
+    console.log("Type Update");
+    console.log(type);
+    console.log("Date to update")
+    console.log(data);
+    let review;
+    //If a review doesn't exist then create one
+    if (this.state.review == null){
+      review = this.createReview()
+    }
+    else {
+      review = this.state.review
+    }
 
+    //Update the data in the review
+    review.lastReviewed = moment.now();
+    if (data.id === "master"){
+      if (type === "comment"){
+        let com = {
+          lastReviewed: moment.now(),
+          value: data.text
+        }
+        review.comments.push(com);
+      }
+      if (type === "rating"){
+        review.rating = data.rate
+      }
+    }
+    else {
+      if (type === "comment"){
+        let com = {
+          lastReviewed: moment.now(),
+          value: data.text
+        }
+        let newComments = review.questionList[data.id].notes
+        newComments.push(com);
+        review.questionList.map((item) => {
+          if (item.id === data.id){
+            item.notes = newComments
+          }
+        })
+      }
+      if (type === "rating"){
+        review.questionList.map((item) => {
+          if (item.id === data.id){
+            item.rating = data.rate
+          }
+        })
+      }
+    }
+
+    //Update the review
+    this.props.updateReview(review)
+    this.setState({review: review})
   }
 
-  componentDidMount() {
-    let appId = this.getApplicationDetails() ? this.getApplicationDetails()._id : null
-    let userId = this.props.user.uid;
-    this.setState({appId: appId })
-    this.setState({userId: userId})
+  createReview = () => {
+    let review = {}
+    let comments = []
+    let questions = {}
+    let questionList = []
+    questionList.push({
+      id: "canvas_Problem",
+      comments: [],
+      rating: -1
+    })
+    questionList.push({
+      id: "canvas_Business Model",
+      comments: [],
+      rating: -1
+    })
+    questionList.push({
+      id: "canvas_Ownership",
+      comments: [],
+      rating: -1
+    })
+    questionList.push({
+      id: "canvas_Product",
+      comments: [],
+      rating: -1
+    })
+    questionList.push({
+      id: "canvas_Market",
+      comments: [],
+      rating: -1
+    })
+    review = {
+      applicationId: this.state.appId,
+      userId: this.state.userId,
+      rating: -1,
+      comments: comments,
+      lastReviewed: moment.now(),
+      questionList: questionList
+    }
+    return review
+  }
+
+  findReview = () => {
+    let appId = this.state.appId
+    let userId = this.state.userId
     let reviews = this.props.applications.reviews.filter(function(item){
       return item.applicationId == appId && item.userId == userId;
     })
     console.log(reviews)
     this.setState({review: reviews[0]})
   }
+
+  componentDidMount() {
+    let appId = this.getApplicationDetails() ? this.getApplicationDetails()._id : null
+    let userId = this.props.user.uid;
+    this.setState({appId: appId})
+    this.setState({userId: userId})
+
+    this.findReview();
+  }
+
 
 
 
@@ -103,13 +210,13 @@ class Application extends Component {
           <hr />
           {this.props.applications.applications.length>0 && this.applicantExists() ?
           <div className="application-information">
-            <Categories categoryData={this.transpileCategoryData()} />
+            <Categories categoryData={this.transpileCategoryData()}/>
             <hr />
             <Files fileData={this.transpileFileData()} />
             <hr />
-            <DecisionCanvas />
+            <DecisionCanvas categoryData={this.transpileCategoryData()} update={this.handleReviewUpdate}/>
             <hr />
-            <Rating ratingData={this.transpileRatingData()} />
+            <Rating ratingData={this.transpileRatingData()} update={this.handleReviewUpdate}/>
             <hr />
           </div>
            : null}

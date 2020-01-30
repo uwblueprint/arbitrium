@@ -16,8 +16,10 @@ const SectionWrapper = styled.div`
   }
 `;
 
-function SectionRating({ onRatingChange, selectedRating, ...rest }) {
+function SectionRating({ onRatingChange, selectedRating, id, update, ...rest }) {
+
   const [rating, setRating] = useState(0);
+
   return (
     <SectionWrapper>
       <h3>Rating</h3>
@@ -26,7 +28,10 @@ function SectionRating({ onRatingChange, selectedRating, ...rest }) {
         this applicant. <Link>You can view the rubric here.</Link>
       </span>
       <RatingList
-        onRatingChange={rate => setRating(rate)}
+        onRatingChange={rate => {
+          setRating(rate)
+          update("rating", {id, rate})
+        }}
         selectedRating={rating}
       />
     </SectionWrapper>

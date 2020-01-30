@@ -174,6 +174,10 @@ class App extends Component {
     return WrappedComponent;
   }
 
+  updateReview = (review) => {
+    this.updateReviewAPI(review);
+  }
+
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
     /*
@@ -212,6 +216,9 @@ class App extends Component {
           applications = {this.props.applications.applications}
           reviews = {this.props.applications.reviews}
           stackedRankings = {this.props.applications.stackedRankings}
+          updateReviewAPI={this.updateReviewAPI}
+          getAllReviewsAPI={this.getAllReviewsAPI}
+          update={this.updateReview}
           //add common props here
         />
       );
