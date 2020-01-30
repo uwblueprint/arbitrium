@@ -14,7 +14,8 @@ import { getReviewAPI } from "../../requests/get";
 import {
   fileCategories,
   adminCategories,
-  ratingCategories
+  ratingCategories,
+  longAnswerCategories
 } from "./column_categories";
 import { push } from "connected-react-router";
 
@@ -72,6 +73,22 @@ class Application extends Component {
       size: index * 500
     }));
   };
+
+  /*
+  transpileLongAnswerData = () => {
+    const applicant = this.getApplicationDetails();
+    let answers = Object.keys(longAnswerCategories).map(longAnswerCategory => ({
+      id: ,
+      answers: {
+        questions:
+        response:
+      },
+      title:
+    }));
+  }
+  */
+
+
 
   transpileRatingData = () => {
     //todo when rating data is made available, currently leverages mock data
@@ -147,6 +164,8 @@ class Application extends Component {
     let comments = []
     let questions = {}
     let questionList = []
+
+    //THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE
     questionList.push({
       id: "canvas_Problem",
       comments: [],
