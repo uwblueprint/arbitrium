@@ -6,7 +6,7 @@ import Header2 from "../Components/Header/Header2";
 
 const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
   const { currentUser } = useContext(AuthContext);
-  return currentUser ? (
+  return currentUser ? (currentUser!==null ? (
     <>
       <Navigation />
       <Header2 />
@@ -22,7 +22,7 @@ const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
       <h1> Please Login! </h1>
       <Redirect to="/login" />
     </>
-  );
+  )) : null
 };
 
 export default PrivateRoute;

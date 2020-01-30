@@ -27,14 +27,31 @@ const StyledPaper = styled(Paper)`
   }
 `;
 
-const Rating = ({ ratingData: { suggested, comments}, update }) => {
+const Rating = ({update, review }) => {
+
+
+  let averageRating = 0
+  let numRatings = 0
+  let comments = []
+  if (review) {
+    review.questionList.map((item) => {
+      if (item.rating > 0){
+        averageRating += item.rating
+        numRatings += 1;
+      }
+    });
+    comments = review.comments
+  if (numRatings > 0){
+    averageRating = averageRating / numRatings
+  }
+  }
   return (
     <StyledPaper>
       <h3>Suggested Rating</h3>
       <p className="rating-info">
         The suggested rating is the average of your decision canvas ratings.
       </p>
-      <p className="suggested">{suggested.toFixed(2)}</p>
+      <p className="suggested">{averageRating.toFixed(2)}</p>
       <h3>Overall Rating</h3>
       <p className="rating-info">
         Your rating will be weighed with your peers.
@@ -42,6 +59,7 @@ const Rating = ({ ratingData: { suggested, comments}, update }) => {
       <SectionRating
         id="master"
         update={update}
+        review={review}
       >
       </SectionRating>
       <h3>Comment</h3>

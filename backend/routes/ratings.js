@@ -37,8 +37,21 @@ function checkIfAuthenticated(req, res, next) {
 
 router.get("/:userid", function(req, res) {
   db.reviews
-    .find({ reviewer_id: req.params.userid })
+    .find({ userId: req.params.userid })
     .then(function(found) {
+      console.log(found);
+      res.json(found);
+    })
+    .catch(function(err) {
+      res.send(err);
+    });
+});
+
+router.get("/:userid/:appId", function(req, res) {
+  db.reviews
+    .find({applicationId: req.params.appId, userId: req.params.userid})
+    .then(function(found) {
+      console.log(found);
       res.json(found);
     })
     .catch(function(err) {

@@ -73,7 +73,7 @@ function expandArrayReducer(expandedArr, { type, index }) {
   });
 }
 
-function DecisionCanvas({update}) {
+function DecisionCanvas({update, review}) {
   const [expandArray, dispatch] = useReducer(
     expandArrayReducer,
     SectionList.map(() => false)
@@ -105,6 +105,7 @@ function DecisionCanvas({update}) {
           rating={0}
           title={section.title}
           update={update}
+          review={review}
         >
           <CardBody>
             <div className="questions">

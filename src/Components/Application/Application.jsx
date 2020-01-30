@@ -9,6 +9,7 @@ import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { updateReviewAPI } from "../../requests/update";
+import { getReviewAPI } from "../../requests/get";
 //column categories
 import {
   fileCategories,
@@ -96,6 +97,8 @@ class Application extends Component {
       review = this.state.review
     }
 
+    console.log(review);
+
     //Update the data in the review
     review.lastReviewed = moment.now();
     if (data.id === "master"){
@@ -134,8 +137,9 @@ class Application extends Component {
     }
 
     //Update the review
-    updateReviewAPI(review)
-    this.setState({review: review})
+    this.setState({review: review});
+    updateReviewAPI(review);
+    //this.findReview(this.state.appId);
   }
 
   createReview = () => {
@@ -179,14 +183,14 @@ class Application extends Component {
     return review
   }
 
-  findReview = () => {
-    let appId = this.state.appId
-    let userId = this.state.userId
-    let reviews = this.props.applications.reviews.filter(function(item){
-      return item.applicationId == appId && item.userId == userId;
+  findReview = (appId) => {
+    console.log(appId)
+    getReviewAPI(this.props.user, appId).then(res => {
+      console.log(res);
+      this.setState({review: res[0]});
     });
-    console.log(reviews);
-    this.setState({ review: reviews[0] });
+    console.log(this.state.review);
+
   }
 
   componentDidMount() {
@@ -195,7 +199,10 @@ class Application extends Component {
     this.setState({appId: appId})
     this.setState({userId: userId})
 
-    this.findReview();
+    getReviewAPI(this.props.user, appId).then(res => {
+      console.log(res);
+      this.setState({review: res[0]});
+    });
   }
 
 
@@ -203,11 +210,6 @@ class Application extends Component {
 
 
   render() {
-    console.log("Application ID");
-    console.log(this.getApplicationDetails()._id);
-    console.log("UserId");
-    console.log(this.props.user.uid);
-    console.log(this.props);
     return (
       <div className="pagecontainer">
         <FlowSelector>
@@ -233,9 +235,9 @@ class Application extends Component {
             <hr />
             <Files fileData={this.transpileFileData()} />
             <hr />
-            <DecisionCanvas categoryData={this.transpileCategoryData()} update={this.handleReviewUpdate}/>
+            <DecisionCanvas categoryData={this.transpileCategoryData()} update={this.handleReviewUpdate} review={this.state.review} />
             <hr />
-            <Rating ratingData={this.transpileRatingData()} update={this.handleReviewUpdate}/>
+            <Rating ratingData={this.transpileRatingData()} update={this.handleReviewUpdate} review={this.state.review}/>
             <hr />
           </div>
            : null}

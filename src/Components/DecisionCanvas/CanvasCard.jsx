@@ -82,9 +82,25 @@ function CanvasCard({
   onLinkClick,
   rating,
   title,
-  update
+  update,
+  review
 }) {
   const classes = useStyles();
+
+
+  let rate = 0;
+  let numComments = 0;
+  if (review) {
+    review.questionList.map((item) => {
+      if (item.id === id){
+        rate = item.rating
+        numComments = item.notes.length;
+      }
+    })
+  }
+  if (rate < 0) {
+    rate = 0
+  }
   return (
     <Card className={classes.root} elevation={0}>
       <ClickableHeader
@@ -107,12 +123,13 @@ function CanvasCard({
           <SectionRating
             id={id}
             update={update}
+            review={review}
           >
           </SectionRating>
           <SectionComments
-            comments={MOCK_RATING_DATA.comments} 
             id={id}
             update={update}
+            review={review}
           >
           </SectionComments>
         </Collapse>
@@ -129,9 +146,9 @@ function CanvasCard({
           <>
             <Divider />
             <Footer>
-              <span className="rating-label">{`Your Rating: ${rating}/5`}</span>
+              <span className="rating-label">{`Your Rating: ${rate}/5`}</span>
               <span>
-                <StyledCommentIcon /> 0 comment(s)
+                <StyledCommentIcon /> {numComments} comment(s)
               </span>
             </Footer>
           </>

@@ -45,7 +45,10 @@ function AddComment({ placeholder, primaryLabel, secondaryLabel, update, id }) {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => {update("comment", {text, id})}}
+          onClick={() => {
+            update("comment", {text, id})
+            setText("")
+          }}
         >
           {primaryLabel}
         </Button>

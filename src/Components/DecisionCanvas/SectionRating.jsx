@@ -16,10 +16,24 @@ const SectionWrapper = styled.div`
   }
 `;
 
-function SectionRating({ onRatingChange, selectedRating, id, update, ...rest }) {
+function SectionRating({ onRatingChange, selectedRating, id, update, review, ...rest }) {
+
 
   const [rating, setRating] = useState(0);
 
+
+  if (review && rating == 0){
+    if (id == "master"){
+      setRating(review.rating);
+    }
+    else {
+      review.questionList.map((item) => {
+        if (item.id === id){
+          setRating(item.rating);
+        }
+      })
+    }
+  }
   return (
     <SectionWrapper>
       <h3>Rating</h3>
