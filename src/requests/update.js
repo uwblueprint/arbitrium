@@ -35,7 +35,7 @@ async function updateStackedAPI(databody) {
   const body = await response.json();
   if (response.status !== 201) {
     console.log(response);
-    console.log("Error with posting ratings");
+    console.log("Error with posting stacked ranking");
   }
   console.log(body);
   return body;
