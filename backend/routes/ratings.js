@@ -47,10 +47,9 @@ router.get("/:userid", function(req, res) {
 });
 
 router.post("/", function(req, res) {
-  console.log(res);
-  db.reviews
-    .create(res)
 
+  console.log(req.body);
+  db.reviews.updateOne({ userId: req.body.userId, applicationId: req.body.applicationId }, req.body, { upsert : true })
     // status code 201 means created
     .then(function(newSchedule) {
       res.status(201).json(newSchedule);

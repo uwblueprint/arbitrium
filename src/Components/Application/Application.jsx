@@ -8,6 +8,7 @@ import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 import { AuthContext } from "../../Authentication/Auth.js";
+import { updateReviewAPI } from "../../requests/update";
 //column categories
 import {
   fileCategories,
@@ -115,10 +116,10 @@ class Application extends Component {
           lastReviewed: moment.now(),
           value: data.text
         }
-        let newComments = review.questionList[data.id].notes
-        newComments.push(com);
         review.questionList.map((item) => {
           if (item.id === data.id){
+            let newComments = item.notes
+            newComments.push(com);
             item.notes = newComments
           }
         })
@@ -133,7 +134,7 @@ class Application extends Component {
     }
 
     //Update the review
-    this.props.updateReview(review)
+    updateReviewAPI(review)
     this.setState({review: review})
   }
 
@@ -149,22 +150,22 @@ class Application extends Component {
     })
     questionList.push({
       id: "canvas_Business Model",
-      comments: [],
+      notes: [],
       rating: -1
     })
     questionList.push({
       id: "canvas_Ownership",
-      comments: [],
+      notes: [],
       rating: -1
     })
     questionList.push({
       id: "canvas_Product",
-      comments: [],
+      notes: [],
       rating: -1
     })
     questionList.push({
       id: "canvas_Market",
-      comments: [],
+      notes: [],
       rating: -1
     })
     review = {

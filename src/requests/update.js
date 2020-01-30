@@ -4,6 +4,8 @@ const proxy =
     : "http://localhost:4000";
 
 async function updateReviewAPI(databody) {
+  console.log("Calling updateReviewAPI")
+  console.log(databody)
   const response = await fetch(proxy + "/api/ratings", {
     method: "POST",
     body: JSON.stringify(databody),
