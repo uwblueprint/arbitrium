@@ -27,24 +27,24 @@ const StyledPaper = styled(Paper)`
   }
 `;
 
-const Rating = ({update, review }) => {
-  let averageRating = 0
-  let numRatings = 0
-  let comments = []
+const Rating = ({ update, review }) => {
+  let averageRating = 0;
+  let numRatings = 0;
+  let comments = [];
   if (review) {
-    review.questionList.map((item) => {
-      if (item.rating > 0){
-        averageRating += item.rating
+    review.questionList.map(item => {
+      if (item.rating > 0) {
+        averageRating += item.rating;
         numRatings += 1;
       }
     });
-    comments = review.comments
-  if (numRatings > 0){
-    averageRating = averageRating / numRatings
-  }
+    comments = review.comments;
+    if (numRatings > 0) {
+      averageRating = averageRating / numRatings;
+    }
   }
   return (
-    <StyledPaper>
+    <StyledPaper elevation={0}>
       <h3>Suggested Rating</h3>
       <p className="rating-info">
         The suggested rating is the average of your decision canvas ratings.
@@ -58,8 +58,7 @@ const Rating = ({update, review }) => {
         id="master"
         update={update}
         review={review}
-      >
-      </SectionRating>
+      ></SectionRating>
       <h3>Comment</h3>
       <p className="rating-info">
         Your comments will be visible only to the admin.

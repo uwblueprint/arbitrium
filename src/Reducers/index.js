@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
-import customReducerExample from "./customReducerExample";
 import {
   INSERT_REVIEW,
   LOAD_APPLICATIONS,

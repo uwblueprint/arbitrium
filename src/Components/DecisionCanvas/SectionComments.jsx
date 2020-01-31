@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import Comment from "../Comment/Comment";
@@ -19,18 +19,17 @@ const SectionWrapper = styled.div`
   }
 `;
 
-function SectionComments({id, update, review, ...rest }) {
+function SectionComments({ id, update, review, ...rest }) {
   let comments = [];
   if (review) {
-    if (id == "master"){
-      comments = review.comments
-    }
-    else {
-      review.questionList.map((item) => {
-        if (item.id == id){
-          comments = item.notes
+    if (id == "master") {
+      comments = review.comments;
+    } else {
+      review.questionList.map(item => {
+        if (item.id == id) {
+          comments = item.notes;
         }
-      })
+      });
     }
   }
   return (

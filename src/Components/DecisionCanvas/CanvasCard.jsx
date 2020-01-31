@@ -13,8 +13,6 @@ import Link from "@material-ui/core/Link";
 import SectionComments from "./SectionComments";
 import SectionRating from "./SectionRating";
 
-import { MOCK_RATING_DATA } from "../Application/mockData.json";
-
 // Note that a rating of '0' is not possible.
 const ratingColour = [
   "#fff",

@@ -1,4 +1,4 @@
-import React, { Component, useContext, useState } from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import moment from "moment";
@@ -7,28 +7,17 @@ import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
-import { AuthContext } from "../../Authentication/Auth.js";
 import { updateReviewAPI } from "../../requests/update";
 import { getReviewAPI } from "../../requests/get";
 //column categories
-import {
-  fileCategories,
-  adminCategories,
-  ratingCategories,
-  longAnswerCategories
-} from "./column_categories";
+import { fileCategories, adminCategories } from "./column_categories";
 import { push } from "connected-react-router";
 
 //import templates
 
-import {
-  MOCK_CATEGORY_DATA,
-  MOCK_FILE_DATA,
-  MOCK_RATING_DATA
-} from "./mockData.json";
+import { MOCK_RATING_DATA } from "./mockData.json";
 
 import { connect } from "react-redux";
-import { NotificationRvHookup } from "material-ui/svg-icons";
 import Rubric from "../Rubric/Rubric";
 import { INSERT_REVIEW } from "../../Constants/ActionTypes";
 
@@ -133,7 +122,7 @@ class Application extends Component {
         });
       }
       if (type === "rating") {
-        review.questionList.map(item => {
+        review.questionList.forEach(item => {
           if (item.id === data.id) {
             item.rating = data.rate;
           }
@@ -148,13 +137,11 @@ class Application extends Component {
         this.props.dispatch({ type: INSERT_REVIEW });
       }
     });
-    //this.findReview(this.state.appId);
   };
 
   createReview = () => {
     let review = {};
     let comments = [];
-    let questions = {};
     let questionList = [];
 
     //THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE

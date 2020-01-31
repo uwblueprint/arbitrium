@@ -1,10 +1,6 @@
 // src/js/actions/index.js
 
-import {
-  LOAD_STACKED_RANKINGS,
-  LOAD_APPLICATIONS,
-  SWITCH_VIEW
-} from "../Constants/ActionTypes";
+import { LOAD_APPLICATIONS, SWITCH_VIEW } from "../Constants/ActionTypes";
 
 //Recall from store/index.js that an action is a javascript object
 //That has a type and a payload (data)
@@ -18,8 +14,4 @@ export function switchView(payload) {
 
 export function loadApplications(payload) {
   return { type: LOAD_APPLICATIONS, payload };
-}
-
-export function loadStackedRankings(payload) {
-  return { type: LOAD_STACKED_RANKINGS, payload };
 }

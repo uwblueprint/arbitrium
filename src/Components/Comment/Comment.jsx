@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import moment from "moment";
 
 const CommentBlock = styled.div`
   display: grid;
@@ -48,11 +47,9 @@ const CommentBlock = styled.div`
   }
 `;
 
-const Comment = ({ comment, userId}) => (
+const Comment = ({ comment, userId }) => (
   <CommentBlock>
-      <div className="circle image">
-        {"You"}
-      </div>
+    <div className="circle image">{"You"}</div>
 
     <div className="comment-info">
       <span className="comment-author">{"You"}</span>

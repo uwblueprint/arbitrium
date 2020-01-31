@@ -123,7 +123,7 @@ function StackedRankings({ applications, user }) {
         console.error(e);
       }
     })();
-  }, [applications.length, user]);
+  }, [applications, user]);
 
   const classes = useStyles();
   // TODO: replace this with list from store or props when connecting to DB :)

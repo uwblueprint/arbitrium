@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
-import { withRouter, Redirect } from "react-router";
-import { push } from "connected-react-router";
 import Button from "@material-ui/core/Button";
 
 const APPLICATION_STAGE = {
@@ -37,12 +34,11 @@ const Wrapper = styled.div`
 
 export default class ApplicationList extends Component {
   render() {
-    console.log(this.props);
     //Pre-calculate the applications array before rendering
 
     return (
       <Wrapper className="application-list">
-        <Paper>
+        <Paper elevation={0}>
           <h1>All Applicants</h1>
           <Table className="table">
             <TableHead>
