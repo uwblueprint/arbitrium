@@ -11,7 +11,7 @@ var application = new mongoose.Schema({
 var stackedSchema = new mongoose.Schema(
   {
     userId: {
-      type: mongoose.Schema.ObjectId
+      type: String
     },
     applications: [application]
   },

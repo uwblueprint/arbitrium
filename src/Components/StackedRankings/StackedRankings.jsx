@@ -176,7 +176,7 @@ function StackedRankings({
       <h1>Stacked Rankings</h1>
       <p>
         Stacked Rankings are based on your overall ratings. You can move
-        applicants around (by dragging) if you disagree with the rankings.
+        applicants around if you disagree with the rankings.
       </p>
       <div className={classes.rankings}>
         {column}
