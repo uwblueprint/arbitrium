@@ -55,6 +55,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
   fab: {
+    zIndex: 50,
     position: 'fixed',
     right: '10px',
     width: '170px',
