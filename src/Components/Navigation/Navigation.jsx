@@ -56,7 +56,7 @@ const useStyles = makeStyles({
       width: "calc(100% - 32px)"
     },
     "& button.nested.selected": {
-      color: "#6202EE"
+      color: "#005EB8"
     },
     // organization Selector
     "& #organization.MuiSelect-root": {
@@ -93,9 +93,9 @@ function Navigation({ pathname, push, showStackedRankings }) {
               document.getElementById(section.id).style.backgroundColor =
                 "white";
             });
-            document.getElementById("all_applications").style.color = "#6202EE";
+            document.getElementById("all_applications").style.color = "#005EB8";
             document.getElementById("all_applications").style.backgroundColor =
-              "#ECE0FD";
+              "rgba(0, 94, 184, 0.2)";
             document.getElementById("stacked_rankings").style.color = "black";
             document.getElementById("stacked_rankings").style.backgroundColor =
                 "white";
@@ -114,10 +114,10 @@ function Navigation({ pathname, push, showStackedRankings }) {
                 "white";
             });
             document.getElementById("application_submission").style.color =
-              "#6202EE";
+              "#005EB8";
             document.getElementById(
               "application_submission"
-            ).style.backgroundColor = "#ECE0FD";
+            ).style.backgroundColor = "rgba(0, 94, 184, 0.2)";
             push(`/submissions/${organization}`);
           }}
         >
@@ -145,7 +145,7 @@ function Navigation({ pathname, push, showStackedRankings }) {
                     (document.getElementById(section.title).style.color =
                       "#888888")
                 );
-                //document.getElementById(section.title).style.color = "#6202EE";
+                //document.getElementById(section.title).style.color = "#005EB8";
               }}
             >
               {section.title}
@@ -161,10 +161,10 @@ function Navigation({ pathname, push, showStackedRankings }) {
                   "white";
               });
               document.getElementById("stacked_rankings").style.color =
-                "#6202EE";
+                "#005EB8";
               document.getElementById(
                 "stacked_rankings"
-              ).style.backgroundColor = "#ECE0FD";
+              ).style.backgroundColor = "rgba(0, 94, 184, 0.2)";
               push(`/rankings`);
             }}
           >

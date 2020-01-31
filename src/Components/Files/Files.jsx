@@ -11,7 +11,7 @@ const FileButton = styled.button`
   display: block;
   margin: 8px 0;
   .name {
-    color: #6202ee;
+    color: #005EB8;
     padding: 4px;
   }
   .size {
