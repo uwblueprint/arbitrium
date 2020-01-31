@@ -30,8 +30,8 @@ const Categories = ({ categoryData }) => {
     <Wrapper>
       <h2>Administrative Categories</h2>
       <CategoryWrapper>
-        {categoryData.map(({ title, value }) => (
-          <div className="category">
+        {categoryData.map(({ title, value }, index) => (
+          <div className="category" key={index}>
             <span className="title">{title}</span>
             <span className="value">{value}</span>
           </div>

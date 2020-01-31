@@ -23,7 +23,6 @@ function checkIfAuthenticated(req, res, next) {
       const { authToken } = req;
       console.log(authToken);
       const userInfo = await admin.auth().verifyIdToken(authToken);
-      console.log("ok");
       req.authId = userInfo.uid;
       return next();
     } catch (e) {
@@ -36,20 +35,25 @@ function checkIfAuthenticated(req, res, next) {
 }
 
 router.get("/:userid", function(req, res) {
-  db.reviews
-    .find({ userId: req.params.userid })
-    .then(function(found) {
+  try {
+    if (req.query.count) {
+      db.reviews.countDocuments({ userId: req.params.userid }).then(count => {
+        res.json(count);
+      });
+      return;
+    }
+    db.reviews.find({ userId: req.params.userid }).then(function(found) {
       console.log(found);
       res.json(found);
-    })
-    .catch(function(err) {
-      res.send(err);
     });
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 router.get("/:userid/:appId", function(req, res) {
   db.reviews
-    .find({applicationId: req.params.appId, userId: req.params.userid})
+    .find({ applicationId: req.params.appId, userId: req.params.userid })
     .then(function(found) {
       console.log(found);
       res.json(found);
@@ -60,9 +64,12 @@ router.get("/:userid/:appId", function(req, res) {
 });
 
 router.post("/", function(req, res) {
-
-  console.log(req.body);
-  db.reviews.updateOne({ userId: req.body.userId, applicationId: req.body.applicationId }, req.body, { upsert : true })
+  db.reviews
+    .updateOne(
+      { userId: req.body.userId, applicationId: req.body.applicationId },
+      req.body,
+      { upsert: true }
+    )
     // status code 201 means created
     .then(function(newSchedule) {
       res.status(201).json(newSchedule);

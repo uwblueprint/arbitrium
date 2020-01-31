@@ -28,8 +28,6 @@ const StyledPaper = styled(Paper)`
 `;
 
 const Rating = ({update, review }) => {
-
-
   let averageRating = 0
   let numRatings = 0
   let comments = []

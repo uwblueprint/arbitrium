@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import classNames from "classnames";
@@ -8,7 +8,7 @@ import { makeStyles } from "@material-ui/core";
 import RankingCard from "./RankingCard";
 
 import { updateStackedAPI } from "../../requests/update";
-import { loadStackedRankings } from "../../Actions/index";
+import { getAllStackingsAPI } from "../../requests/get";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -101,24 +101,29 @@ function reorder(list, startIndex, endIndex) {
   return result;
 }
 
-function StackedRankings({
-  applications,
-  loadStackedRankings,
-  rankings,
-  user
-}) {
+function StackedRankings({ applications, user }) {
+  const [rankings, setRankings] = useState([]);
+
   useEffect(() => {
-    if (applications.length === 0) return;
-    if (rankings.length !== applications.length) {
-      const initApps = applications.map(app => ({ appId: app._id }));
-      updateStackedAPI({
-        userId: user.uid,
-        rankings: initApps
-      }).catch(e => {
+    (async function() {
+      if (user == null || applications.length == 0) return;
+      try {
+        let fetched = await getAllStackingsAPI(user);
+        if (fetched.length !== applications.length) {
+          // Otherwise we need to initialize the user's rankings
+          const initApps = applications.map(app => ({ appId: app._id }));
+          await updateStackedAPI({
+            userId: user.uid,
+            rankings: initApps
+          });
+          fetched = await getAllStackingsAPI(user);
+        }
+        setRankings(fetched);
+      } catch (e) {
         console.error(e);
-      });
-    }
-  }, []);
+      }
+    })();
+  }, [applications.length, user]);
 
   const classes = useStyles();
   // TODO: replace this with list from store or props when connecting to DB :)
@@ -148,21 +153,24 @@ function StackedRankings({
     if (!result.destination) {
       return;
     }
+    const before = rankings;
     const reorderedList = reorder(
       rankings,
       result.source.index,
       result.destination.index
     );
-    updateStackedAPI({
-      userId: user.uid,
-      rankings: reorderedList.map(app => ({ appId: app._id }))
-    })
-      .then(() => {
-        loadStackedRankings(reorderedList);
-      })
-      .catch(e => {
-        console.error(e);
+    try {
+      updateStackedAPI({
+        userId: user.uid,
+        rankings: reorderedList.map(app => ({ appId: app._id }))
       });
+      setRankings(reorderedList);
+    } catch (e) {
+      setRankings(before);
+      console.error(e);
+      // TODO error message
+      window.alert("Unable to update stacked rankings.");
+    }
   };
 
   const onBeforeDragStart = provided => {
@@ -171,6 +179,7 @@ function StackedRankings({
     }
   };
 
+  console.log(rankings);
   return (
     <div className={classes.root}>
       <h1>Stacked Rankings</h1>
@@ -231,13 +240,8 @@ function StackedRankings({
 
 const mapStateToProps = state => {
   return {
-    applications: state.applications.applications,
-    rankings: state.applications.stackedRankings
+    applications: state.applications.applications
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  loadStackedRankings: payload => dispatch(loadStackedRankings(payload))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(StackedRankings);
+export default connect(mapStateToProps)(StackedRankings);

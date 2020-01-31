@@ -76,7 +76,6 @@ const useStyles = makeStyles({
 function CanvasCard({
   children,
   expanded,
-  key,
   id,
   onHeaderClick,
   onLinkClick,
@@ -87,19 +86,18 @@ function CanvasCard({
 }) {
   const classes = useStyles();
 
-
   let rate = 0;
   let numComments = 0;
   if (review) {
-    review.questionList.map((item) => {
-      if (item.id === id){
-        rate = item.rating
+    review.questionList.map(item => {
+      if (item.id === id) {
+        rate = item.rating;
         numComments = item.notes.length;
       }
-    })
+    });
   }
   if (rate < 0) {
-    rate = 0
+    rate = 0;
   }
   return (
     <Card className={classes.root} elevation={0}>
@@ -124,14 +122,12 @@ function CanvasCard({
             id={id}
             update={update}
             review={review}
-          >
-          </SectionRating>
+          ></SectionRating>
           <SectionComments
             id={id}
             update={update}
             review={review}
-          >
-          </SectionComments>
+          ></SectionComments>
         </Collapse>
         {!expanded && (
           <ReadMoreLink

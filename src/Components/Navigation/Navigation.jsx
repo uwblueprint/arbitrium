@@ -83,7 +83,7 @@ function Navigation({ pathname, push, showStackedRankings }) {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> { " SVP Investee Grant Candidates " } </h2>
+        <h2> {" SVP Investee Grant Candidates "} </h2>
         <hr />
         <Button
           id="all_applications"
@@ -96,9 +96,6 @@ function Navigation({ pathname, push, showStackedRankings }) {
             document.getElementById("all_applications").style.color = "#6202EE";
             document.getElementById("all_applications").style.backgroundColor =
               "#ECE0FD";
-            document.getElementById("stacked_rankings").style.color = "black";
-            document.getElementById("stacked_rankings").style.backgroundColor =
-                "white";
             push("/applications");
           }}
           variant="contained"
@@ -178,9 +175,8 @@ function Navigation({ pathname, push, showStackedRankings }) {
 
 export default connect(
   state => ({
-    showStackedRankings: true,
-    // state.applications.applications.length ===
-    // state.applications.reviews.length,
+    showStackedRankings:
+      state.applications.applications.length === state.reviewCount,
     pathname: state.router.location.pathname
   }),
   { push }

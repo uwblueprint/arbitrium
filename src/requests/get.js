@@ -4,19 +4,36 @@ const proxy =
     : "http://localhost:4000";
 
 async function getReviewAPI(user, applicationId) {
-    const token = await user.getIdToken();
-    const response = await fetch(proxy + `/api/ratings/${user.uid}/${applicationId}`, {
+  const token = await user.getIdToken();
+  const response = await fetch(
+    proxy + `/api/ratings/${user.uid}/${applicationId}`,
+    {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         authorization: `Bearer ${token}`
       }
-    });
-    const body = await response.json();
-    if (response.status !== 200) {
-      throw Error(body.message);
     }
-    return body;
-  };
+  );
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
 
-module.exports = { getReviewAPI};
+async function getAllStackingsAPI(user) {
+  const response = await fetch(proxy + `/api/stackings/${user.uid}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    }
+  });
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
+module.exports = { getReviewAPI, getAllStackingsAPI };

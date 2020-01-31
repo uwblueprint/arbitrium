@@ -13,7 +13,6 @@ const APPLICATION_STAGE = {
   FULL_APPLICATION: 1
 };
 
-
 const Wrapper = styled.div`
   margin-top: 150px;
   padding: 0 136px;
@@ -37,44 +36,62 @@ const Wrapper = styled.div`
 `;
 
 export default class ApplicationList extends Component {
+  render() {
+    console.log(this.props);
+    //Pre-calculate the applications array before rendering
 
-    render() {
-      console.log(this.props);
-      //Pre-calculate the applications array before rendering
-
-        return (
-          <Wrapper className="application-list">
-            <Paper>
-              <h1>All Applicants</h1>
-              <Table className="table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell style={{width: "25%"}}>Applicant Name</TableCell>
-                    <TableCell style={{width: "25%"}} align="left">Rating</TableCell>
-                    <TableCell style={{width: "25%"}} align="left">Last reviewed</TableCell>
-                    <TableCell style={{width: "25%"}} align="left"></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.props.applications ?
-                    this.props.applications.map(application => (
-                      <TableRow hover>
-                              <TableCell component="th" scope="row">
-                                  {application[ 'Organization Name']}
-                              </TableCell>
-                              <TableCell align="left">{application['rating'] || "Not Rated" }</TableCell>
-                              <TableCell align="left">{application['last reviewed'] || "Never" }</TableCell>
-                              <TableCell align="left">
-                                <Button variant="contained" color="primary"  target="_blank" value="OpenApplication" onClick={() =>
-                                    {this.props.history.push('submissions/'+application._id)}}>Open</Button>
-                              </TableCell>
-                          </TableRow>
-                      ))
-                    : "ERROR LOADING APPLICATIONS FROM DATABASE"}
-                </TableBody>
-              </Table>
-            </Paper>
-          </Wrapper>
-        )
-    }
+    return (
+      <Wrapper className="application-list">
+        <Paper>
+          <h1>All Applicants</h1>
+          <Table className="table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ width: "25%" }}>Applicant Name</TableCell>
+                <TableCell style={{ width: "25%" }} align="left">
+                  Rating
+                </TableCell>
+                <TableCell style={{ width: "25%" }} align="left">
+                  Last reviewed
+                </TableCell>
+                <TableCell style={{ width: "25%" }} align="left"></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {this.props.applications
+                ? this.props.applications.map(application => (
+                    <TableRow hover key={application._id}>
+                      <TableCell component="th" scope="row">
+                        {application["Organization Name"]}
+                      </TableCell>
+                      <TableCell align="left">
+                        {application["rating"] || "Not Rated"}
+                      </TableCell>
+                      <TableCell align="left">
+                        {application["last reviewed"] || "Never"}
+                      </TableCell>
+                      <TableCell align="left">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          target="_blank"
+                          value="OpenApplication"
+                          onClick={() => {
+                            this.props.history.push(
+                              "submissions/" + application._id
+                            );
+                          }}
+                        >
+                          Open
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : "ERROR LOADING APPLICATIONS FROM DATABASE"}
+            </TableBody>
+          </Table>
+        </Paper>
+      </Wrapper>
+    );
+  }
 }
