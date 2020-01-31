@@ -19,7 +19,7 @@ const SectionWrapper = styled.div`
   }
 `;
 
-function SectionComments({ id, update, review, ...rest }) {
+function SectionComments({ id, update, review }) {
   let comments = [];
   if (review) {
     if (id == "master") {

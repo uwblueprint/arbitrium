@@ -47,7 +47,7 @@ const CommentBlock = styled.div`
   }
 `;
 
-const Comment = ({ comment, userId }) => (
+const Comment = ({ comment }) => (
   <CommentBlock>
     <div className="circle image">{"You"}</div>
 

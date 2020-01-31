@@ -77,7 +77,6 @@ function CanvasCard({
   id,
   onHeaderClick,
   onLinkClick,
-  rating,
   title,
   update,
   review

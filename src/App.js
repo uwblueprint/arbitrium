@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router";
-import { createBrowserHistory } from "history";
 import Header from "./Components/Header/Header";
 import Container from "./Components/Container/Container";
 import Home from "./Components/Home/Home";
@@ -29,11 +28,6 @@ const proxy =
   process.env.NODE_ENV === "production"
     ? process.env.REACT_APP_SERVER
     : "http://localhost:4000";
-
-//Are we using this?
-const browserHistory = createBrowserHistory();
-
-//const currentRoute = withRouter(props => <)
 
 class App extends Component {
   constructor(props) {
@@ -93,7 +87,7 @@ class App extends Component {
     return body;
   };
 
-  postUserAPI = async param => {
+  postUserAPI = async () => {
     const response = await fetch(proxy + "/api/applications", {
       method: "POST",
       body: JSON.stringify({
