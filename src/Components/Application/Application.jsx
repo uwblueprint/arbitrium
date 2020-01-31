@@ -46,9 +46,6 @@ class Application extends Component {
   //transpilers will ensure data is converted to form usable by components
 
   getApplicationDetails = () => {
-    console.log("wtf");
-    console.log(this.props.applications);
-
     return this.props.applications.applications.filter(
       application =>
         application["_id"] === this.props.match.params.organizationId
@@ -100,10 +97,6 @@ class Application extends Component {
   //Comment update - comment
   //rating update - rating
   handleReviewUpdate = (type, data) => {
-    console.log("Type Update");
-    console.log(type);
-    console.log("Date to update");
-    console.log(data);
     let review;
     //If a review doesn't exist then create one
     if (this.state.review == null) {
@@ -202,12 +195,9 @@ class Application extends Component {
   };
 
   findReview = appId => {
-    console.log(appId);
     getReviewAPI(this.props.user, appId).then(res => {
-      console.log(res);
       this.setState({ review: res[0] });
     });
-    console.log(this.state.review);
   };
 
   componentDidMount() {
@@ -219,7 +209,6 @@ class Application extends Component {
     this.setState({ userId: userId });
 
     getReviewAPI(this.props.user, appId).then(res => {
-      console.log(res);
       this.setState({ review: res[0] });
     });
   }

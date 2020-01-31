@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
-import classNames from "classnames";
 
 import SectionList from "../../mock/decisionSections.json";
-import NavigationList from "../../mock/navigationSections.json";
 
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";

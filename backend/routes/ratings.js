@@ -21,12 +21,10 @@ function checkIfAuthenticated(req, res, next) {
   getAuthToken(req, res, async () => {
     try {
       const { authToken } = req;
-      console.log(authToken);
       const userInfo = await admin.auth().verifyIdToken(authToken);
       req.authId = userInfo.uid;
       return next();
     } catch (e) {
-      console.log(e);
       return res
         .status(401)
         .send({ error: "You are not authorized to make this request" });
@@ -43,7 +41,6 @@ router.get("/:userid", function(req, res) {
       return;
     }
     db.reviews.find({ userId: req.params.userid }).then(function(found) {
-      console.log(found);
       res.json(found);
     });
   } catch (err) {
@@ -55,7 +52,6 @@ router.get("/:userid/:appId", function(req, res) {
   db.reviews
     .find({ applicationId: req.params.appId, userId: req.params.userid })
     .then(function(found) {
-      console.log(found);
       res.json(found);
     })
     .catch(function(err) {

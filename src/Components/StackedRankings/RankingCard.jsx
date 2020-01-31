@@ -1,9 +1,13 @@
 import React from "react";
+import { connect } from "react-redux";
 
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { makeStyles } from "@material-ui/core";
 import DragHandle from "@material-ui/icons/DragIndicator";
+
+import { push } from "connected-react-router";
 
 const useStyles = makeStyles({
   drag: {
@@ -45,24 +49,39 @@ const useStyles = makeStyles({
   }
 });
 
-function RankingCard({ companyName, rating }) {
+function RankingCard({ companyName, rating, appId, push }) {
   const classes = useStyles();
-  let notRatingStyle = {}
+  let notRatingStyle = {};
   return (
     <Card className={classes.root} elevation={0}>
-      <CardContent style={!rating ? {backgroundColor: '#929292'}: {backgroundColor: '#F4F4F4'}}>
+      <CardContent
+        style={
+          !rating
+            ? { backgroundColor: "#929292" }
+            : { backgroundColor: "#F4F4F4" }
+        }
+      >
         <div className={classes.content}>
           <DragHandle className={classes.drag} />
           <div className={classes.company}>{companyName}</div>
-          {!rating && <div className={classes.rating}>Your Rating: Not Rated</div>}
-          {rating && <div className={classes.rating}>Your Rating: {rating}/5</div>}
-          <div className={classes.link}>
+          {!rating && (
+            <div className={classes.rating}>Your Rating: Not Rated</div>
+          )}
+          {rating && (
+            <div className={classes.rating}>Your Rating: {rating}/5</div>
+          )}
+          <Button
+            className={classes.link}
+            onClick={() => {
+              push(`/submissions/${appId}`);
+            }}
+          >
             <a>Open Application</a>
-          </div>
+          </Button>
         </div>
       </CardContent>
     </Card>
   );
 }
 
-export default RankingCard;
+export default connect(null, { push })(RankingCard);

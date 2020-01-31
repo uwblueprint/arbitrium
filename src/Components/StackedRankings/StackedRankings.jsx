@@ -179,7 +179,6 @@ function StackedRankings({ applications, user }) {
     }
   };
 
-  console.log(rankings);
   return (
     <div className={classes.root}>
       <h1>Stacked Rankings</h1>
@@ -211,6 +210,7 @@ function StackedRankings({ applications, user }) {
                           {...provided.dragHandleProps}
                         >
                           <RankingCard
+                            appId={item._id}
                             companyName={item["Organization Name"]}
                             rating={item.rating}
                           />
