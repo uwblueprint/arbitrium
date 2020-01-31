@@ -1,5 +1,4 @@
 const express = require("express");
-const admin = require("../firebase-service");
 
 // allows routes to be sent out
 const router = express.Router();
