@@ -43,4 +43,5 @@ async function updateStackedAPI(databody) {
   return body;
 }
 
-module.exports = { updateReviewAPI, updateStackedAPI };
+exports.updateReviewAPI = updateReviewAPI;
+exports.updateStackedAPI = updateStackedAPI;

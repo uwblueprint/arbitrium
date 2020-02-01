@@ -7,8 +7,6 @@ import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
-import { updateReviewAPI } from "../../requests/update";
-import { getReviewAPI } from "../../requests/get";
 //column categories
 import { fileCategories, adminCategories } from "./column_categories";
 import { push } from "connected-react-router";
@@ -20,6 +18,9 @@ import { MOCK_RATING_DATA } from "./mockData.json";
 import { connect } from "react-redux";
 import Rubric from "../Rubric/Rubric";
 import { INSERT_REVIEW } from "../../Constants/ActionTypes";
+
+const GET = require("../../requests/get")
+const UPDATE = require("../../requests/update");
 
 class Application extends Component {
   constructor(props) {
@@ -132,7 +133,7 @@ class Application extends Component {
 
     //Update the review
     this.setState({ review: review });
-    updateReviewAPI(review).then(res => {
+    UPDATE.updateReviewAPI(review).then(res => {
       if (res.nUpserted === 1) {
         this.props.dispatch({ type: INSERT_REVIEW });
       }
@@ -182,7 +183,7 @@ class Application extends Component {
   };
 
   findReview = appId => {
-    getReviewAPI(this.props.user, appId).then(res => {
+    GET.getReviewAPI(this.props.user, appId).then(res => {
       this.setState({ review: res[0] });
     });
   };
@@ -195,7 +196,7 @@ class Application extends Component {
     this.setState({ appId: appId });
     this.setState({ userId: userId });
 
-    getReviewAPI(this.props.user, appId).then(res => {
+    GET.getReviewAPI(this.props.user, appId).then(res => {
       this.setState({ review: res[0] });
     });
   }

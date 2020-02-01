@@ -36,4 +36,5 @@ async function getAllStackingsAPI(user) {
   return body;
 }
 
-module.exports = { getReviewAPI, getAllStackingsAPI };
+exports.getAllStackingsAPI = getAllStackingsAPI;
+exports.getReviewAPI = getReviewAPI;
