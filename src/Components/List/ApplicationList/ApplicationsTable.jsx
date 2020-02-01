@@ -57,15 +57,10 @@ export default class ApplicationList extends Component {
     if (this.state.reviews) {
       this.state.reviews.map((item) => {
         if (item.applicationId == appId){
-          console.log(item.rating);
           if (type == "rating"){
             res = item["rating"] + "/5"
           }
           if (type == "lastReviewed"){
-            console.log(item.lastReviewed);
-            console.log(moment(item.lastReviewed).toDate());
-            console.log()
-
             let date = moment(item.lastReviewed);
             if (date){
               res = moment(item["lastReviewed"]).toDate().toString().substring(0,24);

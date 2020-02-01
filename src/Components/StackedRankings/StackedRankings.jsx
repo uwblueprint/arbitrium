@@ -184,6 +184,9 @@ function StackedRankings({ applications, user }) {
         Stacked Rankings are based on your overall ratings. You can move
         applicants around if you disagree with the rankings.
       </p>
+      <p>
+        The applicants above the cutoff line are the ones you wish to see move on to the next round
+      </p>
       <div className={classes.rankings}>
         {column}
         <DragDropContext

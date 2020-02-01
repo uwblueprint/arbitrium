@@ -34,10 +34,11 @@ const useStyles = makeStyles({
     }
   },
   company: {
-    textAlign: "left"
+    textAlign: "left",
+    maxWidth: '150px'
   },
   rating: {
-    textAlign: "center"
+    textAlign: "center",
   },
   link: {
     textAlign: "right",
@@ -72,7 +73,9 @@ function RankingCard({ companyName, rating, appId, push }) {
             <div className={classes.rating}>Your Rating: {rating}/5</div>
           )}
           <Button
-            className={classes.link}
+            variant="contained"
+            color="primary"
+            target="_blank"
             onClick={() => {
               push(`/submissions/${appId}`);
             }}
