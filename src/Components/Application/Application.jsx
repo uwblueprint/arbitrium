@@ -199,17 +199,38 @@ class Application extends Component {
     GET.getReviewAPI(this.props.user, appId).then(res => {
       this.setState({ review: res[0] });
     });
+
+
   }
+
+  findApplicationIndex = () => {
+    const { organizationId } = this.props.match.params;
+    return this.props.applications.applications.map(e => e._id).indexOf(organizationId);
+  }
+
+  /*
+  handleAppChange = (type) => {
+    if (type === 'prev'){
+      this.props.history.push()
+    }
+  }
+  */
 
   render() {
     let review = this.createReview();
+    let applications = this.props.applications.applications;
+    const currentAppIndex = applications!=null ? this.findApplicationIndex() : null;
+    const previousApplication = (applications && currentAppIndex > 0) ? "/submissions/"+applications[currentAppIndex-1]['_id'] : null;
+    const nextApplication = (applications && currentAppIndex < applications.length-1) ? "/submissions/"+applications[currentAppIndex+1]['_id'] : null;
 
+    console.log(currentAppIndex);
+    console.log(nextApplication);
+    console.log(previousApplication);
     let name = "Loading..."
     let app = this.getApplicationDetails();
     if (app){
       name = app["Organization Name"]
     }
-    console.log(name)
     return (
       <div className="pagecontainer">
         <FlowSelector>
@@ -251,8 +272,18 @@ class Application extends Component {
             </div>
           ) : null}
           <ApplicationSelector>
-            <Button color="primary">Previous Applicant</Button>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!previousApplication}
+              onClick={()=> {previousApplication ? this.props.history.push(previousApplication) : console.log("Previous Application doesn't exist") }}>
+              Previous Applicant
+            </Button>
+            <Button
+            variant="contained"
+            color="primary"
+            disabled={!nextApplication}
+            onClick={()=> {nextApplication ? this.props.history.push(nextApplication) : console.log("Previous Application doesn't exist") }}>>
               Next Applicant
             </Button>
           </ApplicationSelector>

@@ -171,8 +171,9 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
               {section.title}
             </Button>
           ))}
-        {showStackedRankings && (
+        {true && (
           <Button
+            disabled={!showStackedRankings}
             className={
               selected === "rankings" ? classes.selected : classes.unselected
             }
