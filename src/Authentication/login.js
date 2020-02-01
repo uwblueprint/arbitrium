@@ -85,9 +85,12 @@ const Login = ({ history }) => {
 
   const { currentUser } = useContext(AuthContext);
 
+/*
   if (currentUser) {
-    return <Redirect to={history.goBack()} />;
+    console.log(history.goBack());
+    return <Redirect to={'/applications'} />;
   }
+  */
 
   function validateForm() {
     return values.email.length > 0 && values.password.length > 0;
@@ -101,6 +104,9 @@ const Login = ({ history }) => {
     setValues({ ...values, [prop]: event.target.value });
   };
 
+  if (currentUser!==null && currentUser!==false) {
+      return <Redirect to={'/applications'} />;
+  } else if (currentUser!==false){
   return (
     <StyledCard>
       <CardHeader title="arbitrium" subheader="Sign-In" />
@@ -148,6 +154,7 @@ const Login = ({ history }) => {
       </CardContent>
     </StyledCard>
   );
+  } else return null;
 };
 
 export default withRouter(Login);

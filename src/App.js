@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router";
+import { Route, Switch, Redirect } from "react-router";
 import Header from "./Components/Header/Header";
 import Container from "./Components/Container/Container";
 import Home from "./Components/Home/Home";
@@ -185,6 +185,7 @@ class App extends Component {
                         path="/rankings"
                         component={StackedRankings}
                       ></PrivateRoute>
+                      <Redirect to={"/applications"} />
                     </Switch>
                   </Container>
                 </>
