@@ -4,11 +4,9 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import classNames from "classnames";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
-
 import RankingCard from "./RankingCard";
-
-import { updateStackedAPI } from "../../requests/update";
-import { getAllStackingsAPI } from "../../requests/get";
+const GET = require("../../requests/get")
+const UPDATE = require("../../requests/update");
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -108,15 +106,15 @@ function StackedRankings({ applications, user }) {
     (async function() {
       if (user == null || applications.length == 0) return;
       try {
-        let fetched = await getAllStackingsAPI(user);
+        let fetched = await GET.getAllStackingsAPI(user);
         if (fetched.length !== applications.length) {
           // Otherwise we need to initialize the user's rankings
           const initApps = applications.map(app => ({ appId: app._id }));
-          await updateStackedAPI({
+          await UPDATE.updateStackedAPI({
             userId: user.uid,
             rankings: initApps
           });
-          fetched = await getAllStackingsAPI(user);
+          fetched = await GET.getAllStackingsAPI(user);
         }
         setRankings(fetched);
       } catch (e) {
@@ -160,7 +158,7 @@ function StackedRankings({ applications, user }) {
       result.destination.index
     );
     try {
-      updateStackedAPI({
+      UPDATE.updateStackedAPI({
         userId: user.uid,
         rankings: reorderedList.map(app => ({ appId: app._id }))
       });
