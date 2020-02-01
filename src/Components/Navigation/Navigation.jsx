@@ -74,7 +74,7 @@ const useStyles = makeStyles({
   }
 });
 
-const Navigation = ({ pathname, push }) => {
+function Navigation({ pathname, push, showStackedRankings, applications }) {
   const [organization, setOrganization] = useState("UW Blueprint");
 
   const sendAlert = e => window.alert(e.target.textContent);
@@ -82,6 +82,11 @@ const Navigation = ({ pathname, push }) => {
 
   const classes = useStyles();
   const isApplicationReview = pathname.includes("/submissions/");
+
+  const getNextValidApplication = () => (
+    //temporary re-route to first available application in redux
+    applications[0]._id
+  );
 
   return (
     <nav>
@@ -109,7 +114,7 @@ const Navigation = ({ pathname, push }) => {
             });
             document.getElementById("application_submission").style.color = "#005EB8";
             document.getElementById("application_submission").style.backgroundColor = "#ECE0FD";
-            push(`/submissions/${organization}`)
+            push(`/submissions/${getNextValidApplication()}`);
           }}
         >
           Application Submission
@@ -152,6 +157,8 @@ const Navigation = ({ pathname, push }) => {
 
 export default connect(
   state => ({
+    showStackedRankings: true,
+    applications: state.applications.applications,
     pathname: state.router.location.pathname
   }),
   { push }
