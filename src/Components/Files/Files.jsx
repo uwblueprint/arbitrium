@@ -6,6 +6,7 @@ const FileButton = styled.button`
   border: 0;
   font-family: inherit;
   font-weight: 500;
+  text-align: left;
   background: none;
   font-size: 14px;
   display: block;
