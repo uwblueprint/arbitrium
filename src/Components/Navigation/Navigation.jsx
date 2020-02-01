@@ -56,7 +56,7 @@ const useStyles = makeStyles({
       width: "calc(100% - 32px)"
     },
     "& button.nested.selected": {
-      color: "#6202EE"
+      color: "#005EB8"
     },
     // organization Selector
     "& #organization.MuiSelect-root": {
@@ -93,7 +93,7 @@ const Navigation = ({ pathname, push }) => {
               document.getElementById(section.id).style.color = "black";
               document.getElementById(section.id).style.backgroundColor = "white";
             });
-            document.getElementById("all_applications").style.color = "#6202EE";
+            document.getElementById("all_applications").style.color = "#005EB8";
             document.getElementById("all_applications").style.backgroundColor = "#ECE0FD";
             push("/applications");
           }}
@@ -107,7 +107,7 @@ const Navigation = ({ pathname, push }) => {
               document.getElementById(section.id).style.color = "black";
               document.getElementById(section.id).style.backgroundColor = "white";
             });
-            document.getElementById("application_submission").style.color = "#6202EE";
+            document.getElementById("application_submission").style.color = "#005EB8";
             document.getElementById("application_submission").style.backgroundColor = "#ECE0FD";
             push(`/submissions/${organization}`)
           }}
@@ -128,7 +128,7 @@ const Navigation = ({ pathname, push }) => {
           SectionList.map(section => (
             <Button id={section.title} key={section.title} className="nested" onClick={() => {
               SectionList.map(section => (document.getElementById(section.title).style.color = "#888888"));
-              document.getElementById(section.title).style.color = "#6202EE";
+              document.getElementById(section.title).style.color = "#005EB8";
               document.getElementById("canvas_" + section.title).scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             }}>
@@ -140,7 +140,7 @@ const Navigation = ({ pathname, push }) => {
             document.getElementById(section.id).style.color = "black";
             document.getElementById(section.id).style.backgroundColor = "white";
           });
-          document.getElementById("stacked_rankings").style.color = "#6202EE";
+          document.getElementById("stacked_rankings").style.color = "#005EB8";
           document.getElementById("stacked_rankings").style.backgroundColor = "#ECE0FD";
           push(`/rankings`)
         }}>Stacked Rankings</Button>
