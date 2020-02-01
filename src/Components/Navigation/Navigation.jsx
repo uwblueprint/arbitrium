@@ -99,7 +99,7 @@ function Navigation({ pathname, push, showStackedRankings, applications }) {
               document.getElementById(section.id).style.backgroundColor = "white";
             });
             document.getElementById("all_applications").style.color = "#005EB8";
-            document.getElementById("all_applications").style.backgroundColor = "#ECE0FD";
+            document.getElementById("all_applications").style.backgroundColor = "#005EB826";
             push("/applications");
           }}
           variant="contained"
@@ -113,7 +113,7 @@ function Navigation({ pathname, push, showStackedRankings, applications }) {
               document.getElementById(section.id).style.backgroundColor = "white";
             });
             document.getElementById("application_submission").style.color = "#005EB8";
-            document.getElementById("application_submission").style.backgroundColor = "#ECE0FD";
+            document.getElementById("application_submission").style.backgroundColor = "#005EB826";
             push(`/submissions/${getNextValidApplication()}`);
           }}
         >
@@ -146,7 +146,7 @@ function Navigation({ pathname, push, showStackedRankings, applications }) {
             document.getElementById(section.id).style.backgroundColor = "white";
           });
           document.getElementById("stacked_rankings").style.color = "#005EB8";
-          document.getElementById("stacked_rankings").style.backgroundColor = "#ECE0FD";
+          document.getElementById("stacked_rankings").style.backgroundColor = "#005EB826";
           push(`/rankings`)
         }}>Stacked Rankings</Button>
         <Footer></Footer>

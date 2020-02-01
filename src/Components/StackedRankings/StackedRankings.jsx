@@ -133,7 +133,7 @@ function StackedRankings({ applications, user }) {
     for (let i = 0; i < numOrgs; ++i) {
       numbers.push(
         <React.Fragment key={i}>
-          <RankNumber>#{i + 1}</RankNumber>
+          <RankNumber>{i + 1}</RankNumber>
           {i === 4 && (
             <div className={classes.cutoff}>
               <div>Cutoff</div>

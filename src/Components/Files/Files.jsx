@@ -13,6 +13,7 @@ const FileButton = styled.button`
   margin: 8px 0;
   .name {
     color: #005EB8;
+    text-decoration: none;
     padding: 4px;
   }
   .size {
@@ -31,8 +32,8 @@ const Files = ({ fileData }) => {
           <span role="img" aria-label="fileIcon">
             📎
           </span>
-          <span className="name">
-            <a target="_blank" href={link}>
+          <span>
+            <a className="name" target="_blank" href={link}>
               {" "}
               {name}
             </a>

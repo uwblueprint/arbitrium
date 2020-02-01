@@ -57,12 +57,12 @@ const useStyles = makeStyles(theme => ({
   fab: {
     zIndex: 50,
     position: 'fixed',
-    right: '10px',
-    width: '170px',
+    bottom: '20px',
+    right: '20px',
+    width: '110px',
     height: '50px',
-    marginLeft: '80wh',
-    marginBottom: '70vh',
     textTransform: 'uppercase',
+    boxShadow: '0px 2px 4px 2px #cccccc',
   },
   popover: {
     position: 'absolute',
@@ -125,11 +125,11 @@ export default function Rubric() {
         <Typography className={classes.typography}>
         <div>{"Rating Scale Arbitrium allows you to rate each of the LOI sections individually, as well as provide an overall rating. The overall rating is mandatory, while"} </div>
         <div>{"rating each section is optional. Please use this rating scale and the criteria on pgs. Refer 2-3 for each application section and overall ranking"} </div>
-        <div>{" 5 = The organization meets all of our criteria, I think they would definitely be a good fit for SVP, I have no or very minor concerns\n"} </div>
-        <div>{" 4 = The organization meets most of our criteria, I think they are likely a good fit, I have some minor concerns\n"} </div>
-        <div>{" 3 = The organization meets some of our criteria, I think they have the potential to be a good fit, I have a few concerns\n"} </div>
-        <div>{" 2 = The organization meets a few criteria, I think they are probably not a good fit, I have some significant concerns\n"} </div>
-        <div>{" 1 = The organization does not meet our criteria, I don’t think they would be a good fit, I have many significant concerns"} </div>
+        <div>{"😍 5 = The organization meets all of our criteria, I think they would definitely be a good fit for SVP, I have no or very minor concerns\n"} </div>
+        <div>{"😄 4 = The organization meets most of our criteria, I think they are likely a good fit, I have some minor concerns\n"} </div>
+        <div>{"🙂 3 = The organization meets some of our criteria, I think they have the potential to be a good fit, I have a few concerns\n"} </div>
+        <div>{"😐 2 = The organization meets a few criteria, I think they are probably not a good fit, I have some significant concerns\n"} </div>
+        <div>{"😕 1 = The organization does not meet our criteria, I don’t think they would be a good fit, I have many significant concerns"} </div>
         </Typography>
       </StyledPopover>
     </div>

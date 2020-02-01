@@ -18,11 +18,12 @@ const StyledPaper = styled(Paper)`
     margin: 0 0 8px;
   }
   .rating-info {
-    color: #cccccc;
+    color: #888888;
     font-size: 14px;
     margin-top: 0;
   }
   .suggested {
+    font-size: 18px;
     margin-bottom: 20px;
   }
 `;
