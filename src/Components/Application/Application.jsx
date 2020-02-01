@@ -147,7 +147,7 @@ class Application extends Component {
     //THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE
     questionList.push({
       id: "canvas_Problem",
-      comments: [],
+      notes: [],
       rating: -1
     });
     questionList.push({
@@ -187,7 +187,7 @@ class Application extends Component {
     });
   };
 
-  componentDidMount() {
+  componentWillMount() {
     let appId = this.getApplicationDetails()
       ? this.getApplicationDetails()._id
       : null;
@@ -201,6 +201,8 @@ class Application extends Component {
   }
 
   render() {
+    console.log(this.state.review)
+    let review = this.createReview();
     return (
       <div className="pagecontainer">
         <FlowSelector>

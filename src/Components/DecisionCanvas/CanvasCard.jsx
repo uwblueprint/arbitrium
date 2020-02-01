@@ -89,7 +89,9 @@ function CanvasCard({
     review.questionList.map(item => {
       if (item.id === id) {
         rate = item.rating;
-        numComments = item.notes.length;
+        if (item.notes){
+          numComments = item.notes.length;
+        }
       }
     });
   }
