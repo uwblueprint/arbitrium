@@ -146,6 +146,8 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
         >
           Application Submission
         </Button>
+        {/*
+        //Removing this for now because the functionality is not implemented
         <Select
           id="organization"
           labelId="organization-label"
@@ -155,7 +157,10 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
           disableUnderline
         >
           <MenuItem value="UW Blueprint">UW Blueprint</MenuItem>
+
         </Select>
+        */
+        }
         {isApplicationReview &&
           SectionList.map(section => (
             <Button
