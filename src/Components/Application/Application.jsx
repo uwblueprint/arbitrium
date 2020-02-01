@@ -202,8 +202,14 @@ class Application extends Component {
   }
 
   render() {
-    console.log(this.state.review)
     let review = this.createReview();
+
+    let name = "Loading..."
+    let app = this.getApplicationDetails();
+    if (app){
+      name = app["Organization Name"]
+    }
+    console.log(name)
     return (
       <div className="pagecontainer">
         <FlowSelector>
@@ -214,12 +220,12 @@ class Application extends Component {
           <h1>
             <Button
               className="all-applicants"
-              onClick={() => push("/applications")}
+              onClick={() => this.props.history.push("/applications")}
             >
               &lt; All Applicants
             </Button>
             <br />
-            UW Blueprint
+            {name}
           </h1>
           <Rubric />
           <hr />
@@ -266,9 +272,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(Application);
 
 const Wrapper = styled.div`
   margin: 0 auto;
+  padding-top: 50px;
   max-width: 800px;
   h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: normal;
     .all-applicants {
       display: block;
