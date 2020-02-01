@@ -96,11 +96,11 @@ class Application extends Component {
     }
 
     //Update the data in the review
-    review.lastReviewed = moment.now();
+    review.lastReviewed = moment();
     if (data.id === "master") {
       if (type === "comment") {
         let com = {
-          lastReviewed: moment.now(),
+          lastReviewed: moment(),
           value: data.text
         };
         review.comments.push(com);
@@ -111,7 +111,7 @@ class Application extends Component {
     } else {
       if (type === "comment") {
         let com = {
-          lastReviewed: moment.now(),
+          lastReviewed: moment(),
           value: data.text
         };
         review.questionList.forEach(item => {
@@ -176,7 +176,7 @@ class Application extends Component {
       userId: this.state.userId,
       rating: -1,
       comments: comments,
-      lastReviewed: moment.now(),
+      lastReviewed: moment(),
       questionList: questionList
     };
     return review;

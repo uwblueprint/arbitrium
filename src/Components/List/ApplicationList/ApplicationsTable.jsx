@@ -4,6 +4,9 @@ import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import moment from "moment";
+
+const GET = require("../../../requests/get")
 
 const APPLICATION_STAGE = {
   LETTER_OF_INTEREST: 0,
@@ -33,6 +36,51 @@ const Wrapper = styled.div`
 `;
 
 export default class ApplicationList extends Component {
+
+
+  constructor(props) {
+    super(props);
+    this.state = {
+        reviews: []
+    };
+  }
+
+  componentDidMount() {
+    GET.getUserReviewsAPI(this.props.user).then(res => {
+      console.log(res);
+      this.setState({ reviews: res });
+    });
+  }
+
+  getReviewData = (appId, type) => {
+    let res = null;
+    if (this.state.reviews) {
+      this.state.reviews.map((item) => {
+        if (item.applicationId == appId){
+          console.log(item.rating);
+          if (type == "rating"){
+            res = item["rating"] + "/5"
+          }
+          if (type == "lastReviewed"){
+            console.log(item.lastReviewed);
+            console.log(moment(item.lastReviewed).toDate());
+            console.log()
+
+            let date = moment(item.lastReviewed);
+            if (date){
+              res = moment(item["lastReviewed"]).toDate().toString().substring(0,24);
+            }
+            else {
+              res = "Error"
+            }
+          }
+
+          //res = item[type]
+        }
+      })
+    }
+    return res
+  }
   render() {
     //Pre-calculate the applications array before rendering
 
@@ -48,7 +96,7 @@ export default class ApplicationList extends Component {
                   Rating
                 </TableCell>
                 <TableCell style={{ width: "25%" }} align="left">
-                  Last reviewed
+                  Last Edited
                 </TableCell>
                 <TableCell style={{ width: "25%" }} align="left"></TableCell>
               </TableRow>
@@ -61,10 +109,10 @@ export default class ApplicationList extends Component {
                         {application["Organization Name"]}
                       </TableCell>
                       <TableCell align="left">
-                        {application["rating"] || "Not Rated"}
+                        {this.getReviewData(application._id, "rating") || "Not Rated"}
                       </TableCell>
                       <TableCell align="left">
-                        {application["last reviewed"] || "Never"}
+                        {this.getReviewData(application._id, "lastReviewed") || "Never"}
                       </TableCell>
                       <TableCell align="left">
                         <Button

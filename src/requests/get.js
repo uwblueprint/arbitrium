@@ -22,6 +22,25 @@ async function getReviewAPI(user, applicationId) {
   return body;
 }
 
+async function getUserReviewsAPI(user) {
+  const token = await user.getIdToken();
+  const response = await fetch(
+    proxy + `/api/ratings/${user.uid}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        authorization: `Bearer ${token}`
+      }
+    }
+  );
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
 async function getAllStackingsAPI(user) {
   const response = await fetch(proxy + `/api/stackings/${user.uid}`, {
     headers: {
@@ -36,4 +55,4 @@ async function getAllStackingsAPI(user) {
   return body;
 }
 
-export { getReviewAPI, getAllStackingsAPI };
+export { getReviewAPI, getAllStackingsAPI, getUserReviewsAPI };
