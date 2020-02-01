@@ -38,7 +38,11 @@ const Files = ({ fileData }) => {
               {name}
             </a>
           </span>
+          {/*
+            //The file sizes are currently hard coded
           <span className="size">{`(${size.toLocaleString()} K)`}</span>
+          */
+          }
         </FileButton>
       ))}
     </div>
