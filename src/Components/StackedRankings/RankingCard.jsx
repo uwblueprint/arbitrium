@@ -57,9 +57,10 @@ function RankingCard({ companyName, rating, appId, push }) {
       <CardContent
         style={
           !rating
-            ? { backgroundColor: "#929292" }
-            : { backgroundColor: "#F4F4F4" }
+            ? { backgroundColor: "#F4F4F4" }
+            : { backgroundColor: "white" }
         }
+        style={{ padding: 10 }}
       >
         <div className={classes.content}>
           <DragHandle className={classes.drag} />

@@ -13,8 +13,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import "./Navigation.css";
 const useStyles = makeStyles({
   selected: {
-    backgroundColor: "#ECE0FD",
-    color: "#6202EE"
+    backgroundColor: "#005EB826",
+    color: "#005EB8"
   },
   unselected: {
     backgroundColor: "white",
@@ -62,7 +62,7 @@ const useStyles = makeStyles({
       width: "calc(100% - 32px)"
     },
     "& button.nested.selected": {
-      color: "#6202EE"
+      color: "#005EB8"
     },
     // organization Selector
     "& #organization.MuiSelect-root": {

@@ -117,7 +117,7 @@ function DecisionCanvas({ update, review }) {
               </ol>
             </div>
             <div className="answers">
-              <h3>Application Answer</h3>some answers and such
+              <h3>Candidate Answer</h3>some answers and such
             </div>
           </CardBody>
         </CanvasCard>
