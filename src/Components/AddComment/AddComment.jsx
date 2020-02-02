@@ -14,6 +14,7 @@ const CommentForm = styled.form`
     display: block;
     font-family: inherit;
     width: 100%;
+    fontSize: 14px;
   }
   .buttonGroup {
     margin-top: 16px;

@@ -57,7 +57,7 @@ export default class ApplicationList extends Component {
     if (this.state.reviews) {
       this.state.reviews.map((item) => {
         if (item.applicationId == appId){
-          if (type == "rating"){
+          if (type == "rating" && item["rating"] > 0){
             res = item["rating"] + "/5"
           }
           if (type == "lastReviewed"){

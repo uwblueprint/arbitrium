@@ -166,7 +166,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
             <Button
               key={section.title}
               className="nested"
-              onClick={() => scrollToSection(section.title)}
+              onClick={() => scrollToSection(section.id)}
             >
               {section.title}
             </Button>
