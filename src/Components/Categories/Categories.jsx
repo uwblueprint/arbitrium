@@ -117,7 +117,7 @@ const Categories = ({ categoryData }) => {
             </SecondarySummaryPanel>
             <ExpansionPanelDetails classes={{ root: classes.secondaryDetailsPanel }}>
               <CategoryWrapper>
-                {socialMedia.map(({ title, value }, index)) => (
+                {socialMedia.map(({ title, value }, index) => (
                   <div className="category" key={index}>
                     <span className="title">{title}</span>
                     <span className="value">{value}</span>
