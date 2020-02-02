@@ -31,7 +31,7 @@ const StyledPaper = styled(Paper)`
 
 const useStyles = makeStyles({
   root: {
-    padding: "10px",
+    padding: "16px",
     fontSize: 14,
     borderRadius: 0,
     boxShadow: "0 2px 3px 1px #cccccc",

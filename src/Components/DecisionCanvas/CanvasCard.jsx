@@ -15,12 +15,12 @@ import SectionRating from "./SectionRating";
 
 // Note that a rating of '0' is not possible.
 const ratingColour = [
-  "#fff",
-  "#DE5252",
-  "#FCD717",
-  "#EB9546",
+  "#55A94E",
+  "#55A94E",
   "#51ACB9",
-  "#51ACB9"
+  "#EB9546",
+  "#FCD717",
+  "#DE5252"
 ];
 
 const ClickableHeader = styled(CardHeader)`
@@ -57,13 +57,13 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: {
+  root: index => ({
     fontSize: 14,
     borderRadius: 0,
-    borderTop: `4px solid ${ratingColour[5]}`,
+    borderTop: `4px solid ${ratingColour[index]}`,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20
-  },
+  }),
   title: {
     color: "#000",
     fontSize: "20px",
@@ -79,9 +79,11 @@ function CanvasCard({
   onLinkClick,
   title,
   update,
-  review
+  review,
 }) {
-  const classes = useStyles();
+  console.log(parseInt(id.substring(7), 10));
+  let index = parseInt(id.substring(7), 10)
+  const classes = useStyles(index);
 
   let rate = 0;
   let numComments = 0;

@@ -287,19 +287,17 @@ class Application extends Component {
   render() {
     let review = this.createReview();
     let applications = this.props.applications.applications;
-    console.log(this.state.review)
+
     const currentAppIndex = applications!=null ? this.findApplicationIndex() : null;
     const previousApplication = (applications && currentAppIndex > 0) ? "/submissions/"+applications[currentAppIndex-1]['_id'] : null;
     const nextApplication = (applications && currentAppIndex < applications.length-1) ? "/submissions/"+applications[currentAppIndex+1]['_id'] : null;
-    console.log(currentAppIndex);
-    console.log(nextApplication);
-    console.log(previousApplication);
+
     let name = "Loading... (Submission not found)"
     let app = this.getApplicationDetails();
     if (app){
       name = app["Organization Name"]
-      console.log(this.transpileLongAnswerData());
     }
+
     return (
       <div className="pagecontainer">
         <FlowSelector>

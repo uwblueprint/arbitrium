@@ -98,7 +98,7 @@ function DecisionCanvas({ update, review, categoryData }) {
       {categoryData ? categoryData.map((section, index) => (
         <CanvasCard
           expanded={expandArray[index]}
-          key={section.title}
+          key={section.id}
           id={"canvas_" + section.id}
           onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
           onLinkClick={() => dispatch({ type: "EXPAND", index })}

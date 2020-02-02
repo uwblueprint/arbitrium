@@ -63,7 +63,7 @@ export default class ApplicationList extends Component {
           if (type == "lastReviewed"){
             let date = moment(item.lastReviewed);
             if (date){
-              res = moment(item["lastReviewed"]).toDate().toString().substring(0,24);
+              res = moment(item["lastReviewed"]).toDate().toString().substring(4,16);
             }
             else {
               res = "Error"

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import moment from "moment";
 
 const CommentBlock = styled.div`
   display: grid;
@@ -52,7 +53,7 @@ const Comment = ({ comment }) => (
     <div className="circle image">{"You"}</div>
 
     <div className="comment-info">
-      <span className="comment-author">{"You"}</span>
+      <span className="comment-author">{moment(comment["lastReviewed"]).toDate().toString().substring(4,16)}</span>
     </div>
     <p className="comment-text">{comment.value}</p>
   </CommentBlock>
