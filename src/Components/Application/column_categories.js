@@ -1,28 +1,36 @@
 //the format for adminCategories is properyName: displayOrder
 //(where a higher displayOrder corresponds to a higher position on the submissions page listview of categories)
 export const adminCategories = {
-    'Email Address': 1,
-    'Contact First Name': 2,
-    'Contact Last Name': 3,
-    'Street Address Line': 4,
-    'City': 5,
-    'Province, State or County': 6,
-    'Select a Country': 7,
-    'Postal Code': 8,
-    'Organization Name': 9,
-    'Phone Number': 10,
-    'Organization Website': 11,
-    'Charitable Registration Number': 12,
-    'Twitter': 13,
-    'Facebook': 14,
-    'Linkedin': 15,
-    'Other Social Media Link': 16,
-    "Have you discussed your application with SVP's Executive Director?": 17,
-    "Do your primary activities support residents in the Region of Waterloo?": 18,
-    "Organization Affiliation": 19,
-    "Total Number of clients served in 2019": 20,
-    "Total Number of volunteers in 2019": 21,
-    "Annual Budget": 22
+  contact:  {
+    'Contact First Name': 1,
+    'Contact Last Name': 2,
+    'Phone Number': 3,
+    'Email Address': 4,
+    'Street Address Line': 5,
+    'City': 6,
+    'Province, State or County': 7,
+    'Select a Country': 8,
+    'Postal Code': 9,
+    'Organization Website': 10
+  },
+  socialMedia: {
+    'Twitter': 1,
+    'Facebook': 2,
+    'Linkedin': 3,
+    'Other Social Media Link': 4
+  },
+  organizationInformation: {
+    'Charitable Registration Number': 1,
+    'Organization Name': 2,
+    "Organization Affiliation": 3,
+    "Total Number of clients served in 2019": 4,
+    "Total Number of volunteers in 2019": 5,
+    "Annual Budget": 6,
+    "Do your primary activities support residents in the Region of Waterloo?": 7
+  },
+  applicationInformation: {
+    "Have you discussed your application with SVP's Executive Director?": 1
+  }
 }
 
 export const fileCategories = {

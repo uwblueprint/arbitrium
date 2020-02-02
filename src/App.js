@@ -156,11 +156,6 @@ class App extends Component {
                     <Switch>
                       <PrivateRoute
                         exact={true}
-                        path="/"
-                        component={Home}
-                      ></PrivateRoute>
-                      <PrivateRoute
-                        exact={true}
                         path="/applications"
                         component={props =>
                           this.getWrappedComponent(props, ApplicationsTable)

@@ -47,10 +47,24 @@ class Application extends Component {
   transpileCategoryData = () => {
     //todo when category data is made available, currently leverages mock data
     const applicant = this.getApplicationDetails();
-    return Object.keys(adminCategories).map(adminCategory => ({
-      title: adminCategory,
-      value: applicant[adminCategory]
-    }));
+    return {
+      contact : Object.keys(adminCategories.contact).map(adminCategory => ({
+        title: adminCategory,
+        value: applicant[adminCategory]
+      })),
+      socialMedia : Object.keys(adminCategories.socialMedia).map(adminCategory => ({
+        title: adminCategory,
+        value: applicant[adminCategory]
+      })),
+      organizationInformation : Object.keys(adminCategories.organizationInformation).map(adminCategory => ({
+        title: adminCategory,
+        value: applicant[adminCategory]
+      })),
+      applicationInformation : Object.keys(adminCategories.applicationInformation).map(adminCategory => ({
+        title: adminCategory,
+        value: applicant[adminCategory]
+      }))
+    }
   };
 
   transpileFileData = () => {
