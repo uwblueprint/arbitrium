@@ -8,7 +8,7 @@ import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 //column categories
-import { fileCategories, adminCategories } from "./column_categories";
+import { fileCategories, adminCategories, longAnswerCategories } from "./column_categories";
 import { push } from "connected-react-router";
 
 //import templates
@@ -62,19 +62,74 @@ class Application extends Component {
     }));
   };
 
-  /*
   transpileLongAnswerData = () => {
     const applicant = this.getApplicationDetails();
-    let answers = Object.keys(longAnswerCategories).map(longAnswerCategory => ({
-      id: ,
+    console.log(applicant);
+    let answers = Object.keys(longAnswerCategories).map((longAnswerCategory, index) => ({
+      id: longAnswerCategories[longAnswerCategory],
       answers: {
-        questions:
-        response:
+        question: longAnswerCategory,
+        response: applicant[longAnswerCategory]
       },
-      title:
+      title: "Untermined" + longAnswerCategories[longAnswerCategory],
     }));
+
+    let data = []
+    data.push({
+      id: 1,
+      answers: [],
+      title: "Mission and Vision"
+    })
+    data.push({
+      id: 2,
+      answers: [],
+      title: "Leadership"
+    })
+    data.push({
+      id: 3,
+      answers: [],
+      title: "Projects"
+    })
+    data.push({
+      id: 4,
+      answers: [],
+      title: "Plan"
+    })
+    data.push({
+      id: 5,
+      answers: [],
+      title: "Opportunities and Challenges"
+    })
+    console.log(answers)
+    answers.map((answer, index) =>{
+      data.map((item) => {
+        if (answer.id === item.id){
+          console.log(answer);
+          item.answers.push({
+            question: answer.answers.question,
+            response: answer.answers.response
+          })
+        }
+      })
+    })
+    console.log(data);
+    return data;
+    /*
+    //hard coded
+    //Vision and Mission: 1
+    1,2
+    //Leadership: 2
+    3,4,5,6
+    //Projects: 3
+    9, 10
+    //Plan:4
+    8,7
+    //Challenges and Opportunriwa: 5
+    11,12,13
+    */
+
   }
-  */
+
 
   transpileRatingData = () => {
     //todo when rating data is made available, currently leverages mock data
@@ -147,27 +202,27 @@ class Application extends Component {
 
     //THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE
     questionList.push({
-      id: "canvas_Problem",
+      id: "canvas_1",
       notes: [],
       rating: -1
     });
     questionList.push({
-      id: "canvas_Business Model",
+      id: "canvas_2",
       notes: [],
       rating: -1
     });
     questionList.push({
-      id: "canvas_Ownership",
+      id: "canvas_3",
       notes: [],
       rating: -1
     });
     questionList.push({
-      id: "canvas_Product",
+      id: "canvas_4",
       notes: [],
       rating: -1
     });
     questionList.push({
-      id: "canvas_Market",
+      id: "canvas_5",
       notes: [],
       rating: -1
     });
@@ -199,8 +254,6 @@ class Application extends Component {
     GET.getReviewAPI(this.props.user, appId).then(res => {
       this.setState({ review: res[0] });
     });
-
-
   }
 
   findApplicationIndex = () => {
@@ -216,13 +269,28 @@ class Application extends Component {
   }
   */
 
+  componentDidUpdate() {
+    console.log("Component Ddi Update")
+    let appId = this.getApplicationDetails()
+    if (appId){
+      console.log(appId._id)
+      console.log(this.state.appId)
+      if (this.state.appId != appId._id){
+        console.log("Calling")
+        GET.getReviewAPI(this.props.user, appId._id).then(res => {
+          this.setState({ review: res[0], appId: appId._id });
+        });
+      }
+    }
+  }
+
   render() {
     let review = this.createReview();
     let applications = this.props.applications.applications;
+    console.log(this.state.review)
     const currentAppIndex = applications!=null ? this.findApplicationIndex() : null;
     const previousApplication = (applications && currentAppIndex > 0) ? "/submissions/"+applications[currentAppIndex-1]['_id'] : null;
     const nextApplication = (applications && currentAppIndex < applications.length-1) ? "/submissions/"+applications[currentAppIndex+1]['_id'] : null;
-
     console.log(currentAppIndex);
     console.log(nextApplication);
     console.log(previousApplication);
@@ -230,6 +298,7 @@ class Application extends Component {
     let app = this.getApplicationDetails();
     if (app){
       name = app["Organization Name"]
+      console.log(this.transpileLongAnswerData());
     }
     return (
       <div className="pagecontainer">
@@ -258,7 +327,7 @@ class Application extends Component {
               <Files fileData={this.transpileFileData()} />
               <hr />
               <DecisionCanvas
-                categoryData={this.transpileCategoryData()}
+                categoryData={this.transpileLongAnswerData()}
                 update={this.handleReviewUpdate}
                 review={this.state.review}
               />

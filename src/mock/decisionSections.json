@@ -15,9 +15,9 @@
     "title": "Business Model"
   },
   {
-    "id": "product",
+    "id": "projects",
     "questions": ["q1-prod", "q2-prod"],
-    "title": "Product"
+    "title": "Projects"
   },
   {
     "id": "market",

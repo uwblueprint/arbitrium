@@ -18,28 +18,31 @@ const SectionWrapper = styled.div`
 
 function SectionRating({ onRatingChange, selectedRating, id, update, review, ...rest }) {
 
-
   const [rating, setRating] = useState(0);
 
 
-  if (review && rating == 0){
-    if (id == "master"){
+  if (review){
+    if (id == "master" && (rating == 0 || rating != review.rating)){
       setRating(review.rating);
     }
     else {
       review.questionList.map((item) => {
-        if (item.id === id){
+        if (item.id === id && (rating == 0 || rating != item.rating)){
           setRating(item.rating);
         }
       })
     }
+  }
+  else if (rating != 0) {
+    setRating(0);
   }
   return (
     <SectionWrapper>
       <h3>Rating</h3>
       <span className="rating-info">
         Your rating for this question affects the overall suggested rating for
-        this applicant. <Link>You can view the rubric here.</Link>
+        this applicant. Please refer to the rubric provided by SVP to help you
+        decide on a final rating
       </span>
       <RatingList
         onRatingChange={rate => {

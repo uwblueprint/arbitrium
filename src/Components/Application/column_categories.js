@@ -35,18 +35,18 @@ export const fileCategories = {
 
 export const longAnswerCategories = {
   'Mission and Vision - 600 characters (~100 words)': 1,
-  'Elevator Pitch and Vision - 1800 characters (~300 words)': 2,
-  'Senior Leadership - 900 characters (~150 words)': 3,
-  'Board of Directors - 600 characters (~100 words)': 4,
-  'Senior Leadership and Board Dynamics - 600 characters (~100 words)': 5,
-  'Expected Leadership Changes - 900 characters (~150 words)': 6,
-  'Succession Plan - 900 characters (~150 words)': 7,
-  'Capacity Building Areas and Recent Experience - 900 characters (~150 words)': 8,
-  'Potential Projects for SVP Partnership - 1500 characters (~250 words)': 9,
-  'Results and Impact - 900 characters (~150 words)': 10,
-  'Innovation and Approach  - 900 characters (~150 words)': 11,
-  'Organizational Challenges and Opportunities  - 900 characters (~150 words)': 12,
-  'Additional Information - 600 characters (~100 words)': 13
+  'Elevator Pitch and Vision - 1800 characters (~300 words)': 1,
+  'Senior Leadership - 900 characters (~150 words)': 2,
+  'Board of Directors - 600 characters (~100 words)': 2,
+  'Senior Leadership and Board Dynamics - 600 characters (~100 words)': 2,
+  'Expected Leadership Changes - 900 characters (~150 words)': 2,
+  'Succession Plan - 900 characters (~150 words)': 4,
+  'Capacity Building Areas and Recent Experience - 900 characters (~150 words)': 4,
+  'Potential Projects for SVP Partnership - 1500 characters (~250 words)': 3,
+  'Results and Impact - 900 characters (~150 words)': 3,
+  'Innovation and Approach  - 900 characters (~150 words)': 5,
+  'Organizational Challenges and Opportunities  - 900 characters (~150 words)': 5,
+  'Additional Information - 600 characters (~100 words)': 5
 }
 
 export const ratingCategories = {
