@@ -226,7 +226,7 @@ class Application extends Component {
     console.log(currentAppIndex);
     console.log(nextApplication);
     console.log(previousApplication);
-    let name = "Loading..."
+    let name = "Loading... (Submission not found)"
     let app = this.getApplicationDetails();
     if (app){
       name = app["Organization Name"]
