@@ -13,8 +13,6 @@ import Link from "@material-ui/core/Link";
 import SectionComments from "./SectionComments";
 import SectionRating from "./SectionRating";
 
-import { MOCK_RATING_DATA } from "../Application/mockData.json";
-
 // Note that a rating of '0' is not possible.
 const ratingColour = [
   "#fff",
@@ -76,30 +74,29 @@ const useStyles = makeStyles({
 function CanvasCard({
   children,
   expanded,
-  key,
   id,
   onHeaderClick,
   onLinkClick,
-  rating,
   title,
   update,
   review
 }) {
   const classes = useStyles();
 
-
   let rate = 0;
   let numComments = 0;
   if (review) {
-    review.questionList.map((item) => {
-      if (item.id === id){
-        rate = item.rating
-        numComments = item.notes.length;
+    review.questionList.map(item => {
+      if (item.id === id) {
+        rate = item.rating;
+        if (item.notes){
+          numComments = item.notes.length;
+        }
       }
-    })
+    });
   }
   if (rate < 0) {
-    rate = 0
+    rate = 0;
   }
   return (
     <Card className={classes.root} elevation={0}>
@@ -124,14 +121,12 @@ function CanvasCard({
             id={id}
             update={update}
             review={review}
-          >
-          </SectionRating>
+          ></SectionRating>
           <SectionComments
             id={id}
             update={update}
             review={review}
-          >
-          </SectionComments>
+          ></SectionComments>
         </Collapse>
         {!expanded && (
           <ReadMoreLink

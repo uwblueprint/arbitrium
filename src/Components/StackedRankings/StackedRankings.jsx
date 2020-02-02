@@ -1,14 +1,12 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import classNames from "classnames";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
-
 import RankingCard from "./RankingCard";
-
-import { updateStackedAPI } from "../../requests/update";
-import { loadStackedRankings } from "../../Actions/index";
+const GET = require("../../requests/get")
+const UPDATE = require("../../requests/update");
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -101,24 +99,29 @@ function reorder(list, startIndex, endIndex) {
   return result;
 }
 
-function StackedRankings({
-  applications,
-  loadStackedRankings,
-  rankings,
-  user
-}) {
+function StackedRankings({ applications, user }) {
+  const [rankings, setRankings] = useState([]);
+
   useEffect(() => {
-    if (applications.length === 0) return;
-    if (rankings.length !== applications.length) {
-      const initApps = applications.map(app => ({ appId: app._id }));
-      updateStackedAPI({
-        userId: user.uid,
-        rankings: initApps
-      }).catch(e => {
+    (async function() {
+      if (user == null || applications.length == 0) return;
+      try {
+        let fetched = await GET.getAllStackingsAPI(user);
+        if (fetched.length !== applications.length) {
+          // Otherwise we need to initialize the user's rankings
+          const initApps = applications.map(app => ({ appId: app._id }));
+          await UPDATE.updateStackedAPI({
+            userId: user.uid,
+            rankings: initApps
+          });
+          fetched = await GET.getAllStackingsAPI(user);
+        }
+        setRankings(fetched);
+      } catch (e) {
         console.error(e);
-      });
-    }
-  }, []);
+      }
+    })();
+  }, [applications, user]);
 
   const classes = useStyles();
   // TODO: replace this with list from store or props when connecting to DB :)
@@ -130,7 +133,7 @@ function StackedRankings({
     for (let i = 0; i < numOrgs; ++i) {
       numbers.push(
         <React.Fragment key={i}>
-          <RankNumber>#{i + 1}</RankNumber>
+          <RankNumber>{i + 1}</RankNumber>
           {i === 4 && (
             <div className={classes.cutoff}>
               <div>Cutoff</div>
@@ -148,21 +151,24 @@ function StackedRankings({
     if (!result.destination) {
       return;
     }
+    const before = rankings;
     const reorderedList = reorder(
       rankings,
       result.source.index,
       result.destination.index
     );
-    updateStackedAPI({
-      userId: user.uid,
-      rankings: reorderedList.map(app => ({ appId: app._id }))
-    })
-      .then(() => {
-        loadStackedRankings(reorderedList);
-      })
-      .catch(e => {
-        console.error(e);
+    try {
+      UPDATE.updateStackedAPI({
+        userId: user.uid,
+        rankings: reorderedList.map(app => ({ appId: app._id }))
       });
+      setRankings(reorderedList);
+    } catch (e) {
+      setRankings(before);
+      console.error(e);
+      // TODO error message
+      window.alert("Unable to update stacked rankings.");
+    }
   };
 
   const onBeforeDragStart = provided => {
@@ -176,7 +182,10 @@ function StackedRankings({
       <h1>Stacked Rankings</h1>
       <p>
         Stacked Rankings are based on your overall ratings. You can move
-        applicants around (by dragging) if you disagree with the rankings.
+        applicants around if you disagree with the rankings.
+      </p>
+      <p>
+        The applicants above the cutoff line are the ones you wish to see move on to the next round
       </p>
       <div className={classes.rankings}>
         {column}
@@ -202,6 +211,7 @@ function StackedRankings({
                           {...provided.dragHandleProps}
                         >
                           <RankingCard
+                            appId={item._id}
                             companyName={item["Organization Name"]}
                             rating={item.rating}
                           />
@@ -231,13 +241,8 @@ function StackedRankings({
 
 const mapStateToProps = state => {
   return {
-    applications: state.applications.applications,
-    rankings: state.applications.stackedRankings
+    applications: state.applications.applications
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  loadStackedRankings: payload => dispatch(loadStackedRankings(payload))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(StackedRankings);
+export default connect(mapStateToProps)(StackedRankings);

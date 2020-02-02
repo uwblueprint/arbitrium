@@ -1,17 +1,17 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
-import customReducerExample from "./customReducerExample";
 import {
-  LOAD_REVIEWS,
-  LOAD_STACKED_RANKINGS,
+  INSERT_REVIEW,
   LOAD_APPLICATIONS,
-  SWITCH_VIEW
+  LOAD_STACKED_RANKINGS,
+  SWITCH_VIEW,
+  UPDATE_REVIEW,
+  INITIAL_APP_LOAD
 } from "../Constants/ActionTypes";
 
 const initialState = {
   articles: [],
   applications: [],
-  reviews: [],
   stackedRankings: []
 };
 
@@ -20,10 +20,10 @@ const initialState = {
 function applications(state = initialState, action) {
   //console.log("Called app reducer");
   switch (action.type) {
+    case INITIAL_APP_LOAD:
+      return { ...state, applications: action.applications };
     case LOAD_APPLICATIONS:
       return { ...state, applications: action.payload || [] };
-    case LOAD_REVIEWS:
-      return { ...state, reviews: action.payload };
     case LOAD_STACKED_RANKINGS:
       return { ...state, stackedRankings: action.payload || [] };
     default:
@@ -32,7 +32,6 @@ function applications(state = initialState, action) {
 }
 
 function navigation(state = initialState, action) {
-  //console.log("Called navigationReducer");
   switch (action.type) {
     case SWITCH_VIEW:
       return {
@@ -44,8 +43,21 @@ function navigation(state = initialState, action) {
   }
 }
 
+function reviewCount(state = 0, action) {
+  switch (action.type) {
+    case INITIAL_APP_LOAD:
+      return action.reviewCount;
+    case INSERT_REVIEW:
+      return state + 1;
+    case UPDATE_REVIEW:
+    default:
+      return state;
+  }
+}
+
 function createRootReducer(history) {
   return combineReducers({
+    reviewCount,
     router: connectRouter(history),
     navigation,
     applications

@@ -1,10 +1,6 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router";
-import { createBrowserHistory } from "history";
+import { Route, Switch, Redirect } from "react-router";
 import Header from "./Components/Header/Header";
-import Header2 from "./Components/Header/Header2";
-import Footer from "./Components/Footer/Footer";
-import FlowSelector from "./Components/FlowSelector/FlowSelector";
 import Container from "./Components/Container/Container";
 import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
@@ -12,17 +8,14 @@ import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTab
 import Comparison from "./Components/Comparison/Comparison";
 import { AuthProvider } from "./Authentication/Auth";
 
+import { INITIAL_APP_LOAD } from "./Constants/ActionTypes";
+
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import Login from "./Authentication/login.js";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import moment from "moment";
-import {
-  loadApplications,
-  loadReviews,
-  loadStackedRankings
-} from "./Actions/index";
 import theme from "./theme";
 import { history } from "./Store";
 import "./App.css";
@@ -36,37 +29,24 @@ const proxy =
     ? process.env.REACT_APP_SERVER
     : "http://localhost:4000";
 
-//Are we using this?
-const browserHistory = createBrowserHistory();
-
-//const currentRoute = withRouter(props => <)
-
 class App extends Component {
   constructor(props) {
     super(props);
   }
 
-  componentDidMount() {
-    console.log("Loading applications on app load...");
-    //this process is being done here since multiple components require the same applications data
-    this.getAllApplicationsAPI().then(res => {
-      this.props.loadApplications(res);
-    });
-  }
-
   onAuthStateChange = async currentUser => {
     if (currentUser != false) {
-      this.getAllReviewsAPI(currentUser).then(res => {
-        this.props.loadReviews(res);
-      });
-      this.getAllStackingsAPI(currentUser)
-        .then(res => {
-          console.log(res);
-          this.props.loadStackedRankings(res);
-        })
-        .catch(e => {
-          console.log(e);
+      try {
+        const applications = await this.getAllApplicationsAPI();
+        const reviewCount = await this.getReviewCountAPI(currentUser);
+        this.props.dispatch({
+          type: INITIAL_APP_LOAD,
+          applications,
+          reviewCount
         });
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
@@ -86,9 +66,14 @@ class App extends Component {
     return body;
   };
 
-  getAllReviewsAPI = async user => {
+  getReviewCountAPI = async user => {
     const token = await user.getIdToken();
-    const response = await fetch(proxy + `/api/ratings/${user.uid}`, {
+    const url = new URL(
+      proxy +
+        `/api/ratings/${user.uid}/?` +
+        new URLSearchParams({ count: true })
+    );
+    const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -102,7 +87,7 @@ class App extends Component {
     return body;
   };
 
-  postUserAPI = async param => {
+  postUserAPI = async () => {
     const response = await fetch(proxy + "/api/applications", {
       method: "POST",
       body: JSON.stringify({
@@ -112,20 +97,6 @@ class App extends Component {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
-      }
-    });
-    const body = await response.json();
-    if (response.status !== 200) {
-      throw Error(body.message);
-    }
-    return body;
-  };
-
-  getAllStackingsAPI = async user => {
-    const response = await fetch(proxy + `/api/stackings/${user.uid}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
       }
     });
     const body = await response.json();
@@ -156,10 +127,6 @@ class App extends Component {
     );
     return WrappedComponent;
   };
-
-  updateReview = (review) => {
-    this.updateReviewAPI(review);
-  }
 
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
@@ -218,6 +185,7 @@ class App extends Component {
                         path="/rankings"
                         component={StackedRankings}
                       ></PrivateRoute>
+                      <Redirect to={"/applications"} />
                     </Switch>
                   </Container>
                 </>
@@ -237,10 +205,6 @@ const mapStateToProps = state => ({
   reviews: state.reviews
 });
 
-const mapDispatchToProps = dispatch => ({
-  loadApplications: payload => dispatch(loadApplications(payload)),
-  loadReviews: payload => dispatch(loadReviews(payload)),
-  loadStackedRankings: payload => dispatch(loadStackedRankings(payload))
-});
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

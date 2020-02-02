@@ -3,17 +3,23 @@ import { connect } from "react-redux";
 import { push } from "connected-react-router";
 
 import SectionList from "../../mock/decisionSections.json";
-import NavigationList from "../../mock/navigationSections.json";
 
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import Footer from "../Footer/Footer";
 
 import { makeStyles } from "@material-ui/core/styles";
 import "./Navigation.css";
 const useStyles = makeStyles({
+  selected: {
+    backgroundColor: "#005EB826",
+    color: "#005EB8"
+  },
+  unselected: {
+    backgroundColor: "white",
+    color: "black"
+  },
   root: {
     // Entire Nav
     "& .MuiDrawer-paper": {
@@ -56,7 +62,7 @@ const useStyles = makeStyles({
       width: "calc(100% - 32px)"
     },
     "& button.nested.selected": {
-      color: "#6202EE"
+      color: "#005EB8"
     },
     // organization Selector
     "& #organization.MuiSelect-root": {
@@ -74,31 +80,52 @@ const useStyles = makeStyles({
   }
 });
 
-function Navigation({ pathname, push, showStackedRankings }) {
+function getNavId(pathname) {
+  const parts = pathname.split("/");
+  if (parts.length === 1) return "all_applications";
+  switch (parts[1]) {
+    case "applications":
+      return "all_applications";
+    case "submissions":
+      return "application_submission";
+    case "rankings":
+      return "rankings";
+    default:
+      return "all_applications";
+  }
+}
+
+function Navigation({ applications, pathname, push, showStackedRankings }) {
   const [organization, setOrganization] = useState("UW Blueprint");
-  const changeOrganization = e => setOrganization(e.target.value);
   const classes = useStyles();
   const isApplicationReview = pathname.includes("/submissions/");
+  const [selected, setSelected] = useState(getNavId(pathname));
+
+  const changeOrganization = e => setOrganization(e.target.value);
+  //temporary re-route to first available application in redux
+  const getNextValidApplication = () => applications[0]._id;
+
+  const scrollToSection = title => {
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById("canvas_" + title)
+        .scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  };
 
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> { " SVP Investee Grant Candidates " } </h2>
+        <h2> {" SVP Investee Grant Candidates "} </h2>
         <hr />
         <Button
-          id="all_applications"
+          className={
+            selected === "all_applications"
+              ? classes.selected
+              : classes.unselected
+          }
           onClick={() => {
-            NavigationList.map(section => {
-              document.getElementById(section.id).style.color = "black";
-              document.getElementById(section.id).style.backgroundColor =
-                "white";
-            });
-            document.getElementById("all_applications").style.color = "#6202EE";
-            document.getElementById("all_applications").style.backgroundColor =
-              "#ECE0FD";
-            document.getElementById("stacked_rankings").style.color = "black";
-            document.getElementById("stacked_rankings").style.backgroundColor =
-                "white";
+            setSelected("all_applications");
             push("/applications");
           }}
           variant="contained"
@@ -106,23 +133,21 @@ function Navigation({ pathname, push, showStackedRankings }) {
           All Applicants
         </Button>
         <Button
-          id="application_submission"
+          className={
+            selected === "application_submission"
+              ? classes.selected
+              : classes.unselected
+          }
           onClick={() => {
-            NavigationList.map(section => {
-              document.getElementById(section.id).style.color = "black";
-              document.getElementById(section.id).style.backgroundColor =
-                "white";
-            });
-            document.getElementById("application_submission").style.color =
-              "#6202EE";
-            document.getElementById(
-              "application_submission"
-            ).style.backgroundColor = "#ECE0FD";
+            setSelected("application_submission");
             push(`/submissions/${organization}`);
+            push(`/submissions/${getNextValidApplication()}`);
           }}
         >
           Application Submission
         </Button>
+        {/*
+        //Removing this for now because the functionality is not implemented
         <Select
           id="organization"
           labelId="organization-label"
@@ -132,40 +157,30 @@ function Navigation({ pathname, push, showStackedRankings }) {
           disableUnderline
         >
           <MenuItem value="UW Blueprint">UW Blueprint</MenuItem>
+
         </Select>
+        */
+        }
         {isApplicationReview &&
           SectionList.map(section => (
             <Button
-              id={section.title}
               key={section.title}
               className="nested"
-              onClick={() => {
-                SectionList.map(
-                  section =>
-                    (document.getElementById(section.title).style.color =
-                      "#888888")
-                );
-                //document.getElementById(section.title).style.color = "#6202EE";
-              }}
+              onClick={() => scrollToSection(section.title)}
             >
               {section.title}
             </Button>
           ))}
-        {showStackedRankings && (
+        {true && (
           <Button
+            disabled={!showStackedRankings}
+            className={
+              selected === "rankings" ? classes.selected : classes.unselected
+            }
             id="stacked_rankings"
             onClick={() => {
-              NavigationList.map(section => {
-                document.getElementById(section.id).style.color = "black";
-                document.getElementById(section.id).style.backgroundColor =
-                  "white";
-              });
-              document.getElementById("stacked_rankings").style.color =
-                "#6202EE";
-              document.getElementById(
-                "stacked_rankings"
-              ).style.backgroundColor = "#ECE0FD";
               push(`/rankings`);
+              setSelected("rankings");
             }}
           >
             Stacked Rankings
@@ -178,9 +193,9 @@ function Navigation({ pathname, push, showStackedRankings }) {
 
 export default connect(
   state => ({
-    showStackedRankings: true,
-    // state.applications.applications.length ===
-    // state.applications.reviews.length,
+    applications: state.applications.applications,
+    showStackedRankings:
+      state.reviewCount >= state.applications.applications.length,
     pathname: state.router.location.pathname
   }),
   { push }

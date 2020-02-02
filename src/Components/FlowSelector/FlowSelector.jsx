@@ -12,7 +12,7 @@ const Wrapper = styled.div`
     font-family: inherit;
     letter-spacing: 0.3px;
     font-weight: 500;
-    border: 0px solid #6202ee;
+    border: 0px solid #005EB8;
     border-bottom-width: 4px;
     padding: 20px 16px;
     &:disabled {

@@ -1,35 +1,26 @@
-import React, { Component, useContext, useState } from "react";
+import React, { Component } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import moment from 'moment'
+import moment from "moment";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
-import { AuthContext } from "../../Authentication/Auth.js";
-import { updateReviewAPI } from "../../requests/update";
-import { getReviewAPI } from "../../requests/get";
 //column categories
-import {
-  fileCategories,
-  adminCategories,
-  ratingCategories,
-  longAnswerCategories
-} from "./column_categories";
+import { fileCategories, adminCategories } from "./column_categories";
 import { push } from "connected-react-router";
 
 //import templates
 
-import {
-  MOCK_CATEGORY_DATA,
-  MOCK_FILE_DATA,
-  MOCK_RATING_DATA
-} from "./mockData.json";
+import { MOCK_RATING_DATA } from "./mockData.json";
 
 import { connect } from "react-redux";
-import { NotificationRvHookup } from "material-ui/svg-icons";
 import Rubric from "../Rubric/Rubric";
+import { INSERT_REVIEW } from "../../Constants/ActionTypes";
+
+const GET = require("../../requests/get")
+const UPDATE = require("../../requests/update");
 
 class Application extends Component {
   constructor(props) {
@@ -45,9 +36,6 @@ class Application extends Component {
   //transpilers will ensure data is converted to form usable by components
 
   getApplicationDetails = () => {
-    console.log("wtf");
-    console.log(this.props.applications);
-
     return this.props.applications.applications.filter(
       application =>
         application["_id"] === this.props.match.params.organizationId
@@ -102,12 +90,10 @@ class Application extends Component {
   }
   */
 
-
-
   transpileRatingData = () => {
     //todo when rating data is made available, currently leverages mock data
     return MOCK_RATING_DATA;
-  }
+  };
 
   //Types:
   //Notes update - {questionId, notes}
@@ -115,134 +101,150 @@ class Application extends Component {
   //Comment update - comment
   //rating update - rating
   handleReviewUpdate = (type, data) => {
-    console.log("Type Update");
-    console.log(type);
-    console.log("Date to update")
-    console.log(data);
     let review;
     //If a review doesn't exist then create one
-    if (this.state.review == null){
-      review = this.createReview()
+    if (this.state.review == null) {
+      review = this.createReview();
+    } else {
+      review = this.state.review;
     }
-    else {
-      review = this.state.review
-    }
-
-    console.log(review);
 
     //Update the data in the review
-    review.lastReviewed = moment.now();
-    if (data.id === "master"){
-      if (type === "comment"){
+    review.lastReviewed = moment();
+    if (data.id === "master") {
+      if (type === "comment") {
         let com = {
-          lastReviewed: moment.now(),
+          lastReviewed: moment(),
           value: data.text
-        }
+        };
         review.comments.push(com);
       }
-      if (type === "rating"){
-        review.rating = data.rate
+      if (type === "rating") {
+        review.rating = data.rate;
       }
-    }
-    else {
-      if (type === "comment"){
+    } else {
+      if (type === "comment") {
         let com = {
-          lastReviewed: moment.now(),
+          lastReviewed: moment(),
           value: data.text
-        }
-        review.questionList.map((item) => {
-          if (item.id === data.id){
-            let newComments = item.notes
+        };
+        review.questionList.forEach(item => {
+          if (item.id === data.id) {
+            let newComments = item.notes;
             newComments.push(com);
-            item.notes = newComments
+            item.notes = newComments;
           }
-        })
+        });
       }
-      if (type === "rating"){
-        review.questionList.map((item) => {
-          if (item.id === data.id){
-            item.rating = data.rate
+      if (type === "rating") {
+        review.questionList.forEach(item => {
+          if (item.id === data.id) {
+            item.rating = data.rate;
           }
-        })
+        });
       }
     }
 
     //Update the review
-    this.setState({review: review});
-    updateReviewAPI(review);
-    //this.findReview(this.state.appId);
-  }
+    this.setState({ review: review });
+    UPDATE.updateReviewAPI(review).then(res => {
+      if (res.nUpserted === 1) {
+        this.props.dispatch({ type: INSERT_REVIEW });
+      }
+    });
+  };
 
   createReview = () => {
-    let review = {}
-    let comments = []
-    let questions = {}
-    let questionList = []
+    let review = {};
+    let comments = [];
+    let questionList = [];
 
     //THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE
     questionList.push({
       id: "canvas_Problem",
-      comments: [],
+      notes: [],
       rating: -1
-    })
+    });
     questionList.push({
       id: "canvas_Business Model",
       notes: [],
       rating: -1
-    })
+    });
     questionList.push({
       id: "canvas_Ownership",
       notes: [],
       rating: -1
-    })
+    });
     questionList.push({
       id: "canvas_Product",
       notes: [],
       rating: -1
-    })
+    });
     questionList.push({
       id: "canvas_Market",
       notes: [],
       rating: -1
-    })
+    });
     review = {
       applicationId: this.state.appId,
       userId: this.state.userId,
       rating: -1,
       comments: comments,
-      lastReviewed: moment.now(),
+      lastReviewed: moment(),
       questionList: questionList
-    }
-    return review
-  }
+    };
+    return review;
+  };
 
-  findReview = (appId) => {
-    console.log(appId)
-    getReviewAPI(this.props.user, appId).then(res => {
-      console.log(res);
-      this.setState({review: res[0]});
+  findReview = appId => {
+    GET.getReviewAPI(this.props.user, appId).then(res => {
+      this.setState({ review: res[0] });
     });
-    console.log(this.state.review);
+  };
 
-  }
-
-  componentDidMount() {
-    let appId = this.getApplicationDetails() ? this.getApplicationDetails()._id : null
+  componentWillMount() {
+    let appId = this.getApplicationDetails()
+      ? this.getApplicationDetails()._id
+      : null;
     let userId = this.props.user.uid;
-    this.setState({appId: appId})
-    this.setState({userId: userId})
+    this.setState({ appId: appId });
+    this.setState({ userId: userId });
 
-    getReviewAPI(this.props.user, appId).then(res => {
-      console.log(res);
-      this.setState({review: res[0]});
+    GET.getReviewAPI(this.props.user, appId).then(res => {
+      this.setState({ review: res[0] });
     });
+
+
   }
 
+  findApplicationIndex = () => {
+    const { organizationId } = this.props.match.params;
+    return this.props.applications.applications.map(e => e._id).indexOf(organizationId);
+  }
 
-
-
+  /*
+  handleAppChange = (type) => {
+    if (type === 'prev'){
+      this.props.history.push()
+    }
+  }
+  */
 
   render() {
+    let review = this.createReview();
+    let applications = this.props.applications.applications;
+    const currentAppIndex = applications!=null ? this.findApplicationIndex() : null;
+    const previousApplication = (applications && currentAppIndex > 0) ? "/submissions/"+applications[currentAppIndex-1]['_id'] : null;
+    const nextApplication = (applications && currentAppIndex < applications.length-1) ? "/submissions/"+applications[currentAppIndex+1]['_id'] : null;
+
+    console.log(currentAppIndex);
+    console.log(nextApplication);
+    console.log(previousApplication);
+    let name = "Loading..."
+    let app = this.getApplicationDetails();
+    if (app){
+      name = app["Organization Name"]
+    }
     return (
       <div className="pagecontainer">
         <FlowSelector>
@@ -253,30 +255,49 @@ class Application extends Component {
           <h1>
             <Button
               className="all-applicants"
-              onClick={() => push("/applications")}
+              onClick={() => this.props.history.push("/applications")}
             >
               &lt; All Applicants
             </Button>
             <br />
-            UW Blueprint
+            {name}
           </h1>
           <Rubric />
           <hr />
-          {this.props.applications.applications.length>0 && this.applicantExists() ?
-          <div className="application-information">
-            <Categories categoryData={this.transpileCategoryData()}/>
-            <hr />
-            <Files fileData={this.transpileFileData()} />
-            <hr />
-            <DecisionCanvas categoryData={this.transpileCategoryData()} update={this.handleReviewUpdate} review={this.state.review} />
-            <hr />
-            <Rating ratingData={this.transpileRatingData()} update={this.handleReviewUpdate} review={this.state.review}/>
-            <hr />
-          </div>
-           : null}
+          {this.props.applications.applications.length > 0 &&
+          this.applicantExists() ? (
+            <div className="application-information">
+              <Categories categoryData={this.transpileCategoryData()} />
+              <hr />
+              <Files fileData={this.transpileFileData()} />
+              <hr />
+              <DecisionCanvas
+                categoryData={this.transpileCategoryData()}
+                update={this.handleReviewUpdate}
+                review={this.state.review}
+              />
+              <hr />
+              <Rating
+                ratingData={this.transpileRatingData()}
+                update={this.handleReviewUpdate}
+                review={this.state.review}
+              />
+              <hr />
+            </div>
+          ) : null}
           <ApplicationSelector>
-            <Button color="primary">Previous Applicant</Button>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!previousApplication}
+              onClick={()=> {previousApplication ? this.props.history.push(previousApplication) : console.log("Previous Application doesn't exist") }}>
+              Previous Applicant
+            </Button>
+            <Button
+            variant="contained"
+            color="primary"
+            disabled={!nextApplication}
+            onClick={()=> {nextApplication ? this.props.history.push(nextApplication) : console.log("Previous Application doesn't exist") }}>>
               Next Applicant
             </Button>
           </ApplicationSelector>
@@ -290,13 +311,16 @@ const mapStateToProps = state => ({
   applications: state.applications
 });
 
-export default connect(mapStateToProps, null)(Application);
+const mapDispatchToProps = dispatch => ({ dispatch });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Application);
 
 const Wrapper = styled.div`
   margin: 0 auto;
+  padding-top: 50px;
   max-width: 800px;
   h1 {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: normal;
     .all-applicants {
       display: block;

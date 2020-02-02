@@ -101,8 +101,8 @@ const Categories = ({ categoryData }) => {
             </SecondarySummaryPanel>
             <ExpansionPanelDetails classes={{ root: classes.secondaryDetailsPanel }}>
               <CategoryWrapper>
-                {contact.map(({ title, value }) => (
-                  <div className="category">
+                {contact.map(({ title, value }, index) => (
+                  <div className="category" key={index}>
                     <span className="title">{title}</span>
                     <span className="value">{value}</span>
                   </div>
@@ -117,8 +117,8 @@ const Categories = ({ categoryData }) => {
             </SecondarySummaryPanel>
             <ExpansionPanelDetails classes={{ root: classes.secondaryDetailsPanel }}>
               <CategoryWrapper>
-                {socialMedia.map(({ title, value }) => (
-                  <div className="category">
+                {socialMedia.map(({ title, value }, index)) => (
+                  <div className="category" key={index}>
                     <span className="title">{title}</span>
                     <span className="value">{value}</span>
                   </div>
@@ -133,8 +133,8 @@ const Categories = ({ categoryData }) => {
             </SecondarySummaryPanel>
             <ExpansionPanelDetails classes={{ root: classes.secondaryDetailsPanel }}>
               <CategoryWrapper>
-                {organizationInformation.map(({ title, value }) => (
-                  <div className="category">
+                {organizationInformation.map(({ title, value }, index) => (
+                  <div className="category" key={index}>
                     <span className="title">{title}</span>
                     <span className="value">{value}</span>
                   </div>
@@ -149,8 +149,8 @@ const Categories = ({ categoryData }) => {
             </SecondarySummaryPanel>
             <ExpansionPanelDetails classes={{ root: classes.secondaryDetailsPanel }}>
               <CategoryWrapper>
-                {applicationInformation.map(({ title, value }) => (
-                  <div className="category">
+                {applicationInformation.map(({ title, value }, index) => (
+                  <div className="category" key={index}>
                     <span className="title">{title}</span>
                     <span className="value">{value}</span>
                   </div>
