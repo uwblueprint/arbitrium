@@ -104,8 +104,21 @@ const Categories = ({ categoryData }) => {
               <CategoryWrapper>
                 {contact.map(({ title, value }, index) => (
                   <div className="category" key={index}>
-                    <span className="title">{title}</span>
-                    <span className="value">{value}</span>
+                    {title != "Organization Website" ? (
+                      <>
+                      <span className="title">{title}</span>
+                      <span className="value">{value}</span>
+                      </>
+                    )
+                    : (
+                      <>
+                      <span className="title">{title}</span>
+                      <span className="value">
+                          <Link target="_blank" href={value}> {value} </Link>
+                      </span>
+                      </>
+                    )
+                  }
                   </div>
                 ))}
               </CategoryWrapper>
