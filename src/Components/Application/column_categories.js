@@ -38,7 +38,8 @@ export const fileCategories = {
     'An Executive Director bio': 2,
     "The current year's operational budget": 3,
     "Updates to the financial statements provided above, including non-audited or audited YTD statements": 4,
-    "A letter supporting this application signed by the Board Chair and Executive Director": 5
+    "A letter supporting this application signed by the Board Chair and Executive Director": 5,
+    "The two most recent audited financial statements": 6
 }
 
 export const longAnswerCategories = {

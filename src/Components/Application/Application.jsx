@@ -78,11 +78,29 @@ class Application extends Component {
 
   transpileFileData = () => {
     const applicant = this.getApplicationDetails();
-    return Object.keys(fileCategories).map((fileCategory, index) => ({
+    let files = Object.keys(fileCategories).map((fileCategory, index) => ({
       name: fileCategory,
       link: applicant[fileCategory],
       size: index * 500
     }));
+    let fileLinks = []
+    files.map((file, index) =>{
+      console.log(file.link.split(","))
+      file.link.split(",").map((link, index) =>{
+        let append = "";
+        console.log(file.link.length);
+        if (file.link.split(",").length > 1){
+          append = "(" + (index+1) + ")"
+        }
+        fileLinks.push({
+          name: file.name + append,
+          link: link,
+          size: file.size
+        })
+      })
+    })
+    console.log(fileLinks);
+    return fileLinks
   };
 
   transpileLongAnswerData = () => {
