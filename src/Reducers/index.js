@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 import {
-  INSERT_REVIEW,
+  NEW_REVIEW,
   LOAD_APPLICATIONS,
   LOAD_STACKED_RANKINGS,
   SWITCH_VIEW,
@@ -47,7 +47,7 @@ function reviewCount(state = 0, action) {
   switch (action.type) {
     case INITIAL_APP_LOAD:
       return action.reviewCount;
-    case INSERT_REVIEW:
+    case NEW_REVIEW:
       return state + 1;
     case UPDATE_REVIEW:
     default:

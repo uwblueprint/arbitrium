@@ -58,7 +58,7 @@ const Rating = ({ update, review }) => {
     }
   }
   return (
-    <StyledPaper elevation={0}>
+    <StyledPaper >
     <h1> Final Rating </h1>
     <Card className={classes.root}>
       <h3>Suggested Rating</h3>
