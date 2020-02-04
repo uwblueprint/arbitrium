@@ -17,12 +17,13 @@ const CategoryWrapper = styled.div`
   width: 100%;
   .category {
     display: grid;
-    grid-template-columns: 200px auto;
+    grid-template-columns: 40% auto;
     margin: 15px 0;
     line-height: 20px;
   }
   .title {
     font-weight: 500;
+    padding-right: 24px;
   }
   .value {
     font-weight: normal;
