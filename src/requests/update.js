@@ -4,8 +4,6 @@ const proxy =
     : "http://localhost:4000";
 
 async function updateReviewAPI(databody) {
-  console.log("Calling updateReviewAPI")
-  console.log(databody)
   const response = await fetch(proxy + "/api/ratings", {
     method: "POST",
     body: JSON.stringify(databody),
@@ -17,10 +15,8 @@ async function updateReviewAPI(databody) {
 
   const body = await response.json();
   if (response.status !== 201) {
-    console.log(response);
     console.log("Error with posting ratings");
   }
-  console.log(body);
   return body;
 }
 
@@ -36,10 +32,8 @@ async function updateStackedAPI(databody) {
 
   const body = await response.json();
   if (response.status !== 201) {
-    console.log(response);
     console.log("Error with posting stacked ranking");
   }
-  console.log(body);
   return body;
 }
 

@@ -159,8 +159,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
           <MenuItem value="UW Blueprint">UW Blueprint</MenuItem>
 
         </Select>
-        */
-        }
+        */}
         {isApplicationReview &&
           SectionList.map(section => (
             <Button
@@ -171,21 +170,19 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
               {section.title}
             </Button>
           ))}
-        {true && (
-          <Button
-            disabled={!showStackedRankings}
-            className={
-              selected === "rankings" ? classes.selected : classes.unselected
-            }
-            id="stacked_rankings"
-            onClick={() => {
-              push(`/rankings`);
-              setSelected("rankings");
-            }}
-          >
-            Stacked Rankings
-          </Button>
-        )}
+        <Button
+          disabled={!showStackedRankings}
+          className={
+            selected === "rankings" ? classes.selected : classes.unselected
+          }
+          id="stacked_rankings"
+          onClick={() => {
+            push(`/rankings`);
+            setSelected("rankings");
+          }}
+        >
+          Stacked Rankings
+        </Button>
       </Drawer>
     </nav>
   );

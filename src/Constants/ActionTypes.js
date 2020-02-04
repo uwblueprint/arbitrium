@@ -7,7 +7,7 @@ export const LOAD_APPLICATIONS = "LOAD_APPLICATIONS";
 export const LOAD_REVIEWS = "LOAD_REVIEWS";
 export const LOAD_STACKED_RANKINGS = "STACKED_RANKINGS";
 export const UPDATE_REVIEW = "UPDATE_REVIEW";
-export const INSERT_REVIEW = "NEW_REVIEW";
+export const NEW_REVIEW = "NEW_REVIEW";
 
 /*
 {
@@ -16,4 +16,4 @@ export const INSERT_REVIEW = "NEW_REVIEW";
     applications
 }
 */
-export const INITIAL_APP_LOAD = "NEW_REVIEW";
+export const INITIAL_APP_LOAD = "INITIAL_APP_LOAD";
