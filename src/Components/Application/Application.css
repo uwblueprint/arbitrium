@@ -1,11 +1,5 @@
-.application-wrapper {
-  max-width: 800px;
-  margin: 0 auto;
-  border: 2px solid red;
-  border-bottom: 1px solid #CCCCCC;
+.application-wrapper{
+  text-align: left;
 }
 
-.pagecontainer{
-  display: flex;
-  
-}
+
