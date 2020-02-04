@@ -80,7 +80,7 @@ export default function Login({login, logout, isAuthenticated}) {
   }else{
     return(
       <StyledCard>
-        <CardHeader title="arbitrium" subheader="Sign-In"/>
+        <CardHeader title="arbitrium" subheader="Sign In"/>
         <CardContent>
           <CommentForm onSubmit={handleSubmit}>
             <FormControl variant="outlined" className="textFields">
