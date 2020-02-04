@@ -25,7 +25,6 @@ const CardBody = styled.div`
   .questions {
     color: #888888;
     ol {
-      list-style-type: lower-roman;
       list-style-position: inside;
       padding: 0;
     }
