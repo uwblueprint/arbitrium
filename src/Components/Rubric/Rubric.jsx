@@ -37,7 +37,10 @@ const useStyles = makeStyles(theme => ({
   },
   card: {
     display: 'flex',
-    backgroundColor: 'black'
+    backgroundColor: 'black',
+    boxShadow: "0 2px 3px 1px #cccccc",
+    fontSize: "14px",
+    padding: "10px"
   },
   details: {
     display: 'flex',
@@ -68,6 +71,9 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     marginLeft: '80vw',
     marginTop: '20vh',
+    marginRight: '20wh',
+    marginBottom: '25vh',
+    boxShadow: "0 2px 3px 1px #cccccc",
   },
 }));
 
