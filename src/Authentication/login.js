@@ -37,7 +37,7 @@ const CommentForm = styled.form`
   .forgotPassword {
   position: absolute;
   width: 160px;
-  height: 20px;
+  height: 36px;
   left: 8px;
   top: 305px;
 

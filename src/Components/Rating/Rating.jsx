@@ -85,6 +85,7 @@ const Rating = ({ update, review }) => {
       <AddComment
         placeholder={"Add a comment..."}
         primaryLabel="Comment"
+        secondaryLabel="Cancel"
         update={update}
         id="master"
       />
