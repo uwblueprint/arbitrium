@@ -54,7 +54,7 @@ function RankingCard({ companyName, rating, appId, push }) {
   const classes = useStyles();
   let notRatingStyle = {};
   return (
-    <Card className={classes.root} elevation={0}>
+    <Card className={classes.root} >
       <CardContent
         style={
           !rating

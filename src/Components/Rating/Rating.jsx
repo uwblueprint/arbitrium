@@ -58,7 +58,7 @@ const Rating = ({ update, review }) => {
     }
   }
   return (
-    <StyledPaper elevation={0}>
+    <StyledPaper >
     <h1> Final Rating </h1>
     <Card className={classes.root}>
       <h3>Suggested Rating</h3>
@@ -85,7 +85,6 @@ const Rating = ({ update, review }) => {
       <AddComment
         placeholder={"Add a comment..."}
         primaryLabel="Comment"
-        secondaryLabel="Cancel"
         update={update}
         id="master"
       />

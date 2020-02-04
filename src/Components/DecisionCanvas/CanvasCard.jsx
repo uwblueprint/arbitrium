@@ -79,10 +79,9 @@ function CanvasCard({
   onLinkClick,
   title,
   update,
-  review,
+  review
 }) {
-  console.log(parseInt(id.substring(7), 10));
-  let index = parseInt(id.substring(7), 10)
+  let index = parseInt(id.substring(7), 10);
   const classes = useStyles(index);
 
   let rate = 0;
@@ -91,7 +90,7 @@ function CanvasCard({
     review.questionList.map(item => {
       if (item.id === id) {
         rate = item.rating;
-        if (item.notes){
+        if (item.notes) {
           numComments = item.notes.length;
         }
       }
@@ -101,7 +100,7 @@ function CanvasCard({
     rate = 0;
   }
   return (
-    <Card className={classes.root} elevation={0}>
+    <Card className={classes.root} >
       <ClickableHeader
         action={
           <ExpandMoreIcon className={expanded ? classes.expandOpen : null} />

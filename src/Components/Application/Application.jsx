@@ -8,8 +8,11 @@ import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 //column categories
-import { fileCategories, adminCategories, longAnswerCategories } from "./column_categories";
-import { push } from "connected-react-router";
+import {
+  fileCategories,
+  adminCategories,
+  longAnswerCategories
+} from "./column_categories";
 
 //import templates
 
@@ -17,9 +20,9 @@ import { MOCK_RATING_DATA } from "./mockData.json";
 
 import { connect } from "react-redux";
 import Rubric from "../Rubric/Rubric";
-import { INSERT_REVIEW } from "../../Constants/ActionTypes";
+import { NEW_REVIEW, UPDATE_REVIEW } from "../../Constants/ActionTypes";
 
-const GET = require("../../requests/get")
+const GET = require("../../requests/get");
 const UPDATE = require("../../requests/update");
 
 class Application extends Component {
@@ -48,23 +51,29 @@ class Application extends Component {
     //todo when category data is made available, currently leverages mock data
     const applicant = this.getApplicationDetails();
     return {
-      contact : Object.keys(adminCategories.contact).map(adminCategory => ({
+      contact: Object.keys(adminCategories.contact).map(adminCategory => ({
         title: adminCategory,
         value: applicant[adminCategory]
       })),
-      socialMedia : Object.keys(adminCategories.socialMedia).map(adminCategory => ({
+      socialMedia: Object.keys(adminCategories.socialMedia).map(
+        adminCategory => ({
+          title: adminCategory,
+          value: applicant[adminCategory]
+        })
+      ),
+      organizationInformation: Object.keys(
+        adminCategories.organizationInformation
+      ).map(adminCategory => ({
         title: adminCategory,
         value: applicant[adminCategory]
       })),
-      organizationInformation : Object.keys(adminCategories.organizationInformation).map(adminCategory => ({
-        title: adminCategory,
-        value: applicant[adminCategory]
-      })),
-      applicationInformation : Object.keys(adminCategories.applicationInformation).map(adminCategory => ({
+      applicationInformation: Object.keys(
+        adminCategories.applicationInformation
+      ).map(adminCategory => ({
         title: adminCategory,
         value: applicant[adminCategory]
       }))
-    }
+    };
   };
 
   transpileFileData = () => {
@@ -78,55 +87,53 @@ class Application extends Component {
 
   transpileLongAnswerData = () => {
     const applicant = this.getApplicationDetails();
-    console.log(applicant);
-    let answers = Object.keys(longAnswerCategories).map((longAnswerCategory, index) => ({
-      id: longAnswerCategories[longAnswerCategory],
-      answers: {
-        question: longAnswerCategory,
-        response: applicant[longAnswerCategory]
-      },
-      title: "Untermined" + longAnswerCategories[longAnswerCategory],
-    }));
+    let answers = Object.keys(longAnswerCategories).map(
+      (longAnswerCategory, index) => ({
+        id: longAnswerCategories[longAnswerCategory],
+        answers: {
+          question: longAnswerCategory,
+          response: applicant[longAnswerCategory]
+        },
+        title: "Untermined" + longAnswerCategories[longAnswerCategory]
+      })
+    );
 
-    let data = []
+    let data = [];
     data.push({
       id: 1,
       answers: [],
       title: "Mission and Vision"
-    })
+    });
     data.push({
       id: 2,
       answers: [],
       title: "Leadership"
-    })
+    });
     data.push({
       id: 3,
       answers: [],
       title: "Projects"
-    })
+    });
     data.push({
       id: 4,
       answers: [],
       title: "Plan"
-    })
+    });
     data.push({
       id: 5,
       answers: [],
       title: "Opportunities and Challenges"
-    })
-    console.log(answers)
-    answers.map((answer, index) =>{
-      data.map((item) => {
-        if (answer.id === item.id){
-          console.log(answer);
+    });
+    answers.map((answer, index) => {
+      data.map(item => {
+        if (answer.id === item.id) {
           item.answers.push({
             question: answer.answers.question,
             response: answer.answers.response
-          })
+          });
         }
-      })
-    })
-    console.log(data);
+      });
+    });
     return data;
     /*
     //hard coded
@@ -141,9 +148,7 @@ class Application extends Component {
     //Challenges and Opportunriwa: 5
     11,12,13
     */
-
-  }
-
+  };
 
   transpileRatingData = () => {
     //todo when rating data is made available, currently leverages mock data
@@ -203,8 +208,8 @@ class Application extends Component {
     //Update the review
     this.setState({ review: review });
     UPDATE.updateReviewAPI(review).then(res => {
-      if (res.nUpserted === 1) {
-        this.props.dispatch({ type: INSERT_REVIEW });
+      if (res.upserted) {
+        this.props.dispatch({ type: NEW_REVIEW });
       }
     });
   };
@@ -272,25 +277,15 @@ class Application extends Component {
 
   findApplicationIndex = () => {
     const { organizationId } = this.props.match.params;
-    return this.props.applications.applications.map(e => e._id).indexOf(organizationId);
-  }
-
-  /*
-  handleAppChange = (type) => {
-    if (type === 'prev'){
-      this.props.history.push()
-    }
-  }
-  */
+    return this.props.applications.applications
+      .map(e => e._id)
+      .indexOf(organizationId);
+  };
 
   componentDidUpdate() {
-    console.log("Component Ddi Update")
-    let appId = this.getApplicationDetails()
-    if (appId){
-      console.log(appId._id)
-      console.log(this.state.appId)
-      if (this.state.appId != appId._id){
-        console.log("Calling")
+    let appId = this.getApplicationDetails();
+    if (appId) {
+      if (this.state.appId != appId._id) {
         GET.getReviewAPI(this.props.user, appId._id).then(res => {
           this.setState({ review: res[0], appId: appId._id });
         });
@@ -299,17 +294,23 @@ class Application extends Component {
   }
 
   render() {
-    let review = this.createReview();
     let applications = this.props.applications.applications;
 
-    const currentAppIndex = applications!=null ? this.findApplicationIndex() : null;
-    const previousApplication = (applications && currentAppIndex > 0) ? "/submissions/"+applications[currentAppIndex-1]['_id'] : null;
-    const nextApplication = (applications && currentAppIndex < applications.length-1) ? "/submissions/"+applications[currentAppIndex+1]['_id'] : null;
+    const currentAppIndex =
+      applications != null ? this.findApplicationIndex() : null;
+    const previousApplication =
+      applications && currentAppIndex > 0
+        ? "/submissions/" + applications[currentAppIndex - 1]["_id"]
+        : null;
+    const nextApplication =
+      applications && currentAppIndex < applications.length - 1
+        ? "/submissions/" + applications[currentAppIndex + 1]["_id"]
+        : null;
 
-    let name = "Loading... (Submission not found)"
+    let name = "Loading... (Submission not found)";
     let app = this.getApplicationDetails();
-    if (app){
-      name = app["Organization Name"]
+    if (app) {
+      name = app["Organization Name"];
     }
 
     return (
@@ -357,15 +358,25 @@ class Application extends Component {
               variant="contained"
               color="primary"
               disabled={!previousApplication}
-              onClick={()=> {previousApplication ? this.props.history.push(previousApplication) : console.log("Previous Application doesn't exist") }}>
+              onClick={() => {
+                previousApplication
+                  ? this.props.history.push(previousApplication)
+                  : console.log("Previous Application doesn't exist");
+              }}
+            >
               Previous Applicant
             </Button>
             <Button
-            variant="contained"
-            color="primary"
-            disabled={!nextApplication}
-            onClick={()=> {nextApplication ? this.props.history.push(nextApplication) : console.log("Previous Application doesn't exist") }}>>
-              Next Applicant
+              variant="contained"
+              color="primary"
+              disabled={!nextApplication}
+              onClick={() => {
+                nextApplication
+                  ? this.props.history.push(nextApplication)
+                  : console.log("Previous Application doesn't exist");
+              }}
+            >
+              > Next Applicant
             </Button>
           </ApplicationSelector>
         </Wrapper>

@@ -6,7 +6,7 @@ import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import moment from "moment";
 
-const GET = require("../../../requests/get")
+const GET = require("../../../requests/get");
 
 const APPLICATION_STAGE = {
   LETTER_OF_INTEREST: 0,
@@ -36,18 +36,15 @@ const Wrapper = styled.div`
 `;
 
 export default class ApplicationList extends Component {
-
-
   constructor(props) {
     super(props);
     this.state = {
-        reviews: []
+      reviews: []
     };
   }
 
   componentDidMount() {
     GET.getUserReviewsAPI(this.props.user).then(res => {
-      console.log(res);
       this.setState({ reviews: res });
     });
   }
@@ -55,33 +52,35 @@ export default class ApplicationList extends Component {
   getReviewData = (appId, type) => {
     let res = null;
     if (this.state.reviews) {
-      this.state.reviews.map((item) => {
-        if (item.applicationId == appId){
-          if (type == "rating" && item["rating"] > 0){
-            res = item["rating"] + "/5"
+      this.state.reviews.map(item => {
+        if (item.applicationId == appId) {
+          if (type === "rating" && item["rating"] > 0) {
+            res = item["rating"] + "/5";
           }
-          if (type == "lastReviewed"){
+          if (type === "lastReviewed") {
             let date = moment(item.lastReviewed);
-            if (date){
-              res = moment(item["lastReviewed"]).toDate().toString().substring(4,16);
-            }
-            else {
-              res = "Error"
+            if (date) {
+              res = moment(item["lastReviewed"])
+                .toDate()
+                .toString()
+                .substring(4, 16);
+            } else {
+              res = "Error";
             }
           }
 
           //res = item[type]
         }
-      })
+      });
     }
-    return res
-  }
+    return res;
+  };
   render() {
     //Pre-calculate the applications array before rendering
 
     return (
       <Wrapper className="application-list">
-        <Paper elevation={0}>
+        <Paper>
           <h1>All Applicants</h1>
           <Table className="table">
             <TableHead>
@@ -104,10 +103,12 @@ export default class ApplicationList extends Component {
                         {application["Organization Name"]}
                       </TableCell>
                       <TableCell align="left">
-                        {this.getReviewData(application._id, "rating") || "Not Rated"}
+                        {this.getReviewData(application._id, "rating") ||
+                          "Not Rated"}
                       </TableCell>
                       <TableCell align="left">
-                        {this.getReviewData(application._id, "lastReviewed") || "Never"}
+                        {this.getReviewData(application._id, "lastReviewed") ||
+                          "Never"}
                       </TableCell>
                       <TableCell align="left">
                         <Button

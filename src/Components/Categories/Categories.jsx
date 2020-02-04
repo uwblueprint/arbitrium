@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Link from "@material-ui/core/Link";
 
 const Wrapper = styled.div`
@@ -32,14 +32,14 @@ const CategoryWrapper = styled.div`
 
 const SecondaryExpansionPanel = withStyles({
   root: {
-    '&:before': {
-      display: 'none'
+    "&:before": {
+      display: "none"
     },
-    '&$expanded': {
+    "&$expanded": {
       margin: 0
     }
   },
-  expanded: {},
+  expanded: {}
 })(ExpansionPanel);
 
 const SecondarySummaryPanel = withStyles({
@@ -51,20 +51,20 @@ const SecondarySummaryPanel = withStyles({
     color: "#888888",
     fontSize: 15,
     textTransform: "uppercase",
-    '&$expanded': {
+    "&$expanded": {
       minHeight: 0
     }
   },
   content: {
     margin: 0,
-    '&$expanded': {
+    "&$expanded": {
       margin: 0
     }
   },
   expandIcon: {
     padding: 8
   },
-  expanded: {},
+  expanded: {}
 })(ExpansionPanelSummary);
 
 const useStyles = makeStyles({
@@ -82,7 +82,12 @@ const useStyles = makeStyles({
 });
 
 const Categories = ({ categoryData }) => {
-  const {contact, socialMedia, organizationInformation, applicationInformation} = categoryData;
+  const {
+    contact,
+    socialMedia,
+    organizationInformation,
+    applicationInformation
+  } = categoryData;
   const classes = useStyles();
 
   return (
@@ -95,30 +100,32 @@ const Categories = ({ categoryData }) => {
           Administrative Categories
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: classes.mainDetailsPanel }}>
-
           <SecondaryExpansionPanel>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Contact
             </SecondarySummaryPanel>
-            <ExpansionPanelDetails classes={{ root: classes.secondaryDetailsPanel }}>
+            <ExpansionPanelDetails
+              classes={{ root: classes.secondaryDetailsPanel }}
+            >
               <CategoryWrapper>
                 {contact.map(({ title, value }, index) => (
                   <div className="category" key={index}>
                     {title != "Organization Website" ? (
                       <>
-                      <span className="title">{title}</span>
-                      <span className="value">{value}</span>
+                        <span className="title">{title}</span>
+                        <span className="value">{value}</span>
                       </>
-                    )
-                    : (
+                    ) : (
                       <>
-                      <span className="title">{title}</span>
-                      <span className="value">
-                          <Link target="_blank" href={value}> {value} </Link>
-                      </span>
+                        <span className="title">{title}</span>
+                        <span className="value">
+                          <Link target="_blank" href={value}>
+                            {" "}
+                            {value}{" "}
+                          </Link>
+                        </span>
                       </>
-                    )
-                  }
+                    )}
                   </div>
                 ))}
               </CategoryWrapper>
@@ -129,7 +136,9 @@ const Categories = ({ categoryData }) => {
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Social Media
             </SecondarySummaryPanel>
-            <ExpansionPanelDetails classes={{ root: classes.secondaryDetailsPanel }}>
+            <ExpansionPanelDetails
+              classes={{ root: classes.secondaryDetailsPanel }}
+            >
               <CategoryWrapper>
                 {socialMedia.map(({ title, value }, index) => (
                   <div className="category" key={index}>
@@ -147,7 +156,9 @@ const Categories = ({ categoryData }) => {
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Organization Information
             </SecondarySummaryPanel>
-            <ExpansionPanelDetails classes={{ root: classes.secondaryDetailsPanel }}>
+            <ExpansionPanelDetails
+              classes={{ root: classes.secondaryDetailsPanel }}
+            >
               <CategoryWrapper>
                 {organizationInformation.map(({ title, value }, index) => (
                   <div className="category" key={index}>
@@ -163,7 +174,9 @@ const Categories = ({ categoryData }) => {
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Application Information
             </SecondarySummaryPanel>
-            <ExpansionPanelDetails classes={{ root: classes.secondaryDetailsPanel }}>
+            <ExpansionPanelDetails
+              classes={{ root: classes.secondaryDetailsPanel }}
+            >
               <CategoryWrapper>
                 {applicationInformation.map(({ title, value }, index) => (
                   <div className="category" key={index}>
