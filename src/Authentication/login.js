@@ -3,19 +3,16 @@ import { withRouter, Redirect } from "react-router";
 import firebaseApp from "./firebase.js";
 import { AuthContext } from "./Auth.js";
 
-
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { Link } from 'react-router-dom';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import CardActions from '@material-ui/core/CardActions';
-
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import CardActions from "@material-ui/core/CardActions";
 
 const CommentForm = styled.form`
   .textFields {
@@ -23,11 +20,39 @@ const CommentForm = styled.form`
     width: 100%;
   }
   button {
-    margin-left: auto;
+    display: flex;
+    justify-content: end;
   }
   a {
     font-size: 0.9rem;
   }
+  .loginButton {
+    position: absolute;
+    width: 80px;
+    height: 36px;
+    left: 244px;
+    top: 304px;
+    margin-left: 10px;
+  }
+  .forgotPassword {
+  position: absolute;
+  width: 160px;
+  height: 36px;
+  left: 8px;
+  top: 305px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  letter-spacing: 0.25px;
+  text-decoration-line: underline;
+
+  color: #1976D2;
+}
 `;
 
 const StyledCard = styled(Card)`
@@ -41,35 +66,34 @@ const StyledCard = styled(Card)`
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   -webkit-box-shadow: -1px 1px 5px 1px #ccc;
-  -moz-box-shadow:    -1px 1px 5px 1px #ccc;
-  box-shadow:         -1px 1px 5px 1px #ccc;
+  -moz-box-shadow: -1px 1px 5px 1px #ccc;
+  box-shadow: -1px 1px 5px 1px #ccc;
 
-  .MuiCardHeader-title{
+  .MuiCardHeader-title {
     font-size: 3rem;
   }
-  .MuiCardHeader-root{
+  .MuiCardHeader-root {
     padding-bottom: 5px;
   }
-  .MuiCardHeader-subheader{
+  .MuiCardHeader-subheader {
     color: black;
   }
   .MuiInputLabel-outlined.MuiInputLabel-shrink {
-    transform: translate(14px, -14px) scale(0.75)
+    transform: translate(14px, -14px) scale(0.75);
   }
 `;
 
 const Login = ({ history }) => {
-
-
   const [values, setValues] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     errorEmail: false,
     errorPassword: false
   });
 
   const errorEmailMessage = "Couldn't find your account";
-  const errorPasswordMessage = "Wrong password. Try again or click Forgot password";
+  const errorPasswordMessage =
+    "Wrong password. Try again or click Forgot password";
 
   const handleLogin = useCallback(
     async event => {
@@ -89,7 +113,12 @@ const Login = ({ history }) => {
 
   const { currentUser } = useContext(AuthContext);
 
- 
+/*
+  if (currentUser) {
+    console.log(history.goBack());
+    return <Redirect to={'/applications'} />;
+  }
+  */
 
   function validateForm() {
     return values.email.length > 0 && values.password.length > 0;
@@ -104,11 +133,11 @@ const Login = ({ history }) => {
   };
 
   if (currentUser!==null && currentUser!==false) {
-    return <Redirect to={'/applications'} />;
+      return <Redirect to={'/applications'} />;
   } else if (currentUser!==false){
-  return(
+  return (
     <StyledCard>
-      <CardHeader title="arbitrium" subheader="Sign-In"/>
+      <CardHeader title="arbitrium" subheader="Sign-In" />
       <CardContent>
         <CommentForm onSubmit={handleLogin}>
           <FormControl variant="outlined" className="textFields">
@@ -117,26 +146,31 @@ const Login = ({ history }) => {
               required
               autoFocus
               id="email"
-              type={'text'}
+              type={"text"}
               value={values.email}
-              onChange={handleChange('email')}
+              onChange={handleChange("email")}
             />
-            <FormHelperText>{values.errorEmail ? errorEmailMessage : ''}</FormHelperText>
+            <FormHelperText>
+              {values.errorEmail ? errorEmailMessage : ""}
+            </FormHelperText>
           </FormControl>
           <FormControl variant="outlined" className="textFields">
             <InputLabel htmlFor="password">Password</InputLabel>
             <OutlinedInput
               required
               id="password"
-              type={'password'}
+              type={"password"}
               value={values.password}
-              onChange={handleChange('password')}
+              onChange={handleChange("password")}
             />
-            <FormHelperText>{values.errorPassword ? errorPasswordMessage : ''}</FormHelperText>
+            <FormHelperText>
+              {values.errorPassword ? errorPasswordMessage : ""}
+            </FormHelperText>
           </FormControl>
           <CardActions>
-            <Link onClick={handleForgotPassword}>Forgot Password?</Link>
+            <Button className="forgotPassword" onClick={handleForgotPassword}>Forgot Password?</Button>
             <Button
+              className="loginButton"
               type="submit"
               disabled={!validateForm()}
               variant="contained"
@@ -148,7 +182,7 @@ const Login = ({ history }) => {
         </CommentForm>
       </CardContent>
     </StyledCard>
-  )
+  );
   } else return null;
 };
 

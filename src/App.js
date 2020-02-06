@@ -1,29 +1,26 @@
 import React, { Component } from "react";
-import { Route, Switch } from "react-router";
-import { createBrowserHistory } from "history";
-import Navigation from "./Components/Navigation/Navigation";
+import { Route, Switch, Redirect } from "react-router";
 import Header from "./Components/Header/Header";
-import Header2 from "./Components/Header/Header2";
-import FlowSelector from "./Components/FlowSelector/FlowSelector";
 import Container from "./Components/Container/Container";
 import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
 import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTable";
 import Comparison from "./Components/Comparison/Comparison";
+import { AuthProvider } from "./Authentication/Auth";
+
+import { INITIAL_APP_LOAD } from "./Constants/ActionTypes";
 
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
-import Login from "./Authentication/login.js"
-import { AuthProvider } from "./Authentication/Auth";
+import Login from "./Authentication/login.js";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { loadApplications } from "./Actions/index";
+import moment from "moment";
 import theme from "./theme";
 import { history } from "./Store";
-import "./App.css"
+import "./App.css";
 import PrivateRoute from "./Authentication/PrivateRoute";
 //import './App.css';
-
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
@@ -32,41 +29,28 @@ const proxy =
     ? process.env.REACT_APP_SERVER
     : "http://localhost:4000";
 
-//Are we using this?
-const browserHistory = createBrowserHistory();
-
-//const currentRoute = withRouter(props => <)
-
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      user: false
-    };
   }
 
-  componentDidMount() {
-    // API call to Blitzen here, then dispatch this.props.loadApplications to store data to Redux store
-    // Assume API returns the test data
-
-    console.log("Loading applications on app load...");
-    //this process is beind done here since multiple components require the same applications data
-    //components that update the fetched data can initiate an update via a POST call, then update the redux store.
-    this.getAllApplicationsAPI().then(res => {
-      this.props.loadApplications(res);
-    });
-  }
+  onAuthStateChange = async currentUser => {
+    if (currentUser != false) {
+      try {
+        const applications = await this.getAllApplicationsAPI();
+        const reviewCount = await this.getReviewCountAPI(currentUser);
+        this.props.dispatch({
+          type: INITIAL_APP_LOAD,
+          applications,
+          reviewCount
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
 
   //various APIs to query database and populate pages with data
-
-  getQuestionsAPI = async () => {
-    const response = await fetch(proxy + "/api/questions", {});
-    const body = await response.json();
-    if (response.status !== 200) {
-      throw Error(body.message);
-    }
-    return body;
-  };
 
   getAllApplicationsAPI = async () => {
     const response = await fetch(proxy + "/api/applications", {
@@ -82,79 +66,126 @@ class App extends Component {
     return body;
   };
 
-  postUserAPI = async param => {
+  getReviewCountAPI = async user => {
+    const token = await user.getIdToken();
+    const url = new URL(
+      proxy +
+        `/api/ratings/${user.uid}/?` +
+        new URLSearchParams({ count: true })
+    );
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        authorization: `Bearer ${token}`
+      }
+    });
+    const body = await response.json();
+    if (response.status !== 200) {
+      throw Error(body.message);
+    }
+    return body;
+  };
+
+  postUserAPI = async () => {
     const response = await fetch(proxy + "/api/applications", {
       method: "POST",
       body: JSON.stringify({
         username: "greg",
-        passwrd: "insecure"
+        password: "insecure"
       }),
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
       }
     });
-
     const body = await response.json();
-    if (response.status !== 201) {
-      console.log("Error with posting saved-times");
+    if (response.status !== 200) {
+      throw Error(body.message);
     }
-
     return body;
   };
 
-  getWrappedComponent = (props,ApplicationComponent) => {
-    const WrappedComponent= <ApplicationComponent
-      //Passing the applications as a prop
-      applications = {this.props.applications.applications}
-      history={history}
-      //add common props here
-      {...props}
-    />
+  /*
+  applicationId:
+  userId: "insecure"
+  rating:
+  comments:
+  lastReviewed:
+  questionList:
+  */
+
+  getWrappedComponent = (props, ApplicationComponent) => {
+    const WrappedComponent = (
+      <ApplicationComponent
+        //Passing the applications as a prop
+        history={history}
+        applications={this.props.applications.applications}
+        //add common props here
+        {...props}
+      />
+    );
     return WrappedComponent;
-  }
+  };
 
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
+    /*
+    applicationId:
+    userId: "insecure"
+    rating:
+    comments:
+    lastReviewed:
+    questionList:
+    */
+    let comments = [];
+    comments.push({
+      lastReviewed: moment.now(),
+      value: "Wow this is really good"
+    });
+
     return (
       <ThemeProvider theme={theme}>
         <div className="App">
-        <header className="App-header">
-          <AuthProvider>
-          <ConnectedRouter history={history}>
-            <>
-              <Header/>
-              <Container>
-                <Switch>
-                  <PrivateRoute exact={true} path="/" component={Home}></PrivateRoute>
-                  <PrivateRoute
-                    exact={true}
-                    path="/applications"
-                    component={(props)=>this.getWrappedComponent(props,ApplicationsTable)}
-                  ></PrivateRoute>
-                  <Route
-                    exact={true}
-                    path="/login"
-                    component={Login}
-                  ></Route>
-                  <PrivateRoute
-                    path="/submissions/:organizationId"
-                    component={(props)=>this.getWrappedComponent(props,Application)}
-                  ></PrivateRoute>
-                    <PrivateRoute
-                    path="/comparisons/:organizationId"
-                    component={Comparison}
-                  ></PrivateRoute>
-                  <PrivateRoute
-                    path="/rankings"
-                    component={(props)=>this.getWrappedComponent(props,StackedRankings)}
-                  ></PrivateRoute>
-                </Switch>
-              </Container>
-            </>
-          </ConnectedRouter>
-          </AuthProvider>
-
+          <header className="App-header">
+            <AuthProvider onAuthStateChange={this.onAuthStateChange}>
+              <ConnectedRouter history={history}>
+                <>
+                  <Header />
+                  <Container>
+                    <Switch>
+                      <PrivateRoute
+                        exact={true}
+                        path="/applications"
+                        component={props =>
+                          this.getWrappedComponent(props, ApplicationsTable)
+                        }
+                      ></PrivateRoute>
+                      <Route
+                        exact={true}
+                        path="/login"
+                        component={Login}
+                      ></Route>
+                      <PrivateRoute
+                        path="/submissions/:organizationId"
+                        component={props =>
+                          this.getWrappedComponent(props, Application)
+                        }
+                      ></PrivateRoute>
+                      <PrivateRoute
+                        path="/comparisons/:organizationId"
+                        component={Comparison}
+                      ></PrivateRoute>
+                      <PrivateRoute
+                        path="/rankings"
+                        component={StackedRankings}
+                      ></PrivateRoute>
+                      <Redirect to={"/applications"} />
+                    </Switch>
+                  </Container>
+                </>
+              </ConnectedRouter>
+            </AuthProvider>
           </header>
         </div>
       </ThemeProvider>
@@ -165,11 +196,10 @@ class App extends Component {
 //connecting applications to redux
 
 const mapStateToProps = state => ({
-  applications: state.applications
+  applications: state.applications,
+  reviews: state.reviews
 });
 
-const mapDispatchToProps = dispatch => ({
-  loadApplications: payload => dispatch(loadApplications(payload))
-});
+const mapDispatchToProps = dispatch => ({ dispatch });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

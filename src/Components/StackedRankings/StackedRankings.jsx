@@ -1,10 +1,12 @@
-import React, { useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import { connect } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import classNames from "classnames";
 import styled from "styled-components";
-
-import RankingCard from "./RankingCard";
 import { makeStyles } from "@material-ui/core";
+import RankingCard from "./RankingCard";
+const GET = require("../../requests/get");
+const UPDATE = require("../../requests/update");
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -97,23 +99,41 @@ function reorder(list, startIndex, endIndex) {
   return result;
 }
 
-const dummy = Array(100)
-  .fill(1)
-  .map((e, i) => ({ text: "item " + (i + 1), id: `${i}` }));
+function StackedRankings({ applications, user }) {
+  const [rankings, setRankings] = useState([]);
 
-function StackedRankings() {
+  useEffect(() => {
+    (async function() {
+      if (user == null || applications.length === 0) return;
+      try {
+        let fetched = await GET.getAllStackingsAPI(user);
+        if (fetched.length !== applications.length) {
+          // Otherwise we need to initialize the user's rankings
+          const initApps = applications.map(app => ({ appId: app._id }));
+          await UPDATE.updateStackedAPI({
+            userId: user.uid,
+            rankings: initApps
+          });
+          fetched = await GET.getAllStackingsAPI(user);
+        }
+        setRankings(fetched);
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  }, [applications, user]);
+
   const classes = useStyles();
   // TODO: replace this with list from store or props when connecting to DB :)
-  const [orgList, setOrgList] = useState(dummy);
   const shouldTranslate = useRef(false);
 
-  const numOrgs = orgList.length;
+  const numOrgs = rankings.length;
   const column = useMemo(() => {
     const numbers = [];
     for (let i = 0; i < numOrgs; ++i) {
       numbers.push(
         <React.Fragment key={i}>
-          <RankNumber>#{i + 1}</RankNumber>
+          <RankNumber>{i + 1}</RankNumber>
           {i === 4 && (
             <div className={classes.cutoff}>
               <div>Cutoff</div>
@@ -131,12 +151,24 @@ function StackedRankings() {
     if (!result.destination) {
       return;
     }
+    const before = rankings;
     const reorderedList = reorder(
-      orgList,
+      rankings,
       result.source.index,
       result.destination.index
     );
-    setOrgList(reorderedList);
+    try {
+      UPDATE.updateStackedAPI({
+        userId: user.uid,
+        rankings: reorderedList.map(app => ({ appId: app._id }))
+      });
+      setRankings(reorderedList);
+    } catch (e) {
+      setRankings(before);
+      console.error(e);
+      // TODO error message
+      window.alert("Unable to update stacked rankings.");
+    }
   };
 
   const onBeforeDragStart = provided => {
@@ -152,6 +184,10 @@ function StackedRankings() {
         Stacked Rankings are based on your overall ratings. You can move
         applicants around if you disagree with the rankings.
       </p>
+      <p>
+        The applicants above the cutoff line are the ones you wish to see move
+        on to the next round
+      </p>
       <div className={classes.rankings}>
         {column}
         <DragDropContext
@@ -165,9 +201,9 @@ function StackedRankings() {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {orgList.map((item, index) => (
-                  <React.Fragment key={item.id}>
-                    <Draggable draggableId={item.id} index={index}>
+                {rankings.map((item, index) => (
+                  <React.Fragment key={item._id}>
+                    <Draggable draggableId={item._id} index={index}>
                       {provided => (
                         <div
                           className={classes.draggableCard}
@@ -175,7 +211,11 @@ function StackedRankings() {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                          <RankingCard companyName={item.text} />
+                          <RankingCard
+                            appId={item._id}
+                            companyName={item["Organization Name"]}
+                            rating={item.rating}
+                          />
                         </div>
                       )}
                     </Draggable>
@@ -200,4 +240,10 @@ function StackedRankings() {
   );
 }
 
-export default StackedRankings;
+const mapStateToProps = state => {
+  return {
+    applications: state.applications.applications
+  };
+};
+
+export default connect(mapStateToProps)(StackedRankings);

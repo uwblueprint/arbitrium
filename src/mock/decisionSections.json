@@ -1,27 +1,27 @@
 [
   {
-    "id": "ownership",
+    "id": 1,
     "questions": ["q1-ownership", "q2-ownership"],
-    "title": "Ownership"
+    "title": "Mission and Vision"
   },
   {
-    "id": "problem",
+    "id": 2,
     "questions": ["q1-problem", "q2-problem"],
-    "title": "Problem"
+    "title": "Leadership"
   },
   {
-    "id": "business-model",
+    "id": 3,
     "questions": ["q1-bus", "q2-bus"],
-    "title": "Business Model"
+    "title": "Projects"
   },
   {
-    "id": "product",
+    "id": 4,
     "questions": ["q1-prod", "q2-prod"],
-    "title": "Product"
+    "title": "Plan"
   },
   {
-    "id": "market",
+    "id": 5,
     "questions": ["q1-market", "q2-market"],
-    "title": "Market"
+    "title": "Opportunities and Challenges"
   }
 ]

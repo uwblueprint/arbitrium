@@ -13,16 +13,14 @@ import Link from "@material-ui/core/Link";
 import SectionComments from "./SectionComments";
 import SectionRating from "./SectionRating";
 
-import { MOCK_RATING_DATA } from "../Application/mockData.json";
-
 // Note that a rating of '0' is not possible.
 const ratingColour = [
-  "#fff",
-  "#DE5252",
-  "#FCD717",
-  "#EB9546",
+  "#55A94E",
+  "#55A94E",
   "#51ACB9",
-  "#51ACB9"
+  "#EB9546",
+  "#FCD717",
+  "#DE5252"
 ];
 
 const ClickableHeader = styled(CardHeader)`
@@ -59,13 +57,13 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: {
+  root: index => ({
     fontSize: 14,
     borderRadius: 0,
-    borderTop: `4px solid ${ratingColour[5]}`,
+    borderTop: `4px solid ${ratingColour[index]}`,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20
-  },
+  }),
   title: {
     color: "#000",
     fontSize: "20px",
@@ -76,16 +74,33 @@ const useStyles = makeStyles({
 function CanvasCard({
   children,
   expanded,
-  key,
   id,
   onHeaderClick,
   onLinkClick,
-  rating,
-  title
+  title,
+  update,
+  review
 }) {
-  const classes = useStyles();
+  let index = parseInt(id.substring(7), 10);
+  const classes = useStyles(index);
+
+  let rate = 0;
+  let numComments = 0;
+  if (review) {
+    review.questionList.map(item => {
+      if (item.id === id) {
+        rate = item.rating;
+        if (item.notes) {
+          numComments = item.notes.length;
+        }
+      }
+    });
+  }
+  if (rate < 0) {
+    rate = 0;
+  }
   return (
-    <Card className={classes.root} elevation={0}>
+    <Card className={classes.root} >
       <ClickableHeader
         action={
           <ExpandMoreIcon className={expanded ? classes.expandOpen : null} />
@@ -103,8 +118,16 @@ function CanvasCard({
           timeout="auto"
         >
           {children}
-          <SectionRating />
-          <SectionComments comments={MOCK_RATING_DATA.comments} />
+          <SectionRating
+            id={id}
+            update={update}
+            review={review}
+          ></SectionRating>
+          <SectionComments
+            id={id}
+            update={update}
+            review={review}
+          ></SectionComments>
         </Collapse>
         {!expanded && (
           <ReadMoreLink
@@ -119,9 +142,9 @@ function CanvasCard({
           <>
             <Divider />
             <Footer>
-              <span className="rating-label">{`Your Rating: ${rating}/5`}</span>
+              <span className="rating-label">{`Your Rating: ${rate}/5`}</span>
               <span>
-                <StyledCommentIcon /> 0 comment(s)
+                <StyledCommentIcon /> {numComments} comment(s)
               </span>
             </Footer>
           </>

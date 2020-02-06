@@ -13,5 +13,5 @@ export function switchView(payload) {
 //To avoid errors; declare the action types as constants :)
 
 export function loadApplications(payload) {
-  return { type: LOAD_APPLICATIONS, payload }
-};
+  return { type: LOAD_APPLICATIONS, payload };
+}

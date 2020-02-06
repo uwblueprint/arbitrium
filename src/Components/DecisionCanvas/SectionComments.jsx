@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 import Comment from "../Comment/Comment";
@@ -19,7 +19,19 @@ const SectionWrapper = styled.div`
   }
 `;
 
-function SectionComments({ comments, ...rest }) {
+function SectionComments({ id, update, review }) {
+  let comments = [];
+  if (review) {
+    if (id == "master") {
+      comments = review.comments;
+    } else {
+      review.questionList.map(item => {
+        if (item.id == id) {
+          comments = item.notes;
+        }
+      });
+    }
+  }
   return (
     <SectionWrapper>
       <div className="header">
@@ -35,6 +47,8 @@ function SectionComments({ comments, ...rest }) {
         placeholder={"Add a note..."}
         primaryLabel="Add a note"
         secondaryLabel="Cancel"
+        update={update}
+        id={id}
       />
     </SectionWrapper>
   );

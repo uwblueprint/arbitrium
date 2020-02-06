@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import moment from "moment";
 
 const CommentBlock = styled.div`
   display: grid;
@@ -47,23 +48,14 @@ const CommentBlock = styled.div`
   }
 `;
 
-const Comment = ({ comment: { author, relativeTime, text, image } }) => (
+const Comment = ({ comment }) => (
   <CommentBlock>
-    {image ? (
-      <img src={image} alt={author} className="displayPicture image" />
-    ) : (
-      <div className="circle image">
-        {author
-          .split(" ")
-          .map(name => name[0])
-          .join("")}
-      </div>
-    )}
+    <div className="circle image">{"You"}</div>
+
     <div className="comment-info">
-      <span className="comment-author">{author}</span>
-      <span className="comment-date">{relativeTime}</span>
+      <span className="comment-author">{moment(comment["lastReviewed"]).toDate().toString().substring(4,16)}</span>
     </div>
-    <p className="comment-text">{text}</p>
+    <p className="comment-text">{comment.value}</p>
   </CommentBlock>
 );
 

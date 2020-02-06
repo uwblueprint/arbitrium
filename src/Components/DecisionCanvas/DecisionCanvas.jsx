@@ -4,8 +4,6 @@ import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import CanvasCard from "./CanvasCard";
 
-import SectionList from "../../mock/decisionSections.json";
-
 const SectionWrapper = styled.div`
   text-align: left;
 `;
@@ -73,10 +71,10 @@ function expandArrayReducer(expandedArr, { type, index }) {
   });
 }
 
-function DecisionCanvas() {
+function DecisionCanvas({ update, review, categoryData }) {
   const [expandArray, dispatch] = useReducer(
     expandArrayReducer,
-    SectionList.map(() => false)
+    categoryData.map(() => false)
   );
 
   return (
@@ -95,31 +93,43 @@ function DecisionCanvas() {
           Expand All
         </Button>
       </CanvasHeader>
-      {SectionList.map((section, index) => (
-        <CanvasCard
-          expanded={expandArray[index]}
-          key={section.title}
-          id={"canvas_" + section.title}
-          onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
-          onLinkClick={() => dispatch({ type: "EXPAND", index })}
-          rating={0}
-          title={section.title}
-        >
-          <CardBody>
-            <div className="questions">
-              <h3>Question(s):</h3>
-              <ol>
-                {section.questions.map((question, i) => (
-                  <li key={i}>{question}</li>
-                ))}
-              </ol>
-            </div>
-            <div className="answers">
-              <h3>Application Answer</h3>some answers and such
-            </div>
-          </CardBody>
-        </CanvasCard>
-      ))}
+      {categoryData
+        ? categoryData.map((section, index) => (
+            <CanvasCard
+              expanded={expandArray[index]}
+              key={section.id}
+              id={"canvas_" + section.id}
+              onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
+              onLinkClick={() => dispatch({ type: "EXPAND", index })}
+              rating={0}
+              title={section.title}
+              update={update}
+              review={review}
+            >
+              <CardBody>
+                <div className="questions">
+                  <h3>Question(s):</h3>
+                  <ol>
+                    {section.answers.map((item, i) => (
+                      <li key={i}>{item.question}</li>
+                    ))}
+                  </ol>
+                </div>
+                <div className="answers">
+                  <h3>Candidate Answer</h3>
+                  <ol>
+                    {section.answers.map((item, i) => (
+                      <React.Fragment key={i}>
+                        <li key={i}>{item.response}</li>
+                        <h1> {"    "}</h1>
+                      </React.Fragment>
+                    ))}
+                  </ol>
+                </div>
+              </CardBody>
+            </CanvasCard>
+          ))
+        : null}
     </SectionWrapper>
   );
 }

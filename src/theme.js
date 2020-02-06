@@ -1,13 +1,21 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
+  props: {
+    MuiPaper: {
+      elevation: 0
+    },
+    MuiCard: {
+      elevation: 0
+    }
+  },
   palette: {
     primary: {
-      main: "#6202EE"
+      main: "#005EB8"
     },
     secondary: {
       main: "#ECE0FD",
-      contrastText: "#6202EE"
+      contrastText: "#005EB8"
     }
   },
   shadows: ["none"]
