@@ -23,8 +23,8 @@ mongoimport \
   --username ${1} \
   --password ${2} \
   --authenticationDatabase admin \
-  --db QA \
+  --db Production \
   --collection Applications \
   --type csv \
-  --file ./SVP2.csv \
+  --file ./SVPLIO.csv \
   --headerline \
