@@ -120,7 +120,7 @@ class App extends Component {
       <ApplicationComponent
         //Passing the applications as a prop
         history={history}
-        applications={this.props.applications.applications}
+        applications={this.props.applications}
         //add common props here
         {...props}
       />

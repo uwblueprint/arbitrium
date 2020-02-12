@@ -3,23 +3,14 @@ import { connect } from "react-redux";
 import { push } from "connected-react-router";
 
 import SectionList from "../../mock/decisionSections.json";
+import NavButton from "./NavButton";
 
 import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
 
 import { makeStyles } from "@material-ui/core/styles";
-import "./Navigation.css";
+
 const useStyles = makeStyles({
-  selected: {
-    backgroundColor: "#005EB826",
-    color: "#005EB8"
-  },
-  unselected: {
-    backgroundColor: "white",
-    color: "black"
-  },
   root: {
     // Entire Nav
     "& .MuiDrawer-paper": {
@@ -96,14 +87,13 @@ function getNavId(pathname) {
 }
 
 function Navigation({ applications, pathname, push, showStackedRankings }) {
-  const [organization, setOrganization] = useState("UW Blueprint");
   const classes = useStyles();
   const isApplicationReview = pathname.includes("/submissions/");
   const [selected, setSelected] = useState(getNavId(pathname));
 
-  const changeOrganization = e => setOrganization(e.target.value);
   //temporary re-route to first available application in redux
-  const getNextValidApplication = () => applications[0]._id;
+  const getNextValidApplication = () =>
+    applications.length > 0 ? applications[0]._id : "/";
 
   const scrollToSection = title => {
     window.requestAnimationFrame(() => {
@@ -113,53 +103,33 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
     });
   };
 
+  const onNavClick = (id, path) => {
+    setSelected(id);
+    push(path);
+  };
+
+  const nextApp = getNextValidApplication();
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
         <h2> {" SVP Investee Grant Candidates "} </h2>
         <hr />
-        <Button
-          className={
-            selected === "all_applications"
-              ? classes.selected
-              : classes.unselected
-          }
-          onClick={() => {
-            setSelected("all_applications");
-            push("/applications");
-          }}
-          variant="contained"
+        <NavButton
+          id="all_applications"
+          isSelected={selected === "all_applications"}
+          onClick={onNavClick}
+          path="/applications"
         >
           All Applicants
-        </Button>
-        <Button
-          className={
-            selected === "application_submission"
-              ? classes.selected
-              : classes.unselected
-          }
-          onClick={() => {
-            setSelected("application_submission");
-            push(`/submissions/${organization}`);
-            push(`/submissions/${getNextValidApplication()}`);
-          }}
+        </NavButton>
+        <NavButton
+          id="application_submission"
+          isSelected={selected === "application_submission"}
+          onClick={onNavClick}
+          path={`/submissions/${nextApp}`}
         >
           Application Submission
-        </Button>
-        {/*
-        //Removing this for now because the functionality is not implemented
-        <Select
-          id="organization"
-          labelId="organization-label"
-          value={organization}
-          onChange={changeOrganization}
-          autoWidth
-          disableUnderline
-        >
-          <MenuItem value="UW Blueprint">UW Blueprint</MenuItem>
-
-        </Select>
-        */}
+        </NavButton>
         {isApplicationReview &&
           SectionList.map(section => (
             <Button
@@ -170,19 +140,14 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
               {section.title}
             </Button>
           ))}
-        <Button
+        <NavButton
           disabled={!showStackedRankings}
-          className={
-            selected === "rankings" ? classes.selected : classes.unselected
-          }
           id="stacked_rankings"
-          onClick={() => {
-            push(`/rankings`);
-            setSelected("rankings");
-          }}
+          onClick={onNavClick}
+          path="/rankings"
         >
           Stacked Rankings
-        </Button>
+        </NavButton>
       </Drawer>
     </nav>
   );
@@ -190,9 +155,8 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
 
 export default connect(
   state => ({
-    applications: state.applications.applications,
-    showStackedRankings:
-      state.reviewCount >= state.applications.applications.length,
+    applications: state.applications,
+    showStackedRankings: state.reviewCount >= state.applications.length,
     pathname: state.router.location.pathname
   }),
   { push }

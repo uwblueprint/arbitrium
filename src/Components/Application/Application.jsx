@@ -39,7 +39,7 @@ class Application extends Component {
   //transpilers will ensure data is converted to form usable by components
 
   getApplicationDetails = () => {
-    return this.props.applications.applications.filter(
+    return this.props.applications.filter(
       application =>
         application["_id"] === this.props.match.params.organizationId
     )[0];
@@ -83,24 +83,24 @@ class Application extends Component {
       link: applicant[fileCategory],
       size: index * 500
     }));
-    let fileLinks = []
-    files.map((file, index) =>{
-      console.log(file.link.split(","))
-      file.link.split(",").map((link, index) =>{
+    let fileLinks = [];
+    files.map((file, index) => {
+      console.log(file.link.split(","));
+      file.link.split(",").map((link, index) => {
         let append = "";
         console.log(file.link.length);
-        if (file.link.split(",").length > 1){
-          append = "(" + (index+1) + ")"
+        if (file.link.split(",").length > 1) {
+          append = "(" + (index + 1) + ")";
         }
         fileLinks.push({
           name: file.name + append,
           link: link,
           size: file.size
-        })
-      })
-    })
+        });
+      });
+    });
     console.log(fileLinks);
-    return fileLinks
+    return fileLinks;
   };
 
   transpileLongAnswerData = () => {
@@ -295,9 +295,7 @@ class Application extends Component {
 
   findApplicationIndex = () => {
     const { organizationId } = this.props.match.params;
-    return this.props.applications.applications
-      .map(e => e._id)
-      .indexOf(organizationId);
+    return this.props.applications.map(e => e._id).indexOf(organizationId);
   };
 
   componentDidUpdate() {
@@ -312,7 +310,7 @@ class Application extends Component {
   }
 
   render() {
-    let applications = this.props.applications.applications;
+    let applications = this.props.applications;
 
     const currentAppIndex =
       applications != null ? this.findApplicationIndex() : null;
@@ -350,8 +348,7 @@ class Application extends Component {
           </h1>
           <Rubric />
           <hr />
-          {this.props.applications.applications.length > 0 &&
-          this.applicantExists() ? (
+          {this.props.applications.length > 0 && this.applicantExists() ? (
             <div className="application-information">
               <Categories categoryData={this.transpileCategoryData()} />
               <hr />
