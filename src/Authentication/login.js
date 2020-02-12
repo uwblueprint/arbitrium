@@ -142,7 +142,7 @@ const Login = ({ history }) => {
       return <Redirect to={'/applications'} />;
   } else if (currentUser!==false){
   return (
-    <StyledCard>
+    <StyledCard elevation={1}>
       <CardHeader title="arbitrium" subheader="Sign-In" />
       <CardContent>
         <CommentForm onSubmit={handleLogin}>
