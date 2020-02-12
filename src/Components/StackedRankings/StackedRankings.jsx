@@ -242,7 +242,7 @@ function StackedRankings({ applications, user }) {
 
 const mapStateToProps = state => {
   return {
-    applications: state.applications.applications
+    applications: state.applications
   };
 };
 
