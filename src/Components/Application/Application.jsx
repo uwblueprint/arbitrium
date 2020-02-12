@@ -394,7 +394,7 @@ class Application extends Component {
                   : console.log("Previous Application doesn't exist");
               }}
             >
-              > Next Applicant
+              Next Applicant
             </Button>
           </ApplicationSelector>
         </Wrapper>
