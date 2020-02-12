@@ -11,6 +11,7 @@ import { AuthProvider } from "./Authentication/Auth";
 import { INITIAL_APP_LOAD } from "./Constants/ActionTypes";
 
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
+import Admin from "./Components/Admin/Admin";
 import Login from "./Authentication/login.js";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -179,6 +180,10 @@ class App extends Component {
                       <PrivateRoute
                         path="/rankings"
                         component={StackedRankings}
+                      ></PrivateRoute>
+                      <PrivateRoute
+                        path="/admin"
+                        component={Admin}
                       ></PrivateRoute>
                       <Redirect to={"/applications"} />
                     </Switch>
