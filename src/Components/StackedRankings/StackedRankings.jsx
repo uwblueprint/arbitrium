@@ -209,6 +209,9 @@ function StackedRankings({ applications, user }) {
         The applicants above the cutoff line are the ones you wish to see move
         on to the next round
       </p>
+    <h1> Note: You are done the review process once you are happy with your
+    stacked rankings. There is no submit button. Everything is automatically saved
+  </h1>
       <div className={classes.rankings}>
         {column}
         <DragDropContext
