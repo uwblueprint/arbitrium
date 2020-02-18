@@ -116,6 +116,27 @@ function StackedRankings({ applications, user }) {
           });
           fetched = await GET.getAllStackingsAPI(user);
         }
+        let reviews = await GET.getUserReviewsAPI(user);
+        reviews.map((review)=>{
+          let averageRating = 0;
+          let numRatings = 0;
+          if (review && review.questionList) {
+            review.questionList.map(item => {
+              if (item.rating > 0) {
+                averageRating += item.rating;
+                numRatings += 1;
+              }
+            });
+          }
+          if (numRatings > 0) {
+            averageRating = averageRating / numRatings;
+          }
+          let result = fetched.filter((app)=> app._id == review.applicationId ).map((item) => {
+            item.suggested = averageRating
+          })
+        })
+        console.log(reviews);
+        console.log(fetched);
         setRankings(fetched);
       } catch (e) {
         console.error(e);
@@ -215,6 +236,7 @@ function StackedRankings({ applications, user }) {
                             appId={item._id}
                             companyName={item["Organization Name"]}
                             rating={item.rating}
+                            suggested={item.suggested}
                           />
                         </div>
                       )}

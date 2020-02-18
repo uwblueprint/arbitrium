@@ -85,7 +85,8 @@ class Application extends Component {
     }));
     let fileLinks = [];
     files.map((file, index) => {
-      console.log(file.link.split(","));
+      //console.log(file.link.split(","));
+      if (file.link){
       file.link.split(",").map((link, index) => {
         let append = "";
         console.log(file.link.length);
@@ -98,6 +99,7 @@ class Application extends Component {
           size: file.size
         });
       });
+    }
     });
     console.log(fileLinks);
     return fileLinks;
