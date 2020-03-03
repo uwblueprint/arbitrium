@@ -77,30 +77,25 @@ function CanvasCard({
   id,
   onHeaderClick,
   onLinkClick,
+  review,
   title,
-  update,
-  review
+  update
 }) {
   let index = parseInt(id.substring(7), 10);
   const classes = useStyles(index);
+  let rating = 0;
+  let notes = [];
+  if (review != null) {
+    rating = review.rating;
+    notes = review.notes;
+  }
 
-  let rate = 0;
-  let numComments = 0;
-  if (review) {
-    review.questionList.map(item => {
-      if (item.id === id) {
-        rate = item.rating;
-        if (item.notes) {
-          numComments = item.notes.length;
-        }
-      }
-    });
+  if (rating < 0) {
+    rating = 0;
   }
-  if (rate < 0) {
-    rate = 0;
-  }
+
   return (
-    <Card className={classes.root} >
+    <Card className={classes.root}>
       <ClickableHeader
         action={
           <ExpandMoreIcon className={expanded ? classes.expandOpen : null} />
@@ -124,9 +119,9 @@ function CanvasCard({
             review={review}
           ></SectionRating>
           <SectionComments
+            comments={notes}
             id={id}
             update={update}
-            review={review}
           ></SectionComments>
         </Collapse>
         {!expanded && (
@@ -142,9 +137,9 @@ function CanvasCard({
           <>
             <Divider />
             <Footer>
-              <span className="rating-label">{`Your Rating: ${rate}/5`}</span>
+              <span className="rating-label">{`Your Rating: ${rating}/5`}</span>
               <span>
-                <StyledCommentIcon /> {numComments} comment(s)
+                <StyledCommentIcon /> {notes.length} comment(s)
               </span>
             </Footer>
           </>

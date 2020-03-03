@@ -85,10 +85,8 @@ class Application extends Component {
     }));
     let fileLinks = [];
     files.map((file, index) => {
-      console.log(file.link.split(","));
       file.link.split(",").map((link, index) => {
         let append = "";
-        console.log(file.link.length);
         if (file.link.split(",").length > 1) {
           append = "(" + (index + 1) + ")";
         }
@@ -99,22 +97,19 @@ class Application extends Component {
         });
       });
     });
-    console.log(fileLinks);
     return fileLinks;
   };
 
   transpileLongAnswerData = () => {
     const applicant = this.getApplicationDetails();
-    let answers = Object.keys(longAnswerCategories).map(
-      (longAnswerCategory, index) => ({
-        id: longAnswerCategories[longAnswerCategory],
-        answers: {
-          question: longAnswerCategory,
-          response: applicant[longAnswerCategory]
-        },
-        title: "Untermined" + longAnswerCategories[longAnswerCategory]
-      })
-    );
+    let answers = Object.keys(longAnswerCategories).map(longAnswerCategory => ({
+      id: longAnswerCategories[longAnswerCategory],
+      answers: {
+        question: longAnswerCategory,
+        response: applicant[longAnswerCategory]
+      },
+      title: "Untermined" + longAnswerCategories[longAnswerCategory]
+    }));
 
     let data = [];
     data.push({
@@ -142,7 +137,7 @@ class Application extends Component {
       answers: [],
       title: "Opportunities and Challenges"
     });
-    answers.map((answer, index) => {
+    answers.map(answer => {
       data.map(item => {
         if (answer.id === item.id) {
           item.answers.push({
@@ -153,19 +148,6 @@ class Application extends Component {
       });
     });
     return data;
-    /*
-    //hard coded
-    //Vision and Mission: 1
-    1,2
-    //Leadership: 2
-    3,4,5,6
-    //Projects: 3
-    9, 10
-    //Plan:4
-    8,7
-    //Challenges and Opportunriwa: 5
-    11,12,13
-    */
   };
 
   transpileRatingData = () => {
