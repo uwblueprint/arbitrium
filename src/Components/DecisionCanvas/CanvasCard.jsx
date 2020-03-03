@@ -85,13 +85,11 @@ function CanvasCard({
   const classes = useStyles(index);
   let rating = 0;
   let notes = [];
-  if (review != null) {
-    rating = review.rating;
-    notes = review.notes;
-  }
+  console.log(review);
 
-  if (rating < 0) {
-    rating = 0;
+  if (review != null) {
+    rating = review.rating >= 0 ? review.rating : 0;
+    notes = review.notes;
   }
 
   return (

@@ -42,7 +42,7 @@ router.get("/:userid", function(req, res) {
                 }
               }
             },
-            { $project: { rating: 1, lastReviewed: 1 } }
+            { $project: { _id: 0, rating: 1, lastReviewed: 1 } }
           ],
           as: "ratingInfo"
         }

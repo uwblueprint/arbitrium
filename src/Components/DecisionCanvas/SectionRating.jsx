@@ -16,26 +16,22 @@ const SectionWrapper = styled.div`
   }
 `;
 
-function SectionRating({ onRatingChange, selectedRating, id, update, review, ...rest }) {
+function SectionRating({ id, update, review }) {
+  const [rating, setRating] = useState(review ? review.rating : -1);
 
-  const [rating, setRating] = useState(0);
-
-
-  if (review){
-    if (id == "master" && (rating == 0 || rating != review.rating)){
-      setRating(review.rating);
-    }
-    else {
-      review.questionList.map((item) => {
-        if (item.id === id && (rating == 0 || rating != item.rating)){
-          setRating(item.rating);
-        }
-      })
-    }
-  }
-  else if (rating != 0) {
-    setRating(0);
-  }
+  // if (review) {
+  //   if (id == "master" && (rating == 0 || rating != review.rating)) {
+  //     setRating(review.rating);
+  //   } else {
+  //     review.questionList.map(item => {
+  //       if (item.id === id && (rating == 0 || rating != item.rating)) {
+  //         setRating(item.rating);
+  //       }
+  //     });
+  //   }
+  // } else if (rating != 0) {
+  //   setRating(0);
+  // }
   return (
     <SectionWrapper>
       <h3>Rating</h3>
@@ -46,8 +42,8 @@ function SectionRating({ onRatingChange, selectedRating, id, update, review, ...
       </span>
       <RatingList
         onRatingChange={rate => {
-          setRating(rate)
-          update("rating", {id, rate})
+          setRating(rate);
+          update("rating", { id, rate });
         }}
         selectedRating={rating}
       />
