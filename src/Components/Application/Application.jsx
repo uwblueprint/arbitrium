@@ -388,7 +388,7 @@ class Application extends Component {
               onClick={() => {
                 nextApplication
                   ? this.props.history.push(nextApplication)
-                  : console.log("Previous Application doesn't exist");
+                  : console.log("Next Application doesn't exist");
               }}
             >
               Next Applicant
@@ -440,4 +440,8 @@ const ApplicationSelector = styled.div`
   button {
     border-radius: 0px;
   }
+  @media (max-width: 1450px) {
+    margin-bottom: 100px;
+  }
+}
 `;
