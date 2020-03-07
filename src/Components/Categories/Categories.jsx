@@ -113,7 +113,7 @@ const Categories = ({ categoryData }) => {
               <CategoryWrapper>
                 {contact.map(({ title, value }, index) => (
                   <div className="category" key={index}>
-                    {title != "Organization Website" ? (
+                    {title !== "Organization Website" ? (
                       <>
                         <span className="title">{title}</span>
                         <span className="value">{value}</span>

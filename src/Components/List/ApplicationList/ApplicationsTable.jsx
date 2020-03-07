@@ -8,11 +8,6 @@ import moment from "moment";
 
 const GET = require("../../../requests/get");
 
-const APPLICATION_STAGE = {
-  LETTER_OF_INTEREST: 0,
-  FULL_APPLICATION: 1
-};
-
 const Wrapper = styled.div`
   margin-top: 150px;
   padding: 0 136px;

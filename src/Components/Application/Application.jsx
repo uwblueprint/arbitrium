@@ -301,7 +301,7 @@ class Application extends Component {
   componentDidUpdate() {
     let appId = this.getApplicationDetails();
     if (appId) {
-      if (this.state.appId != appId._id) {
+      if (this.state.appId !== appId._id) {
         GET.getReviewAPI(this.props.user, appId._id).then(res => {
           this.setState({ review: res[0], appId: appId._id });
         });
@@ -313,7 +313,7 @@ class Application extends Component {
     let applications = this.props.applications;
 
     const currentAppIndex =
-      applications != null ? this.findApplicationIndex() : null;
+      applications !== null ? this.findApplicationIndex() : null;
     const previousApplication =
       applications && currentAppIndex > 0
         ? "/submissions/" + applications[currentAppIndex - 1]["_id"]
@@ -388,7 +388,7 @@ class Application extends Component {
               onClick={() => {
                 nextApplication
                   ? this.props.history.push(nextApplication)
-                  : console.log("Previous Application doesn't exist");
+                  : console.log("Next Application doesn't exist");
               }}
             >
               Next Applicant

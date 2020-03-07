@@ -115,12 +115,13 @@ class App extends Component {
   questionList:
   */
 
-  getWrappedComponent = (props, ApplicationComponent) => {
+  getWrappedComponent = (props, ApplicationComponent, fullApplication=false) => {
+    const data = fullApplication ? [] : this.props.applications;
     const WrappedComponent = (
       <ApplicationComponent
         //Passing the applications as a prop
         history={history}
-        applications={this.props.applications}
+        applications={data}
         //add common props here
         {...props}
       />
@@ -161,6 +162,13 @@ class App extends Component {
                           this.getWrappedComponent(props, ApplicationsTable)
                         }
                       ></PrivateRoute>
+                      <PrivateRoute
+                        exact={true}
+                        path="/applications/full"
+                        component={props =>
+                          this.getWrappedComponent(props, ApplicationsTable, true)
+                        }
+                      ></PrivateRoute>
                       <Route
                         exact={true}
                         path="/login"
@@ -170,6 +178,12 @@ class App extends Component {
                         path="/submissions/:organizationId"
                         component={props =>
                           this.getWrappedComponent(props, Application)
+                        }
+                      ></PrivateRoute>
+                      <PrivateRoute
+                        path="/submissions/full/:organizationId"
+                        component={props =>
+                          this.getWrappedComponent(props, Application, true)
                         }
                       ></PrivateRoute>
                       <PrivateRoute
