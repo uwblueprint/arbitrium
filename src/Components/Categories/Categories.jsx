@@ -95,7 +95,7 @@ const Categories = ({ categoryData }) => {
 
   return (
     <Wrapper>
-      <ExpansionPanel>
+      <ExpansionPanel defaultExpanded>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           classes={{ root: classes.mainSummaryPanel }}
@@ -103,7 +103,7 @@ const Categories = ({ categoryData }) => {
           Administrative Categories
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: classes.mainDetailsPanel }}>
-          <SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Contact
             </SecondarySummaryPanel>
@@ -135,7 +135,7 @@ const Categories = ({ categoryData }) => {
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
 
-          <SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Social Media
             </SecondarySummaryPanel>
@@ -155,7 +155,7 @@ const Categories = ({ categoryData }) => {
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
 
-          <SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Organization Information
             </SecondarySummaryPanel>
@@ -173,7 +173,7 @@ const Categories = ({ categoryData }) => {
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
 
-          <SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Application Information
             </SecondarySummaryPanel>
