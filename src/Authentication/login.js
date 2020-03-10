@@ -13,6 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import CardActions from "@material-ui/core/CardActions";
+import globalStyles from "../global-styles.js";
 
 const CommentForm = styled.form`
   .textFields {
@@ -70,7 +71,14 @@ const StyledCard = styled(Card)`
   box-shadow: -1px 1px 5px 1px #ccc;
 
   .MuiCardHeader-title {
-    font-size: 3rem;
+    font-family: Tungsten-Semibold;
+    letter-spacing: 2px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 4rem;
+    line-height: 3rem;
+
+    text-transform: uppercase;
   }
   .MuiCardHeader-root {
     padding-bottom: 5px;
@@ -137,7 +145,7 @@ const Login = ({ history }) => {
   } else if (currentUser!==false){
   return (
     <StyledCard>
-      <CardHeader title="arbitrium" subheader="Sign-In" />
+      <CardHeader className="card-header" title="arbitrium" subheader="Sign-In" />
       <CardContent>
         <CommentForm onSubmit={handleLogin}>
           <FormControl variant="outlined" className="textFields">
