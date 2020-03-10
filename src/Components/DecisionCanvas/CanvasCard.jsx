@@ -142,7 +142,7 @@ function CanvasCard({
           <>
             <Divider />
             <Footer>
-              <span className="rating-label">{`Your Rating: ${rate}/5`}</span>
+              <span className="rating-label">{`Your Rating: ${(rate == 0) ? 'Not Rated' : rate} / 5`}</span>
               <span>
                 <StyledCommentIcon /> {numComments} comment(s)
               </span>
