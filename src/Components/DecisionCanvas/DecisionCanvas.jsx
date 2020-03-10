@@ -79,9 +79,9 @@ function DecisionCanvas({ update, review, categoryData }) {
 
   const categoryToReviewMap = useMemo(() => {
     if (review == null) return {};
-    return review.questionList.reduce((map, review) => {
-      map[review.id] = review;
-      return map;
+    return review.questionList.reduce((reviewMap, review) => {
+      reviewMap[review.id] = review;
+      return reviewMap;
     }, {});
   }, [review]);
 

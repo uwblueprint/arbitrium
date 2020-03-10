@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import Link from "@material-ui/core/Link";
 import RatingList from "../RatingList/RatingList";
+import { UPDATE_RATING } from "../Application/reviewReducer";
 
 const SectionWrapper = styled.div`
   font-size: inherit;
@@ -16,22 +16,15 @@ const SectionWrapper = styled.div`
   }
 `;
 
-function SectionRating({ id, update, review }) {
-  const [rating, setRating] = useState(review ? review.rating : -1);
+function SectionRating({ id, update, rating }) {
+  function onRatingChange(newRating) {
+    update({
+      type: UPDATE_RATING,
+      rating: newRating,
+      id
+    });
+  }
 
-  // if (review) {
-  //   if (id == "master" && (rating == 0 || rating != review.rating)) {
-  //     setRating(review.rating);
-  //   } else {
-  //     review.questionList.map(item => {
-  //       if (item.id === id && (rating == 0 || rating != item.rating)) {
-  //         setRating(item.rating);
-  //       }
-  //     });
-  //   }
-  // } else if (rating != 0) {
-  //   setRating(0);
-  // }
   return (
     <SectionWrapper>
       <h3>Rating</h3>
@@ -40,13 +33,7 @@ function SectionRating({ id, update, review }) {
         this applicant. Please refer to the rubric provided by SVP to help you
         decide on a final rating
       </span>
-      <RatingList
-        onRatingChange={rate => {
-          setRating(rate);
-          update("rating", { id, rate });
-        }}
-        selectedRating={rating}
-      />
+      <RatingList onRatingChange={onRatingChange} selectedRating={rating} />
     </SectionWrapper>
   );
 }

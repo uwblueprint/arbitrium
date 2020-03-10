@@ -2,7 +2,6 @@ import React from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
-import RatingList from "../RatingList/RatingList";
 import Comment from "../Comment/Comment";
 import AddComment from "../AddComment/AddComment";
 import SectionRating from "../DecisionCanvas/SectionRating";
@@ -39,6 +38,7 @@ const useStyles = makeStyles({
   }
 });
 
+// This is the Rating component for the WHOLE APP...TODO: consolidate with section rating
 const Rating = ({ update, review }) => {
   const classes = useStyles();
   let averageRating = 0;
@@ -72,7 +72,7 @@ const Rating = ({ update, review }) => {
         <SectionRating
           id="master"
           update={update}
-          review={review}
+          rating={review ? review.rating : -1}
         ></SectionRating>
         <h3>Comment</h3>
         <p className="rating-info">

@@ -43,7 +43,7 @@ function formatDate(date) {
     .substring(4, 16);
 }
 
-function ApplicationList({ history, user }) {
+function ApplicationTable({ history, user }) {
   // Applications, with reviews attached
   const [applications, setApps] = useState([]);
 
@@ -51,9 +51,8 @@ function ApplicationList({ history, user }) {
     GET.getApplicationTableData(user).then(res => {
       if (Array.isArray(res)) setApps(res);
     });
-  }, []);
+  }, [user]);
 
-  //Pre-calculate the applications array before rendering
   return (
     <Wrapper className="application-list">
       <Paper>
@@ -107,4 +106,4 @@ function ApplicationList({ history, user }) {
   );
 }
 
-export default ApplicationList;
+export default ApplicationTable;

@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useReducer, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import moment from "moment";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
@@ -9,63 +8,21 @@ import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 //column categories
 import {
-  fileCategories,
-  adminCategories,
-  longAnswerCategories
-} from "./column_categories";
+  createReview,
+  transpileCategoryData,
+  transpileFileData,
+  transpileLongAnswerData
+} from "./applicationDataHelpers";
+import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 
 //import templates
 
-import { MOCK_RATING_DATA } from "./mockData.json";
-
 import { connect } from "react-redux";
 import Rubric from "../Rubric/Rubric";
-import { NEW_REVIEW, UPDATE_REVIEW } from "../../Constants/ActionTypes";
+import { NEW_REVIEW } from "../../Constants/ActionTypes";
 
 const GET = require("../../requests/get");
 const UPDATE = require("../../requests/update");
-
-function createReview(user, appId) {
-  let review = {};
-  let comments = [];
-  let questionList = [];
-
-  //THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE
-  questionList.push({
-    id: "canvas_1",
-    notes: [],
-    rating: -1
-  });
-  questionList.push({
-    id: "canvas_2",
-    notes: [],
-    rating: -1
-  });
-  questionList.push({
-    id: "canvas_3",
-    notes: [],
-    rating: -1
-  });
-  questionList.push({
-    id: "canvas_4",
-    notes: [],
-    rating: -1
-  });
-  questionList.push({
-    id: "canvas_5",
-    notes: [],
-    rating: -1
-  });
-  review = {
-    applicationId: appId,
-    userId: user.uid,
-    rating: -1,
-    comments: comments,
-    lastReviewed: moment(),
-    questionList: questionList
-  };
-  return review;
-}
 
 // returns tuple: [appData, appIndex in appList]
 function getApplicationDetails(appList, appId) {
@@ -80,176 +37,43 @@ function getApplicationDetails(appList, appId) {
 
 function Application({ applications, dispatch, history, match, user }) {
   const appId = match.params.organizationId;
-  const [review, setReview] = useState(null);
+  const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
 
   useEffect(() => {
     GET.getReviewAPI(user, appId).then(res => {
-      console.log(res[0]);
-      setReview(res[0]);
+      dispatchReviewUpdate({
+        type: LOAD_REVIEW,
+        review: res != null ? res[0] : createReview(user, appId)
+      });
     });
   }, [appId]);
+
+  useEffect(() => {
+    if (appId == null || user == null || review == null) {
+      return;
+    }
+    UPDATE.updateReviewAPI(review).then(res => {
+      if (res.ok != 1) {
+        alert("Error in saving your review!");
+      }
+      if (res.upserted) {
+        dispatch({ type: NEW_REVIEW });
+      }
+    });
+  }, [review]);
 
   const [application, appIndex] = useMemo(() => {
     return getApplicationDetails(applications, appId);
   }, [applications, appId]);
 
-  const transpileCategoryData = () => {
-    //todo when category data is made available, currently leverages mock data
+  const appData = useMemo(() => {
+    if (application == null) return null;
     return {
-      contact: Object.keys(adminCategories.contact).map(adminCategory => ({
-        title: adminCategory,
-        value: application[adminCategory]
-      })),
-      socialMedia: Object.keys(adminCategories.socialMedia).map(
-        adminCategory => ({
-          title: adminCategory,
-          value: application[adminCategory]
-        })
-      ),
-      organizationInformation: Object.keys(
-        adminCategories.organizationInformation
-      ).map(adminCategory => ({
-        title: adminCategory,
-        value: application[adminCategory]
-      })),
-      applicationInformation: Object.keys(
-        adminCategories.applicationInformation
-      ).map(adminCategory => ({
-        title: adminCategory,
-        value: application[adminCategory]
-      }))
+      categoryData: transpileCategoryData(application),
+      fileData: transpileFileData(application),
+      longAnswers: transpileLongAnswerData(application)
     };
-  };
-
-  const transpileFileData = () => {
-    let files = Object.keys(fileCategories).map((fileCategory, index) => ({
-      name: fileCategory,
-      link: application[fileCategory],
-      size: index * 500
-    }));
-    let fileLinks = [];
-    files.map(file => {
-      if (file.link == null) return;
-      file.link.split(",").map((link, index) => {
-        let append = "";
-        if (file.link.split(",").length > 1) {
-          append = "(" + (index + 1) + ")";
-        }
-        fileLinks.push({
-          name: file.name + append,
-          link: link,
-          size: file.size
-        });
-      });
-    });
-    return fileLinks;
-  };
-
-  const transpileLongAnswerData = () => {
-    let answers = Object.keys(longAnswerCategories).map(longAnswerCategory => ({
-      id: longAnswerCategories[longAnswerCategory],
-      answers: {
-        question: longAnswerCategory,
-        response: application[longAnswerCategory]
-      },
-      title: "Undetermined" + longAnswerCategories[longAnswerCategory]
-    }));
-
-    let data = [];
-    data.push({
-      id: 1,
-      answers: [],
-      title: "Mission and Vision"
-    });
-    data.push({
-      id: 2,
-      answers: [],
-      title: "Leadership"
-    });
-    data.push({
-      id: 3,
-      answers: [],
-      title: "Projects"
-    });
-    data.push({
-      id: 4,
-      answers: [],
-      title: "Plan"
-    });
-    data.push({
-      id: 5,
-      answers: [],
-      title: "Opportunities and Challenges"
-    });
-    answers.map(answer => {
-      data.map(item => {
-        if (answer.id === item.id) {
-          item.answers.push({
-            question: answer.answers.question,
-            response: answer.answers.response
-          });
-        }
-      });
-    });
-    return data;
-  };
-
-  //Types:
-  //Notes update - {questionId, notes}
-  //Rating update - {questionId, rating}
-  //Comment update - comment
-  //rating update - rating
-  const handleReviewUpdate = (type, data) => {
-    let editedReview = review;
-    //If a review doesn't exist then create one
-    if (editedReview == null) {
-      editedReview = createReview(user, appId);
-    }
-
-    //Update the data in the review
-    editedReview.lastReviewed = moment();
-    if (data.id === "master") {
-      if (type === "comment") {
-        let com = {
-          lastReviewed: moment(),
-          value: data.text
-        };
-        editedReview.comments.push(com);
-      }
-      if (type === "rating") {
-        editedReview.rating = data.rate;
-      }
-    } else {
-      if (type === "comment") {
-        let com = {
-          lastReviewed: moment(),
-          value: data.text
-        };
-        editedReview.questionList.forEach(item => {
-          if (item.id === data.id) {
-            let newComments = item.notes;
-            newComments.push(com);
-            item.notes = newComments;
-          }
-        });
-      }
-      if (type === "rating") {
-        editedReview.questionList.forEach(item => {
-          if (item.id === data.id) {
-            item.rating = data.rate;
-          }
-        });
-      }
-    }
-
-    //Update the review
-    setReview(editedReview);
-    UPDATE.updateReviewAPI(editedReview).then(res => {
-      if (res.upserted) {
-        this.props.dispatch({ type: NEW_REVIEW });
-      }
-    });
-  };
+  }, [application]);
 
   const previousApplication =
     applications && appIndex > 0
@@ -286,17 +110,17 @@ function Application({ applications, dispatch, history, match, user }) {
         <hr />
         {applications.length > 0 && application != null ? (
           <div className="application-information">
-            <Categories categoryData={transpileCategoryData()} />
+            <Categories categoryData={appData.categoryData} />
             <hr />
-            <Files fileData={transpileFileData()} />
+            <Files fileData={appData.fileData} />
             <hr />
             <DecisionCanvas
-              categoryData={transpileLongAnswerData()}
-              update={handleReviewUpdate}
+              categoryData={appData.longAnswers}
+              update={dispatchReviewUpdate}
               review={review}
             />
             <hr />
-            <Rating ratingData={review} update={handleReviewUpdate} />
+            <Rating review={review} update={dispatchReviewUpdate} />
             <hr />
           </div>
         ) : null}

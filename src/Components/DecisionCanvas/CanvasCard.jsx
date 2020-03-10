@@ -85,7 +85,6 @@ function CanvasCard({
   const classes = useStyles(index);
   let rating = 0;
   let notes = [];
-  console.log(review);
 
   if (review != null) {
     rating = review.rating >= 0 ? review.rating : 0;
@@ -114,7 +113,7 @@ function CanvasCard({
           <SectionRating
             id={id}
             update={update}
-            review={review}
+            rating={review ? review.rating : -1}
           ></SectionRating>
           <SectionComments
             comments={notes}
