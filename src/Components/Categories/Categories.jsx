@@ -17,12 +17,13 @@ const CategoryWrapper = styled.div`
   width: 100%;
   .category {
     display: grid;
-    grid-template-columns: 200px auto;
+    grid-template-columns: 40% auto;
     margin: 15px 0;
     line-height: 20px;
   }
   .title {
     font-weight: 500;
+    padding-right: 24px;
   }
   .value {
     font-weight: normal;
@@ -92,7 +93,7 @@ const Categories = ({ categoryData }) => {
 
   return (
     <Wrapper>
-      <ExpansionPanel>
+      <ExpansionPanel defaultExpanded={true}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           classes={{ root: classes.mainSummaryPanel }}
@@ -100,7 +101,7 @@ const Categories = ({ categoryData }) => {
           Administrative Categories
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: classes.mainDetailsPanel }}>
-          <SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded={true}>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Contact
             </SecondarySummaryPanel>
@@ -132,7 +133,7 @@ const Categories = ({ categoryData }) => {
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
 
-          <SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded={true}>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Social Media
             </SecondarySummaryPanel>
@@ -152,7 +153,7 @@ const Categories = ({ categoryData }) => {
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
 
-          <SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded={true}>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Organization Information
             </SecondarySummaryPanel>
@@ -170,7 +171,7 @@ const Categories = ({ categoryData }) => {
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
 
-          <SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded={true}>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Application Information
             </SecondarySummaryPanel>

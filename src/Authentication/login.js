@@ -137,7 +137,7 @@ const Login = ({ history }) => {
   } else if (currentUser!==false){
   return (
     <StyledCard>
-      <CardHeader title="arbitrium" subheader="Sign-In" />
+      <CardHeader title="arbitrium" subheader="Sign In" />
       <CardContent>
         <CommentForm onSubmit={handleLogin}>
           <FormControl variant="outlined" className="textFields">
