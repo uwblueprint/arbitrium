@@ -19,7 +19,6 @@ const Wrapper = styled.div`
   h1 {
     font-size: 24px;
     font-weight: normal;
-    text-align: left
   }
   .table {
     max-width: 864px;
