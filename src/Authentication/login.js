@@ -105,7 +105,13 @@ const Login = ({ history }) => {
           .signInWithEmailAndPassword(email.value, password.value);
         history.push("/applications");
       } catch (error) {
-        alert(error);
+        if(error.code == "auth/user-not-found" || error.code == "auth/user-disabled" || error.code == "auth/invalid-email"){
+          setValues({ ...values, errorEmail: true});
+        } else if(error.code === "auth/wrong-password"){
+          setValues({ ...values, errorPassword: true});
+        } else{
+          alert(error);
+        }
       }
     },
     [history]
@@ -136,7 +142,7 @@ const Login = ({ history }) => {
       return <Redirect to={'/applications'} />;
   } else if (currentUser!==false){
   return (
-    <StyledCard>
+    <StyledCard elevation={1}>
       <CardHeader title="arbitrium" subheader="Sign-In" />
       <CardContent>
         <CommentForm onSubmit={handleLogin}>
@@ -149,8 +155,9 @@ const Login = ({ history }) => {
               type={"text"}
               value={values.email}
               onChange={handleChange("email")}
+              error={values.errorEmail}
             />
-            <FormHelperText>
+            <FormHelperText error={values.errorEmail}>
               {values.errorEmail ? errorEmailMessage : ""}
             </FormHelperText>
           </FormControl>
@@ -162,8 +169,9 @@ const Login = ({ history }) => {
               type={"password"}
               value={values.password}
               onChange={handleChange("password")}
+              error={values.errorPassword}
             />
-            <FormHelperText>
+            <FormHelperText error={values.errorPassword}>
               {values.errorPassword ? errorPasswordMessage : ""}
             </FormHelperText>
           </FormControl>
