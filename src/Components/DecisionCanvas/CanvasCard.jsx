@@ -134,7 +134,7 @@ function CanvasCard({
           <>
             <Divider />
             <Footer>
-              <span className="rating-label">{`Your Rating: ${(rate == 0) ? 'Not Rated' : rate + " / 5"}`}</span>
+              <span className="rating-label">{`Your Rating: ${(rating == 0) ? 'Not Rated' : {rating} + " / 5"}`}</span>
               <span>
                 <StyledCommentIcon /> {notes.length} comment(s)
               </span>
