@@ -47,4 +47,19 @@ router.post("/", function(req, res) {
     });
 });
 
+//application stats routes (ADMIN ONLY)
+router.get("/:userid/admin/stats", function(req, res) {
+  try {
+    db.reviews
+    .find({ applicationId: req.params.appId })
+    .then(function(found) {
+      res.json(found);
+    })
+  } catch (err) {
+    res.send(err);
+  }
+});
+
 module.exports = router;
+
+
