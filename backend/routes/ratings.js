@@ -20,6 +20,29 @@ router.get("/:userid", function(req, res) {
   }
 });
 
+//application stats routes (ADMIN ONLY)
+router.get("/admin/:appId", function(req, res) {
+  try {
+    db.reviews
+    .find({ applicationId: req.params.appId })
+    .then(function(found) {
+      let mergedComments = [], mergedRatings={};
+      //retrive all comments and ratings from each review
+      found.forEach((review, index)=>{
+        mergedComments.push(review.comments);
+        mergedRatings[review.userId]=review.rating;
+      });
+      res.json(
+        {"allComments": mergedComments, 
+         "allRatings": mergedRatings,
+         "averageRating": (Object.values(mergedRatings).reduce((ratingA, ratingB) => 
+         ratingA+ratingB, 0)/Object.keys(mergedRatings).length).toFixed(1)});
+    })
+  } catch (err) {
+    res.send(err);
+  }
+});
+
 router.get("/:userid/:appId", function(req, res) {
   db.reviews
     .find({ applicationId: req.params.appId, userId: req.params.userid })
@@ -45,19 +68,6 @@ router.post("/", function(req, res) {
     .catch(function(err) {
       res.send(err);
     });
-});
-
-//application stats routes (ADMIN ONLY)
-router.get("/:userid/admin/stats", function(req, res) {
-  try {
-    db.reviews
-    .find({ applicationId: req.params.appId })
-    .then(function(found) {
-      res.json(found);
-    })
-  } catch (err) {
-    res.send(err);
-  }
 });
 
 module.exports = router;
