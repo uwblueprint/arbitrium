@@ -44,6 +44,8 @@ var whitelist = [
   "http://localhost:3000",
   "https://decision-io.firebaseapp.com",
   "https://decision-io.web.app"
+  "https://qa-blueprint.firebaseapp.com"
+  "https://qa.gregmaxin.com"
 ];
 //Include "cors(corsOptions)" to protect the endpoint
 //Example: app.get('/api/questions', cors(corsOptions), (req, res) => {
