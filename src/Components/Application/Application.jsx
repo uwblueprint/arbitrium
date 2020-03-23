@@ -1,3 +1,4 @@
+import './Application.css'
 import React, { Component } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -337,7 +338,7 @@ class Application extends Component {
           <button>1. Letter of Interest</button>
           <button disabled>2. Full Application</button>
         </FlowSelector>
-        <Wrapper>
+        <Wrapper className="application-wrapper">
           <h1>
             <Button
               className="all-applicants"

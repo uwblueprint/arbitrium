@@ -99,7 +99,7 @@ export default class ApplicationList extends Component {
             <TableBody>
               {this.props.applications
                 ? this.props.applications.map(application => (
-                    <TableRow hover key={application._id}>
+                    <TableRow key={application._id}>
                       <TableCell component="th" scope="row">
                         {application["Organization Name"]}
                       </TableCell>

@@ -31,7 +31,7 @@ const useStyles = makeStyles({
     },
     // Header
     "& h2": {
-      margin: "10px 83px 16px 32px",
+      margin: "24px 32px 24px 32px",
       fontSize: "24px",
       fontWeight: "normal",
       lineHeight: "28px",
