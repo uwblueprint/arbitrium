@@ -17,16 +17,17 @@ const CategoryWrapper = styled.div`
   width: 100%;
   .category {
     display: grid;
-    grid-template-columns: 200px auto;
+    grid-template-columns: 50% auto;
     margin: 15px 0;
     line-height: 20px;
   }
   .title {
     font-weight: 500;
+    padding-right: 24px;
   }
   .value {
     font-weight: normal;
-    text-align: right;
+    text-align: left;
   }
 `;
 
@@ -69,13 +70,15 @@ const SecondarySummaryPanel = withStyles({
 
 const useStyles = makeStyles({
   mainDetailsPanel: {
-    display: "block"
+    display: "block",
+    padding: "8px 24px 24px 0"
   },
   secondaryDetailsPanel: {
     padding: 0
   },
   mainSummaryPanel: {
     margin: 0,
+    padding: "0 24px 0 0",
     fontWeight: 500,
     fontSize: 20
   }
