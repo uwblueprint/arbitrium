@@ -32,8 +32,8 @@ function SectionComments({ id, update, comments }) {
         <Comment comment={comment} key={i} />
       ))}
       <AddComment
-        placeholder={"Add a note..."}
-        primaryLabel="Add a note"
+        placeholder={"Add note..."}
+        primaryLabel="Add note"
         secondaryLabel="Cancel"
         update={update}
         id={id}
