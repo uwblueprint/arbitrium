@@ -5,7 +5,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
 import RankingCard from "./RankingCard";
-const GET = require("../../requests/get")
+const GET = require("../../requests/get");
 const UPDATE = require("../../requests/update");
 
 const CARD_HEIGHT = 56;
@@ -104,7 +104,7 @@ function StackedRankings({ applications, user }) {
 
   useEffect(() => {
     (async function() {
-      if (user == null || applications.length == 0) return;
+      if (user == null || applications.length === 0) return;
       try {
         let fetched = await GET.getAllStackingsAPI(user);
         if (fetched.length !== applications.length) {
@@ -185,7 +185,8 @@ function StackedRankings({ applications, user }) {
         applicants around if you disagree with the rankings.
       </p>
       <p>
-        The applicants above the cutoff line are the ones you wish to see move on to the next round
+        The applicants above the cutoff line are the ones you wish to see move
+        on to the next round
       </p>
       <div className={classes.rankings}>
         {column}
@@ -241,7 +242,7 @@ function StackedRankings({ applications, user }) {
 
 const mapStateToProps = state => {
   return {
-    applications: state.applications.applications
+    applications: state.applications
   };
 };
 

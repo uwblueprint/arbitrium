@@ -20,11 +20,39 @@ const CommentForm = styled.form`
     width: 100%;
   }
   button {
-    margin-left: auto;
+    display: flex;
+    justify-content: end;
   }
   a {
     font-size: 0.9rem;
   }
+  .loginButton {
+    position: absolute;
+    width: 80px;
+    height: 36px;
+    left: 244px;
+    top: 304px;
+    margin-left: 10px;
+  }
+  .forgotPassword {
+  position: absolute;
+  width: 160px;
+  height: 36px;
+  left: 8px;
+  top: 305px;
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  letter-spacing: 0.25px;
+  text-decoration-line: underline;
+
+  color: #1976D2;
+}
 `;
 
 const StyledCard = styled(Card)`
@@ -77,7 +105,13 @@ const Login = ({ history }) => {
           .signInWithEmailAndPassword(email.value, password.value);
         history.push("/applications");
       } catch (error) {
-        alert(error);
+        if(error.code == "auth/user-not-found" || error.code == "auth/user-disabled" || error.code == "auth/invalid-email"){
+          setValues({ ...values, errorEmail: true});
+        } else if(error.code === "auth/wrong-password"){
+          setValues({ ...values, errorPassword: true});
+        } else{
+          alert(error);
+        }
       }
     },
     [history]
@@ -108,7 +142,7 @@ const Login = ({ history }) => {
       return <Redirect to={'/applications'} />;
   } else if (currentUser!==false){
   return (
-    <StyledCard>
+    <StyledCard elevation={1}>
       <CardHeader title="arbitrium" subheader="Sign-In" />
       <CardContent>
         <CommentForm onSubmit={handleLogin}>
@@ -121,8 +155,9 @@ const Login = ({ history }) => {
               type={"text"}
               value={values.email}
               onChange={handleChange("email")}
+              error={values.errorEmail}
             />
-            <FormHelperText>
+            <FormHelperText error={values.errorEmail}>
               {values.errorEmail ? errorEmailMessage : ""}
             </FormHelperText>
           </FormControl>
@@ -134,14 +169,16 @@ const Login = ({ history }) => {
               type={"password"}
               value={values.password}
               onChange={handleChange("password")}
+              error={values.errorPassword}
             />
-            <FormHelperText>
+            <FormHelperText error={values.errorPassword}>
               {values.errorPassword ? errorPasswordMessage : ""}
             </FormHelperText>
           </FormControl>
           <CardActions>
-            <Button onClick={handleForgotPassword}>Forgot Password?</Button>
+            <Button className="forgotPassword" onClick={handleForgotPassword}>Forgot Password?</Button>
             <Button
+              className="loginButton"
               type="submit"
               disabled={!validateForm()}
               variant="contained"

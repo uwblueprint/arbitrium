@@ -1,377 +1,158 @@
-import React, { Component } from "react";
+import React, { useReducer, useEffect, useMemo } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import moment from "moment";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
 //column categories
-import { fileCategories, adminCategories, longAnswerCategories } from "./column_categories";
-import { push } from "connected-react-router";
+import {
+  createReview,
+  transpileCategoryData,
+  transpileFileData,
+  transpileLongAnswerData
+} from "./applicationDataHelpers";
+import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 
 //import templates
 
-import { MOCK_RATING_DATA } from "./mockData.json";
-
 import { connect } from "react-redux";
 import Rubric from "../Rubric/Rubric";
-import { INSERT_REVIEW } from "../../Constants/ActionTypes";
+import { NEW_REVIEW } from "../../Constants/ActionTypes";
 
-const GET = require("../../requests/get")
+const GET = require("../../requests/get");
 const UPDATE = require("../../requests/update");
 
-class Application extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userId: "",
-      appId: "",
-      reviewId: "",
-      review: null
-    };
+// returns tuple: [appData, appIndex in appList]
+function getApplicationDetails(appList, appId) {
+  for (let i = 0; i < appList.length; ++i) {
+    const app = appList[i];
+    if (app["_id"] === appId) {
+      return [app, i];
+    }
   }
+  return [null, -1];
+}
 
-  //transpilers will ensure data is converted to form usable by components
+function Application({ applications, dispatch, history, match, user }) {
+  const appId = match.params.organizationId;
+  const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
 
-  getApplicationDetails = () => {
-    return this.props.applications.applications.filter(
-      application =>
-        application["_id"] === this.props.match.params.organizationId
-    )[0];
-  };
+  useEffect(() => {
+    GET.getReviewAPI(user, appId).then(res => {
+      dispatchReviewUpdate({
+        type: LOAD_REVIEW,
+        review: res != null ? res[0] : createReview(user, appId)
+      });
+    });
+  }, [appId]);
 
-  applicantExists = () => this.getApplicationDetails() !== undefined;
-
-  transpileCategoryData = () => {
-    //todo when category data is made available, currently leverages mock data
-    const applicant = this.getApplicationDetails();
-    return {
-      contact : Object.keys(adminCategories.contact).map(adminCategory => ({
-        title: adminCategory,
-        value: applicant[adminCategory]
-      })),
-      socialMedia : Object.keys(adminCategories.socialMedia).map(adminCategory => ({
-        title: adminCategory,
-        value: applicant[adminCategory]
-      })),
-      organizationInformation : Object.keys(adminCategories.organizationInformation).map(adminCategory => ({
-        title: adminCategory,
-        value: applicant[adminCategory]
-      })),
-      applicationInformation : Object.keys(adminCategories.applicationInformation).map(adminCategory => ({
-        title: adminCategory,
-        value: applicant[adminCategory]
-      }))
+  useEffect(() => {
+    if (appId == null || user == null || review == null) {
+      return;
     }
-  };
-
-  transpileFileData = () => {
-    const applicant = this.getApplicationDetails();
-    return Object.keys(fileCategories).map((fileCategory, index) => ({
-      name: fileCategory,
-      link: applicant[fileCategory],
-      size: index * 500
-    }));
-  };
-
-  transpileLongAnswerData = () => {
-    const applicant = this.getApplicationDetails();
-    console.log(applicant);
-    let answers = Object.keys(longAnswerCategories).map((longAnswerCategory, index) => ({
-      id: longAnswerCategories[longAnswerCategory],
-      answers: {
-        question: longAnswerCategory,
-        response: applicant[longAnswerCategory]
-      },
-      title: "Untermined" + longAnswerCategories[longAnswerCategory],
-    }));
-
-    let data = []
-    data.push({
-      id: 1,
-      answers: [],
-      title: "Mission and Vision"
-    })
-    data.push({
-      id: 2,
-      answers: [],
-      title: "Leadership"
-    })
-    data.push({
-      id: 3,
-      answers: [],
-      title: "Projects"
-    })
-    data.push({
-      id: 4,
-      answers: [],
-      title: "Plan"
-    })
-    data.push({
-      id: 5,
-      answers: [],
-      title: "Opportunities and Challenges"
-    })
-    console.log(answers)
-    answers.map((answer, index) =>{
-      data.map((item) => {
-        if (answer.id === item.id){
-          console.log(answer);
-          item.answers.push({
-            question: answer.answers.question,
-            response: answer.answers.response
-          })
-        }
-      })
-    })
-    console.log(data);
-    return data;
-    /*
-    //hard coded
-    //Vision and Mission: 1
-    1,2
-    //Leadership: 2
-    3,4,5,6
-    //Projects: 3
-    9, 10
-    //Plan:4
-    8,7
-    //Challenges and Opportunriwa: 5
-    11,12,13
-    */
-
-  }
-
-
-  transpileRatingData = () => {
-    //todo when rating data is made available, currently leverages mock data
-    return MOCK_RATING_DATA;
-  };
-
-  //Types:
-  //Notes update - {questionId, notes}
-  //Rating update - {questionId, rating}
-  //Comment update - comment
-  //rating update - rating
-  handleReviewUpdate = (type, data) => {
-    let review;
-    //If a review doesn't exist then create one
-    if (this.state.review == null) {
-      review = this.createReview();
-    } else {
-      review = this.state.review;
-    }
-
-    //Update the data in the review
-    review.lastReviewed = moment();
-    if (data.id === "master") {
-      if (type === "comment") {
-        let com = {
-          lastReviewed: moment(),
-          value: data.text
-        };
-        review.comments.push(com);
-      }
-      if (type === "rating") {
-        review.rating = data.rate;
-      }
-    } else {
-      if (type === "comment") {
-        let com = {
-          lastReviewed: moment(),
-          value: data.text
-        };
-        review.questionList.forEach(item => {
-          if (item.id === data.id) {
-            let newComments = item.notes;
-            newComments.push(com);
-            item.notes = newComments;
-          }
-        });
-      }
-      if (type === "rating") {
-        review.questionList.forEach(item => {
-          if (item.id === data.id) {
-            item.rating = data.rate;
-          }
-        });
-      }
-    }
-
-    //Update the review
-    this.setState({ review: review });
     UPDATE.updateReviewAPI(review).then(res => {
-      if (res.nUpserted === 1) {
-        this.props.dispatch({ type: INSERT_REVIEW });
+      if (res.ok != 1) {
+        alert("Error in saving your review!");
+      }
+      if (res.upserted) {
+        dispatch({ type: NEW_REVIEW });
       }
     });
-  };
+  }, [review]);
 
-  createReview = () => {
-    let review = {};
-    let comments = [];
-    let questionList = [];
+  const [application, appIndex] = useMemo(() => {
+    return getApplicationDetails(applications, appId);
+  }, [applications, appId]);
 
-    //THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE
-    questionList.push({
-      id: "canvas_1",
-      notes: [],
-      rating: -1
-    });
-    questionList.push({
-      id: "canvas_2",
-      notes: [],
-      rating: -1
-    });
-    questionList.push({
-      id: "canvas_3",
-      notes: [],
-      rating: -1
-    });
-    questionList.push({
-      id: "canvas_4",
-      notes: [],
-      rating: -1
-    });
-    questionList.push({
-      id: "canvas_5",
-      notes: [],
-      rating: -1
-    });
-    review = {
-      applicationId: this.state.appId,
-      userId: this.state.userId,
-      rating: -1,
-      comments: comments,
-      lastReviewed: moment(),
-      questionList: questionList
+  const appData = useMemo(() => {
+    if (application == null) return null;
+    return {
+      categoryData: transpileCategoryData(application),
+      fileData: transpileFileData(application),
+      longAnswers: transpileLongAnswerData(application)
     };
-    return review;
-  };
+  }, [application]);
 
-  findReview = appId => {
-    GET.getReviewAPI(this.props.user, appId).then(res => {
-      this.setState({ review: res[0] });
-    });
-  };
-
-  componentWillMount() {
-    let appId = this.getApplicationDetails()
-      ? this.getApplicationDetails()._id
+  const previousApplication =
+    applications && appIndex > 0
+      ? "/submissions/" + applications[appIndex - 1]["_id"]
       : null;
-    let userId = this.props.user.uid;
-    this.setState({ appId: appId });
-    this.setState({ userId: userId });
+  const nextApplication =
+    applications && appIndex < applications.length - 1
+      ? "/submissions/" + applications[appIndex + 1]["_id"]
+      : null;
 
-    GET.getReviewAPI(this.props.user, appId).then(res => {
-      this.setState({ review: res[0] });
-    });
+  let name = "Loading... (Submission not found)";
+  if (application) {
+    name = application["Organization Name"];
   }
 
-  findApplicationIndex = () => {
-    const { organizationId } = this.props.match.params;
-    return this.props.applications.applications.map(e => e._id).indexOf(organizationId);
-  }
-
-  /*
-  handleAppChange = (type) => {
-    if (type === 'prev'){
-      this.props.history.push()
-    }
-  }
-  */
-
-  componentDidUpdate() {
-    console.log("Component Ddi Update")
-    let appId = this.getApplicationDetails()
-    if (appId){
-      console.log(appId._id)
-      console.log(this.state.appId)
-      if (this.state.appId != appId._id){
-        console.log("Calling")
-        GET.getReviewAPI(this.props.user, appId._id).then(res => {
-          this.setState({ review: res[0], appId: appId._id });
-        });
-      }
-    }
-  }
-
-  render() {
-    let review = this.createReview();
-    let applications = this.props.applications.applications;
-
-    const currentAppIndex = applications!=null ? this.findApplicationIndex() : null;
-    const previousApplication = (applications && currentAppIndex > 0) ? "/submissions/"+applications[currentAppIndex-1]['_id'] : null;
-    const nextApplication = (applications && currentAppIndex < applications.length-1) ? "/submissions/"+applications[currentAppIndex+1]['_id'] : null;
-
-    let name = "Loading... (Submission not found)"
-    let app = this.getApplicationDetails();
-    if (app){
-      name = app["Organization Name"]
-    }
-
-    return (
-      <div className="pagecontainer">
-        <FlowSelector>
-          <button>1. Letter of Interest</button>
-          <button disabled>2. Full Application</button>
-        </FlowSelector>
-        <Wrapper>
-          <h1>
-            <Button
-              className="all-applicants"
-              onClick={() => this.props.history.push("/applications")}
-            >
-              &lt; All Applicants
-            </Button>
-            <br />
-            {name}
-          </h1>
-          <Rubric />
-          <hr />
-          {this.props.applications.applications.length > 0 &&
-          this.applicantExists() ? (
-            <div className="application-information">
-              <Categories categoryData={this.transpileCategoryData()} />
-              <hr />
-              <Files fileData={this.transpileFileData()} />
-              <hr />
-              <DecisionCanvas
-                categoryData={this.transpileLongAnswerData()}
-                update={this.handleReviewUpdate}
-                review={this.state.review}
-              />
-              <hr />
-              <Rating
-                ratingData={this.transpileRatingData()}
-                update={this.handleReviewUpdate}
-                review={this.state.review}
-              />
-              <hr />
-            </div>
-          ) : null}
-          <ApplicationSelector>
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={!previousApplication}
-              onClick={()=> {previousApplication ? this.props.history.push(previousApplication) : console.log("Previous Application doesn't exist") }}>
-              Previous Applicant
-            </Button>
-            <Button
+  return (
+    <div className="pagecontainer">
+      <FlowSelector>
+        <button>1. Letter of Interest</button>
+        <button disabled>2. Full Application</button>
+      </FlowSelector>
+      <Wrapper>
+        <h1>
+          <Button
+            className="all-applicants"
+            onClick={() => history.push("/applications")}
+          >
+            &lt; All Applicants
+          </Button>
+          <br />
+          {name}
+        </h1>
+        <Rubric />
+        <hr />
+        {applications.length > 0 && application != null ? (
+          <div className="application-information">
+            <Categories categoryData={appData.categoryData} />
+            <hr />
+            <Files fileData={appData.fileData} />
+            <hr />
+            <DecisionCanvas
+              categoryData={appData.longAnswers}
+              update={dispatchReviewUpdate}
+              review={review}
+            />
+            <hr />
+            <Rating review={review} update={dispatchReviewUpdate} />
+            <hr />
+          </div>
+        ) : null}
+        <ApplicationSelector>
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={!previousApplication}
+            onClick={() => {
+              previousApplication
+                ? history.push(previousApplication)
+                : console.log("Previous Application doesn't exist");
+            }}
+          >
+            Previous Applicant
+          </Button>
+          <Button
             variant="contained"
             color="primary"
             disabled={!nextApplication}
-            onClick={()=> {nextApplication ? this.props.history.push(nextApplication) : console.log("Previous Application doesn't exist") }}>>
-              Next Applicant
-            </Button>
-          </ApplicationSelector>
-        </Wrapper>
-      </div>
-    );
-  }
+            onClick={() => {
+              nextApplication
+                ? history.push(nextApplication)
+                : console.log("Previous Application doesn't exist");
+            }}
+          >
+            Next Applicant
+          </Button>
+        </ApplicationSelector>
+      </Wrapper>
+    </div>
+  );
 }
 
 const mapStateToProps = state => ({

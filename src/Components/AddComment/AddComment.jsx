@@ -1,6 +1,7 @@
-import React, { useState }  from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
+import { INSERT_COMMENT } from "../Application/reviewReducer";
 
 const CommentForm = styled.form`
   margin-top: 20px;
@@ -14,7 +15,7 @@ const CommentForm = styled.form`
     display: block;
     font-family: inherit;
     width: 100%;
-    fontSize: 14px;
+    fontsize: 14px;
   }
   .buttonGroup {
     margin-top: 16px;
@@ -28,8 +29,16 @@ const CommentForm = styled.form`
 `;
 
 function AddComment({ placeholder, primaryLabel, secondaryLabel, update, id }) {
-
   const [text, setText] = useState("");
+
+  function submitComment() {
+    update({
+      type: INSERT_COMMENT,
+      comment: text,
+      id
+    });
+    setText("");
+  }
 
   return (
     <CommentForm>
@@ -38,24 +47,24 @@ function AddComment({ placeholder, primaryLabel, secondaryLabel, update, id }) {
         name="comment"
         value={text}
         placeholder={placeholder}
-        onChange={e => setText(e.target.value)}/>
+        onChange={e => setText(e.target.value)}
+      />
       <div className="buttonGroup">
-        <Button className="addcomment-cancel" color="primary" onClick={() => {setText("")}}>
-          {secondaryLabel}
-        </Button>
         <Button
-          variant="contained"
+          className="addcomment-cancel"
           color="primary"
           onClick={() => {
-            update("comment", {text, id})
-            setText("")
+            setText("");
           }}
         >
+          {secondaryLabel}
+        </Button>
+        <Button variant="contained" color="primary" onClick={submitComment}>
           {primaryLabel}
         </Button>
       </div>
     </CommentForm>
   );
-};
+}
 
 export default AddComment;
