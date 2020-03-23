@@ -41,13 +41,14 @@ Make it a variable... how?
 
   /* H5/ Roboto Regular 24 */
   float: right;
-  font-family: Roboto;
+  font-family: Tungsten-Semibold;
+  letter-spacing: 2px;
   font-style: normal;
   font-weight: normal;
-  font-size: 24px;
+  font-size: 30px;
   line-height: 28px;
 
-  text-transform: lowercase;
+  text-transform: uppercase;
 
   color: #FFFFFF;
 }
