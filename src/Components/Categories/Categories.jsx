@@ -95,7 +95,7 @@ const Categories = ({ categoryData }) => {
 
   return (
     <Wrapper>
-      <ExpansionPanel>
+      <ExpansionPanel defaultExpanded>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           classes={{ root: classes.mainSummaryPanel }}

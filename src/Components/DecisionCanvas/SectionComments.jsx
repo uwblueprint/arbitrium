@@ -19,19 +19,7 @@ const SectionWrapper = styled.div`
   }
 `;
 
-function SectionComments({ id, update, review }) {
-  let comments = [];
-  if (review) {
-    if (id == "master") {
-      comments = review.comments;
-    } else {
-      review.questionList.map(item => {
-        if (item.id == id) {
-          comments = item.notes;
-        }
-      });
-    }
-  }
+function SectionComments({ id, update, comments }) {
   return (
     <SectionWrapper>
       <div className="header">
@@ -44,8 +32,8 @@ function SectionComments({ id, update, review }) {
         <Comment comment={comment} key={i} />
       ))}
       <AddComment
-        placeholder={"Add a note..."}
-        primaryLabel="Add a note"
+        placeholder={"Add note..."}
+        primaryLabel="Add note"
         secondaryLabel="Cancel"
         update={update}
         id={id}
