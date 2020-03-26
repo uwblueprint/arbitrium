@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useMemo, useReducer } from "react";
 import { produce } from "immer";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
@@ -23,7 +23,6 @@ const CardBody = styled.div`
   .questions {
     color: #888888;
     ol {
-      list-style-type: lower-roman;
       list-style-position: inside;
       padding: 0;
     }
@@ -77,6 +76,14 @@ function DecisionCanvas({ update, review, categoryData }) {
     categoryData.map(() => false)
   );
 
+  const categoryToReviewMap = useMemo(() => {
+    if (review == null) return {};
+    return review.questionList.reduce((reviewMap, review) => {
+      reviewMap[review.id] = review;
+      return reviewMap;
+    }, {});
+  }, [review]);
+
   return (
     <SectionWrapper>
       <CanvasHeader>
@@ -101,10 +108,9 @@ function DecisionCanvas({ update, review, categoryData }) {
               id={"canvas_" + section.id}
               onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
               onLinkClick={() => dispatch({ type: "EXPAND", index })}
-              rating={0}
+              review={categoryToReviewMap["canvas_" + section.id]}
               title={section.title}
               update={update}
-              review={review}
             >
               <CardBody>
                 <div className="questions">

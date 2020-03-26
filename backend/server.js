@@ -188,36 +188,36 @@ app.post("/api/authenticate/createaccount", cors(corsOptions), (req, res) => {
 
 //Returns the entire list of applications. To be called on load to show the
 //user the list of applications.
-app.get("/api/applications/:userId", cors(corsOptions), (req, res) => {
-  const reviewsCol = db
-    .collection("reviews")
-    .where("userId", "==", Number(req.params.userId));
-  let responses = [];
-  reviewsCol
-    .get()
-    .then(querySnapshot => {
-      const numReviews = querySnapshot.size;
-      let applicantNameLookupCompleted = 0;
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        findApplicantName(Number(data.appId))
-          .then(name => {
-            const response = {
-              applicantName: name,
-              rating: data.rating,
-              lastReviewed: data.lastReviewed
-            };
-            responses.push(response);
-            applicantNameLookupCompleted++;
-            if (applicantNameLookupCompleted === numReviews) {
-              res.json(responses);
-            }
-          })
-          .catch(err => res.send(err));
-      });
-    })
-    .catch(err => res.send(err));
-});
+// app.get("/api/applications/:userId", cors(corsOptions), (req, res) => {
+//   const reviewsCol = db
+//     .collection("reviews")
+//     .where("userId", "==", Number(req.params.userId));
+//   let responses = [];
+//   reviewsCol
+//     .get()
+//     .then(querySnapshot => {
+//       const numReviews = querySnapshot.size;
+//       let applicantNameLookupCompleted = 0;
+//       querySnapshot.forEach(doc => {
+//         const data = doc.data();
+//         findApplicantName(Number(data.appId))
+//           .then(name => {
+//             const response = {
+//               applicantName: name,
+//               rating: data.rating,
+//               lastReviewed: data.lastReviewed
+//             };
+//             responses.push(response);
+//             applicantNameLookupCompleted++;
+//             if (applicantNameLookupCompleted === numReviews) {
+//               res.json(responses);
+//             }
+//           })
+//           .catch(err => res.send(err));
+//       });
+//     })
+//     .catch(err => res.send(err));
+// });
 
 //The only things we need to edit in an application is the comments
 app.put(
