@@ -43,8 +43,6 @@ async function updateStackedAPI(databody) {
 
 
 async function updateUserAPI(databody) {
-  console.log("Updating user API")
-  console.log(databody);
   const response = await fetch(proxy + "/api/users", {
     method: "POST",
     body: JSON.stringify(databody),
