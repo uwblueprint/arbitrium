@@ -27,10 +27,14 @@ import { getReviewCountAPI } from "./requests/get";
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
-const proxy =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_SERVER
-    : "http://localhost:4000";
+let proxy = "http://localhost:4000"
+console.log(process.env.REACT_APP_NODE_ENV)
+if (process.env.REACT_APP_NODE_ENV === "production"){
+  proxy = process.env.REACT_APP_SERVER_PROD
+}
+if (process.env.REACT_APP_NODE_ENV === "qa"){
+  proxy = process.env.REACT_APP_SERVER_QA
+}
 
 class App extends Component {
   constructor(props) {
@@ -97,12 +101,13 @@ class App extends Component {
   questionList:
   */
 
-  getWrappedComponent = (props, ApplicationComponent) => {
+  getWrappedComponent = (props, ApplicationComponent, fullApplication=false) => {
+    const data = fullApplication ? [] : this.props.applications;
     const WrappedComponent = (
       <ApplicationComponent
         //Passing the applications as a prop
         history={history}
-        applications={this.props.applications}
+        applications={data}
         //add common props here
         {...props}
       />
@@ -143,6 +148,13 @@ class App extends Component {
                           this.getWrappedComponent(props, ApplicationsTable)
                         }
                       ></PrivateRoute>
+                      <PrivateRoute
+                        exact={true}
+                        path="/applications/full"
+                        component={props =>
+                          this.getWrappedComponent(props, ApplicationsTable, true)
+                        }
+                      ></PrivateRoute>
                       <Route
                         exact={true}
                         path="/login"
@@ -152,6 +164,12 @@ class App extends Component {
                         path="/submissions/:organizationId"
                         component={props =>
                           this.getWrappedComponent(props, Application)
+                        }
+                      ></PrivateRoute>
+                      <PrivateRoute
+                        path="/submissions/full/:organizationId"
+                        component={props =>
+                          this.getWrappedComponent(props, Application, true)
                         }
                       ></PrivateRoute>
                       <PrivateRoute
