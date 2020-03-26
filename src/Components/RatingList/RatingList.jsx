@@ -52,23 +52,24 @@ const ratings = [
   }
 ];
 
-const RatingList = ({ onRatingChange, selectedRating }) => (
-  <Wrapper>
-    {ratings.map(rate => (
-      <button
-        key={rate.value}
-        onClick={() => onRatingChange && onRatingChange(rate.value)}
-        style={selectedRating === rate.value ? { border: "solid 3px" } : null}
-      >
-        <div className="emojiRating">
-          <span role="img" aria-label={`${rate.value}`}>
-            {rate.icon}
-          </span>
-        </div>
-        <div className="numberRating">{rate.value}</div>
-      </button>
-    ))}
-  </Wrapper>
-);
-
+const RatingList = ({ onRatingChange, selectedRating }) => {
+  return (
+    <Wrapper>
+      {ratings.map(rate => (
+        <button
+          key={rate.value}
+          onClick={() => onRatingChange && onRatingChange(rate.value)}
+          style={selectedRating === rate.value ? { border: "solid 3px" } : null}
+        >
+          <div className="emojiRating">
+            <span role="img" aria-label={`${rate.value}`}>
+              {rate.icon}
+            </span>
+          </div>
+          <div className="numberRating">{rate.value}</div>
+        </button>
+      ))}
+    </Wrapper>
+  );
+};
 export default RatingList;
