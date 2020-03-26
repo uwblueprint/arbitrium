@@ -31,6 +31,8 @@ router.get("/:userid/:appId", function(req, res) {
     });
 });
 
+//upsert create a new document if the query did not retrieve any documents
+//satisfying the criteria. It instead does an insert.
 router.post("/", function(req, res) {
   db.reviews
     .updateOne(

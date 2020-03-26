@@ -41,4 +41,24 @@ async function updateStackedAPI(databody) {
   return body;
 }
 
-export { updateReviewAPI, updateStackedAPI };
+
+async function updateUserAPI(databody) {
+  console.log("Updating user API")
+  console.log(databody);
+  const response = await fetch(proxy + "/api/users", {
+    method: "POST",
+    body: JSON.stringify(databody),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  });
+
+  const body = await response.json();
+  if (response.status !== 201) {
+    console.log("Error with posting stacked ranking");
+  }
+  return body;
+}
+
+export { updateReviewAPI, updateStackedAPI, updateUserAPI };

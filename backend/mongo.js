@@ -36,4 +36,5 @@ mongoose.Promise = Promise;
 module.exports.applications = require("./models/application");
 module.exports.reviews = require("./models/ratings");
 module.exports.stackedRankings = require("./models/stackedRankings");
+module.exports.users = require("./models/users");
 //module.exports.applications = require("./models/application");
