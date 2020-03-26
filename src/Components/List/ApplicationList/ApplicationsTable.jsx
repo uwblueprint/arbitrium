@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
@@ -35,103 +35,75 @@ const Wrapper = styled.div`
   }
 `;
 
-export default class ApplicationList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      reviews: []
-    };
-  }
-
-  componentDidMount() {
-    GET.getUserReviewsAPI(this.props.user).then(res => {
-      this.setState({ reviews: res });
-    });
-  }
-
-  getReviewData = (appId, type) => {
-    let res = null;
-    if (this.state.reviews) {
-      this.state.reviews.map(item => {
-        if (item.applicationId == appId) {
-          if (type === "rating" && item["rating"] > 0) {
-            res = item["rating"] + "/5";
-          }
-          if (type === "lastReviewed") {
-            let date = moment(item.lastReviewed);
-            if (date) {
-              res = moment(item["lastReviewed"])
-                .toDate()
-                .toString()
-                .substring(4, 16);
-            } else {
-              res = "Error";
-            }
-          }
-
-          //res = item[type]
-        }
-      });
-    }
-    return res;
-  };
-  render() {
-    //Pre-calculate the applications array before rendering
-
-    return (
-      <Wrapper className="application-list">
-        <Paper>
-          <h1>All Applicants</h1>
-          <Table className="table">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ width: "25%" }}>Applicant Name</TableCell>
-                <TableCell style={{ width: "25%" }} align="left">
-                  Rating
-                </TableCell>
-                <TableCell style={{ width: "25%" }} align="left">
-                  Last Edited
-                </TableCell>
-                <TableCell style={{ width: "25%" }} align="left"></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.props.applications
-                ? this.props.applications.map(application => (
-                    <TableRow hover key={application._id}>
-                      <TableCell component="th" scope="row">
-                        {application["Organization Name"]}
-                      </TableCell>
-                      <TableCell align="left">
-                        {this.getReviewData(application._id, "rating") ||
-                          "Not Rated"}
-                      </TableCell>
-                      <TableCell align="left">
-                        {this.getReviewData(application._id, "lastReviewed") ||
-                          "Never"}
-                      </TableCell>
-                      <TableCell align="left">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          target="_blank"
-                          value="OpenApplication"
-                          onClick={() => {
-                            this.props.history.push(
-                              "submissions/" + application._id
-                            );
-                          }}
-                        >
-                          Open
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : "ERROR LOADING APPLICATIONS FROM DATABASE"}
-            </TableBody>
-          </Table>
-        </Paper>
-      </Wrapper>
-    );
-  }
+function formatDate(date) {
+  if (date == null) return null;
+  return moment(date)
+    .toDate()
+    .toString()
+    .substring(4, 16);
 }
+
+function ApplicationTable({ history, user }) {
+  // Applications, with reviews attached
+  const [applications, setApps] = useState([]);
+
+  useEffect(() => {
+    GET.getApplicationTableData(user).then(res => {
+      if (Array.isArray(res)) setApps(res);
+    });
+  }, [user]);
+
+  return (
+    <Wrapper className="application-list">
+      <Paper>
+        <h1>All Applicants</h1>
+        <Table className="table">
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ width: "25%" }}>Applicant Name</TableCell>
+              <TableCell style={{ width: "25%" }} align="left">
+                Rating
+              </TableCell>
+              <TableCell style={{ width: "25%" }} align="left">
+                Last Edited
+              </TableCell>
+              <TableCell style={{ width: "25%" }} align="left"></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {applications
+              ? applications.map(application => (
+                  <TableRow hover key={application._id}>
+                    <TableCell component="th" scope="row">
+                      {application["Organization Name"]}
+                    </TableCell>
+                    <TableCell align="left">
+                      {application["rating"] || "Not Rated"}
+                    </TableCell>
+                    <TableCell align="left">
+                      {formatDate(application["lastReviewed"]) || "Never"}
+                    </TableCell>
+                    <TableCell align="left">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        target="_blank"
+                        value="OpenApplication"
+                        onClick={() => {
+                          history.push("submissions/" + application._id);
+                        }}
+                      >
+                        Open
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              : "ERROR LOADING APPLICATIONS FROM DATABASE"}
+          </TableBody>
+        </Table>
+      </Paper>
+    </Wrapper>
+  );
+}
+
+export default ApplicationTable;
