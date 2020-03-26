@@ -10,6 +10,7 @@ import { AuthProvider } from "./Authentication/Auth";
 import { INITIAL_APP_LOAD } from "./Constants/ActionTypes";
 
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
+import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import Admin from "./Components/Admin/Admin";
 import Login from "./Authentication/login.js";
 import { ConnectedRouter } from "connected-react-router";
@@ -162,6 +163,10 @@ class App extends Component {
                         component={StackedRankings}
                       ></PrivateRoute>
                       <PrivateRoute
+                        path="/allcandidates"
+                        component={props =>
+                          this.getWrappedComponent(props, AllCandidates)
+                        }
                         path="/admin"
                         component={Admin}
                       ></PrivateRoute>
