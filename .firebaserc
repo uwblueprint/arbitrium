@@ -2,5 +2,17 @@
   "projects": {
     "default": "decision-io",
     "decisionio": "decision-io"
+  },
+  "targets": {
+    "decision-io": {
+      "hosting": {
+        "production": [
+          "decision-io"
+        ],
+        "qa": [
+          "qa-blueprint"
+        ]
+      }
+    }
   }
 }

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router";
 import Header from "./Components/Header/Header";
 import Container from "./Components/Container/Container";
-import Home from "./Components/Home/Home";
 import Application from "./Components/Application/Application";
 import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTable";
 import Comparison from "./Components/Comparison/Comparison";
@@ -11,6 +10,8 @@ import { AuthProvider } from "./Authentication/Auth";
 import { INITIAL_APP_LOAD } from "./Constants/ActionTypes";
 
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
+import AllCandidates from "./Components/AllCandidates/AllCandidates";
+import Admin from "./Components/Admin/Admin";
 import Login from "./Authentication/login.js";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -20,14 +21,20 @@ import theme from "./theme";
 import { history } from "./Store";
 import "./App.css";
 import PrivateRoute from "./Authentication/PrivateRoute";
+
+import { getReviewCountAPI } from "./requests/get";
 //import './App.css';
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
-const proxy =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_SERVER
-    : "http://localhost:4000";
+let proxy = "http://localhost:4000"
+console.log(process.env.REACT_APP_NODE_ENV)
+if (process.env.REACT_APP_NODE_ENV === "production"){
+  proxy = process.env.REACT_APP_SERVER_PROD
+}
+if (process.env.REACT_APP_NODE_ENV === "qa"){
+  proxy = process.env.REACT_APP_SERVER_QA
+}
 
 class App extends Component {
   constructor(props) {
@@ -38,7 +45,7 @@ class App extends Component {
     if (currentUser != false) {
       try {
         const applications = await this.getAllApplicationsAPI();
-        const reviewCount = await this.getReviewCountAPI(currentUser);
+        const reviewCount = await getReviewCountAPI(currentUser);
         this.props.dispatch({
           type: INITIAL_APP_LOAD,
           applications,
@@ -57,27 +64,6 @@ class App extends Component {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
-      }
-    });
-    const body = await response.json();
-    if (response.status !== 200) {
-      throw Error(body.message);
-    }
-    return body;
-  };
-
-  getReviewCountAPI = async user => {
-    const token = await user.getIdToken();
-    const url = new URL(
-      proxy +
-        `/api/ratings/${user.uid}/?` +
-        new URLSearchParams({ count: true })
-    );
-    const response = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        authorization: `Bearer ${token}`
       }
     });
     const body = await response.json();
@@ -115,12 +101,13 @@ class App extends Component {
   questionList:
   */
 
-  getWrappedComponent = (props, ApplicationComponent) => {
+  getWrappedComponent = (props, ApplicationComponent, fullApplication=false) => {
+    const data = fullApplication ? [] : this.props.applications;
     const WrappedComponent = (
       <ApplicationComponent
         //Passing the applications as a prop
         history={history}
-        applications={this.props.applications}
+        applications={data}
         //add common props here
         {...props}
       />
@@ -161,6 +148,13 @@ class App extends Component {
                           this.getWrappedComponent(props, ApplicationsTable)
                         }
                       ></PrivateRoute>
+                      <PrivateRoute
+                        exact={true}
+                        path="/applications/full"
+                        component={props =>
+                          this.getWrappedComponent(props, ApplicationsTable, true)
+                        }
+                      ></PrivateRoute>
                       <Route
                         exact={true}
                         path="/login"
@@ -173,6 +167,12 @@ class App extends Component {
                         }
                       ></PrivateRoute>
                       <PrivateRoute
+                        path="/submissions/full/:organizationId"
+                        component={props =>
+                          this.getWrappedComponent(props, Application, true)
+                        }
+                      ></PrivateRoute>
+                      <PrivateRoute
                         path="/comparisons/:organizationId"
                         component={Comparison}
                       ></PrivateRoute>
@@ -180,6 +180,17 @@ class App extends Component {
                         path="/rankings"
                         component={StackedRankings}
                       ></PrivateRoute>
+                      <PrivateRoute
+                        path="/allcandidates"
+                        component={props =>
+                          this.getWrappedComponent(props, AllCandidates)
+                        }
+                      ></PrivateRoute>
+                      <PrivateRoute
+                        path="/admin"
+                        component={Admin}
+                        >
+                        </PrivateRoute>
                       <Redirect to={"/applications"} />
                     </Switch>
                   </Container>

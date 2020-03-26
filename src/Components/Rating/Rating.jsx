@@ -2,7 +2,6 @@ import React from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
-import RatingList from "../RatingList/RatingList";
 import Comment from "../Comment/Comment";
 import AddComment from "../AddComment/AddComment";
 import SectionRating from "../DecisionCanvas/SectionRating";
@@ -39,8 +38,8 @@ const useStyles = makeStyles({
   }
 });
 
+// This is the Rating component for the WHOLE APP...TODO: consolidate with section rating
 const Rating = ({ update, review }) => {
-
   const classes = useStyles();
   let averageRating = 0;
   let numRatings = 0;
@@ -58,37 +57,37 @@ const Rating = ({ update, review }) => {
     }
   }
   return (
-    <StyledPaper >
-    <h1> Final Rating </h1>
-    <Card className={classes.root}>
-      <h3>Suggested Rating</h3>
-      <p className="rating-info">
-        The suggested rating is the average of your decision canvas ratings.
-      </p>
-      <p className="suggested">{averageRating.toFixed(2)}</p>
-      <h3>Overall Rating</h3>
-      <p className="rating-info">
-        Your rating will be weighed with your peers.
-      </p>
-      <SectionRating
-        id="master"
-        update={update}
-        review={review}
-      ></SectionRating>
-      <h3>Comment</h3>
-      <p className="rating-info">
-        Your comments will be visible only to the admin.
-      </p>
-      {comments.map((comment, i) => (
-        <Comment comment={comment} key={i} />
-      ))}
-      <AddComment
-        placeholder={"Add a comment..."}
-        primaryLabel="Comment"
-        secondaryLabel="Cancel"
-        update={update}
-        id="master"
-      />
+    <StyledPaper>
+      <h1> Final Rating </h1>
+      <Card className={classes.root}>
+        <h3>Suggested Rating</h3>
+        <p className="rating-info">
+          The suggested rating is the average of your decision canvas ratings.
+        </p>
+        <p className="suggested">{averageRating.toFixed(2)}</p>
+        <h3>Overall Rating</h3>
+        <p className="rating-info">
+          Your rating will be weighed with your peers.
+        </p>
+        <SectionRating
+          id="master"
+          update={update}
+          rating={review ? review.rating : -1}
+        ></SectionRating>
+        <h3>Comment</h3>
+        <p className="rating-info">
+          Your comments will be visible only to the admin.
+        </p>
+        {comments.map((comment, i) => (
+          <Comment comment={comment} key={i} />
+        ))}
+        <AddComment
+          placeholder={"Add a comment..."}
+          primaryLabel="Comment"
+          secondaryLabel="Cancel"
+          update={update}
+          id="master"
+        />
       </Card>
     </StyledPaper>
   );
