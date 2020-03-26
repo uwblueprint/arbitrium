@@ -167,9 +167,12 @@ class App extends Component {
                         component={props =>
                           this.getWrappedComponent(props, AllCandidates)
                         }
+                      ></PrivateRoute>
+                      <PrivateRoute
                         path="/admin"
                         component={Admin}
-                      ></PrivateRoute>
+                        >
+                        </PrivateRoute>
                       <Redirect to={"/applications"} />
                     </Switch>
                   </Container>
