@@ -1,12 +1,10 @@
 import React, { useReducer, useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import Categories from "../Categories/Categories";
-import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
+import ApplicationView from "./ApplicationView";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
-import Spinner from 'react-spinner-material';
+import Spinner from "react-spinner-material";
 
 //column categories
 import {
@@ -17,14 +15,19 @@ import {
 } from "./applicationDataHelpers";
 import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 
-
 import { connect } from "react-redux";
-import Rubric from "../Rubric/Rubric";
 import { NEW_REVIEW } from "../../Constants/ActionTypes";
 const GET = require("../../requests/get");
 const UPDATE = require("../../requests/update");
 
-function Application({ applications, dispatch, history, match, user }) {
+function Application({
+  applications,
+  dispatch,
+  history,
+  match,
+  user,
+  isAdminView = true
+}) {
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
   const isRated = useRef(false);
@@ -58,7 +61,6 @@ function Application({ applications, dispatch, history, match, user }) {
       }
     });
   }, [appId, dispatch, review, user]);
-
 
   const [application, appIndex] = useMemo(() => {
     return getApplicationDetails(applications, appId);
@@ -95,60 +97,16 @@ function Application({ applications, dispatch, history, match, user }) {
       </FlowSelector>
       <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
       <Wrapper>
-        <h1>
-          <Button
-            className="all-applicants"
-            onClick={() => history.push("/applications")}
-          >
-            &lt; All Applicants
-          </Button>
-          <br />
-          {name}
-        </h1>
-        <Rubric />
-        <hr />
-        {applications.length > 0 && application != null ? (
-          <div className="application-information">
-            <Categories categoryData={appData.categoryData} />
-            <hr />
-            <Files fileData={appData.fileData} />
-            <hr />
-            <DecisionCanvas
-              categoryData={appData.longAnswers}
-              update={dispatchReviewUpdate}
-              review={review}
-            />
-            <hr />
-            <Rating review={review} update={dispatchReviewUpdate} />
-            <hr />
-          </div>
-        ) : null}
-        <ApplicationSelector>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!previousApplication}
-            onClick={() => {
-              previousApplication
-                ? history.push(previousApplication)
-                : console.log("Previous Application doesn't exist");
-            }}
-          >
-            Previous Applicant
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={!nextApplication}
-            onClick={() => {
-              nextApplication
-                ? history.push(nextApplication)
-                : console.log("Previous Application doesn't exist");
-            }}
-          >
-            Next Applicant
-          </Button>
-        </ApplicationSelector>
+        <ApplicationView
+          isAdminView={isAdminView}
+          appData={appData}
+          previousApplication={previousApplication}
+          nextApplication={nextApplication}
+          organizationName={name}
+          review={review}
+          dispatchReviewUpdate={dispatchReviewUpdate}
+          history={history}
+        />
       </Wrapper>
     </div>
   );
@@ -198,14 +156,5 @@ const Wrapper = styled.div`
     border: 0px solid #cccccc;
     border-bottom-width: 1px;
     margin: 20px 0;
-  }
-`;
-
-const ApplicationSelector = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 37px;
-  button {
-    border-radius: 0px;
   }
 `;
