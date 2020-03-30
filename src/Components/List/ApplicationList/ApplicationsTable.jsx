@@ -73,7 +73,9 @@ function ApplicationTable({ history, user }) {
                       {application["Organization Name"]}
                     </TableCell>
                     <TableCell align="left">
-                      {application["rating"] || "Not Rated"}
+                      {application.rating && application.rating > 0
+                        ? application.rating
+                        : "Not Rated"}
                     </TableCell>
                     <TableCell align="left">
                       {formatDate(application["lastReviewed"]) || "Never"}

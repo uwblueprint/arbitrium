@@ -7,9 +7,11 @@ const db = require("../mongo.js");
 router.get("/:userid", function(req, res) {
   try {
     if (req.query.count) {
-      db.reviews.countDocuments({ userId: req.params.userid }).then(count => {
-        res.json(count);
-      });
+      db.reviews
+        .countDocuments({ userId: req.params.userid, rating: { $ne: -1 } })
+        .then(count => {
+          res.json(count);
+        });
       return;
     }
     db.reviews.find({ userId: req.params.userid }).then(function(found) {

@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useMemo } from "react";
+import React, { useReducer, useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
@@ -38,12 +38,17 @@ function getApplicationDetails(appList, appId) {
 function Application({ applications, dispatch, history, match, user }) {
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
+  const isRated = useRef(false);
 
   useEffect(() => {
     GET.getReviewAPI(user, appId).then(res => {
+      const reviewExists = res != null && res.length > 0;
+      if (reviewExists) {
+        isRated.current = res[0].rating > -1;
+      }
       dispatchReviewUpdate({
         type: LOAD_REVIEW,
-        review: res != null ? res[0] : createReview(user, appId)
+        review: reviewExists ? res[0] : createReview(user, appId)
       });
     });
   }, [appId]);
@@ -53,11 +58,12 @@ function Application({ applications, dispatch, history, match, user }) {
       return;
     }
     UPDATE.updateReviewAPI(review).then(res => {
+      if (!isRated.current && review.rating > -1) {
+        isRated.current = true;
+        dispatch({ type: NEW_REVIEW });
+      }
       if (res.ok != 1) {
         alert("Error in saving your review!");
-      }
-      if (res.upserted) {
-        dispatch({ type: NEW_REVIEW });
       }
     });
   }, [review]);
@@ -159,7 +165,9 @@ const mapStateToProps = state => ({
   applications: state.applications
 });
 
-const mapDispatchToProps = dispatch => ({ dispatch });
+const mapDispatchToProps = dispatch => ({
+  dispatch
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Application);
 
