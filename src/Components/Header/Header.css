@@ -8,7 +8,7 @@
   left: 0px;
   right: 0px;
   top: 0px;
-  z-index: 1;
+  z-index: 100;
 
   background: #000000;
   border-bottom: 1px solid #cccccc;
@@ -29,7 +29,7 @@ Make it a variable... how?
 
   background: #ffffff;
   border: 1px solid #cccccc;
-  z-index: 1;
+  z-index: 100;
 }
 
 .Arbitrium {
@@ -50,10 +50,9 @@ Make it a variable... how?
 
   text-transform: uppercase;
 
-  color: #FFFFFF;
+  color: #ffffff;
 }
 .UserDisplay {
-
   margin-top: 14px;
   margin-right: 14px;
   height: 28px;
