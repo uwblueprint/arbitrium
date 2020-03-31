@@ -7,6 +7,9 @@ import {
   INITIAL_APP_LOAD
 } from "../Constants/ActionTypes";
 
+//import the admin reducer
+import adminReducer from "./admin";
+
 //Reducers take 2 params, a state and an action
 //Notice how the initial state is passed as a default parameter
 function applications(state = [], action) {
@@ -37,7 +40,8 @@ function createRootReducer(history) {
   return combineReducers({
     reviewCount,
     router: connectRouter(history),
-    applications
+    applications,
+    adminReducer
   });
 }
 

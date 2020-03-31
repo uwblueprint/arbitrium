@@ -20,8 +20,8 @@ router.get("/:userid", function(req, res) {
   }
 });
 
-//application stats routes (ADMIN ONLY)
-router.get("/admin/:appId", function(req, res) {
+//ratings stats routes (ADMIN ONLY)
+router.get("/admin/ratings/:appId", function(req, res) {
   try {
     db.reviews
     .find({ applicationId: req.params.appId })

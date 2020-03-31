@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
 import { createBrowserHistory } from "history";
 import { routerMiddleware } from "connected-react-router";
 
@@ -8,8 +9,8 @@ import createRootReducer from "../Reducers/index";
 //Which is a function from the react library
 export const history = createBrowserHistory();
 //Scroll to top for every route
-history.listen(()=>{
-  window.scrollTo({top: 0,left: 0,behavior: 'smooth'});
+history.listen(() => {
+  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 });
 
 //createStore takes in a reducer as the first argument
@@ -17,6 +18,7 @@ const store = createStore(
   createRootReducer(history),
   compose(
     applyMiddleware(routerMiddleware(history)),
+    applyMiddleware(thunk),
     //https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
     //Install extension to remove "cannot read property apply of undefined"
     window.__REDUX_DEVTOOLS_EXTENSION__
