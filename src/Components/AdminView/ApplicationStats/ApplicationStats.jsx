@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import fetchAdminViewStats from "../../../Actions/admin";
 
 class ApplicationStats extends Component {
