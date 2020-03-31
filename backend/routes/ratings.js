@@ -32,7 +32,7 @@ router.get("/admin/:appId", function(req, res) {
         mergedComments=mergedComments.concat(review.comments);
         mergedRatings[review.userId]=review.rating;
         for (let i=0; i<5; i++){
-          if (review.questionList[i].rating!=-1){
+          if (review.questionList[i] && review.questionList[i].rating!=-1){
             sectionAverageSums[i] += review.questionList[i].rating;
             numRatedPerSection[i]++;
           }
