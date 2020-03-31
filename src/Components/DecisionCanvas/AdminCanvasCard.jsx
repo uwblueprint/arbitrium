@@ -5,13 +5,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Collapse from "@material-ui/core/Collapse";
 import Divider from "@material-ui/core/Divider";
-import CommentIcon from "@material-ui/icons/ChatOutlined";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import Link from "@material-ui/core/Link";
-import SectionComments from "./SectionComments";
-import SectionRating from "./SectionRating";
 
 // Note that a rating of '0' is not possible.
 const ratingColour = [
@@ -72,11 +69,11 @@ function AdminCanvasCard({
   id,
   onHeaderClick,
   onLinkClick,
-  title
+  title,
+  adminCategoryRating
 }) {
   let index = parseInt(id.substring(7), 10);
   const classes = useStyles(index);
-  let rating = 0;
 
   return (
     <Card className={classes.root}>
@@ -111,7 +108,7 @@ function AdminCanvasCard({
           <>
             <Divider />
             <Footer>
-              <span className="rating-label">{`Average Rating: ${rating}/ 5`}</span>
+              <span className="rating-label">{`Average Rating: ${adminCategoryRating}`}</span>
             </Footer>
           </>
         )}

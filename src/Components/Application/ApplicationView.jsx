@@ -29,6 +29,7 @@ function ApplicationView(props) {
     review,
     dispatchReviewUpdate,
     isAdminView,
+    adminData,
     history
   } = props;
 
@@ -112,9 +113,10 @@ function ApplicationView(props) {
             update={dispatchReviewUpdate}
             review={review}
             isAdminView={true}
+            adminCategoryRatings={adminData.categoryRatings}
           />
           <hr />
-          <AdminRating />
+          <AdminRating adminData={adminData} />
           <hr />
         </div>
       ) : null}

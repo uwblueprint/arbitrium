@@ -77,7 +77,13 @@ function expandArrayReducer(expandedArr, { type, index }) {
   });
 }
 
-function DecisionCanvas({ update, review, categoryData, isAdminView = false }) {
+function DecisionCanvas({
+  update,
+  review,
+  categoryData,
+  isAdminView = false,
+  adminCategoryRatings = null
+}) {
   const [expandArray, dispatch] = useReducer(
     expandArrayReducer,
     categoryData.map(() => false)
@@ -135,42 +141,48 @@ function DecisionCanvas({ update, review, categoryData, isAdminView = false }) {
   const renderAdminCanvasCards = () => (
     <>
       {categoryData
-        ? categoryData.map((section, index) => (
-            <AdminCanvasCard
-              expanded={expandArray[index]}
-              key={section.id}
-              id={"canvas_" + section.id}
-              onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
-              onLinkClick={() => dispatch({ type: "EXPAND", index })}
-              title={section.title}
-            >
-              <CardBody>
-                <div className="questions">
-                  <h3>Question(s):</h3>
-                  <ol>
-                    {section.answers.map((item, i) => (
-                      <li key={i}>{item.question}</li>
-                    ))}
-                  </ol>
-                </div>
-                <div className="answers">
-                  <h3>Candidate Answer</h3>
-                  <ol>
-                    {section.answers.map((item, i) => (
-                      <React.Fragment key={i}>
-                        <li key={i}>{item.response}</li>
-                        <h1> {"    "}</h1>
-                      </React.Fragment>
-                    ))}
-                  </ol>
-                </div>
-                <div className="averageRating">
-                  <h3>Average Rating</h3>
-                  <p> 4.5/5 </p>
-                </div>
-              </CardBody>
-            </AdminCanvasCard>
-          ))
+        ? categoryData.map((section, index) => {
+            const adminCategoryRating = adminCategoryRatings
+              ? adminCategoryRatings[index].toString() + "/5"
+              : "";
+            return (
+              <AdminCanvasCard
+                expanded={expandArray[index]}
+                key={section.id}
+                id={"canvas_" + section.id}
+                onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
+                onLinkClick={() => dispatch({ type: "EXPAND", index })}
+                title={section.title}
+                adminCategoryRating={adminCategoryRating}
+              >
+                <CardBody>
+                  <div className="questions">
+                    <h3>Question(s):</h3>
+                    <ol>
+                      {section.answers.map((item, i) => (
+                        <li key={i}>{item.question}</li>
+                      ))}
+                    </ol>
+                  </div>
+                  <div className="answers">
+                    <h3>Candidate Answer</h3>
+                    <ol>
+                      {section.answers.map((item, i) => (
+                        <React.Fragment key={i}>
+                          <li key={i}>{item.response}</li>
+                          <h1> {"    "}</h1>
+                        </React.Fragment>
+                      ))}
+                    </ol>
+                  </div>
+                  <div className="averageRating">
+                    <h3>Average Rating</h3>
+                    <p>{adminCategoryRating}</p>
+                  </div>
+                </CardBody>
+              </AdminCanvasCard>
+            );
+          })
         : null}
     </>
   );

@@ -1,9 +1,7 @@
-import React, { useReducer, useEffect, useMemo, useRef } from "react";
+import React, { useReducer, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import ApplicationView from "./ApplicationView";
 import FlowSelector from "../FlowSelector/FlowSelector";
-import Files from "../Files/Files";
-import Rating from "../Rating/Rating";
 import Spinner from "react-spinner-material";
 
 //column categories
@@ -30,7 +28,22 @@ function Application({
 }) {
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
+  const [adminData, dispatchAdminData] = useState({
+    comments: null,
+    overallRating: null,
+    categoryRatings: null
+  });
   const isRated = useRef(false);
+
+  useEffect(() => {
+    if (isAdminView) {
+      GET.getAdminViewStats(appId).then(res => {
+        adminData.comments = res.allComments;
+        adminData.categoryRatings = res.sectionAverages;
+        adminData.overallRating = res.averageRating;
+      });
+    }
+  }, [isAdminView, appId]);
 
   //Returns a review from DB if exists, otherwise null
   useEffect(() => {
@@ -99,6 +112,7 @@ function Application({
       <Wrapper>
         <ApplicationView
           isAdminView={isAdminView}
+          adminData={adminData}
           appData={appData}
           previousApplication={previousApplication}
           nextApplication={nextApplication}
