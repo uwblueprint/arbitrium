@@ -53,7 +53,7 @@ async function getAllStackingsAPI(user) {
 }
 
 async function getAdminViewStats(app_id) {
-  const response = await fetch(proxy + `/api/admin/rankings/${app_id}`, {
+  const response = await fetch(proxy + `/api/ratings/admin/${app_id}`, {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json"
