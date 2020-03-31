@@ -10,7 +10,9 @@ class ApplicationStats extends Component {
     fetchAdminViewStats(this.props.match.params.app_id);
   }
 
-  render() {}
+  render() {
+    return null;
+  }
 }
 
 const mapStateToProps = state => ({
@@ -21,4 +23,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({ dispatch });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Application);
+export default connect(mapStateToProps, mapDispatchToProps)(ApplicationStats);
