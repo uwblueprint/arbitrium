@@ -21,20 +21,27 @@ router.get("/:userid", function(req, res) {
 });
 
 //ratings stats routes (ADMIN ONLY)
-router.get("/admin/ratings/:appId", function(req, res) {
+router.get("/admin/:appId", function(req, res) {
   try {
     db.reviews
     .find({ applicationId: req.params.appId })
     .then(function(found) {
-      let mergedComments = [], mergedRatings={};
+      let mergedComments = [], mergedRatings={}, sectionAverageSums=new Array(5).fill(0), numRatedPerSection=new Array(5).fill(0);
       //retrive all comments and ratings from each review
       found.forEach((review, index)=>{
-        mergedComments.push(review.comments);
+        mergedComments=mergedComments.concat(review.comments);
         mergedRatings[review.userId]=review.rating;
+        for (let i=0; i<5; i++){
+          if (review.questionList[i].rating!=-1){
+            sectionAverageSums[i] += review.questionList[i].rating;
+            numRatedPerSection[i]++;
+          }
+        }
       });
       res.json(
         {"allComments": mergedComments, 
          "allRatings": mergedRatings,
+         "sectionAverages": sectionAverageSums.map((sum, index)=>(numRatedPerSection[index]===0 ? 0 : (sum/numRatedPerSection[index]).toFixed(1))),
          "averageRating": (Object.values(mergedRatings).reduce((ratingA, ratingB) => 
          ratingA+ratingB, 0)/Object.keys(mergedRatings).length).toFixed(1)});
     })

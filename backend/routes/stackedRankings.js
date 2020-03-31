@@ -68,28 +68,6 @@ router.get("/:userid", function(req, res) {
     });
 });
 
-//stacked rankings stats routes (ADMIN ONLY) 
-router.get("/admin/rankings/:appId", function(req, res) {
-  try {
-    db.s
-    .find({ applicationId: req.params.appId })
-    .then(function(found) {
-      let mergedComments = [], mergedRatings={};
-      //retrive all comments and ratings from each review
-      found.forEach((review, index)=>{
-        mergedComments.push(review.comments);
-        mergedRatings[review.userId]=review.rating;
-      });
-      res.json(
-        {"allComments": mergedComments, 
-         "allRatings": mergedRatings,
-        });
-    })
-  } catch (err) {
-    res.send(err);
-  }
-});
-
 router.post("/", function(req, res) {
   const stacked = {
     userId: req.body.userId,
