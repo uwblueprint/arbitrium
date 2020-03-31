@@ -35,12 +35,11 @@ const useStyles = makeStyles({
   },
   company: {
     textAlign: "left",
-    maxWidth: '150px',
-    width: '100px'
-
+    maxWidth: "150px",
+    width: "100px"
   },
   rating: {
-    textAlign: "left",
+    textAlign: "left"
   },
   link: {
     textAlign: "right",
@@ -54,16 +53,10 @@ const useStyles = makeStyles({
 
 function RankingCard({ companyName, rating, appId, push, suggested }) {
   const classes = useStyles();
-  let notRatingStyle = {};
   return (
-    <Card className={classes.root} >
+    <Card className={classes.root}>
       <CardContent
-        style={
-          !rating
-            ? { backgroundColor: "#F4F4F4" }
-            : { backgroundColor: "white" }
-        }
-        style={{ padding: 10 }}
+        style={{ padding: 10, backgroundColor: !rating ? "#F4F4F4" : "white" }}
       >
         <div className={classes.content}>
           <DragHandle className={classes.drag} />
@@ -83,7 +76,7 @@ function RankingCard({ companyName, rating, appId, push, suggested }) {
               push(`/submissions/${appId}`);
             }}
           >
-            <a>Open Application</a>
+            Open Application
           </Button>
         </div>
       </CardContent>

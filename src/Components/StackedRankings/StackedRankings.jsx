@@ -117,11 +117,11 @@ function StackedRankings({ applications, user }) {
           fetched = await GET.getAllStackingsAPI(user);
         }
         let reviews = await GET.getUserReviewsAPI(user);
-        reviews.map((review)=>{
+        reviews.forEach(review => {
           let averageRating = 0;
           let numRatings = 0;
           if (review && review.questionList) {
-            review.questionList.map(item => {
+            review.questionList.forEach(item => {
               if (item.rating > 0) {
                 averageRating += item.rating;
                 numRatings += 1;
@@ -131,10 +131,12 @@ function StackedRankings({ applications, user }) {
           if (numRatings > 0) {
             averageRating = averageRating / numRatings;
           }
-          let result = fetched.filter((app)=> app._id == review.applicationId ).map((item) => {
-            item.suggested = averageRating
-          })
-        })
+          fetched
+            .filter(app => app._id === review.applicationId)
+            .forEach(item => {
+              item.suggested = averageRating;
+            });
+        });
         console.log(reviews);
         console.log(fetched);
         setRankings(fetched);
@@ -209,9 +211,11 @@ function StackedRankings({ applications, user }) {
         The applicants above the cutoff line are the ones you wish to see move
         on to the next round
       </p>
-    <h1> Note: You are done the review process once you are happy with your
-    stacked rankings. There is no submit button. Everything is automatically saved
-  </h1>
+      <p>
+        Note: You are done the review process once you are happy with your
+        stacked rankings. There is no submit button. Everything is automatically
+        saved
+      </p>
       <div className={classes.rankings}>
         {column}
         <DragDropContext

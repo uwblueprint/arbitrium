@@ -4,7 +4,6 @@ import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import moment from "moment";
 
 const GET = require("../../requests/get");
 

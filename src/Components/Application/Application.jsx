@@ -51,7 +51,7 @@ function Application({ applications, dispatch, history, match, user }) {
         review: reviewExists ? res[0] : createReview(user, appId)
       });
     });
-  }, [appId]);
+  }, [appId, user]);
 
   useEffect(() => {
     if (appId == null || user == null || review == null) {
@@ -62,11 +62,11 @@ function Application({ applications, dispatch, history, match, user }) {
         isRated.current = true;
         dispatch({ type: NEW_REVIEW });
       }
-      if (res.ok != 1) {
+      if (res.ok !== 1) {
         alert("Error in saving your review!");
       }
     });
-  }, [review]);
+  }, [appId, dispatch, review, user]);
 
   const [application, appIndex] = useMemo(() => {
     return getApplicationDetails(applications, appId);

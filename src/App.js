@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router";
-import Header from "./Components/Header/Header";
-import Container from "./Components/Container/Container";
+import { AuthProvider } from "./Authentication/Auth";
 import Application from "./Components/Application/Application";
 import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTable";
 import Comparison from "./Components/Comparison/Comparison";
-import { AuthProvider } from "./Authentication/Auth";
+import Container from "./Components/Container/Container";
+import Header from "./Components/Header/Header";
 
 import { INITIAL_APP_LOAD } from "./Constants/ActionTypes";
 
@@ -23,25 +23,21 @@ import "./App.css";
 import PrivateRoute from "./Authentication/PrivateRoute";
 
 import { getReviewCountAPI } from "./requests/get";
-//import './App.css';
 
 //Use this later for prod vs dev environment
 //// TODO: Uncomment when express is setup
-let proxy = "http://localhost:4000"
-console.log(process.env.REACT_APP_NODE_ENV)
-if (process.env.REACT_APP_NODE_ENV === "production"){
-  proxy = process.env.REACT_APP_SERVER_PROD
+let proxy = "http://localhost:4000";
+console.log(process.env.REACT_APP_NODE_ENV);
+if (process.env.REACT_APP_NODE_ENV === "production") {
+  proxy = process.env.REACT_APP_SERVER_PROD;
 }
-if (process.env.REACT_APP_NODE_ENV === "qa"){
-  proxy = process.env.REACT_APP_SERVER_QA
+if (process.env.REACT_APP_NODE_ENV === "qa") {
+  proxy = process.env.REACT_APP_SERVER_QA;
 }
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   onAuthStateChange = async currentUser => {
+    /* eslint-disable-next-line eqeqeq*/
     if (currentUser != false) {
       try {
         const applications = await this.getAllApplicationsAPI();
@@ -92,16 +88,11 @@ class App extends Component {
     return body;
   };
 
-  /*
-  applicationId:
-  userId: "insecure"
-  rating:
-  comments:
-  lastReviewed:
-  questionList:
-  */
-
-  getWrappedComponent = (props, ApplicationComponent, fullApplication=false) => {
+  getWrappedComponent = (
+    props,
+    ApplicationComponent,
+    fullApplication = false
+  ) => {
     const data = fullApplication ? [] : this.props.applications;
     const WrappedComponent = (
       <ApplicationComponent
@@ -117,14 +108,6 @@ class App extends Component {
 
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
-    /*
-    applicationId:
-    userId: "insecure"
-    rating:
-    comments:
-    lastReviewed:
-    questionList:
-    */
     let comments = [];
     comments.push({
       lastReviewed: moment.now(),
@@ -152,7 +135,11 @@ class App extends Component {
                         exact={true}
                         path="/applications/full"
                         component={props =>
-                          this.getWrappedComponent(props, ApplicationsTable, true)
+                          this.getWrappedComponent(
+                            props,
+                            ApplicationsTable,
+                            true
+                          )
                         }
                       ></PrivateRoute>
                       <Route
@@ -189,8 +176,7 @@ class App extends Component {
                       <PrivateRoute
                         path="/admin"
                         component={Admin}
-                        >
-                        </PrivateRoute>
+                      ></PrivateRoute>
                       <Redirect to={"/applications"} />
                     </Switch>
                   </Container>

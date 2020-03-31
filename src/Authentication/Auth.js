@@ -14,7 +14,7 @@ export const AuthProvider = ({ children, onAuthStateChange }) => {
   useEffect(() => {
     if (currentUser == null) return;
     onAuthStateChange(currentUser);
-  }, [currentUser]);
+  }, [currentUser, onAuthStateChange]);
 
   return (
     <AuthContext.Provider

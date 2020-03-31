@@ -83,9 +83,9 @@ export function transpileFileData(application) {
     size: index * 500
   }));
   let fileLinks = [];
-  files.map(file => {
+  files.forEach(file => {
     if (file.link == null) return;
-    file.link.split(",").map((link, index) => {
+    file.link.split(",").forEach((link, index) => {
       let append = "";
       if (file.link.split(",").length > 1) {
         append = "(" + (index + 1) + ")";
@@ -136,8 +136,8 @@ export function transpileLongAnswerData(application) {
     answers: [],
     title: "Opportunities and Challenges"
   });
-  answers.map(answer => {
-    data.map(item => {
+  answers.forEach(answer => {
+    data.forEach(item => {
       if (answer.id === item.id) {
         item.answers.push({
           question: answer.answers.question,
