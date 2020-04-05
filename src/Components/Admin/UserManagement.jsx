@@ -3,6 +3,8 @@ import UserManagementTable from "./UserManagementTable";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 
+const GET = require("../../requests/get");
+
 const Wrapper = styled.div`
   margin-top: 148px;
   text-align: left;
@@ -40,6 +42,8 @@ const users = new Array(30).fill(0).map((elem, index) => ({
     </Button>
   )
 }));
+
+
 
 function UserManagement() {
   return (

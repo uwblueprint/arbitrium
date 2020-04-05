@@ -6,6 +6,8 @@ import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
+import Spinner from 'react-spinner-material';
+
 //column categories
 import {
   createReview,
@@ -15,31 +17,19 @@ import {
 } from "./applicationDataHelpers";
 import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 
-//import templates
 
 import { connect } from "react-redux";
 import Rubric from "../Rubric/Rubric";
 import { NEW_REVIEW } from "../../Constants/ActionTypes";
-
 const GET = require("../../requests/get");
 const UPDATE = require("../../requests/update");
-
-// returns tuple: [appData, appIndex in appList]
-function getApplicationDetails(appList, appId) {
-  for (let i = 0; i < appList.length; ++i) {
-    const app = appList[i];
-    if (app["_id"] === appId) {
-      return [app, i];
-    }
-  }
-  return [null, -1];
-}
 
 function Application({ applications, dispatch, history, match, user }) {
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
   const isRated = useRef(false);
 
+  //Returns a review from DB if exists, otherwise null
   useEffect(() => {
     GET.getReviewAPI(user, appId).then(res => {
       const reviewExists = res != null && res.length > 0;
@@ -53,6 +43,7 @@ function Application({ applications, dispatch, history, match, user }) {
     });
   }, [appId, user]);
 
+  //Updates a review when any update happens from the user
   useEffect(() => {
     if (appId == null || user == null || review == null) {
       return;
@@ -67,6 +58,7 @@ function Application({ applications, dispatch, history, match, user }) {
       }
     });
   }, [appId, dispatch, review, user]);
+
 
   const [application, appIndex] = useMemo(() => {
     return getApplicationDetails(applications, appId);
@@ -101,6 +93,7 @@ function Application({ applications, dispatch, history, match, user }) {
         <button>1. Letter of Interest</button>
         <button disabled>2. Full Application</button>
       </FlowSelector>
+      <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
       <Wrapper>
         <h1>
           <Button
@@ -159,6 +152,18 @@ function Application({ applications, dispatch, history, match, user }) {
       </Wrapper>
     </div>
   );
+}
+
+//Helper function
+// returns tuple: [appData, appIndex in appList]
+function getApplicationDetails(appList, appId) {
+  for (let i = 0; i < appList.length; ++i) {
+    const app = appList[i];
+    if (app["_id"] === appId) {
+      return [app, i];
+    }
+  }
+  return [null, -1];
 }
 
 const mapStateToProps = state => ({
