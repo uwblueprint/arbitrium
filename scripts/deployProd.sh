@@ -1,2 +1,2 @@
 npm run-script build
-firebase deploy --only hosting:qa
+firebase deploy --only hosting:production

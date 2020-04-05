@@ -77,7 +77,7 @@ const columns = [
   { title: "Role", field: "role" },
   {
     title: "Program Access",
-    field: "programAccess",
+    field: "programs",
     render: rowData => {
       if (rowData.programAccess.length > 1) {
         return (
@@ -97,7 +97,7 @@ const columns = [
           </div>
         );
       }
-      return rowData.programAccess.join(", ");
+      return "None";
     }
   },
   {

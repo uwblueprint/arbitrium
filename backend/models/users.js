@@ -18,6 +18,8 @@ var program = new mongoose.Schema({
   }
 });
 
+
+//TEMP JUST HAVING A ROLE AND PROGRAM FOR EMERGENCY FUND
 var userSchema = new mongoose.Schema({
     userId: {
         type: String
@@ -28,8 +30,11 @@ var userSchema = new mongoose.Schema({
     email: {
         type: String
     },
+    role: {
+        type: String
+    },
     programs: {
-        type: [program]
+        type: String
     }
 }, { collection: 'user' });
 

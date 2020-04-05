@@ -67,6 +67,22 @@ const Login = ({ history }) => {
   };
 
   if (currentUser !== null && currentUser !== false) {
+
+    getUserAPI(currentUser).then((entry) => {
+        console.log("We got the current user and it is ")
+        console.log(entry)
+        if (entry != null && entry.length == 0){
+          let user = {
+            userId: currentUser.uid,
+            name: "",
+            email: currentUser.email,
+            programs: []
+          }
+          console.log("About to create a new User")
+          updateUserAPI(user)
+        }
+
+      })
     return <Redirect to={"/applications"} />;
   } else if (currentUser !== false) {
     return (

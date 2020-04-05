@@ -142,7 +142,7 @@ async function getUserAPI(user) {
   return body;
 }
 
-async function getAllUsersAPI(user) {
+async function getAllUsersAPI() {
   const response = await fetch(
     proxy + `/api/users/all`,
     {
