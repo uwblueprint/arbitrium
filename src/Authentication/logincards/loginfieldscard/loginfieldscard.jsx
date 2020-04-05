@@ -82,7 +82,7 @@ const LoginFieldsCard = (props) => {
     const validateForm = () => {
         return values.email.length > 0 && values.password.length > 0;
     }
-    
+
     const handleChange = prop => event => {
         setValues({ ...values, [prop]: event.target.value });
     };

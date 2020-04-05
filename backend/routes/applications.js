@@ -66,25 +66,4 @@ router.get("/:userid", function(req, res) {
     });
 });
 
-// router.get("/:appid/:userId", function(req, res) => {
-// }
-
-router.post("/", function(req, res) {
-  var user = {
-    username: "greg",
-    password: "insecure",
-    email: "gmaxin@uwaterloo.ca"
-  };
-  db.applications
-    .create(user)
-
-    // status code 201 means created
-    .then(function(newSchedule) {
-      res.status(201).json(newSchedule);
-    })
-    .catch(function(err) {
-      res.send(err);
-    });
-});
-
 module.exports = router;

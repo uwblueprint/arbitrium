@@ -142,13 +142,47 @@ async function getUserAPI(user) {
   return body;
 }
 
+async function getAllUsersAPI(user) {
+  const response = await fetch(
+    proxy + `/api/users/all`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }
+    }
+  );
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
+async function getAllApplicationsAPI(user) {
+  const response = await fetch(proxy + "/api/applications", {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    }
+  });
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
+
 export {
   getAllStackingsAPI,
+  getAllApplicationsAPI,
   getApplicationCount,
   getApplicationDetails,
   getApplicationTableData,
   getReviewAPI,
   getUserReviewsAPI,
   getReviewCountAPI,
-  getUserAPI
+  getUserAPI,
+  getAllUsersAPI
 };
