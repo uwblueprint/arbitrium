@@ -11,13 +11,10 @@ const GET = require("../../../requests/get");
 const Wrapper = styled.div`
   margin-top: 150px;
   padding: 0 136px;
+  text-align: left;
   h1 {
     font-size: 24px;
     font-weight: normal;
-  }
-  .table {
-    max-width: 864px;
-    margin: 0 auto;
   }
   table.MuiTable-root {
     border: 1px solid #cccccc;

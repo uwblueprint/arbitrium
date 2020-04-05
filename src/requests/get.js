@@ -1,5 +1,4 @@
 let proxy = "http://localhost:4000";
-console.log(process.env.REACT_APP_NODE_ENV);
 if (process.env.REACT_APP_NODE_ENV === "production") {
   proxy = process.env.REACT_APP_SERVER_PROD;
 }
@@ -43,7 +42,6 @@ async function getUserReviewsAPI(user) {
 }
 
 async function getApplicationTableData(user) {
-  console.log("aosidfj");
   const token = await user.getIdToken();
   const response = await fetch(proxy + `/api/applications/${user.uid}`, {
     headers: {

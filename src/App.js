@@ -37,11 +37,8 @@ if (process.env.REACT_APP_NODE_ENV === "qa") {
 }
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   onAuthStateChange = async currentUser => {
+    /* eslint-disable-next-line eqeqeq*/
     if (currentUser != false) {
       try {
         const applications = await this.getAllApplicationsAPI();
