@@ -4,6 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import Spinner from 'react-spinner-material';
 import moment from "moment";
 
 const GET = require("../../../requests/get");
@@ -48,6 +49,8 @@ function ApplicationTable({ history, user }) {
   return (
     <Wrapper className="application-list">
       <Paper>
+        {applications ? (
+        <div>
         <h1>All Applicants</h1>
         <Table className="table">
           <TableHead>
@@ -62,9 +65,9 @@ function ApplicationTable({ history, user }) {
               <TableCell style={{ width: "25%" }} align="left"></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
             {applications
               ? applications.map(application => (
+                <TableBody>
                   <TableRow hover key={application._id}>
                     <TableCell component="th" scope="row">
                       {application["Organization Name"]}
@@ -90,11 +93,19 @@ function ApplicationTable({ history, user }) {
                         Open
                       </Button>
                     </TableCell>
-                  </TableRow>
+                    </TableRow>
+                  </TableBody>
                 ))
-              : "ERROR LOADING APPLICATIONS FROM DATABASE"}
-          </TableBody>
+              : null}
         </Table>
+        </div>
+      )
+      : (
+        <div>
+          <h1>Loading Applications...</h1>
+          <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+        </div>
+      )}
       </Paper>
     </Wrapper>
   );
