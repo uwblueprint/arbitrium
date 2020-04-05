@@ -31,7 +31,7 @@ const StyledCard = styled(Card)`
     font-size: 3rem;
   }
   .MuiCardHeader-root {
-    padding-bottom: 5px;
+    padding-bottom: 50px;
   }
   .MuiCardHeader-subheader {
     color: black;
