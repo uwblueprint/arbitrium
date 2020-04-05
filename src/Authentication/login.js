@@ -10,6 +10,9 @@ import LoginFieldsCard from "./logincards/loginfieldscard/loginfieldscard.jsx";
 import PasswordResetEmailCard from "./logincards/passwordresetemailcard/passwordresetemailcard.jsx";
 import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/passwordresetresponsecard.jsx";
 
+import { getUserAPI } from "../requests/get";
+import { updateUserAPI } from "../requests/update";
+
 const StyledCard = styled(Card)`
   width: 350px;
 

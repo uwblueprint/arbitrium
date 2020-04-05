@@ -6,6 +6,7 @@ import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTab
 import Comparison from "./Components/Comparison/Comparison";
 import Container from "./Components/Container/Container";
 import Header from "./Components/Header/Header";
+import UserManagement from "./Components/Admin/UserManagement";
 
 import { INITIAL_APP_LOAD } from "./Constants/ActionTypes";
 
@@ -172,6 +173,10 @@ class App extends Component {
                         component={props =>
                           this.getWrappedComponent(props, AllCandidates)
                         }
+                      ></PrivateRoute>
+                      <PrivateRoute
+                        path="/admin/user-management"
+                        component={UserManagement}
                       ></PrivateRoute>
                       <PrivateRoute
                         path="/admin"

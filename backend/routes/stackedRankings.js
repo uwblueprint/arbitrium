@@ -68,6 +68,9 @@ router.get("/:userid", function(req, res) {
     });
 });
 
+
+//upsert create a new document if the query did not retrieve any documents
+//satisfying the criteria. It instead does an insert.
 router.post("/", function(req, res) {
   const stacked = {
     userId: req.body.userId,
