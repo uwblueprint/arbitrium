@@ -126,6 +126,24 @@ async function getAllStackingsAPI(user) {
   return body;
 }
 
+
+async function getUserAPI(user) {
+  const response = await fetch(
+    proxy + `/api/users/${user.uid}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      }
+    }
+  );
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
 export {
   getAllStackingsAPI,
   getApplicationCount,
@@ -133,5 +151,6 @@ export {
   getApplicationTableData,
   getReviewAPI,
   getUserReviewsAPI,
-  getReviewCountAPI
+  getReviewCountAPI,
+  getUserAPI
 };
