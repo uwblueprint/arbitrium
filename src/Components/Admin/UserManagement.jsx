@@ -5,17 +5,6 @@ import styled from "styled-components";
 import Spinner from 'react-spinner-material';
 const GET = require("../../requests/get");
 
-/*
-var admin = require('firebase-admin');
-var serviceAccount = require('./firebaseAdmin.json');
-
-let firebaseAdmin = admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.REACT_APP_FIREBASE_ADMIN_DATABASE_URL
-})
-*/
-
-
 const Wrapper = styled.div`
   margin-top: 148px;
   text-align: left;
@@ -54,41 +43,70 @@ const users2 = new Array(30).fill(0).map((elem, index) => ({
   )
 }));
 
-/*
-function listAllUsers(nextPageToken) {
-  // List batch of users, 1000 at a time.
-  firebaseAdmin.auth().listUsers(1000, nextPageToken)
-    .then(function(listUsersResult) {
-      listUsersResult.users.forEach(function(userRecord) {
-        console.log('user', userRecord.toJSON());
-      });
-      if (listUsersResult.pageToken) {
-        // List next batch of users.
-        listAllUsers(listUsersResult.pageToken);
-      }
-    })
-    .catch(function(error) {
-      console.log('Error listing users:', error);
-    });
-}
-*/
-
-
 function UserManagement() {
 
   const [users, setUsers ] = useState(null);
 
-  let users3 = []
   useEffect(() => {
+
+
+    //Option 1
+    /*
     GET.getAllUsersAPI().then(res => {
       if (Array.isArray(res)) setUsers(res);
     });
+    */
+
+
+    //Option 2: Define an async function to call at the end of useEffect
+    async function getUsers(){
+
+      //Fetch the users from the backend
+      let fetched = await GET.getAllUsersAPI()
+
+      //Convert data into a format used by the table using convertData
+      //Update the state and re-render
+      setUsers(convertData(fetched))
+    }
+
+
+    //Call the defined async function
+    getUsers();
+
   }, []);
 
-  //Convert data into a format used by the table
+
+  return (
+    <div>
+    { users != null ? (
+      <Wrapper>
+        <div className="header">
+          <h1>User Management</h1>
+          <div className="button-container">
+            <Button color="primary" variant="contained">
+              Create New User
+            </Button>
+          </div>
+        </div>
+        <UserManagementTable data={users} />
+      </Wrapper>
+    ) : (
+      <div>
+        <h1>Loading Users...</h1>
+        <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+      </div>
+    )
+  }
+  </div>
+  );
+}
+
+
+//Helper Function
+function convertData(fetched) {
   let userList = []
-  if (users != null) {
-    users.forEach(user => {
+  if (fetched != null) {
+    fetched.forEach(user => {
       let programs = []
       if (user.programs != null){
         user.programs.forEach(program => {
@@ -106,35 +124,8 @@ function UserManagement() {
           </Button>
         )
       })
-
     })
   }
-
-  console.log("rendering")
-  console.log(users)
-
-  return (
-    <div>
-    { userList.length != 0 && users != null  ? (
-      <Wrapper>
-        <div className="header">
-          <h1>User Management</h1>
-          <div className="button-container">
-            <Button color="primary" variant="contained">
-              Create New User
-            </Button>
-          </div>
-        </div>
-        <UserManagementTable data={userList} />
-      </Wrapper>
-    ) : (
-      <div>
-        <h1>Loading Users...</h1>
-        <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
-      </div>
-    )
-  }
-  </div>
-  );
+  return userList;
 }
 export default UserManagement;

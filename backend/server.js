@@ -36,6 +36,35 @@ if (db != null && realtime != null) {
 }
 
 //------------------------------------------------------------------------------
+//FIREBASE INIT Admin
+//------------------------------------------------------------------------------
+var admin = require('firebase-admin');
+var serviceAccount = require('./firebaseAdmin.json');
+
+let firebaseAdmin = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: process.env.REACT_APP_FIREBASE_ADMIN_DATABASE_URL
+})
+
+function listAllUsers(nextPageToken) {
+  // List batch of users, 1000 at a time.
+  firebaseAdmin.auth().listUsers(1000, nextPageToken)
+    .then(function(listUsersResult) {
+      listUsersResult.users.forEach(function(userRecord) {
+        console.log('user', userRecord.toJSON());
+      });
+      if (listUsersResult.pageToken) {
+        // List next batch of users.
+        listAllUsers(listUsersResult.pageToken);
+      }
+    })
+    .catch(function(error) {
+      console.log('Error listing users:', error);
+    });
+}
+
+listAllUsers()
+//------------------------------------------------------------------------------
 //CORS
 //------------------------------------------------------------------------------
 
