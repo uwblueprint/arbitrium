@@ -76,6 +76,7 @@ var whitelist = [
   "https://decision-io.firebaseapp.com",
   "https://decision-io.web.app",
   "https://qa-blueprint.firebaseapp.com",
+  "https://emergencyfund.firebaseapp.com",
   "https://qa.gregmaxin.com"
 ];
 //Include "cors(corsOptions)" to protect the endpoint

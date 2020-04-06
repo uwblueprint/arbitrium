@@ -11,6 +11,9 @@
         ],
         "qa": [
           "qa-blueprint"
+        ],
+        "production2": [
+          "emergencyfund"
         ]
       }
     }
