@@ -64,18 +64,19 @@ const LoginFieldsCard = (props) => {
     "Wrong password. Try again or click Forgot password";
 
     const handleLogin = useCallback(
-    async event => {
-        event.preventDefault();
-        const { email, password } = event.target.elements;
-        try {
-        await firebaseApp
-            .auth()
-            .signInWithEmailAndPassword(email.value, password.value);
-        props.history.push("/applications");
-        } catch (error) {
-            console.log(error)
-        }
-    },
+      async event => {
+          event.preventDefault();
+          const { email, password } = event.target.elements;
+          try {
+          await firebaseApp
+              .auth()
+              .signInWithEmailAndPassword(email.value, password.value);
+          props.history.push("/applications");
+          } catch (error) {
+              alert("Wrong user name or password!")
+              console.log(error)
+          }
+      },
     [props.history]
     );
 

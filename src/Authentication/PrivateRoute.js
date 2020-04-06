@@ -31,8 +31,9 @@ function PrivateRoute({ component: RouteComponent, route: route, ...rest }) {
       }
     });
 
-    if (!programAccess) {
+    if (!programAccess && currentUser) {
       firebaseApp.auth().signOut()
+        alert("You do not have access to this program. Please verify you are using the correct URL")
     }
   }
 
