@@ -122,7 +122,7 @@ const LoginFieldsCard = (props) => {
           <Button
             className="loginButton"
             type="submit"
-            disabled={true || !validateForm()}
+            disabled={!validateForm()}
             variant="contained"
             color="primary"
           >

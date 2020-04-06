@@ -79,7 +79,6 @@ const Login = ({ history }) => {
             subheader={loginFlowState === "loginFields" ? "Sign-In" : null}
           />
           <CardContent>{getCardContent()}</CardContent>
-          <h> ADMINS HAVE DISABLED ACCESS </h>
         </StyledCard>
       </div>
     );
