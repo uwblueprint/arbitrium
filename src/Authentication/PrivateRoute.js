@@ -1,28 +1,70 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { AuthContext } from "./Auth";
 import Navigation from "../Components/Navigation/Navigation";
 import Header2 from "../Components/Header/Header2";
+import firebaseApp from "./firebase";
+import { getUserAPI } from "../requests/get";
 
-const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
+function PrivateRoute({ component: RouteComponent, route: route, ...rest }) {
   const { currentUser } = useContext(AuthContext);
-  return currentUser!==false ? (currentUser!==null ? (
-    <>
-      <Navigation />
-      <Header2 />
-      <Route
-        {...rest}
-        render={routeProps => (
-          <RouteComponent {...routeProps} user={currentUser} />
-        )}
-      />
-    </>
-  ) : (
-    <>
-      <h1> Please Login! </h1>
-      <Redirect to="/login" />
-    </>
-  )) : null
+  const [user, setUser ] = useState(null);
+
+  //React hook. Will fetch the user docment from mongo when currentUser context changes
+  useEffect(()=>{
+    if (!currentUser) return
+
+    //Grabs the current users docment from mongo
+    getUserAPI(currentUser).then((user) => {
+      console.log(user);
+      setUser(user[0]);
+    })
+  }, [currentUser]);
+
+
+  //If the user doesn't have access to this program, sign them out
+  let programAccess = false;
+  if (user) {
+    user.programs.forEach((program) => {
+      if (program.name == process.env.REACT_APP_PROGRAM) {
+        programAccess = true;
+      }
+    });
+
+    if (!programAccess) {
+      firebaseApp.auth().signOut()
+    }
+  }
+
+
+  let access = (route.groups.length == 0) ||
+    (user && route.groups.includes(user.role))
+
+  return (currentUser !==false && user) ?
+          (currentUser!==null && user ?
+            (access ? (
+              <>
+                <Navigation />
+                <Header2 />
+                <Route
+                  {...rest}
+                  render={routeProps => (
+                    <RouteComponent {...routeProps} user={currentUser} />
+                  )}
+                />
+              </>
+            ) : (
+              <>
+                <Redirect to="/applications" />
+              </>
+            )
+          ) : (
+            <>
+              <h1> Please Login! </h1>
+              <Redirect to="/login" />
+            </>
+          )
+        ) : null
 };
 
 export default PrivateRoute;

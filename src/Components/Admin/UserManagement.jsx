@@ -77,6 +77,7 @@ function UserManagement() {
 
     //DANGER, ONLY RUN TO SYNC THE FIREBASE USERS WITH THE MONGO USERS.
     //WILL RUN AN UPDATE USER ON EACH USER FROM FIREBASE
+    //IT WILL OVERRIDE CHANGES MADE
     //seedDB()
   }, []);
 
@@ -111,16 +112,16 @@ function convertData(fetched) {
   let userList = []
   if (fetched != null) {
     fetched.forEach(user => {
-      let programs = []
+      let programsList = []
       if (user.programs != null){
         user.programs.forEach(program => {
-          programs.push(program.name)
+          programsList.push(program.name)
         })
       }
       userList.push({
         name: user.name,
         email: user.email,
-        programAccess: programs,
+        programAccess: programsList,
         role: user.role,
         userLink: (
           <Button variant="outlined" color="primary">
@@ -152,7 +153,8 @@ function seedDB() {
         role: "User",
         programs: programs
       }
-      UPDATE.updateUserAPI(user)
+      //2 FACTOR AUTH. CONTACT GREG BEFORE UNCOMMENTING
+      //UPDATE.updateUserAPI(user)
     });
 
   });

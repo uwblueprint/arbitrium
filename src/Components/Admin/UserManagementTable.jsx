@@ -79,6 +79,9 @@ const columns = [
     title: "Program Access",
     field: "programs",
     render: rowData => {
+      if (rowData.programAccess.length == 0) {
+        return "None";
+      }
       if (rowData.programAccess.length > 1) {
         return (
           <div>
@@ -97,7 +100,7 @@ const columns = [
           </div>
         );
       }
-      return "None";
+      return rowData.programAccess.join(", ");
     }
   },
   {
@@ -119,7 +122,7 @@ function UserManagementTable(props) {
         columns={columns}
         {...props}
         options={{
-          pageSize: Math.min(20, props.data.length),
+          pageSize: Math.min(10, props.data.length),
           rowStyle: rowStyle,
           search: true,
           showTitle: false
