@@ -105,7 +105,7 @@ const Categories = ({ categoryData }) => {
         <ExpansionPanelDetails classes={{ root: classes.mainDetailsPanel }}>
           <SecondaryExpansionPanel>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
-              Contact
+              Admin information
             </SecondarySummaryPanel>
             <ExpansionPanelDetails
               classes={{ root: classes.secondaryDetailsPanel }}
@@ -134,7 +134,7 @@ const Categories = ({ categoryData }) => {
               </CategoryWrapper>
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
-
+          {/*}
           <SecondaryExpansionPanel>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Social Media
@@ -190,6 +190,8 @@ const Categories = ({ categoryData }) => {
               </CategoryWrapper>
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
+
+        */}
         </ExpansionPanelDetails>
       </ExpansionPanel>
     </Wrapper>

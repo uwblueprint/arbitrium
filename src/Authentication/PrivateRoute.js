@@ -16,7 +16,6 @@ function PrivateRoute({ component: RouteComponent, route: route, ...rest }) {
 
     //Grabs the current users docment from mongo
     getUserAPI(currentUser).then((user) => {
-      console.log(user);
       setUser(user[0]);
     })
   }, [currentUser]);
@@ -41,17 +40,11 @@ function PrivateRoute({ component: RouteComponent, route: route, ...rest }) {
   let access = (route.groups.length == 0) ||
     (user && route.groups.includes(user.role))
 
-
-  console.log(route.path)
-  console.log(currentUser !==false && (user != null))
-  console.log(currentUser!==null && (user != null) && access)
-
-
   return (currentUser !==false) ?
           ((currentUser!==null && access) ? (
             <>
               <Navigation />
-              <Header2 />
+              {/*<Header2 />*/}
               <Route
                 {...rest}
                 render={routeProps => (

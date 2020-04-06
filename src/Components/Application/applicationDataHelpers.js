@@ -4,7 +4,7 @@ import {
   fileCategories,
   adminCategories,
   longAnswerCategories
-} from "./column_categories";
+} from "./column_categories2";
 
 export function createReview(user, appId) {
   let review = {};
@@ -51,10 +51,11 @@ export function createReview(user, appId) {
 export function transpileCategoryData(application) {
   //todo when category data is made available, currently leverages mock data
   return {
-    contact: Object.keys(adminCategories.contact).map(adminCategory => ({
+    contact: Object.keys(adminCategories.Admin).map(adminCategory => ({
       title: adminCategory,
       value: application[adminCategory]
     })),
+    /*
     socialMedia: Object.keys(adminCategories.socialMedia).map(
       adminCategory => ({
         title: adminCategory,
@@ -73,6 +74,7 @@ export function transpileCategoryData(application) {
       title: adminCategory,
       value: application[adminCategory]
     }))
+    */
   };
 }
 
@@ -114,27 +116,27 @@ export function transpileLongAnswerData(application) {
   data.push({
     id: 1,
     answers: [],
-    title: "Mission and Vision"
+    title: "Question 1"
   });
   data.push({
     id: 2,
     answers: [],
-    title: "Leadership"
+    title: "Question 2"
   });
   data.push({
     id: 3,
     answers: [],
-    title: "Projects"
+    title: "Question 3"
   });
   data.push({
     id: 4,
     answers: [],
-    title: "Plan"
+    title: "Question 4"
   });
   data.push({
     id: 5,
     answers: [],
-    title: "Opportunities and Challenges"
+    title: "Question 5"
   });
   answers.forEach(answer => {
     data.forEach(item => {
