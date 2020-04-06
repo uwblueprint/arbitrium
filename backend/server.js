@@ -14,7 +14,7 @@ const MONGO_CONFIGS = require("./mongo.config");
 //------------------------------------------------------------------------------
 //FIREBASE INIT
 //------------------------------------------------------------------------------
-console.log("Attempting to connect to Firebase");
+console.log("Attempting to connect to Firebase...");
 // Doesn't work with FIREBASE_CONFIGS.projectId for some reason
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -38,7 +38,8 @@ if (db != null && realtime != null) {
 //------------------------------------------------------------------------------
 //FIREBASE INIT Admin
 //------------------------------------------------------------------------------
-var admin = require('firebase-admin');
+
+/*var admin = require('firebase-admin');
 var serviceAccount = require('./firebaseAdmin.json');
 
 let firebaseAdmin = admin.initializeApp({
@@ -64,6 +65,7 @@ function listAllUsers(nextPageToken) {
 }
 
 listAllUsers()
+*/
 //------------------------------------------------------------------------------
 //CORS
 //------------------------------------------------------------------------------
@@ -100,6 +102,7 @@ const applicationRoutes = require("./routes/applications");
 const ratingsRoutes = require("./routes/ratings");
 const stackedRoutes = require("./routes/stackedRankings");
 const usersRoutes = require("./routes/users");
+const adminRoutes = require("./routes/admin");
 
 // allows us to access request body in a post or put
 app.use(cors(corsOptions));
@@ -122,72 +125,14 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/ratings", ratingsRoutes);
 app.use("/api/stackings", stackedRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/admin", adminRoutes);
 const mongo = require("./mongo.js");
 
 app.listen(4000, () => {
   console.log("Server is listening on port:4000");
 });
 
-//------------------------------------------------------------------------------
-//FIREBASE ENDPINTS
-//------------------------------------------------------------------------------
 
-//this also works
-/*
-app.get('/api/applications', cors(corsOptions), function(req, res){
-	//get all unique clinicians
-	//treats entire object as a dictionary key
-	mongo.applications.find()
-	.then(function(found){
-		res.json(found);
-	})
-	.catch(function(err){
-		res.send(err);
-	})
-});
-*/
-
-function findReview(userId, appId) {
-  const col = db
-    .collection("reviews")
-    .where("userId", "==", userId)
-    .where("appId", "==", appId);
-
-  return new Promise((resolve, reject) => {
-    let review = {};
-    col
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          review = {
-            id: doc.id,
-            data: doc.data()
-          };
-        });
-        resolve(review);
-      })
-      .catch(err => reject(err));
-  });
-}
-
-function findApplicantName(appId) {
-  const col = db.collection("applications").where("appId", "==", appId);
-
-  return new Promise((resolve, reject) => {
-    let applicant;
-    col
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          applicant = doc.data().applicant;
-        });
-        resolve(applicant);
-      })
-      .catch(err => {
-        reject(err);
-      });
-  });
-}
 //------------------------------------------------------------------------------
 //Beginning of API endpoints
 //------------------------------------------------------------------------------

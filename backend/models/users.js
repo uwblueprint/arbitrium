@@ -34,7 +34,7 @@ var userSchema = new mongoose.Schema({
         type: String
     },
     programs: {
-        type: String
+        type: [program]
     }
 }, { collection: 'user' });
 
