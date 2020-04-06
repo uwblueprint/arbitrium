@@ -92,7 +92,7 @@ class App extends Component {
                       <Route
                         exact={true}
                         path="/login"
-                        component={Login}
+                        component={(props) => this.getWrappedComponent(props, Login)}
                       ></Route>
                       {this.mapRoutes(routes)}
                       <Redirect to={"/applications"} />

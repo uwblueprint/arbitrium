@@ -67,18 +67,21 @@ const Login = ({ history }) => {
   };
 
   if (currentUser !== null && currentUser !== false) {
-
+    console.log("Redirecting")
     return <Redirect to={"/applications"} />;
   }
   else if (currentUser !== false) {
     return (
+      <div>
         <StyledCard>
           <CardHeader
             title="arbitrium"
             subheader={loginFlowState === "loginFields" ? "Sign-In" : null}
           />
           <CardContent>{getCardContent()}</CardContent>
+          <h> ADMINS HAVE DISABLED ACCESS </h>
         </StyledCard>
+      </div>
     );
   } else return null;
 };

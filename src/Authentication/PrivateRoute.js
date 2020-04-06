@@ -41,31 +41,30 @@ function PrivateRoute({ component: RouteComponent, route: route, ...rest }) {
   let access = (route.groups.length == 0) ||
     (user && route.groups.includes(user.role))
 
-  return (currentUser !==false && user) ?
-          (currentUser!==null && user ?
-            (access ? (
-              <>
-                <Navigation />
-                <Header2 />
-                <Route
-                  {...rest}
-                  render={routeProps => (
-                    <RouteComponent {...routeProps} user={currentUser} />
-                  )}
-                />
-              </>
-            ) : (
-              <>
-                <Redirect to="/applications" />
-              </>
-            )
+
+  console.log(route.path)
+  console.log(currentUser !==false && (user != null))
+  console.log(currentUser!==null && (user != null) && access)
+
+
+  return (currentUser !==false) ?
+          ((currentUser!==null && access) ? (
+            <>
+              <Navigation />
+              <Header2 />
+              <Route
+                {...rest}
+                render={routeProps => (
+                  <RouteComponent {...routeProps} user={currentUser} />
+                )}
+              />
+            </>
           ) : (
             <>
               <h1> Please Login! </h1>
               <Redirect to="/login" />
             </>
-          )
-        ) : null
+          )) : null
 };
 
 export default PrivateRoute;
