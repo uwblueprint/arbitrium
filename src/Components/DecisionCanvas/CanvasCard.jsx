@@ -86,10 +86,13 @@ function CanvasCard({
   let rating = 0;
   let notes = [];
 
+  console.log(review)
   if (review != null) {
     rating = review.rating >= 0 ? review.rating : 0;
     notes = review.notes;
   }
+
+  console.log(rating)
 
   return (
     <Card className={classes.root}>
@@ -135,7 +138,7 @@ function CanvasCard({
             <Divider />
             <Footer>
               <span className="rating-label">{`Your Rating: ${
-                rating === 0 ? "Not Rated" : { rating } + " / 5"
+                rating === 0 ? "Not Rated" : rating + " / 5"
               }`}</span>
               <span>
                 <StyledCommentIcon /> {notes.length} comment(s)

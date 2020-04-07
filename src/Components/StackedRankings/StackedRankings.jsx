@@ -157,11 +157,11 @@ function StackedRankings({ applications, user }) {
       numbers.push(
         <React.Fragment key={i}>
           <RankNumber>{i + 1}</RankNumber>
-          {i === 4 && (
+          {/*i === 4 && (
             <div className={classes.cutoff}>
               <div>Cutoff</div>
             </div>
-          )}
+          )*/}
         </React.Fragment>
       );
     }
@@ -248,6 +248,7 @@ function StackedRankings({ applications, user }) {
                         </div>
                       )}
                     </Draggable>
+                    {/*}
                     {index === 4 && (
                       <div className={classes.divider}>
                         <div
@@ -257,6 +258,7 @@ function StackedRankings({ applications, user }) {
                         />
                       </div>
                     )}
+                    */}
                   </React.Fragment>
                 ))}
                 {provided.placeholder}
