@@ -3,6 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import { AuthContext } from "./Auth";
 import Navigation from "../Components/Navigation/Navigation";
 import Header2 from "../Components/Header/Header2";
+import Spinner from 'react-spinner-material';
 import firebaseApp from "./firebase";
 import { getUserAPI } from "../requests/get";
 
@@ -40,7 +41,8 @@ function PrivateRoute({ component: RouteComponent, route: route, ...rest }) {
   let access = (route.groups.length == 0) ||
     (user && route.groups.includes(user.role))
 
-  return (currentUser !==false) ?
+
+  return (currentUser !==false && access) ?
           ((currentUser!==null && access) ? (
             <>
               <Navigation />
@@ -57,7 +59,9 @@ function PrivateRoute({ component: RouteComponent, route: route, ...rest }) {
               <h1> Please Login! </h1>
               <Redirect to="/login" />
             </>
-          )) : null
+          )) : (
+            <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+          )
 };
 
 export default PrivateRoute;

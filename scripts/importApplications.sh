@@ -23,7 +23,7 @@ mongoimport \
   --username ${1} \
   --password ${2} \
   --authenticationDatabase admin \
-  --db Development \
+  --db EmergencyFund \
   --collection Applications \
   --type csv \
   --file ./emfund.csv \
