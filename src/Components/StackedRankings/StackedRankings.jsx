@@ -126,6 +126,7 @@ function StackedRankings({ applications, user }) {
             rankings: initApps
           });
           fetched = await GET.getAllStackingsAPI(user);
+          fetched.sort(compare);
         }
         let reviews = await GET.getUserReviewsAPI(user);
         reviews.forEach(review => {
@@ -148,7 +149,7 @@ function StackedRankings({ applications, user }) {
               item.suggested = averageRating;
             });
         });
-        fetched.sort(compare);
+        //fetched.sort(compare);
         console.log(reviews);
         console.log(fetched);
         setRankings(fetched);
