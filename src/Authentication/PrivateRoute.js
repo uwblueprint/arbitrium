@@ -42,7 +42,7 @@ function PrivateRoute({ component: RouteComponent, route: route, ...rest }) {
     (user && route.groups.includes(user.role))
 
 
-  return (currentUser !==false && access) ?
+  return (currentUser !==false && access != null) ?
           ((currentUser!==null && access) ? (
             <>
               <Navigation />
