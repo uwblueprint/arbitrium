@@ -7,7 +7,7 @@ export const adminCategories = {
     'Executive Director / CEO Name': 3,
     'Executive Director / CEO Email': 4,
     'Contact Name': 5,
-    'Conect Email': 6,
+    'Contact Email': 6,
     'Office Address': 7,
     'Website Address': 8,
     'Amount Requested (up to $20,000)': 9

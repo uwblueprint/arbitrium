@@ -99,6 +99,17 @@ function reorder(list, startIndex, endIndex) {
   return result;
 }
 
+function compare( a, b ) {
+  if ( a.rating < b.rating ){
+    return 1;
+  }
+  if ( a.rating > b.rating ){
+    return -1;
+  }
+  return 0;
+}
+
+
 function StackedRankings({ applications, user }) {
   const [rankings, setRankings] = useState([]);
 
@@ -137,6 +148,7 @@ function StackedRankings({ applications, user }) {
               item.suggested = averageRating;
             });
         });
+        fetched.sort(compare);
         console.log(reviews);
         console.log(fetched);
         setRankings(fetched);
@@ -204,17 +216,10 @@ function StackedRankings({ applications, user }) {
     <div className={classes.root}>
       <h1>Stacked Rankings</h1>
       <p>
-        Stacked Rankings are based on your overall ratings. You can move
-        applicants around if you disagree with the rankings.
+        Stacked Rankings are based on your overall ratings. You can move applicants around in your order of preference.
       </p>
       <p>
-        The applicants above the cutoff line are the ones you wish to see move
-        on to the next round
-      </p>
-      <p>
-        Note: You are done the review process once you are happy with your
-        stacked rankings. There is no submit button. Everything is automatically
-        saved
+        Your rankings will be saved automatically.
       </p>
       <div className={classes.rankings}>
         {column}
