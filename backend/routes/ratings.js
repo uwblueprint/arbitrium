@@ -38,13 +38,23 @@ router.get("/admin/:appId", function(req, res) {
           }
         }
       });
-      res.json(
-        {"allComments": mergedComments, 
-         "allRatings": mergedRatings,
-         "sectionAverages": sectionAverageSums.map((sum, index)=>(numRatedPerSection[index]===0 ? 0 : (sum/numRatedPerSection[index]).toFixed(1))),
-         "averageRating": (Object.values(mergedRatings).reduce((ratingA, ratingB) => 
-         ratingA+ratingB, 0)/Object.keys(mergedRatings).length).toFixed(1)});
-    })
+      //get user_ids from comments and query user attributes to populate comments
+      const user_ids = mergedComments.map(comment => comment._id);
+      db.user.find({_id: { $in: user_ids}}).then(function(found){
+        const transpiledComments = mergedComments.map(comment => {
+          let newComment = comment;
+          const commentUser = found.filter(user => user._id===comment._id)[0]
+          newComment['email'] = commentUser.email;
+          return newComment;
+        })
+         res.json(
+          {"allComments": transpiledComments, 
+           "allRatings": mergedRatings,
+           "sectionAverages": sectionAverageSums.map((sum, index)=>(numRatedPerSection[index]===0 ? 0 : (sum/numRatedPerSection[index]).toFixed(1))),
+           "averageRating": (Object.values(mergedRatings).reduce((ratingA, ratingB) => 
+           ratingA+ratingB, 0)/Object.keys(mergedRatings).length).toFixed(1)});
+         })
+      })  
   } catch (err) {
     res.send(err);
   }
