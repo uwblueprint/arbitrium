@@ -36,7 +36,9 @@ const useStyles = makeStyles({
   company: {
     textAlign: "left",
     maxWidth: "150px",
-    width: "100px"
+    width: "100px",
+    fontSize: 14,
+    fontWeight: "normal",
   },
   rating: {
     textAlign: "left"
@@ -67,7 +69,7 @@ function RankingCard({ companyName, rating, appId, push, suggested }) {
           {rating && (
             <div className={classes.rating}>Your Rating: {rating}/5</div>
           )}
-          <div className={classes.rating}>Suggested Rating {suggested}/5</div>
+          <div className={classes.rating}>Suggested Rating: {suggested != 0 ? suggested.toFixed(2) : rating.toFixed(2)}/5</div>
           <Button
             variant="contained"
             color="primary"
