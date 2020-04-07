@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   margin-top: 150px;
   padding: 0 136px;
   text-align: left;
+  padding-bottom: 200px;
   h1 {
     font-size: 24px;
     font-weight: normal;

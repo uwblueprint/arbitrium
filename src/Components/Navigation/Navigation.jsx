@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
 
-import SectionList from "../../mock/decisionSections.json";
+import SectionList from "../../mock/decisionSections2.json";
 import NavButton from "./NavButton";
 
 import Drawer from "@material-ui/core/Drawer";

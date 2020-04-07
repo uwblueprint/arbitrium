@@ -104,7 +104,7 @@ function Application({ applications, dispatch, history, match, user }) {
           <br />
           {name}
         </h1>
-        <Rubric />
+        {/*}<Rubric />*/}
         <hr />
         {applications.length > 0 && application != null ? (
           <div className="application-information">

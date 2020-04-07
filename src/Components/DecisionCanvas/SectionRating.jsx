@@ -30,8 +30,7 @@ function SectionRating({ id, update, rating }) {
       <h3>Rating</h3>
       <span className="rating-info">
         Your rating for this question affects the overall suggested rating for
-        this applicant. Please refer to the rubric provided by SVP to help you
-        decide on a final rating
+        this applicant. 
       </span>
       <RatingList onRatingChange={onRatingChange} selectedRating={rating} />
     </SectionWrapper>
