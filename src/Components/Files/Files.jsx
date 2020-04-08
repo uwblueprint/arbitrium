@@ -12,7 +12,7 @@ const FileButton = styled.button`
   display: block;
   margin: 8px 0;
   .name {
-    color: #005EB8;
+    color: #005eb8;
     text-decoration: none;
     padding: 4px;
   }
@@ -33,7 +33,12 @@ const Files = ({ fileData }) => {
             📎
           </span>
           <span>
-            <a className="name" target="_blank" href={link}>
+            <a
+              className="name"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={link}
+            >
               {" "}
               {name}
             </a>
@@ -41,8 +46,7 @@ const Files = ({ fileData }) => {
           {/*
             //The file sizes are currently hard coded
           <span className="size">{`(${size.toLocaleString()} K)`}</span>
-          */
-          }
+          */}
         </FileButton>
       ))}
     </div>

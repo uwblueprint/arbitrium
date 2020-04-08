@@ -8,6 +8,7 @@ const CommentBlock = styled.div`
   grid-template-rows: 20px auto;
   grid-column-gap: 16px;
   grid-row-gap: 2px;
+  margin-top: 20px;
   .image {
     grid-column: 1 / span 1;
     grid-row: 1 / span 2;
@@ -53,7 +54,12 @@ const Comment = ({ comment }) => (
     <div className="circle image">{"You"}</div>
 
     <div className="comment-info">
-      <span className="comment-author">{moment(comment["lastReviewed"]).toDate().toString().substring(4,16)}</span>
+      <span className="comment-author">
+        {moment(comment["lastReviewed"])
+          .toDate()
+          .toString()
+          .substring(4, 16)}
+      </span>
     </div>
     <p className="comment-text">{comment.value}</p>
   </CommentBlock>
