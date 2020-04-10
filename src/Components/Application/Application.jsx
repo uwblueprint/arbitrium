@@ -110,7 +110,18 @@ function Application({ applications, dispatch, history, match, user }) {
           <div className="application-information">
             <Categories categoryData={appData.categoryData} />
             <hr />
-            <Files fileData={appData.fileData} />
+            <span>
+              <a
+                className="name"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://drive.google.com/open?id=1qS3AOeihtyJD3uL2EDYvN5IK18QCTmoc"
+              >
+                {" "}
+                {"Link to Decision Making Matrix"}
+              </a>
+            </span>
+            {/*}<Files fileData={appData.fileData} />*/}
             <hr />
             <DecisionCanvas
               categoryData={appData.longAnswers}

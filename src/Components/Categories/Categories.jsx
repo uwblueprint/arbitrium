@@ -102,8 +102,8 @@ const Categories = ({ categoryData }) => {
         >
           Administrative Categories
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails classes={{ root: classes.mainDetailsPanel }}>
-          <SecondaryExpansionPanel>
+        <ExpansionPanelDetails  classes={{ root: classes.mainDetailsPanel }}>
+          <SecondaryExpansionPanel defaultExpanded>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Admin information
             </SecondarySummaryPanel>

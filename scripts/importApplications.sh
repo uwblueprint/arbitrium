@@ -26,5 +26,5 @@ mongoimport \
   --db EmergencyFund \
   --collection Applications \
   --type csv \
-  --file ./emfund.csv \
+  --file ./ttt.csv \
   --headerline \
