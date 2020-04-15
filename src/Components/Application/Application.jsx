@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import ApplicationView from "./ApplicationView";
 import FlowSelector from "../FlowSelector/FlowSelector";
-import Spinner from "react-spinner-material";
+// import Spinner from "react-spinner-material";
 
 //column categories
 import {
@@ -28,7 +28,7 @@ function Application({
 }) {
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
-  const [adminData, dispatchAdminData] = useState({
+  const [adminData, setAdminData] = useState({
     comments: null,
     overallRating: null,
     categoryRatings: null
@@ -38,9 +38,11 @@ function Application({
   useEffect(() => {
     if (isAdminView) {
       GET.getAdminViewStats(appId).then(res => {
-        adminData.comments = res.allComments;
-        adminData.categoryRatings = res.sectionAverages;
-        adminData.overallRating = res.averageRating;
+        setAdminData({
+          comments: res.allComments,
+          categoryRatings: res.sectionAverages,
+          overallRating: res.averageRating
+        });
       });
     }
   }, [isAdminView, appId]);
@@ -108,7 +110,7 @@ function Application({
         <button>1. Letter of Interest</button>
         <button disabled>2. Full Application</button>
       </FlowSelector>
-      <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+      {/* <Spinner radius={120} color={"#333"} stroke={2} visible={true} /> */}
       <Wrapper>
         <ApplicationView
           isAdminView={isAdminView}
