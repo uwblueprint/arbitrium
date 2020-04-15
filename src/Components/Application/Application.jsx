@@ -26,7 +26,7 @@ function Application({
   history,
   match,
   user,
-  isAdminView = true
+  isAdminView
 }) {
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
