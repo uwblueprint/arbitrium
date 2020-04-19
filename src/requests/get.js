@@ -41,6 +41,52 @@ async function getUserReviewsAPI(user) {
   return body;
 }
 
+//Admin stats stuff
+//-----------------------------------------------------------------------------
+async function getApplicationReviewsAPI(app) {
+  const response = await fetch(proxy + `/api/ratings/app/${app}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    }
+  });
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
+async function getAllRankingsAPI() {
+  const response = await fetch(proxy + `/api/stackings`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    }
+  });
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
+async function getAllReviewsAPI() {
+  const response = await fetch(proxy + `/api/ratings`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    }
+  });
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
+//-----------------------------------------------------------------------------
+
 async function getApplicationTableData(user) {
   const token = await user.getIdToken();
   const response = await fetch(proxy + `/api/applications/${user.uid}`, {
@@ -184,5 +230,8 @@ export {
   getUserReviewsAPI,
   getReviewCountAPI,
   getUserAPI,
-  getAllUsersAPI
+  getAllReviewsAPI,
+  getAllUsersAPI,
+  getAllRankingsAPI,
+  getApplicationReviewsAPI
 };

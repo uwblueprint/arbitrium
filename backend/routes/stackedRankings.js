@@ -69,6 +69,19 @@ router.get("/:userid", function(req, res) {
 });
 
 
+//Admin stats 
+router.get("/", function(req, res) {
+  db.stackedRankings
+    .find()
+    .then(function(found) {
+      res.json(found);
+    })
+    .catch(function(err) {
+      res.send(err);
+    });
+});
+
+
 //upsert create a new document if the query did not retrieve any documents
 //satisfying the criteria. It instead does an insert.
 router.post("/", function(req, res) {

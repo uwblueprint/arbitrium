@@ -22,6 +22,28 @@ router.get("/:userid", function(req, res) {
   }
 });
 
+//For Admin stats
+router.get("/app/:appId", function(req, res) {
+  try {
+    db.reviews.find({ applicationId: req.params.appId }).then(function(found) {
+      res.json(found);
+    });
+  } catch (err) {
+    res.send(err);
+  }
+});
+
+router.get("/", function(req, res) {
+  db.reviews
+    .find()
+    .then(function(found) {
+      res.json(found);
+    })
+    .catch(function(err) {
+      res.send(err);
+    });
+});
+
 router.get("/:userid/:appId", function(req, res) {
   db.reviews
     .find({ applicationId: req.params.appId, userId: req.params.userid })
