@@ -7,6 +7,8 @@ const GET = require("../../requests/get");
 const ADMIN = require("../../requests/admin");
 const UPDATE = require("../../requests/update");
 
+const GET = require("../../requests/get");
+
 const Wrapper = styled.div`
   margin-top: 148px;
   text-align: left;
@@ -44,6 +46,8 @@ const users2 = new Array(30).fill(0).map((elem, index) => ({
     </Button>
   )
 }));
+
+
 
 function UserManagement() {
 

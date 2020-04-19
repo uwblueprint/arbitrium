@@ -6,6 +6,7 @@ if (process.env.REACT_APP_NODE_ENV === "qa") {
   proxy = process.env.REACT_APP_SERVER_QA;
 }
 
+
 async function getReviewAPI(user, applicationId) {
   const token = await user.getIdToken();
   const response = await fetch(

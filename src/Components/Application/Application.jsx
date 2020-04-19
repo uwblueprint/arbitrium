@@ -93,6 +93,7 @@ function Application({ applications, dispatch, history, match, user }) {
         <button>1. Letter of Interest</button>
         <button disabled>2. Full Application</button>
       </FlowSelector>
+      <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
       <Wrapper>
         <h1>
           <Button
