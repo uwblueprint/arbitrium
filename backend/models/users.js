@@ -1,5 +1,4 @@
-var mongoose = require('mongoose');
-
+var mongoose = require("mongoose");
 
 //Name is oneOf: ["SVP Investee Grant", "SVP Teens", "SVP Perfect Pitch"]
 //Access is oneOf: ["regular", "guest", "admin"]
@@ -18,27 +17,28 @@ var program = new mongoose.Schema({
   }
 });
 
-
 //TEMP JUST HAVING A ROLE AND PROGRAM FOR EMERGENCY FUND
-var userSchema = new mongoose.Schema({
+var userSchema = new mongoose.Schema(
+  {
     userId: {
-        type: String
+      type: String
     },
     name: {
-        type: String
+      type: String
     },
     email: {
-        type: String
+      type: String
     },
     role: {
-        type: String
+      type: String
     },
     programs: {
-        type: [program]
+      type: [program]
     }
-}, { collection: 'user' });
+  },
+  { collection: "user" }
+);
 
-
-var User = mongoose.model('Users', userSchema);
+var User = mongoose.model("Users", userSchema);
 
 module.exports = User;

@@ -4,9 +4,7 @@ import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
-import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
-import Spinner from 'react-spinner-material';
 
 //column categories
 import {
@@ -17,10 +15,8 @@ import {
 } from "./applicationDataHelpers";
 import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 
-
 import { connect } from "react-redux";
-import Rubric from "../Rubric/Rubric";
-import { NEW_REVIEW } from "../../Constants/ActionTypes";
+import { newReview } from "../../Actions";
 const GET = require("../../requests/get");
 const UPDATE = require("../../requests/update");
 
@@ -31,14 +27,14 @@ function Application({ applications, dispatch, history, match, user }) {
 
   //Returns a review from DB if exists, otherwise null
   useEffect(() => {
-    GET.getReviewAPI(user, appId).then(res => {
-      const reviewExists = res != null && res.length > 0;
+    GET.getReviewAPI(user, appId).then((res) => {
+      const reviewExists = res != null;
       if (reviewExists) {
-        isRated.current = res[0].rating > -1;
+        isRated.current = res.rating > -1;
       }
       dispatchReviewUpdate({
         type: LOAD_REVIEW,
-        review: reviewExists ? res[0] : createReview(user, appId)
+        review: reviewExists ? res : createReview(user, appId)
       });
     });
   }, [appId, user]);
@@ -48,17 +44,16 @@ function Application({ applications, dispatch, history, match, user }) {
     if (appId == null || user == null || review == null) {
       return;
     }
-    UPDATE.updateReviewAPI(review).then(res => {
+    UPDATE.updateReviewAPI(review).then((res) => {
       if (!isRated.current && review.rating > -1) {
         isRated.current = true;
-        dispatch({ type: NEW_REVIEW });
+        newReview();
       }
       if (res.ok !== 1) {
         alert("Error in saving your review!");
       }
     });
   }, [appId, dispatch, review, user]);
-
 
   const [application, appIndex] = useMemo(() => {
     return getApplicationDetails(applications, appId);
@@ -177,13 +172,13 @@ function getApplicationDetails(appList, appId) {
   return [null, -1];
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   applications: state.applications
 });
 
-const mapDispatchToProps = dispatch => ({
-  dispatch
-});
+const mapDispatchToProps = {
+  newReview
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Application);
 

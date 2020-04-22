@@ -78,8 +78,8 @@ const columns = [
   {
     title: "Program Access",
     field: "programs",
-    render: rowData => {
-      if (rowData.programAccess.length == 0) {
+    render: (rowData) => {
+      if (rowData.programAccess.length === 0) {
         return "None";
       }
       if (rowData.programAccess.length > 1) {
@@ -117,7 +117,7 @@ function UserManagementTable(props) {
       <MaterialTable
         icons={tableIcons}
         components={{
-          Container: props => <Container {...props} elevation={0} />
+          Container: (props) => <Container {...props} elevation={0} />
         }}
         columns={columns}
         {...props}
