@@ -85,12 +85,7 @@ const useStyles = makeStyles({
 });
 
 const Categories = ({ categoryData }) => {
-  const {
-    contact,
-    socialMedia,
-    organizationInformation,
-    applicationInformation
-  } = categoryData;
+  const { contact } = categoryData;
   const classes = useStyles();
 
   return (
@@ -102,7 +97,7 @@ const Categories = ({ categoryData }) => {
         >
           Administrative Categories
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails  classes={{ root: classes.mainDetailsPanel }}>
+        <ExpansionPanelDetails classes={{ root: classes.mainDetailsPanel }}>
           <SecondaryExpansionPanel defaultExpanded>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Admin information

@@ -6,7 +6,6 @@ if (process.env.REACT_APP_NODE_ENV === "qa") {
   proxy = process.env.REACT_APP_SERVER_QA;
 }
 
-
 async function getReviewAPI(user, applicationId) {
   const token = await user.getIdToken();
   const response = await fetch(
@@ -48,7 +47,7 @@ async function getApplicationReviewsAPI(app) {
   const response = await fetch(proxy + `/api/ratings/app/${app}`, {
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      Accept: "application/json"
     }
   });
   const body = await response.json();
@@ -62,7 +61,7 @@ async function getAllRankingsAPI() {
   const response = await fetch(proxy + `/api/stackings`, {
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      Accept: "application/json"
     }
   });
   const body = await response.json();
@@ -76,7 +75,7 @@ async function getAllReviewsAPI() {
   const response = await fetch(proxy + `/api/ratings`, {
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      Accept: "application/json"
     }
   });
   const body = await response.json();
@@ -171,43 +170,8 @@ async function getAllStackingsAPI(user) {
   return body;
 }
 
-
 async function getUserAPI(user) {
-  const response = await fetch(
-    proxy + `/api/users/${user.uid}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
-    }
-  );
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
-}
-
-async function getAllUsersAPI() {
-  const response = await fetch(
-    proxy + `/api/users/all`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      }
-    }
-  );
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
-}
-
-async function getAllApplicationsAPI(user) {
-  const response = await fetch(proxy + "/api/applications", {
+  const response = await fetch(proxy + `/api/users/${user.uid}`, {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json"
@@ -220,6 +184,33 @@ async function getAllApplicationsAPI(user) {
   return body;
 }
 
+async function getAllUsersAPI() {
+  const response = await fetch(proxy + `/api/users/all`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    }
+  });
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
+async function getAllApplicationsAPI() {
+  const response = await fetch(proxy + "/api/applications", {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    }
+  });
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
 
 export {
   getAllStackingsAPI,

@@ -16,7 +16,6 @@ const useStyles = makeStyles({
     marginRight: 26
   },
   root: {
-    maxWidth: 800,
     height: 56,
     borderRadius: 0,
     boxShadow: "0px 2px 3px 1px #cccccc"
@@ -38,7 +37,7 @@ const useStyles = makeStyles({
     maxWidth: "200px",
     width: "150px",
     fontSize: 14,
-    fontWeight: "normal",
+    fontWeight: "normal"
   },
   rating: {
     textAlign: "left"
@@ -63,17 +62,20 @@ function RankingCard({ companyName, rating, appId, push, suggested }) {
         <div className={classes.content}>
           <DragHandle className={classes.drag} />
           <div className={classes.company}>{companyName}</div>
-          {(!rating || rating == -1) && (
+          {(!rating || rating === -1) && (
             <div className={classes.rating}>Your Rating: Not Rated</div>
           )}
-          {(rating && rating != -1) && (
+          {rating && rating !== -1 && (
             <div className={classes.rating}>Your Rating: {rating}/5</div>
           )}
-          {(!rating || rating == -1) ?
+          {!rating || rating === -1 ? (
             <div className={classes.rating}>Suggested Rating: Not Rated</div>
-            :
-            <div className={classes.rating}>Suggested Rating: {suggested != 0 ? suggested.toFixed(2) : rating.toFixed(2)}/5</div>
-          }
+          ) : (
+            <div className={classes.rating}>
+              Suggested Rating:{" "}
+              {suggested !== 0 ? suggested.toFixed(2) : rating.toFixed(2)}/5
+            </div>
+          )}
           <Button
             variant="contained"
             color="primary"

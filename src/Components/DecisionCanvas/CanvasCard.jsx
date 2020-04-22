@@ -57,7 +57,7 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: index => ({
+  root: (index) => ({
     fontSize: 14,
     borderRadius: 0,
     borderTop: `4px solid ${ratingColour[index]}`,
@@ -86,13 +86,10 @@ function CanvasCard({
   let rating = 0;
   let notes = [];
 
-  console.log(review)
   if (review != null) {
     rating = review.rating >= 0 ? review.rating : 0;
     notes = review.notes;
   }
-
-  console.log(rating)
 
   return (
     <Card className={classes.root}>

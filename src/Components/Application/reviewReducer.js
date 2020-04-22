@@ -30,7 +30,7 @@ export function reviewReducer(review, action) {
   if (action.type === LOAD_REVIEW) {
     return action.review;
   }
-  return produce(review, draftReview => {
+  return produce(review, (draftReview) => {
     switch (action.type) {
       case INSERT_COMMENT:
         const comment = {

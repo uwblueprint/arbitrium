@@ -9,7 +9,7 @@ router.get("/:userid", function(req, res) {
     if (req.query.count) {
       db.reviews
         .countDocuments({ userId: req.params.userid, rating: { $ne: -1 } })
-        .then(count => {
+        .then((count) => {
           res.json(count);
         });
       return;
@@ -46,7 +46,7 @@ router.get("/", function(req, res) {
 
 router.get("/:userid/:appId", function(req, res) {
   db.reviews
-    .find({ applicationId: req.params.appId, userId: req.params.userid })
+    .findOne({ applicationId: req.params.appId, userId: req.params.userid })
     .then(function(found) {
       res.json(found);
     })

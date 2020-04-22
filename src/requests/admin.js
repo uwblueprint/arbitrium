@@ -20,6 +20,4 @@ async function getAllFirebaseUsers() {
   return body;
 }
 
-export {
-  getAllFirebaseUsers
-};
+export { getAllFirebaseUsers };

@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from "react-router";
 import { AuthProvider } from "./Authentication/Auth";
 import Container from "./Components/Container/Container";
 import Header from "./Components/Header/Header";
-import { INITIAL_APP_LOAD } from "./Constants/ActionTypes";
+import { initialAppLoad } from "./Actions";
 import Login from "./Authentication/login.js";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -13,42 +13,16 @@ import theme from "./theme";
 import { history } from "./Store";
 import "./App.css";
 import PrivateRoute from "./Authentication/PrivateRoute";
-import routes from "./appRoutes"
-
-const GET = require("./requests/get");
+import routes from "./appRoutes";
 
 class App extends Component {
-
   //Runs whenever a new user logs in
-  onAuthStateChange = async currentUser => {
-    /* eslint-disable-next-line eqeqeq*/
-    if (currentUser != false) {
-      try {
-        const applications = await GET.getAllApplicationsAPI();
-        const reviewCount = await GET.getReviewCountAPI(currentUser);
 
-        //Load the initial data into redux
-        this.props.dispatch({
-          type: INITIAL_APP_LOAD,
-          applications,
-          reviewCount
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  };
-
-  getWrappedComponent = (
-    props,
-    ApplicationComponent,
-  ) => {
-    const data = this.props.applications;
+  getWrappedComponent = (props, ApplicationComponent) => {
     const WrappedComponent = (
       <ApplicationComponent
         //Passing the applications as a prop
         history={history}
-        applications={data}
         //add common props here
         {...props}
       />
@@ -56,24 +30,26 @@ class App extends Component {
     return WrappedComponent;
   };
 
-  mapRoutes = (routes) =>{
-    let appRoutes = routes.map(route => {
+  mapRoutes = (routes) => {
+    const appRoutes = routes.map((route, i) => {
       return (
         <PrivateRoute
           exact={true}
+          key={i}
           route={route}
           path={route.path}
-          component={(props) => this.getWrappedComponent(props, route.component)}
-          >
-        </PrivateRoute>
-      )
-    })
+          component={(props) =>
+            this.getWrappedComponent(props, route.component)
+          }
+        ></PrivateRoute>
+      );
+    });
     return appRoutes;
-  }
+  };
 
   //wraps common prop under given componenent (likely that many components wll require common props)
   render() {
-    let comments = [];
+    const comments = [];
     comments.push({
       lastReviewed: moment.now(),
       value: "Wow this is really good"
@@ -83,7 +59,7 @@ class App extends Component {
       <ThemeProvider theme={theme}>
         <div className="App">
           <header className="App-header">
-            <AuthProvider onAuthStateChange={this.onAuthStateChange}>
+            <AuthProvider>
               <ConnectedRouter history={history}>
                 <>
                   <Header />
@@ -92,7 +68,9 @@ class App extends Component {
                       <Route
                         exact={true}
                         path="/login"
-                        component={(props) => this.getWrappedComponent(props, Login)}
+                        component={(props) =>
+                          this.getWrappedComponent(props, Login)
+                        }
                       ></Route>
                       {this.mapRoutes(routes)}
                       <Redirect to={"/applications"} />
@@ -110,11 +88,10 @@ class App extends Component {
 
 //connecting applications to redux
 
-const mapStateToProps = state => ({
-  applications: state.applications,
-  reviews: state.reviews
+const mapStateToProps = (state) => ({
+  applications: state.applications
 });
 
-const mapDispatchToProps = dispatch => ({ dispatch });
+const mapDispatchToProps = { initialAppLoad };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
