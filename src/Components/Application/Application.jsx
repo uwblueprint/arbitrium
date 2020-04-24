@@ -20,7 +20,7 @@ import { newReview } from "../../Actions";
 const GET = require("../../requests/get");
 const UPDATE = require("../../requests/update");
 
-function Application({ applications, dispatch, history, match, user }) {
+function Application({ applications, newReview, history, match, user }) {
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
   const isRated = useRef(false);
@@ -53,7 +53,7 @@ function Application({ applications, dispatch, history, match, user }) {
         alert("Error in saving your review!");
       }
     });
-  }, [appId, dispatch, review, user]);
+  }, [appId, newReview, review, user]);
 
   const [application, appIndex] = useMemo(() => {
     return getApplicationDetails(applications, appId);

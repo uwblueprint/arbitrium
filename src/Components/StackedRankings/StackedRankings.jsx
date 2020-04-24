@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
@@ -110,10 +111,16 @@ function compare(a, b) {
   return 0;
 }
 
-function StackedRankings({ applications, user }) {
+function StackedRankings({ applications, reviewCount, user }) {
   const [rankings, setRankings] = useState([]);
+  const classes = useStyles();
+  const shouldTranslate = useRef(false);
+
+  const shouldRedirect =
+    reviewCount == null || reviewCount < applications.length;
 
   useEffect(() => {
+    if (shouldRedirect) return; // do not fetch data if going to redirect
     (async function() {
       if (user == null || applications.length === 0) return;
       try {
@@ -154,11 +161,7 @@ function StackedRankings({ applications, user }) {
         console.error(e);
       }
     })();
-  }, [applications, user]);
-
-  const classes = useStyles();
-  // TODO: replace this with list from store or props when connecting to DB :)
-  const shouldTranslate = useRef(false);
+  }, [shouldRedirect, applications, user]);
 
   const numOrgs = rankings.length;
   const column = useMemo(() => {
@@ -177,6 +180,10 @@ function StackedRankings({ applications, user }) {
     }
     return <NumbersColumn>{numbers}</NumbersColumn>;
   }, [numOrgs]);
+
+  if (shouldRedirect) {
+    return <Redirect to="/" />;
+  }
 
   const onDragEnd = (result) => {
     // dropped outside the list
@@ -275,7 +282,8 @@ function StackedRankings({ applications, user }) {
 
 const mapStateToProps = (state) => {
   return {
-    applications: state.applications
+    applications: state.applications,
+    reviewCount: state.reviewCount
   };
 };
 

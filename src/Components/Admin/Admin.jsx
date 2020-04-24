@@ -69,12 +69,6 @@ async function calc(rankings, applications, reviews) {
     };
     display.push(dis);
   });
-
-  console.log(display);
-
-  display.forEach((d) => {
-    console.log(d.avgRanking);
-  });
 }
 
 function Admin({ applications }) {

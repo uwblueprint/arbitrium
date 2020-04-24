@@ -51,7 +51,6 @@ export function reviewReducer(review, action) {
         }
         break;
       case UPDATE_RATING:
-        console.log(review);
         if (action.id === MASTER_ID) {
           draftReview.rating = action.rating;
           break;
