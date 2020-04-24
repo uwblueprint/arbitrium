@@ -156,7 +156,9 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
 export default connect(
   (state) => ({
     applications: state.applications,
-    showStackedRankings: state.reviewCount >= state.applications.length,
+    showStackedRankings:
+      state.reviewCount != null &&
+      state.reviewCount >= state.applications.length,
     pathname: state.router.location.pathname
   }),
   { push }

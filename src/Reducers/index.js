@@ -27,7 +27,7 @@ function user(state = null, action) {
   }
 }
 
-function reviewCount(state = 0, action) {
+function reviewCount(state = null, action) {
   switch (action.type) {
     case INITIAL_APP_LOAD:
       return action.reviewCount;

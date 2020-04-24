@@ -14,7 +14,6 @@ const AUTH_STATES = {
 };
 
 function AuthProvider({ initialAppLoad, children }) {
-  //React hook
   const [authState, setAuthState] = useState({
     state: AUTH_STATES.LOADING,
     user: null
@@ -27,12 +26,38 @@ function AuthProvider({ initialAppLoad, children }) {
         return;
       }
       const appUser = await getUserAPI(user);
-      console.log(appUser);
+      //If the user doesn't have access to this program, sign them out
+      if (!appUser) {
+        alert(
+          "You are not a registered user, please contact support for assistance."
+        );
+        setAuthState({
+          state: AUTH_STATES.NOT_AUTHENTICATED,
+          user: null
+        });
+        return;
+      }
+
+      const hasProgramAcess = appUser.programs.some(
+        (program) => program.name === process.env.REACT_APP_PROGRAM
+      );
+      if (!hasProgramAcess) {
+        firebaseApp.auth().signOut();
+        alert(
+          "You do not have access to this program. Please verify you are using the correct URL"
+        );
+        setAuthState({
+          state: AUTH_STATES.NOT_AUTHENTICATED,
+          user: null
+        });
+        return;
+      }
+
       const applications = await GET.getAllApplicationsAPI();
       const reviewCount = await GET.getReviewCountAPI(user);
-
       //Load the initial data into redux
       initialAppLoad(applications, reviewCount);
+      // differentiate between the firebase user and the user retrieved from mongo (firebaseUser and appUser)
       setAuthState({
         state: AUTH_STATES.AUTHENTICATED,
         user: { firebaseUser: user, appUser }
