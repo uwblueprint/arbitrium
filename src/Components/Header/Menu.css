@@ -20,7 +20,7 @@
 
 .navbar-collapse {
   background: white !important;
-  z-index: 1000000000;
+  z-index: 100;
   min-width: 100px;
 }
 

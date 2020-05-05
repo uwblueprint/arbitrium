@@ -18,7 +18,8 @@ const useStyles = makeStyles({
       maxWidth: "300px",
       padding: "4px 0",
       position: "fixed",
-      marginBottom: "50px"
+      marginBottom: "50px",
+      zIndex: 100
     },
     // Header
     "& h2": {
