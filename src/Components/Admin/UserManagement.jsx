@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import UserManagementTable from "./UserManagementTable";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import Spinner from 'react-spinner-material';
+import Spinner from "react-spinner-material";
 const GET = require("../../requests/get");
-const ADMIN = require("../../requests/admin");
-const UPDATE = require("../../requests/update");
 
 const Wrapper = styled.div`
   margin-top: 148px;
@@ -46,7 +44,7 @@ function UserManagement() {
     //Option 2: Define an async function to call at the end of useEffect
     async function getUsers() {
       //Fetch the users from the backend
-      let fetched = await GET.getAllUsersAPI();
+      const fetched = await GET.getAllUsersAPI();
 
       //Convert data into a format used by the table using convertData
       //Update the state and re-render
@@ -88,10 +86,10 @@ function UserManagement() {
 
 //Helper Function
 function convertData(fetched) {
-  let userList = [];
+  const userList = [];
   if (fetched != null) {
     fetched.forEach((user) => {
-      let programsList = [];
+      const programsList = [];
       if (user.programs != null) {
         user.programs.forEach((program) => {
           programsList.push(program.name);

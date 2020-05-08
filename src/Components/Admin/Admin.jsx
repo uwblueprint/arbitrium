@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Spinner from "react-spinner-material";
 import { connect } from "react-redux";
-import { isNonEmptyArray } from "../../common/array-helpers";
+import { isNonEmptyArray } from "../../common/arrayHelpers";
 
 const GET = require("../../requests/get");
 
