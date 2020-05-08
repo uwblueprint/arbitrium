@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
-import Spinner from "react-spinner-material";
 import Rating from "../Rating/Rating";
 
 //column categories
@@ -89,7 +88,6 @@ function Application({ applications, newReview, history, match, user }) {
         <button>1. Letter of Interest</button>
         <button disabled>2. Full Application</button>
       </FlowSelector>
-      <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
       <Wrapper>
         <h1>
           <Button
