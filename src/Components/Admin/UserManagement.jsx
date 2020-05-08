@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import UserManagementTable from "./UserManagementTable";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import Spinner from "react-spinner-material";
+import Spinner from 'react-spinner-material';
 const GET = require("../../requests/get");
-// const ADMIN = require("../../requests/admin");
-// const UPDATE = require("../../requests/update");
+const ADMIN = require("../../requests/admin");
+const UPDATE = require("../../requests/update");
 
 const Wrapper = styled.div`
   margin-top: 148px;
