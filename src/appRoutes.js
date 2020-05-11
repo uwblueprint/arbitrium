@@ -3,6 +3,7 @@ import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTab
 import UserManagement from "./Components/Admin/UserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
+import AdminStatsView from "./Components/AdminView/ApplicationStats/ApplicationStats";
 import Admin from "./Components/Admin/Admin";
 
 /*
@@ -48,6 +49,12 @@ const routes = [
     path: "/admin",
     component: Admin,
     title: "Admin view to view all users",
+    groups: ["admin"]
+  },
+  {
+    path: "/admin/submissions/:organizationId",
+    component: ApplicationStats,
+    title: "Admin view of a single application",
     groups: ["admin"]
   }
 ];
