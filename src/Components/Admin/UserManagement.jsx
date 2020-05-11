@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Spinner from "react-spinner-material";
 import * as GET from "../../requests/get";
 
+
 const Wrapper = styled.div`
   margin-top: 148px;
   text-align: left;
