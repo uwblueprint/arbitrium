@@ -115,7 +115,7 @@ function Application({ applications, dispatch, history, match, user }) {
                 className="name"
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://drive.google.com/open?id=1qS3AOeihtyJD3uL2EDYvN5IK18QCTmoc"
+                href="https://drive.google.com/file/d/1GT2l4PLYnavReVWjYU3cXzdQmCTg_tXN/view?usp=sharing"
               >
                 {" "}
                 {"Link to Decision Making Matrix"}

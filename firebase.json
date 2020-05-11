@@ -39,6 +39,17 @@
               "destination": "/index.html"
            }
       ]
+    },
+    {
+      "target": "seniors" ,
+      "public": "build",
+      "rewrites": [
+           {
+              "source": "**",
+              "function": "api",
+              "destination": "/index.html"
+           }
+      ]
     }
   ]
 }

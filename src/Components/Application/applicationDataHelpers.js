@@ -4,7 +4,7 @@ import {
   fileCategories,
   adminCategories,
   longAnswerCategories
-} from "./column_categories2";
+} from "./senior_categories";
 
 export function createReview(user, appId) {
   let review = {};
@@ -29,11 +29,6 @@ export function createReview(user, appId) {
   });
   questionList.push({
     id: "canvas_4",
-    notes: [],
-    rating: -1
-  });
-  questionList.push({
-    id: "canvas_5",
     notes: [],
     rating: -1
   });
@@ -132,11 +127,6 @@ export function transpileLongAnswerData(application) {
     id: 4,
     answers: [],
     title: "Question 4"
-  });
-  data.push({
-    id: 5,
-    answers: [],
-    title: "Question 5"
   });
   answers.forEach(answer => {
     data.forEach(item => {
