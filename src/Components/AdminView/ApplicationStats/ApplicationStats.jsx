@@ -33,7 +33,16 @@ const ApplicationStats = props => {
     []
   );
 
-  const getApplicationStatsChart = () => {
+  const getApplicationStatsRankingsChart = () => {
+    //TODO: transpile rankings data and pass as props to chart
+    return (
+      <div>
+        <Chart data={data} axes={axes} />
+      </div>
+    );
+  };
+
+  const getApplicationStatsRatingsChart = () => {
     //TODO: transpile ratings data and pass as props to chart
     return (
       <div>
@@ -51,12 +60,27 @@ const ApplicationStats = props => {
 
   return (
     <div className="application-stats">
-      <div className="application-stats-chart">
-        <div className="application-stats-chart-title">
-          Ranking Distribution
+      <div className="application-stats-rankings">
+        <h4 className="application-stats-rankings-title">Overall Ranking</h4>
+        <div className="application-stats-rankings-chart">
+          <div className="application-stats-rankings-chart-title">
+            <h4>Ranking distribution</h4>
+          </div>
+          {getApplicationStatsRankingsChart()}
         </div>
-        {getApplicationStatsChart()}
       </div>
+      <div className="application-stats-ratings">
+        <div className="application-stats-ratings">
+          <h4 className="application-stats-ratings-title">Ratings</h4>
+        </div>
+        <div className="application-stats-ratings-chart">
+          <div className="application-stats-ratings-chart-title">
+            <h4>Rating distribution</h4>
+          </div>
+          {getApplicationStatsRatingsChart()}
+        </div>
+      </div>
+
       <div className="application-stats-comments-section">
         {getFormattedComments()}
       </div>
