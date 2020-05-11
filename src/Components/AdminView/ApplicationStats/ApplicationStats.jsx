@@ -1,20 +1,27 @@
 import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import fetchAdminViewStats from "../../../Actions/admin";
 
-class ApplicationStats extends Component {
-  constructor(props) {
-    super(props);
-  }
+const ApplicationStats = props => {
+  useEffect(() => {
+    props.fetchAdminViewStats(this.props.match.params.app_id);
+  }, []);
 
-  componentDidMount() {
-    fetchAdminViewStats(this.props.match.params.app_id);
-  }
+  const getFormattedComments = () =>
+    props.comments.map((comment, index) => (
+      <span key={"comment-" + index}>{comment.content}</span>
+    ));
 
-  render() {
-    return null;
-  }
-}
+  return (
+    <div className="application-stats">
+      <div className="application-stats-chart"></div>
+      <div className="application-stats-comments-section">
+        {getFormattedComments()}
+      </div>
+    </div>
+  );
+};
 
 const mapStateToProps = state => ({
   comments: state.adminReducer.allComments,
@@ -22,6 +29,8 @@ const mapStateToProps = state => ({
   averageRating: state.adminReducer.averageRating
 });
 
-const mapDispatchToProps = dispatch => ({ dispatch });
+const mapDispatchToProps = dispatch => ({
+  fetchAdminViewStats: app_id => dispatch(fetchAdminViewStats(app_id))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ApplicationStats);

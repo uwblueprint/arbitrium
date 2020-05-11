@@ -6,9 +6,10 @@ const db = require("../mongo.js");
 
 //ratings stats routes (ADMIN ONLY)
 router.get("/admin/:appId", function(req, res) {
+  const allResults=[]
   try {
     db.reviews
-    .find({ applicationId: req.params.appId })
+    .find({ applicationId: { $in: req.params.appId}})
     .then(function(found) {
       let mergedComments = [], commentUsers=[], mergedRatings={}, sectionAverageSums=new Array(5).fill(0), numRatedPerSection=new Array(5).fill(0);
       //retrive all comments and ratings from each review
@@ -34,7 +35,7 @@ router.get("/admin/:appId", function(req, res) {
           newComment['author'] = commentUser ? commentUser.name : null;
           return newComment;
         })
-         res.json(
+         allResults.push(
           {
            "allComments": transpiledComments, 
            "allRatings": mergedRatings,
@@ -46,6 +47,8 @@ router.get("/admin/:appId", function(req, res) {
   } catch (err) {
     res.send(err);
   }
+  //send all results based on the given application ids
+  res.send(allResults)
 });
 
 router.get("/:userid", function(req, res) {

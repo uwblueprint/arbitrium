@@ -14,6 +14,7 @@
     "classnames": "^2.2.6",
     "connected-react-router": "6.6.0",
     "cors": "^2.8.5",
+    "d3": "^5.15.1",
     "date-fns": "^2.11.1",
     "express": "^4.17.1",
     "firebase": "^7.6.2",
