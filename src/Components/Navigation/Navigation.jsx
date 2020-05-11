@@ -112,7 +112,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> {" Emergency Fund Candidates "} </h2>
+        <h2> {" Seniors Response Fund Candidates "} </h2>
         <hr />
         <NavButton
           id="all_applications"
