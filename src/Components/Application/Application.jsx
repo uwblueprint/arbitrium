@@ -4,9 +4,7 @@ import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
-import Files from "../Files/Files";
 import Rating from "../Rating/Rating";
-import Spinner from 'react-spinner-material';
 
 //column categories
 import {
@@ -17,28 +15,26 @@ import {
 } from "./applicationDataHelpers";
 import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 
-
 import { connect } from "react-redux";
-import Rubric from "../Rubric/Rubric";
-import { NEW_REVIEW } from "../../Constants/ActionTypes";
+import { newReview } from "../../Actions";
 const GET = require("../../requests/get");
 const UPDATE = require("../../requests/update");
 
-function Application({ applications, dispatch, history, match, user }) {
+function Application({ applications, newReview, history, match, user }) {
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
   const isRated = useRef(false);
 
   //Returns a review from DB if exists, otherwise null
   useEffect(() => {
-    GET.getReviewAPI(user, appId).then(res => {
-      const reviewExists = res != null && res.length > 0;
+    GET.getReviewAPI(user, appId).then((res) => {
+      const reviewExists = res != null;
       if (reviewExists) {
-        isRated.current = res[0].rating > -1;
+        isRated.current = res.rating > -1;
       }
       dispatchReviewUpdate({
         type: LOAD_REVIEW,
-        review: reviewExists ? res[0] : createReview(user, appId)
+        review: reviewExists ? res : createReview(user, appId)
       });
     });
   }, [appId, user]);
@@ -48,17 +44,16 @@ function Application({ applications, dispatch, history, match, user }) {
     if (appId == null || user == null || review == null) {
       return;
     }
-    UPDATE.updateReviewAPI(review).then(res => {
+    UPDATE.updateReviewAPI(review).then((res) => {
       if (!isRated.current && review.rating > -1) {
         isRated.current = true;
-        dispatch({ type: NEW_REVIEW });
+        newReview();
       }
       if (res.ok !== 1) {
         alert("Error in saving your review!");
       }
     });
-  }, [appId, dispatch, review, user]);
-
+  }, [appId, newReview, review, user]);
 
   const [application, appIndex] = useMemo(() => {
     return getApplicationDetails(applications, appId);
@@ -93,7 +88,6 @@ function Application({ applications, dispatch, history, match, user }) {
         <button>1. Letter of Interest</button>
         <button disabled>2. Full Application</button>
       </FlowSelector>
-      <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
       <Wrapper>
         <h1>
           <Button
@@ -105,13 +99,24 @@ function Application({ applications, dispatch, history, match, user }) {
           <br />
           {name}
         </h1>
-        <Rubric />
+        {/*}<Rubric />*/}
         <hr />
         {applications.length > 0 && application != null ? (
           <div className="application-information">
             <Categories categoryData={appData.categoryData} />
             <hr />
-            <Files fileData={appData.fileData} />
+            <span>
+              <a
+                className="name"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://drive.google.com/file/d/1GT2l4PLYnavReVWjYU3cXzdQmCTg_tXN/view?usp=sharing"
+              >
+                {" "}
+                {"Link to Decision Making Matrix"}
+              </a>
+            </span>
+            {/*}<Files fileData={appData.fileData} />*/}
             <hr />
             <DecisionCanvas
               categoryData={appData.longAnswers}
@@ -166,13 +171,13 @@ function getApplicationDetails(appList, appId) {
   return [null, -1];
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   applications: state.applications
 });
 
-const mapDispatchToProps = dispatch => ({
-  dispatch
-});
+const mapDispatchToProps = {
+  newReview
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Application);
 

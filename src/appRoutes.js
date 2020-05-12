@@ -5,7 +5,6 @@ import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import Admin from "./Components/Admin/Admin";
 
-
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
 component: Home,    =>The component to be loaded at the path specified
@@ -37,20 +36,20 @@ const routes = [
     path: "/admin/allcandidates",
     component: AllCandidates,
     title: "Admin view to view all candidates",
-    groups: ["admin"]
+    groups: ["Admin"]
   },
   {
     path: "/admin/user-management",
     component: UserManagement,
     title: "Admin view to view all users",
-    groups: ["admin"]
+    groups: ["Admin"]
   },
   {
     path: "/admin",
     component: Admin,
     title: "Admin view to view all users",
-    groups: ["admin"]
+    groups: ["Admin"]
   }
-]
+];
 
 export default routes;

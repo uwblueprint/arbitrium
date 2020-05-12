@@ -2,27 +2,37 @@ import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import { AuthContext } from "./Auth";
 import Navigation from "../Components/Navigation/Navigation";
-import Header2 from "../Components/Header/Header2";
+import LoadingOverlay from "../Components/Common/LoadingOverlay";
 
-const PrivateRoute = ({ component: RouteComponent, ...rest }) => {
-  const { currentUser } = useContext(AuthContext);
-  return currentUser!==false ? (currentUser!==null ? (
+function PrivateRoute({ component: RouteComponent, route, ...rest }) {
+  const { isLoading, currentUser: user, appUser } = useContext(AuthContext);
+
+  // the user only has access if they are logged in and are in the proper user group
+  const access =
+    user &&
+    (route.groups.length === 0 ||
+      (user.appUser && route.groups.includes(appUser.role)));
+
+  return isLoading ? (
+    <LoadingOverlay
+      spinnerProps={{
+        radius: 220,
+        color: "#333",
+        stroke: 2,
+        visible: true
+      }}
+    />
+  ) : access ? (
     <>
       <Navigation />
-      <Header2 />
       <Route
         {...rest}
-        render={routeProps => (
-          <RouteComponent {...routeProps} user={currentUser} />
-        )}
+        render={(routeProps) => <RouteComponent {...routeProps} user={user} />}
       />
     </>
   ) : (
-    <>
-      <h1> Please Login! </h1>
-      <Redirect to="/login" />
-    </>
-  )) : null
-};
+    <Redirect to={user ? "/" : "/login"} />
+  );
+}
 
 export default PrivateRoute;

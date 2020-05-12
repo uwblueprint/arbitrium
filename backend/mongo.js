@@ -1,7 +1,7 @@
 const MONGO_CONFIGS = require("./mongo.config");
 const mongoose = require("mongoose");
 
-console.log("Attempting to connect to Mongo");
+console.log("Attempting to connect to Mongo...");
 
 USERNAME = MONGO_CONFIGS.module.mongoUsername;
 PASS = MONGO_CONFIGS.module.mongoPassword;
@@ -19,7 +19,7 @@ var mongo = mongoose.connect(
       console.log("Mongo DB connection failed");
       console.log(err);
     } else {
-      console.log("Mongo DB connection successful.");
+      console.log("Mongo DB connection successful");
     }
   }
 );

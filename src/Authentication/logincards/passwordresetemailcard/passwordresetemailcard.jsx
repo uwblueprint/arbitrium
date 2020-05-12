@@ -11,7 +11,7 @@ import styled from "styled-components";
 
 const CommentForm = styled.form`
   .textFields {
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     width: 100%;
   }
   button {
@@ -23,14 +23,16 @@ const CommentForm = styled.form`
   }
   .sendResetLinkButton {
     position: absolute;
+    margin-top: 35px;
     width: 153px;
     height: 36px;
     right: 0px;
     top: 270px;
-    margin-left: 10px;
+    margin-left: 0px;
   }
   .backToLogin {
     position: absolute;
+    margin-top: 25px;
     width: 121px;
     height: 36px;
     left: 8px;

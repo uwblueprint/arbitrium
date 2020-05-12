@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
 
-import SectionList from "../../mock/decisionSections.json";
+import SectionList from "../../mock/decisionSections2.json";
 import NavButton from "./NavButton";
 
 import Drawer from "@material-ui/core/Drawer";
@@ -95,7 +95,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
   const getNextValidApplication = () =>
     applications.length > 0 ? applications[0]._id : "/";
 
-  const scrollToSection = title => {
+  const scrollToSection = (title) => {
     window.requestAnimationFrame(() => {
       document
         .getElementById("canvas_" + title)
@@ -112,7 +112,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> {" SVP Investee Grant Candidates "} </h2>
+        <h2> {" Seniors Response Fund Candidates "} </h2>
         <hr />
         <NavButton
           id="all_applications"
@@ -131,7 +131,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
           Application Submission
         </NavButton>
         {isApplicationReview &&
-          SectionList.map(section => (
+          SectionList.map((section) => (
             <Button
               key={section.title}
               className="nested"
@@ -154,9 +154,11 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
 }
 
 export default connect(
-  state => ({
+  (state) => ({
     applications: state.applications,
-    showStackedRankings: state.reviewCount >= state.applications.length,
+    showStackedRankings:
+      state.reviewCount != null &&
+      state.reviewCount >= state.applications.length,
     pathname: state.router.location.pathname
   }),
   { push }

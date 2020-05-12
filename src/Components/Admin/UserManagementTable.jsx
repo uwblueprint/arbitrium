@@ -77,8 +77,11 @@ const columns = [
   { title: "Role", field: "role" },
   {
     title: "Program Access",
-    field: "programAccess",
-    render: rowData => {
+    field: "programs",
+    render: (rowData) => {
+      if (rowData.programAccess.length === 0) {
+        return "None";
+      }
       if (rowData.programAccess.length > 1) {
         return (
           <div>
@@ -114,12 +117,12 @@ function UserManagementTable(props) {
       <MaterialTable
         icons={tableIcons}
         components={{
-          Container: props => <Container {...props} elevation={0} />
+          Container: (props) => <Container {...props} elevation={0} />
         }}
         columns={columns}
         {...props}
         options={{
-          pageSize: Math.min(20, props.data.length),
+          pageSize: Math.min(10, props.data.length),
           rowStyle: rowStyle,
           search: true,
           showTitle: false

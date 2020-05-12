@@ -10,9 +10,6 @@ import LoginFieldsCard from "./logincards/loginfieldscard/loginfieldscard.jsx";
 import PasswordResetEmailCard from "./logincards/passwordresetemailcard/passwordresetemailcard.jsx";
 import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/passwordresetresponsecard.jsx";
 
-import { getUserAPI } from "../requests/get";
-import { updateUserAPI } from "../requests/update";
-
 const StyledCard = styled(Card)`
   width: 350px;
 
@@ -31,7 +28,7 @@ const StyledCard = styled(Card)`
     font-size: 3rem;
   }
   .MuiCardHeader-root {
-    padding-bottom: 5px;
+    padding-bottom: 50px;
   }
   .MuiCardHeader-subheader {
     color: black;
@@ -66,19 +63,22 @@ const Login = ({ history }) => {
     }
   };
 
-  if (currentUser !== null && currentUser !== false) {
+  if (currentUser != null) {
+    console.log("Redirecting");
     return <Redirect to={"/applications"} />;
-  } else if (currentUser !== false) {
+  } else {
     return (
-      <StyledCard>
-        <CardHeader
-          title="arbitrium"
-          subheader={loginFlowState === "loginFields" ? "Sign-In" : null}
-        />
-        <CardContent>{getCardContent()}</CardContent>
-      </StyledCard>
+      <div>
+        <StyledCard>
+          <CardHeader
+            title="arbitrium"
+            subheader={loginFlowState === "loginFields" ? "Sign-In" : null}
+          />
+          <CardContent>{getCardContent()}</CardContent>
+        </StyledCard>
+      </div>
     );
-  } else return null;
+  }
 };
 
 export default withRouter(Login);

@@ -30,7 +30,7 @@ export function reviewReducer(review, action) {
   if (action.type === LOAD_REVIEW) {
     return action.review;
   }
-  return produce(review, draftReview => {
+  return produce(review, (draftReview) => {
     switch (action.type) {
       case INSERT_COMMENT:
         const comment = {
@@ -51,7 +51,6 @@ export function reviewReducer(review, action) {
         }
         break;
       case UPDATE_RATING:
-        console.log(review);
         if (action.id === MASTER_ID) {
           draftReview.rating = action.rating;
           break;
