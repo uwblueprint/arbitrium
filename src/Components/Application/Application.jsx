@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
-import Spinner from "react-spinner-material";
 import Rating from "../Rating/Rating";
 
 //column categories
