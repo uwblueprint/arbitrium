@@ -7,9 +7,11 @@ import LoadingOverlay from "../Components/Common/LoadingOverlay";
 function PrivateRoute({ component: RouteComponent, route, ...rest }) {
   const { isLoading, currentUser: user, appUser } = useContext(AuthContext);
 
+  // the user only has access if they are logged in and are in the proper user group
   const access =
-    route.groups.length === 0 ||
-    (user && user.appUser && route.groups.includes(appUser.role));
+    user &&
+    (route.groups.length === 0 ||
+      (user.appUser && route.groups.includes(appUser.role)));
 
   return (
     <>
