@@ -10,9 +10,6 @@ import LoginFieldsCard from "./logincards/loginfieldscard/loginfieldscard.jsx";
 import PasswordResetEmailCard from "./logincards/passwordresetemailcard/passwordresetemailcard.jsx";
 import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/passwordresetresponsecard.jsx";
 
-import { getUserAPI } from "../requests/get";
-import { updateUserAPI } from "../requests/update";
-
 const StyledCard = styled(Card)`
   width: 350px;
 
@@ -66,11 +63,10 @@ const Login = ({ history }) => {
     }
   };
 
-  if (currentUser !== null && currentUser !== false) {
-    console.log("Redirecting")
+  if (currentUser != null) {
+    console.log("Redirecting");
     return <Redirect to={"/applications"} />;
-  }
-  else if (currentUser !== false) {
+  } else {
     return (
       <div>
         <StyledCard>
@@ -82,7 +78,7 @@ const Login = ({ history }) => {
         </StyledCard>
       </div>
     );
-  } else return null;
+  }
 };
 
 export default withRouter(Login);

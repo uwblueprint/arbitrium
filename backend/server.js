@@ -133,7 +133,6 @@ app.listen(4000, () => {
   console.log("Server is listening on port:4000");
 });
 
-
 //------------------------------------------------------------------------------
 //Beginning of API endpoints
 //------------------------------------------------------------------------------
@@ -145,13 +144,13 @@ app.post("/api/authenticate/createaccount", cors(corsOptions), (req, res) => {
   firebase
     .auth()
     .createUserWithEmailAndPassword(req.body.email, req.body.password)
-    .then(user => {
+    .then((user) => {
       // There is a getIdToken() method on the user object which generates a JWT token
       // I think it makes since to send this to the frontend and then keep it in a cookie
       // But having some trouble accessing methods and fields on user right now
       res.json(user);
     })
-    .catch(error => {
+    .catch((error) => {
       var errorCode = error.code;
       var errorMessage = error.message;
       console.log(
@@ -208,9 +207,10 @@ app.put("/api/comments/:appId/overall", (req, res) => {});
 //Called when a user opens an app that they want to review.
 //ToDo: Is this pre-populated? Do we create if it doesn't exist?
 app.get("/api/reviews/:userId/:appId", cors(corsOptions), (req, res) => {
-  findReview(Number(req.params.userId), Number(req.params.appId)).then(review =>
-    res.json(review.data)
-  );
+  findReview(
+    Number(req.params.userId),
+    Number(req.params.appId)
+  ).then((review) => res.json(review.data));
 });
 
 // Request body: array of questionId and rating pairs, e.g. [ {"questionId": 1, "rating": 5}]
@@ -219,7 +219,7 @@ app.put(
   cors(corsOptions),
   (req, res) => {
     findReview(Number(req.params.userId), Number(req.params.appId)).then(
-      review => {
+      (review) => {
         db.collection("reviews")
           .doc(review.id)
           .update({
@@ -229,9 +229,9 @@ app.put(
             findReview(
               Number(req.params.userId),
               Number(req.params.appId)
-            ).then(review => res.json(review))
+            ).then((review) => res.json(review))
           )
-          .catch(err => res.send(err));
+          .catch((err) => res.send(err));
       }
     );
   }
@@ -255,14 +255,14 @@ app.put(
   cors(corsOptions),
   (req, res) => {
     findReview(Number(req.params.userId), Number(req.params.appId)).then(
-      review => {
+      (review) => {
         db.collection("reviews")
           .doc(review.id)
           .update({
             questionRatings: req.body
           })
           .then(() => res.send())
-          .catch(err => res.send(err));
+          .catch((err) => res.send(err));
         // TODO: consider sending back updated object
       }
     );
@@ -275,7 +275,7 @@ app.get("/api/questions", (req, res) => {
   var questions = [];
   col
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       querySnapshot.forEach(function(doc) {
         // doc.data() is never undefined for query doc snapshots
         //console.log(doc.id, " => ", doc.data());
@@ -283,5 +283,5 @@ app.get("/api/questions", (req, res) => {
       });
       res.json(questions);
     })
-    .catch(err => res.send(err));
+    .catch((err) => res.send(err));
 });

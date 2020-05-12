@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import classNames from "classnames";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
 import RankingCard from "./RankingCard";
@@ -10,6 +10,8 @@ const UPDATE = require("../../requests/update");
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
+
+const maxWidth = "100%";
 
 const useStyles = makeStyles({
   rankings: {
@@ -52,7 +54,7 @@ const useStyles = makeStyles({
     overflow: "visible",
     "& div": {
       position: "absolute",
-      maxWidth: 800,
+      maxWidth: maxWidth,
       left: 0,
       right: 0,
       bottom: 4,
@@ -64,7 +66,7 @@ const useStyles = makeStyles({
   },
   draggableCard: {
     marginBottom: 12,
-    maxWidth: 800,
+    maxWidth: maxWidth,
     minWidth: 300,
     textAlign: "center"
   },
@@ -99,28 +101,33 @@ function reorder(list, startIndex, endIndex) {
   return result;
 }
 
-function compare( a, b ) {
-  if ( a.rating < b.rating ){
+function compare(a, b) {
+  if (a.rating < b.rating) {
     return 1;
   }
-  if ( a.rating > b.rating ){
+  if (a.rating > b.rating) {
     return -1;
   }
   return 0;
 }
 
-
-function StackedRankings({ applications, user }) {
+function StackedRankings({ applications, reviewCount, user }) {
   const [rankings, setRankings] = useState([]);
+  const classes = useStyles();
+  const shouldTranslate = useRef(false);
+
+  const shouldRedirect =
+    reviewCount == null || reviewCount < applications.length;
 
   useEffect(() => {
+    if (shouldRedirect) return; // do not fetch data if going to redirect
     (async function() {
       if (user == null || applications.length === 0) return;
       try {
         let fetched = await GET.getAllStackingsAPI(user);
         if (fetched.length !== applications.length) {
           // Otherwise we need to initialize the user's rankings
-          const initApps = applications.map(app => ({ appId: app._id }));
+          const initApps = applications.map((app) => ({ appId: app._id }));
           await UPDATE.updateStackedAPI({
             userId: user.uid,
             rankings: initApps
@@ -128,12 +135,12 @@ function StackedRankings({ applications, user }) {
           fetched = await GET.getAllStackingsAPI(user);
           fetched.sort(compare);
         }
-        let reviews = await GET.getUserReviewsAPI(user);
-        reviews.forEach(review => {
+        const reviews = await GET.getUserReviewsAPI(user);
+        reviews.forEach((review) => {
           let averageRating = 0;
           let numRatings = 0;
           if (review && review.questionList) {
-            review.questionList.forEach(item => {
+            review.questionList.forEach((item) => {
               if (item.rating > 0) {
                 averageRating += item.rating;
                 numRatings += 1;
@@ -144,24 +151,17 @@ function StackedRankings({ applications, user }) {
             averageRating = averageRating / numRatings;
           }
           fetched
-            .filter(app => app._id === review.applicationId)
-            .forEach(item => {
+            .filter((app) => app._id === review.applicationId)
+            .forEach((item) => {
               item.suggested = averageRating;
             });
         });
-        //fetched.sort(compare);
-        console.log(reviews);
-        console.log(fetched);
         setRankings(fetched);
       } catch (e) {
         console.error(e);
       }
     })();
-  }, [applications, user]);
-
-  const classes = useStyles();
-  // TODO: replace this with list from store or props when connecting to DB :)
-  const shouldTranslate = useRef(false);
+  }, [shouldRedirect, applications, user]);
 
   const numOrgs = rankings.length;
   const column = useMemo(() => {
@@ -179,9 +179,13 @@ function StackedRankings({ applications, user }) {
       );
     }
     return <NumbersColumn>{numbers}</NumbersColumn>;
-  }, [classes.cutoff, numOrgs]);
+  }, [numOrgs]);
 
-  const onDragEnd = result => {
+  if (shouldRedirect) {
+    return <Redirect to="/" />;
+  }
+
+  const onDragEnd = (result) => {
     // dropped outside the list
     shouldTranslate.current = false;
     if (!result.destination) {
@@ -196,7 +200,7 @@ function StackedRankings({ applications, user }) {
     try {
       UPDATE.updateStackedAPI({
         userId: user.uid,
-        rankings: reorderedList.map(app => ({ appId: app._id }))
+        rankings: reorderedList.map((app) => ({ appId: app._id }))
       });
       setRankings(reorderedList);
     } catch (e) {
@@ -207,7 +211,7 @@ function StackedRankings({ applications, user }) {
     }
   };
 
-  const onBeforeDragStart = provided => {
+  const onBeforeDragStart = (provided) => {
     if (provided.source.index <= 4) {
       shouldTranslate.current = true;
     }
@@ -217,11 +221,10 @@ function StackedRankings({ applications, user }) {
     <div className={classes.root}>
       <h1>Stacked Rankings</h1>
       <p>
-        Stacked Rankings are based on your overall ratings. You can move applicants around in your order of preference.
+        Stacked Rankings are based on your overall ratings. You can move
+        applicants around in your order of preference.
       </p>
-      <p>
-        Your rankings will be saved automatically.
-      </p>
+      <p>Your rankings will be saved automatically.</p>
       <div className={classes.rankings}>
         {column}
         <DragDropContext
@@ -229,7 +232,7 @@ function StackedRankings({ applications, user }) {
           onDragEnd={onDragEnd}
         >
           <Droppable droppableId="droppable">
-            {provided => (
+            {(provided) => (
               <div
                 className={classes.droppableSection}
                 {...provided.droppableProps}
@@ -238,7 +241,7 @@ function StackedRankings({ applications, user }) {
                 {rankings.map((item, index) => (
                   <React.Fragment key={item._id}>
                     <Draggable draggableId={item._id} index={index}>
-                      {provided => (
+                      {(provided) => (
                         <div
                           className={classes.draggableCard}
                           ref={provided.innerRef}
@@ -277,9 +280,10 @@ function StackedRankings({ applications, user }) {
   );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    applications: state.applications
+    applications: state.applications,
+    reviewCount: state.reviewCount
   };
 };
 

@@ -95,7 +95,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
   const getNextValidApplication = () =>
     applications.length > 0 ? applications[0]._id : "/";
 
-  const scrollToSection = title => {
+  const scrollToSection = (title) => {
     window.requestAnimationFrame(() => {
       document
         .getElementById("canvas_" + title)
@@ -131,7 +131,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
           Application Submission
         </NavButton>
         {isApplicationReview &&
-          SectionList.map(section => (
+          SectionList.map((section) => (
             <Button
               key={section.title}
               className="nested"
@@ -154,9 +154,11 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
 }
 
 export default connect(
-  state => ({
+  (state) => ({
     applications: state.applications,
-    showStackedRankings: state.reviewCount >= state.applications.length,
+    showStackedRankings:
+      state.reviewCount != null &&
+      state.reviewCount >= state.applications.length,
     pathname: state.router.location.pathname
   }),
   { push }
