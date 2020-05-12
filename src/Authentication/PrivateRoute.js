@@ -13,29 +13,25 @@ function PrivateRoute({ component: RouteComponent, route, ...rest }) {
     (route.groups.length === 0 ||
       (user.appUser && route.groups.includes(appUser.role)));
 
-  return (
+  return isLoading ? (
+    <LoadingOverlay
+      spinnerProps={{
+        radius: 220,
+        color: "#333",
+        stroke: 2,
+        visible: true
+      }}
+    />
+  ) : access ? (
     <>
       <Navigation />
-      {isLoading ? (
-        <LoadingOverlay
-          spinnerProps={{
-            radius: 220,
-            color: "#333",
-            stroke: 2,
-            visible: true
-          }}
-        />
-      ) : access ? (
-        <Route
-          {...rest}
-          render={(routeProps) => (
-            <RouteComponent {...routeProps} user={user} />
-          )}
-        />
-      ) : (
-        <Redirect to={user ? "/" : "/login"} />
-      )}
+      <Route
+        {...rest}
+        render={(routeProps) => <RouteComponent {...routeProps} user={user} />}
+      />
     </>
+  ) : (
+    <Redirect to={user ? "/" : "/login"} />
   );
 }
 
