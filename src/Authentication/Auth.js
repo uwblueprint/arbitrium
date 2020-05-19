@@ -73,7 +73,7 @@ function AuthProvider({ initialAppLoad, children }) {
       value={{
         isLoading: authState.state === AUTH_STATES.LOADING,
         currentUser: authState.user ? authState.user.firebaseUser : null,
-        appUser: authState.user ? authState.appUser : null
+        appUser: authState.user ? authState.user.appUser : null
       }}
     >
       {children}

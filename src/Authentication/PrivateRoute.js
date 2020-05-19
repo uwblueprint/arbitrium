@@ -11,7 +11,7 @@ function PrivateRoute({ component: RouteComponent, route, ...rest }) {
   const access =
     user &&
     (route.groups.length === 0 ||
-      (user.appUser && route.groups.includes(appUser.role)));
+      (appUser && route.groups.includes(appUser.role)));
 
   return isLoading ? (
     <LoadingOverlay
