@@ -1,5 +1,5 @@
 {
-  "plugins": ["react", "prettier"],
+  "plugins": ["react", "react-hooks", "prettier"],
   "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 6,
@@ -22,7 +22,15 @@
     "prettier/prettier": "error",
     "react/prefer-stateless-function": "warn",
     "react/prop-types": "off",
-    "no-case-declarations": "off"
+    "no-case-declarations": "off",
+    "eqeqeq": ["error", "smart"],
+    "no-unused-vars": ["warn"],
+    "array-callback-return": ["error"],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-useless-rename": "warn",
+    "prefer-const": "warn",
+    "no-var": "warn"
   },
   "settings": {
     "react": {

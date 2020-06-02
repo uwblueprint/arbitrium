@@ -14,7 +14,7 @@ const MONGO_CONFIGS = require("./mongo.config");
 //------------------------------------------------------------------------------
 //FIREBASE INIT
 //------------------------------------------------------------------------------
-console.log("Attempting to connect to Firebase");
+console.log("Attempting to connect to Firebase...");
 // Doesn't work with FIREBASE_CONFIGS.projectId for some reason
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -36,6 +36,37 @@ if (db != null && realtime != null) {
 }
 
 //------------------------------------------------------------------------------
+//FIREBASE INIT Admin
+//------------------------------------------------------------------------------
+
+/*var admin = require('firebase-admin');
+var serviceAccount = require('./firebaseAdmin.json');
+
+let firebaseAdmin = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: process.env.REACT_APP_FIREBASE_ADMIN_DATABASE_URL
+})
+
+function listAllUsers(nextPageToken) {
+  // List batch of users, 1000 at a time.
+  firebaseAdmin.auth().listUsers(1000, nextPageToken)
+    .then(function(listUsersResult) {
+      listUsersResult.users.forEach(function(userRecord) {
+        console.log('user', userRecord.toJSON());
+      });
+      if (listUsersResult.pageToken) {
+        // List next batch of users.
+        listAllUsers(listUsersResult.pageToken);
+      }
+    })
+    .catch(function(error) {
+      console.log('Error listing users:', error);
+    });
+}
+
+listAllUsers()
+*/
+//------------------------------------------------------------------------------
 //CORS
 //------------------------------------------------------------------------------
 
@@ -45,6 +76,7 @@ var whitelist = [
   "https://decision-io.firebaseapp.com",
   "https://decision-io.web.app",
   "https://qa-blueprint.firebaseapp.com",
+  "https://emergencyfund.firebaseapp.com",
   "https://qa.gregmaxin.com"
 ];
 //Include "cors(corsOptions)" to protect the endpoint
@@ -71,6 +103,7 @@ const applicationRoutes = require("./routes/applications");
 const ratingsRoutes = require("./routes/ratings");
 const stackedRoutes = require("./routes/stackedRankings");
 const usersRoutes = require("./routes/users");
+const adminRoutes = require("./routes/admin");
 
 // allows us to access request body in a post or put
 app.use(cors(corsOptions));
@@ -93,72 +126,13 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/ratings", ratingsRoutes);
 app.use("/api/stackings", stackedRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/admin", adminRoutes);
 const mongo = require("./mongo.js");
 
 app.listen(4000, () => {
   console.log("Server is listening on port:4000");
 });
 
-//------------------------------------------------------------------------------
-//FIREBASE ENDPINTS
-//------------------------------------------------------------------------------
-
-//this also works
-/*
-app.get('/api/applications', cors(corsOptions), function(req, res){
-	//get all unique clinicians
-	//treats entire object as a dictionary key
-	mongo.applications.find()
-	.then(function(found){
-		res.json(found);
-	})
-	.catch(function(err){
-		res.send(err);
-	})
-});
-*/
-
-function findReview(userId, appId) {
-  const col = db
-    .collection("reviews")
-    .where("userId", "==", userId)
-    .where("appId", "==", appId);
-
-  return new Promise((resolve, reject) => {
-    let review = {};
-    col
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          review = {
-            id: doc.id,
-            data: doc.data()
-          };
-        });
-        resolve(review);
-      })
-      .catch(err => reject(err));
-  });
-}
-
-function findApplicantName(appId) {
-  const col = db.collection("applications").where("appId", "==", appId);
-
-  return new Promise((resolve, reject) => {
-    let applicant;
-    col
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          applicant = doc.data().applicant;
-        });
-        resolve(applicant);
-      })
-      .catch(err => {
-        reject(err);
-      });
-  });
-}
 //------------------------------------------------------------------------------
 //Beginning of API endpoints
 //------------------------------------------------------------------------------
@@ -170,13 +144,13 @@ app.post("/api/authenticate/createaccount", cors(corsOptions), (req, res) => {
   firebase
     .auth()
     .createUserWithEmailAndPassword(req.body.email, req.body.password)
-    .then(user => {
+    .then((user) => {
       // There is a getIdToken() method on the user object which generates a JWT token
       // I think it makes since to send this to the frontend and then keep it in a cookie
       // But having some trouble accessing methods and fields on user right now
       res.json(user);
     })
-    .catch(error => {
+    .catch((error) => {
       var errorCode = error.code;
       var errorMessage = error.message;
       console.log(
@@ -233,9 +207,10 @@ app.put("/api/comments/:appId/overall", (req, res) => {});
 //Called when a user opens an app that they want to review.
 //ToDo: Is this pre-populated? Do we create if it doesn't exist?
 app.get("/api/reviews/:userId/:appId", cors(corsOptions), (req, res) => {
-  findReview(Number(req.params.userId), Number(req.params.appId)).then(review =>
-    res.json(review.data)
-  );
+  findReview(
+    Number(req.params.userId),
+    Number(req.params.appId)
+  ).then((review) => res.json(review.data));
 });
 
 // Request body: array of questionId and rating pairs, e.g. [ {"questionId": 1, "rating": 5}]
@@ -244,7 +219,7 @@ app.put(
   cors(corsOptions),
   (req, res) => {
     findReview(Number(req.params.userId), Number(req.params.appId)).then(
-      review => {
+      (review) => {
         db.collection("reviews")
           .doc(review.id)
           .update({
@@ -254,9 +229,9 @@ app.put(
             findReview(
               Number(req.params.userId),
               Number(req.params.appId)
-            ).then(review => res.json(review))
+            ).then((review) => res.json(review))
           )
-          .catch(err => res.send(err));
+          .catch((err) => res.send(err));
       }
     );
   }
@@ -280,14 +255,14 @@ app.put(
   cors(corsOptions),
   (req, res) => {
     findReview(Number(req.params.userId), Number(req.params.appId)).then(
-      review => {
+      (review) => {
         db.collection("reviews")
           .doc(review.id)
           .update({
             questionRatings: req.body
           })
           .then(() => res.send())
-          .catch(err => res.send(err));
+          .catch((err) => res.send(err));
         // TODO: consider sending back updated object
       }
     );
@@ -300,7 +275,7 @@ app.get("/api/questions", (req, res) => {
   var questions = [];
   col
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       querySnapshot.forEach(function(doc) {
         // doc.data() is never undefined for query doc snapshots
         //console.log(doc.id, " => ", doc.data());
@@ -308,5 +283,5 @@ app.get("/api/questions", (req, res) => {
       });
       res.json(questions);
     })
-    .catch(err => res.send(err));
+    .catch((err) => res.send(err));
 });

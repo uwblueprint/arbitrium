@@ -50,7 +50,7 @@ const CommentForm = styled.form`
   }
 `;
 
-const LoginFieldsCard = props => {
+const LoginFieldsCard = (props) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -63,7 +63,7 @@ const LoginFieldsCard = props => {
     "Wrong password. Try again or click Forgot password";
 
   const handleLogin = useCallback(
-    async event => {
+    async (event) => {
       event.preventDefault();
       const { email, password } = event.target.elements;
       try {
@@ -72,6 +72,7 @@ const LoginFieldsCard = props => {
           .signInWithEmailAndPassword(email.value, password.value);
         props.history.push("/applications");
       } catch (error) {
+        alert("Wrong user name or password!");
         console.log(error);
       }
     },
@@ -82,7 +83,7 @@ const LoginFieldsCard = props => {
     return values.email.length > 0 && values.password.length > 0;
   };
 
-  const handleChange = prop => event => {
+  const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
 

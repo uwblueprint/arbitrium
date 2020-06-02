@@ -2,9 +2,8 @@ import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 import {
   NEW_REVIEW,
-  LOAD_APPLICATIONS,
-  UPDATE_REVIEW,
-  INITIAL_APP_LOAD
+  INITIAL_APP_LOAD,
+  AUTHENTICATE_USER
 } from "../Constants/ActionTypes";
 
 //import the admin reducer
@@ -17,20 +16,26 @@ function applications(state = [], action) {
   switch (action.type) {
     case INITIAL_APP_LOAD:
       return action.applications || [];
-    case LOAD_APPLICATIONS:
-      return action.payload || [];
     default:
       return state;
   }
 }
 
-function reviewCount(state = 0, action) {
+function user(state = null, action) {
+  switch (action.type) {
+    case AUTHENTICATE_USER:
+      return action.user;
+    default:
+      return state;
+  }
+}
+
+function reviewCount(state = null, action) {
   switch (action.type) {
     case INITIAL_APP_LOAD:
       return action.reviewCount;
     case NEW_REVIEW:
       return state + 1;
-    case UPDATE_REVIEW:
     default:
       return state;
   }
@@ -41,7 +46,8 @@ function createRootReducer(history) {
     reviewCount,
     router: connectRouter(history),
     applications,
-    adminReducer
+    adminReducer,
+    user
   });
 }
 

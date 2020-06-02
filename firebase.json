@@ -28,6 +28,28 @@
               "destination": "/index.html"
            }
       ]
+    },
+    {
+      "target": "production2" ,
+      "public": "build",
+      "rewrites": [
+           {
+              "source": "**",
+              "function": "api",
+              "destination": "/index.html"
+           }
+      ]
+    },
+    {
+      "target": "seniors" ,
+      "public": "build",
+      "rewrites": [
+           {
+              "source": "**",
+              "function": "api",
+              "destination": "/index.html"
+           }
+      ]
     }
   ]
 }

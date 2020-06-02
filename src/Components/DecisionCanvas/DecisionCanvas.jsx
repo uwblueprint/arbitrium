@@ -48,7 +48,7 @@ const CanvasHeader = styled.div`
 `;
 
 function expandArrayReducer(expandedArr, { type, index }) {
-  return produce(expandedArr, draftExpanded => {
+  return produce(expandedArr, (draftExpanded) => {
     switch (type) {
       case "TOGGLE":
         draftExpanded[index] = !expandedArr[index];

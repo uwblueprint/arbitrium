@@ -37,13 +37,13 @@ const routes = [
     path: "/admin/allcandidates",
     component: AllCandidates,
     title: "Admin view to view all candidates",
-    groups: ["admin"]
+    groups: ["Admin"]
   },
   {
     path: "/admin/user-management",
     component: UserManagement,
     title: "Admin view to view all users",
-    groups: ["admin"]
+    groups: ["Admin"]
   },
   {
     path: "/admin",

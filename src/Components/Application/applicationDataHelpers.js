@@ -4,12 +4,12 @@ import {
   fileCategories,
   adminCategories,
   longAnswerCategories
-} from "./column_categories";
+} from "./column_categories2";
 
 export function createReview(user, appId) {
   let review = {};
-  let comments = [];
-  let questionList = [];
+  const comments = [];
+  const questionList = [];
 
   // THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE
   questionList.push({
@@ -51,10 +51,11 @@ export function createReview(user, appId) {
 export function transpileCategoryData(application) {
   //todo when category data is made available, currently leverages mock data
   return {
-    contact: Object.keys(adminCategories.contact).map(adminCategory => ({
+    contact: Object.keys(adminCategories.Admin).map((adminCategory) => ({
       title: adminCategory,
       value: application[adminCategory]
-    })),
+    }))
+    /*
     socialMedia: Object.keys(adminCategories.socialMedia).map(
       adminCategory => ({
         title: adminCategory,
@@ -73,17 +74,18 @@ export function transpileCategoryData(application) {
       title: adminCategory,
       value: application[adminCategory]
     }))
+    */
   };
 }
 
 export function transpileFileData(application) {
-  let files = Object.keys(fileCategories).map((fileCategory, index) => ({
+  const files = Object.keys(fileCategories).map((fileCategory, index) => ({
     name: fileCategory,
     link: application[fileCategory],
     size: index * 500
   }));
-  let fileLinks = [];
-  files.forEach(file => {
+  const fileLinks = [];
+  files.forEach((file) => {
     if (file.link == null) return;
     file.link.split(",").forEach((link, index) => {
       let append = "";
@@ -101,43 +103,45 @@ export function transpileFileData(application) {
 }
 
 export function transpileLongAnswerData(application) {
-  let answers = Object.keys(longAnswerCategories).map(longAnswerCategory => ({
-    id: longAnswerCategories[longAnswerCategory],
-    answers: {
-      question: longAnswerCategory,
-      response: application[longAnswerCategory]
-    },
-    title: "Undetermined" + longAnswerCategories[longAnswerCategory]
-  }));
+  const answers = Object.keys(longAnswerCategories).map(
+    (longAnswerCategory) => ({
+      id: longAnswerCategories[longAnswerCategory],
+      answers: {
+        question: longAnswerCategory,
+        response: application[longAnswerCategory]
+      },
+      title: "Undetermined" + longAnswerCategories[longAnswerCategory]
+    })
+  );
 
-  let data = [];
+  const data = [];
   data.push({
     id: 1,
     answers: [],
-    title: "Mission and Vision"
+    title: "Question 1"
   });
   data.push({
     id: 2,
     answers: [],
-    title: "Leadership"
+    title: "Question 2"
   });
   data.push({
     id: 3,
     answers: [],
-    title: "Projects"
+    title: "Question 3"
   });
   data.push({
     id: 4,
     answers: [],
-    title: "Plan"
+    title: "Question 4"
   });
   data.push({
     id: 5,
     answers: [],
-    title: "Opportunities and Challenges"
+    title: "Question 5"
   });
-  answers.forEach(answer => {
-    data.forEach(item => {
+  answers.forEach((answer) => {
+    data.forEach((item) => {
       if (answer.id === item.id) {
         item.answers.push({
           question: answer.answers.question,

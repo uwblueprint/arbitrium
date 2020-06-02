@@ -23,8 +23,8 @@ mongoimport \
   --username ${1} \
   --password ${2} \
   --authenticationDatabase admin \
-  --db Production \
+  --db EmergencyFund \
   --collection Applications \
   --type csv \
-  --file ./SVPLIO.csv \
+  --file ./kimbridge.csv \
   --headerline \

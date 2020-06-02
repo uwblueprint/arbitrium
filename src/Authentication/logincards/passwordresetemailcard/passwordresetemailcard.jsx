@@ -11,7 +11,7 @@ import styled from "styled-components";
 
 const CommentForm = styled.form`
   .textFields {
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     width: 100%;
   }
   button {
@@ -23,14 +23,16 @@ const CommentForm = styled.form`
   }
   .sendResetLinkButton {
     position: absolute;
+    margin-top: 35px;
     width: 153px;
     height: 36px;
     right: 0px;
     top: 270px;
-    margin-left: 10px;
+    margin-left: 0px;
   }
   .backToLogin {
     position: absolute;
+    margin-top: 25px;
     width: 121px;
     height: 36px;
     left: 8px;
@@ -68,7 +70,7 @@ const CommentForm = styled.form`
   }
 `;
 
-const PasswordResetEmailCard = props => {
+const PasswordResetEmailCard = (props) => {
   const [values, setValues] = useState({
     email: "",
     errorEmail: false,
@@ -91,7 +93,7 @@ const PasswordResetEmailCard = props => {
       });
   };
 
-  const handleForgotPasswordSubmitEvent = event => {
+  const handleForgotPasswordSubmitEvent = (event) => {
     //execute password reset
     event.preventDefault();
     setValues({ ...values, resetCallInProgress: true });
@@ -103,7 +105,7 @@ const PasswordResetEmailCard = props => {
     return values.email.length > 0;
   };
 
-  const handleChange = prop => event => {
+  const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
 

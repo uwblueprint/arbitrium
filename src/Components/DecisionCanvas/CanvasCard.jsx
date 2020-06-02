@@ -57,7 +57,7 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: index => ({
+  root: (index) => ({
     fontSize: 14,
     borderRadius: 0,
     borderTop: `4px solid ${ratingColour[index]}`,
@@ -135,7 +135,7 @@ function CanvasCard({
             <Divider />
             <Footer>
               <span className="rating-label">{`Your Rating: ${
-                rating === 0 ? "Not Rated" : { rating } + " / 5"
+                rating === 0 ? "Not Rated" : rating + " / 5"
               }`}</span>
               <span>
                 <StyledCommentIcon /> {notes.length} comment(s)
