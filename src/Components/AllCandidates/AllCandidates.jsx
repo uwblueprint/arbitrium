@@ -44,7 +44,6 @@ export default class AllCandidates extends Component {
   componentDidMount() {
     GET.getUserReviewsAPI(this.props.user).then(res => {
       this.setState({ reviews: res });
-      console.log(res);
     });
   }
 
@@ -54,8 +53,6 @@ export default class AllCandidates extends Component {
   }
 
   render() {
-    //Pre-calculate the applications array before rendering
-
     return (
       <Wrapper className="application-list">
         <Paper>
