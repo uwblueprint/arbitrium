@@ -4,7 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import CommitteeReview from "./CommitteeReview.jsx"
+import Checkbox from '@material-ui/core/Checkbox';
 
 const GET = require("../../requests/get");
 
@@ -32,10 +32,9 @@ const Wrapper = styled.div`
   }
 `;
 
-export default class AllCandidates extends Component {
+export default class CommitteeReview extends Component {
   constructor(props) {
-    super(props); 
-    this.routeChange = this.routeChange.bind(this);
+    super(props);
     this.state = {
       reviews: []
     };
@@ -48,34 +47,24 @@ export default class AllCandidates extends Component {
     });
   }
 
-  routeChange() {
-    let path = `/admin/committeereview`; 
-    this.props.history.push(path);
-  }
-
   render() {
-    //Pre-calculate the applications array before rendering
-
     return (
       <Wrapper className="application-list">
         <Paper>
-          <h1>All Candidates</h1>
+          <h1>Committee Review Completion</h1>
           <Table className="table">
             <TableHead>
               <TableRow>
-                <TableCell style={{ width: "20%" }}>
-                  Average Rank
+                <TableCell style={{ width: "20%" }}>Committee Member</TableCell>
+                <TableCell style={{ width: "30%" }}># of Candidates Reviewed</TableCell>
+                <TableCell style={{ width: "30%" }} align="left"></TableCell>
+                <TableCell style={{ width: "20%" }} align="right">
+                  Select All 
+                  <Checkbox
+                    color="primary"
+                    inputProps={{ 'aria-label': 'secondary checkbox' }}
+                  />
                 </TableCell>
-                <TableCell style={{ width: "20%" }}>
-                  Candidate Name
-                </TableCell>
-                <TableCell style={{ width: "20%" }} align="left">
-                  Average Rating
-                </TableCell>
-                <TableCell style={{ width: "20%" }} align="left" onClick={this.routeChange}>
-                  # of Reviews
-                </TableCell>
-                <TableCell style={{ width: "20%" }} align="left"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -87,21 +76,11 @@ export default class AllCandidates extends Component {
                       </TableCell>
                       <TableCell align="left"></TableCell>
                       <TableCell align="left"></TableCell>
-                      <TableCell align="left"></TableCell>
                       <TableCell align="right">
-                        <Button
-                          variant="contained"
+                        <Checkbox
                           color="primary"
-                          target="_blank"
-                          value="OpenApplication"
-                          onClick={() => {
-                            this.props.history.push(
-                              "submissions/" + application._id
-                            );
-                          }}
-                        >
-                          Open
-                        </Button>
+                          inputProps={{ 'aria-label': 'secondary checkbox' }}
+                        />
                       </TableCell>
                     </TableRow>
                   ))
