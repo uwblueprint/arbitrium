@@ -43,7 +43,6 @@ export default class CommitteeReview extends Component {
   componentDidMount() {
     GET.getUserReviewsAPI(this.props.user).then(res => {
       this.setState({ reviews: res });
-      console.log(res);
     });
   }
 
