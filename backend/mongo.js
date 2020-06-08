@@ -10,8 +10,8 @@ ENV = MONGO_CONFIGS.module.environment;
 // for debugging the database
 mongoose.set("debug", true);
 
-// connect to database server; if database doesn't exist, it will create it
-var mongo = mongoose.connect(
+//connect to database server; if database doesn't exist, it will create it
+var mongo = mongoose.createConnection(
   `mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.mongodb.net/${ENV}`,
   { useNewUrlParser: true, useUnifiedTopology: true },
   function(err) {
@@ -23,6 +23,8 @@ var mongo = mongoose.connect(
     }
   }
 );
+
+console.log(mongoose.connections)
 
 // need this for promises
 mongoose.Promise = Promise;

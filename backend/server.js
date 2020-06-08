@@ -1,6 +1,5 @@
 const express = require("express");
 const firebase = require("firebase");
-mongoose = require("mongoose");
 require("firebase/firestore");
 bodyParser = require("body-parser");
 
@@ -127,7 +126,6 @@ app.use("/api/ratings", ratingsRoutes);
 app.use("/api/stackings", stackedRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/admin", adminRoutes);
-const mongo = require("./mongo.js");
 
 app.listen(4000, () => {
   console.log("Server is listening on port:4000");
