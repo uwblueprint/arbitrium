@@ -8,7 +8,6 @@ cors = require("cors");
 const app = express();
 
 const FIREBASE_CONFIGS = require("./firebase.config");
-const MONGO_CONFIGS = require("./mongo.config");
 
 //------------------------------------------------------------------------------
 //FIREBASE INIT
