@@ -5,13 +5,14 @@ import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import Rating from "../Rating/Rating";
-
+import Files from "../Files/Files";
 //column categories
 import {
   createReview,
   transpileCategoryData,
   transpileFileData,
-  transpileLongAnswerData
+  transpileLongAnswerData,
+  transpileCheckBoxData
 } from "./applicationDataHelpers";
 import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 
@@ -64,7 +65,8 @@ function Application({ applications, newReview, history, match, user }) {
     return {
       categoryData: transpileCategoryData(application),
       fileData: transpileFileData(application),
-      longAnswers: transpileLongAnswerData(application)
+      longAnswers: transpileLongAnswerData(application),
+      checkBoxAnswers: transpileCheckBoxData(application),
     };
   }, [application]);
 
@@ -105,18 +107,7 @@ function Application({ applications, newReview, history, match, user }) {
           <div className="application-information">
             <Categories categoryData={appData.categoryData} />
             <hr />
-            <span>
-              <a
-                className="name"
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://drive.google.com/file/d/1GT2l4PLYnavReVWjYU3cXzdQmCTg_tXN/view?usp=sharing"
-              >
-                {" "}
-                {"Link to Decision Making Matrix"}
-              </a>
-            </span>
-            {/*}<Files fileData={appData.fileData} />*/}
+            <Files fileData={appData.fileData}/>
             <hr />
             <DecisionCanvas
               categoryData={appData.longAnswers}

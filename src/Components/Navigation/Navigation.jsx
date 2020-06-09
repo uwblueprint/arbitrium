@@ -107,12 +107,13 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
     setSelected(id);
     push(path);
   };
+  console.log(SectionList)
 
   const nextApp = getNextValidApplication();
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> {" Seniors Response Fund Candidates "} </h2>
+        <h2> {" Emergency Community Support Fund (ECSF) "} </h2>
         <hr />
         <NavButton
           id="all_applications"
