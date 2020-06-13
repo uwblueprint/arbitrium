@@ -3,10 +3,11 @@ import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Checkbox from '@material-ui/core/Checkbox';
+// TODO: Uncomment when send email feature is complete
+//import Checkbox from '@material-ui/core/Checkbox';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { connect } from "react-redux";
 
 const GET = require("../../requests/get");
 
@@ -61,26 +62,33 @@ const Wrapper = styled.div`
   table.MuiTable-root {
     border: 1px solid #cccccc;
   }
-  button {
-    max-width: 200px;
-    padding: 5px 5px;
-    text-transform: uppercase;
-    font-size: 15px;
-  }
 `;
 
-export default class CommitteeReview extends Component {
+class CommitteeReview extends Component {
   constructor(props) {
     super(props);
     this.goBack = this.goBack.bind(this);
     this.state = {
-      reviews: []
+      members: [],
+      reviews: [],
+      appCount: -1,
     };
   }
 
   componentDidMount() {
-    GET.getUserReviewsAPI(this.props.user).then(res => {
-      this.setState({ reviews: res });
+    GET.getAllUsersAPI().then(res => {
+      this.setState({ members: res });
+      for (let i = 0; i < res.length; i++) {
+        this.state.reviews.push(-1)
+        GET.getReviewCountAPI(this.state.members[i]).then(count => {
+          let reviews = [...this.state.reviews];
+          reviews[i] = count;
+          this.setState({reviews});
+        })
+      }
+    });
+    GET.getApplicationCount().then(res => {
+      this.setState({ appCount: res });
     });
   }
 
@@ -91,7 +99,7 @@ export default class CommitteeReview extends Component {
   render() {
     return (
       <Wrapper className="application-list">
-        <Paper>
+        <Paper style={{paddingBottom: '30px'}}>
           <p align="left" onClick={this.goBack}>
             <FontAwesomeIcon
               style={{ height: "25px", width: "25px", verticalAlign: "-0.5em" }}
@@ -103,32 +111,38 @@ export default class CommitteeReview extends Component {
           <Table className="table">
             <TableHead>
               <TableRow>
-                <TableCell style={{ width: "20%" }} className="header">Committee Member</TableCell>
-                <TableCell style={{ width: "30%" }} className="header"># of Candidates Reviewed</TableCell>
-                <TableCell style={{ width: "30%" }} align="left"></TableCell>
+                <TableCell style={{ width: "35%" }} className="header">Committee Member</TableCell>
+                <TableCell style={{ width: "35%" }} className="header"># of Candidates Reviewed</TableCell>
+                <TableCell style={{ width: "10%" }} align="left"></TableCell>
                 <TableCell style={{ width: "20%" }} className="tableContent" align="right">
+                  {/* TODO: Uncomment when send email feature is complete
                   Select all 
                   <Checkbox
                     color="primary"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                   />
+                  */}
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.reviews
-                ? this.state.reviews.map(application => (
-                    <TableRow hover key={application._id}>
+              {this.state.members
+                ? this.state.members.map((member, key) => (
+                    <TableRow hover key={member._id}>
                       <TableCell component="th" scope="row" className="tableContent">
-                        {application["Organization Name"]}
+                        {member.email}
+                      </TableCell>
+                      <TableCell align="left" className="tableContent">
+                        {this.state.reviews[key]} / {this.state.appCount}
                       </TableCell>
                       <TableCell align="left" className="tableContent"></TableCell>
-                      <TableCell align="left" className="tableContent"></TableCell>
                       <TableCell align="right">
+                        {/* TODO: Uncomment when send email feature is complete
                         <Checkbox
                           color="primary"
                           inputProps={{ 'aria-label': 'secondary checkbox' }}
                         />
+                        */}
                       </TableCell>
                     </TableRow>
                   ))
@@ -140,3 +154,12 @@ export default class CommitteeReview extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    applications: state.applications,
+    reviewCount: state.reviewCount
+  };
+};
+
+export default connect(mapStateToProps)(CommitteeReview);
