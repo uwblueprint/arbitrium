@@ -3,7 +3,7 @@ import UserManagementTable from "./UserManagementTable";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import Spinner from "react-spinner-material";
-const GET = require("../../requests/get");
+const GET = require("../../../requests/get");
 
 const Wrapper = styled.div`
   margin-top: 148px;

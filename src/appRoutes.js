@@ -1,6 +1,6 @@
 import Application from "./Components/Application/Application";
 import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTable";
-import UserManagement from "./Components/Admin/UserManagement";
+import UserManagement from "./Components/AdminView/UserManagement/UserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import AdminStatsView from "./Components/AdminView/ApplicationStats/ApplicationStats";
@@ -53,7 +53,7 @@ const routes = [
   },
   {
     path: "/admin/submissions/:organizationId",
-    component: ApplicationStats,
+    component: AdminStatsView,
     title: "Admin view of a single application",
     groups: ["admin"]
   }

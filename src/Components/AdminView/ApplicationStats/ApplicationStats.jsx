@@ -1,10 +1,9 @@
-import React, { Component, useMemo } from "react";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import fetchAdminViewStats from "../../../Actions/admin";
+import { fetchAdminViewStats } from "../../../Actions/admin";
 import { Chart } from "react-charts";
 
-const ApplicationStats = props => {
+const ApplicationStats = (props) => {
   useEffect(() => {
     props.fetchAdminViewStats(this.props.match.params.app_id);
   }, []);
@@ -88,14 +87,14 @@ const ApplicationStats = props => {
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   comments: state.adminReducer.allComments,
   ratings: state.adminReducer.allRatings,
   averageRating: state.adminReducer.averageRating
 });
 
-const mapDispatchToProps = dispatch => ({
-  fetchAdminViewStats: app_id => dispatch(fetchAdminViewStats(app_id))
+const mapDispatchToProps = (dispatch) => ({
+  fetchAdminViewStats: (app_id) => dispatch(fetchAdminViewStats(app_id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ApplicationStats);
