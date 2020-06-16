@@ -89,8 +89,8 @@ class CommitteeReview extends Component {
       users = users.filter(checkCommittee)
       this.setState({ members: users });
       for (let i = 0; i < users.length; i++) {
-        this.state.reviews.push(-1)
-        GET.getReviewCountAPI(this.state.members[i]).then(count => {
+        this.state.reviews.push(-1);
+        GET.getReviewCountAPI(users[i].userId).then(count => {
           let reviews = [...this.state.reviews];
           reviews[i] = count;
           this.setState({reviews});
@@ -111,11 +111,13 @@ class CommitteeReview extends Component {
       <Wrapper className="application-list">
         <Paper style={{paddingBottom: '30px'}}>
           <p align="left" onClick={this.goBack}>
-            <FontAwesomeIcon
-              style={{ height: "25px", width: "25px", verticalAlign: "-0.5em" }}
-              icon={faAngleLeft}
-            />
-            Back to Candidate Submissions
+            <span style={{cursor: 'pointer'}}>
+              <FontAwesomeIcon
+                style={{ height: "25px", width: "25px", verticalAlign: "-0.5em" }}
+                icon={faAngleLeft}
+              />
+              Back to Candidate Submissions
+            </span>
           </p>
           <h1 align="left">Committee Review Completion</h1>
           <Table className="table">

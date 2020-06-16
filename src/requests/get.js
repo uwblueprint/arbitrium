@@ -101,9 +101,9 @@ async function getApplicationTableData(user) {
   return body;
 }
 
-async function getReviewCountAPI(user) {
+async function getReviewCountAPI(userId) {
   const url = new URL(
-    proxy + `/api/ratings/${user.uid}/?` + new URLSearchParams({ count: true })
+    proxy + `/api/ratings/${userId}/?` + new URLSearchParams({ count: true })
   );
   const response = await fetch(url, {
     headers: {
