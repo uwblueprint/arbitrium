@@ -26,12 +26,10 @@ async function getReviewAPI(user, applicationId) {
 }
 
 async function getUserReviewsAPI(user) {
-  const token = await user.getIdToken();
   const response = await fetch(proxy + `/api/ratings/${user.uid}`, {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      authorization: `Bearer ${token}`
     }
   });
   const body = await response.json();
@@ -104,7 +102,6 @@ async function getApplicationTableData(user) {
 }
 
 async function getReviewCountAPI(user) {
-  const token = await user.getIdToken();
   const url = new URL(
     proxy + `/api/ratings/${user.uid}/?` + new URLSearchParams({ count: true })
   );
@@ -112,7 +109,6 @@ async function getReviewCountAPI(user) {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      authorization: `Bearer ${token}`
     }
   });
   const body = await response.json();

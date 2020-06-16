@@ -64,6 +64,15 @@ const Wrapper = styled.div`
   }
 `;
 
+function checkCommittee(user) {
+  for (let i = 0; i < user.programs.length; i++) {
+    if (user.programs[i].name === "Emergency Fund") {
+      return true
+    }
+  }
+  return false
+}
+
 class CommitteeReview extends Component {
   constructor(props) {
     super(props);
@@ -76,9 +85,10 @@ class CommitteeReview extends Component {
   }
 
   componentDidMount() {
-    GET.getAllUsersAPI().then(res => {
-      this.setState({ members: res });
-      for (let i = 0; i < res.length; i++) {
+    GET.getAllUsersAPI().then(users => {
+      users = users.filter(checkCommittee)
+      this.setState({ members: users });
+      for (let i = 0; i < users.length; i++) {
         this.state.reviews.push(-1)
         GET.getReviewCountAPI(this.state.members[i]).then(count => {
           let reviews = [...this.state.reviews];
@@ -87,8 +97,8 @@ class CommitteeReview extends Component {
         })
       }
     });
-    GET.getApplicationCount().then(res => {
-      this.setState({ appCount: res });
+    GET.getApplicationCount().then(appCount => {
+      this.setState({ appCount: appCount });
     });
   }
 
