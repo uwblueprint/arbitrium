@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import UserManagementTable from "./UserManagementTable";
+import EditUserDialog from "./EditUserDialog";
 import NewUserDialog from "./NewUserDialog";
 import DialogButton from "../Common/DialogButton";
 
-import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import Spinner from "react-spinner-material";
 import * as GET from "../../requests/get";
@@ -48,9 +48,16 @@ function convertToTableData(fetched) {
         programAccess: programsList,
         role: user.role,
         userLink: (
-          <Button variant="outlined" color="primary">
-            Edit
-          </Button>
+          <div className="button-container">
+            <DialogButton
+              Dialog={EditUserDialog}
+              closeOnEsc={true}
+              variant="outlined"
+              data={user}
+            >
+              Edit
+            </DialogButton>
+          </div>
         )
       });
     });

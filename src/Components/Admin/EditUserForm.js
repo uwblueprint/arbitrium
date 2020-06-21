@@ -31,7 +31,10 @@ function EditUserForm({ dispatch, formState }) {
 
   const dispatchPreferredNameChange = useCallback(
     (event) => {
-      dispatch({ type: EDIT_PREFERRED_NAME, name: event.target.value });
+      dispatch({
+        type: EDIT_PREFERRED_NAME,
+        preferredName: event.target.value
+      });
     },
     [dispatch]
   );
@@ -68,6 +71,7 @@ function EditUserForm({ dispatch, formState }) {
           fullWidth
           id="name-input"
           onChange={dispatchNameChange}
+          value={formState.name}
         />
       </QuestionWrapper>
       <QuestionWrapper>
@@ -76,6 +80,7 @@ function EditUserForm({ dispatch, formState }) {
           fullWidth
           id="preferred-name-input"
           onChange={dispatchPreferredNameChange}
+          value={formState.preferredName}
         />
       </QuestionWrapper>
       <QuestionWrapper>
@@ -84,6 +89,7 @@ function EditUserForm({ dispatch, formState }) {
           fullWidth
           id="email-input"
           onChange={dispatchEmailChange}
+          value={formState.email}
         />
       </QuestionWrapper>
       <QuestionWrapper>

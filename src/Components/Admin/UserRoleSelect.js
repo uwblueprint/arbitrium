@@ -5,8 +5,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 // TODO: fetch from mongo
 const userRoles = [
-  { name: "Admin", id: "admin" },
-  { name: "Committee Member", id: "member" },
+  { name: "Admin", id: "Admin" },
+  { name: "Committee Member", id: "User" },
   { name: "Guest (view only)", id: "guest" }
 ];
 
