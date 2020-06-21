@@ -26,6 +26,9 @@ var userSchema = new mongoose.Schema(
     name: {
       type: String
     },
+    preferredName: {
+      type: String
+    },
     email: {
       type: String
     },
