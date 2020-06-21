@@ -50,4 +50,21 @@ router.get("/", function(req, res) {
 
 });
 
-module.exports = router;
+function deleteUser(userId) {
+  return new Promise((resolve, reject) => {
+    firebaseAdmin
+      .auth()
+      .deleteUser(userId)
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        console.log(`
+          Error occurred deleting user with UID ${userId}: ${error}`);
+        reject(error);
+      });
+  });
+}
+
+exports.router = router;
+exports.deleteUser = deleteUser;
