@@ -123,27 +123,32 @@ export function transpileLongAnswerData(application) {
   data.push({
     id: 1,
     answers: [],
-    title: "Vulnerable Populations Served"
+    title: "Vulnerable Populations Served",
+    description: "Do the vulnerable populations selected align with the project/program described?"
   });
   data.push({
     id: 2,
     answers: [],
-    title: "Service Types and Output Tracking"
+    title: "Service Types and Output Tracking",
+    description: "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
   });
   data.push({
     id: 3,
     answers: [],
-    title: "Types of Activities"
+    title: "Types of Activities",
+    description: "Do the activities, geographic area, and timelines make sense for the program? Are they aligned with the criteria of the ECSF?"
   });
   data.push({
     id: 4,
     answers: [],
-    title: "Service Description (Long Answer)"
+    title: "Service Description (Long Answer)",
+    description: "Does the description adequately answer the questions? Do the answers provided present a logical implementation plan?"
   });
   data.push({
     id: 5,
     answers: [],
-    title: "Additional Service Information"
+    title: "Additional Service Information",
+    description: "Has additional service information been provided? Are the responses reasonable within the ECSF context?"
   });
   answers.forEach((answer) => {
     data.forEach((item) => {

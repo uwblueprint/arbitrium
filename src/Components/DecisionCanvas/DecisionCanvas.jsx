@@ -116,6 +116,7 @@ function DecisionCanvas({ update, review, categoryData }) {
               update={update}
             >
               <CardBody>
+                <h4> {section.description} </h4>
                 <div className="questions">
                   <h3>Question(s):</h3>
                   <ol>
@@ -162,8 +163,7 @@ function DecisionCanvas({ update, review, categoryData }) {
                         )
                         : (
                             <h1> {"    "}</h1>
-                        )
-                      }
+                        )}
                       </React.Fragment>
                     )
                     ))}

@@ -16,7 +16,7 @@ async function calc(rankings, applications, reviews) {
 
   const display = [];
 
-  applications.forEach((application) => {
+  applications.forEach((application, i) => {
     let numRank = 0;
     let rankingTotal = 0;
 
@@ -52,7 +52,8 @@ async function calc(rankings, applications, reviews) {
       if (
         review.applicationId === application._id &&
         review.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-        review.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+        review.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2" &&
+        review.rating != -1
       ) {
         numRated += 1;
         ratingTotal += review.rating;
@@ -62,18 +63,109 @@ async function calc(rankings, applications, reviews) {
     const averageRating = (ratingTotal / numRated).toFixed(2);
 
     const dis = {
-      name: application["Organization Name"],
-      amount: application["Amount Requested (up to $20,000)"],
+      name: application["Organization Name (legal name)"],
+      amount: application["What is the total grant request from United Way Waterloo Region Communities (Ex- 20000)"],
+      numRanked: numRank,
+      service: application["Service Name"],
       avgRanking: averageRanking,
+      numRated: numRated,
       avgRating: averageRating
     };
     display.push(dis);
+    // console.log(dis.avgRating)
+    // if (i % 2 == 0){
+    //   console.log(dis.numRated)
+    // }
+    // else {
+    //   console.log(dis.numRated)
+    // }
   });
+  console.log(display)
+
+}
+
+async function getComments(applications, reviews, users){
+  console.log(users)
+  let commentsTotal = []
+  applications.forEach((application, i) => {
+    let comments = []
+    reviews.forEach((review) => {
+      if (
+        review.applicationId === application._id &&
+        review.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+        review.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+      ) {
+        //Go through questions and tally the comments
+        let temp = []
+        review.comments.map(comment =>{
+          temp.push(comment)
+        });
+        review.questionList.map(question =>{
+          question.notes.map(note => {
+            temp.push(note)
+          });
+        });
+        let email = ""
+        users.forEach(user => {
+          if (user.userId === review.userId){
+            email = user.email
+          }
+        });
+
+        let comment = {
+          comments: temp,
+          userId: email
+        }
+        if (comment.comments.length != 0){
+          comments.push(comment)
+        }
+
+      }
+    })
+    let commentList = []
+    comments.forEach(comment => {
+      console.log(comment)
+      comment.comments.map(c => {
+        let t = {
+          comment: c.value,
+          user: comment.userId
+        }
+        commentList.push(t)
+      });
+    });
+    let newComment = {
+      name: application["Organization Name (legal name)"],
+      comments: commentList
+    }
+    commentsTotal.push(newComment)
+  });
+  console.log(commentsTotal)
+
+
+  commentsTotal.forEach((app, i) => {
+    //console.log(app.name + "( Total Comments: " + app.comments.length + ")")
+    if (i % 2 == 0){
+      console.log("<<<")
+    }
+    else {
+      console.log(">>>")
+    }
+    app.comments.forEach((c, index) => {
+      console.log( '"' + c.comment + '"' + " (" + c.user + ")")
+      // if (index % 2 == 0){
+      //   console.log("<<<")
+      // }
+      // else {
+      //   console.log(">>>")
+      // }
+    });
+  })
 }
 
 function Admin({ applications }) {
   const [rankings, setRankings] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     GET.getAllRankingsAPI().then((rankings) => {
@@ -82,10 +174,14 @@ function Admin({ applications }) {
     GET.getAllReviewsAPI().then((reviews) => {
       setReviews(reviews);
     });
+    GET.getAllUsersAPI().then((users) => {
+      setUsers(users)
+    })
   }, []);
 
   if (isNonEmptyArray(rankings) && isNonEmptyArray(reviews)) {
     calc(rankings, applications, reviews);
+    getComments(applications, reviews, users)
   }
 
   return (

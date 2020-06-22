@@ -81,7 +81,7 @@ function Application({ applications, newReview, history, match, user }) {
 
   let name = "Loading... (Submission not found)";
   if (application) {
-    name = application["Organization Name"];
+    name = application["Organization Name (legal name)"];
   }
 
   return (

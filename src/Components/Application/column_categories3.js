@@ -75,7 +75,7 @@ export const longAnswerCategories = {
   "3-9 Will this service engage the support/involvement of Canadians/Businesses": 5,
   "If yes, How many volunteers": 5,
   "If yes, How many businesses": 5,
-  "If yes, How many Donars": 5,
+  "If yes, How many Donors": 5,
 };
 
 export const checkBoxCategories = {
