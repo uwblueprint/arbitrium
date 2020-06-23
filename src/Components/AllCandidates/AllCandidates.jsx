@@ -68,7 +68,7 @@ export default class AllCandidates extends Component {
                 <TableCell style={{ width: "20%" }} align="left">
                   Average Rating
                 </TableCell>
-                <TableCell style={{ width: "20%" }} align="left" onClick={this.routeChange} style={{cursor: 'pointer', color: '#2261AD'}}>
+                <TableCell style={{ width: "20%", cursor: 'pointer', color: '#2261AD' }} align="left" onClick={this.routeChange}>
                   # of Reviews
                 </TableCell>
                 <TableCell style={{ width: "20%" }} align="left"></TableCell>
