@@ -47,8 +47,7 @@ function DeleteUser({ close, userId }) {
         Dialog={DeleteUserConfirmation}
         closeOnEsc={true}
         variant="contained"
-        color="#C94031"
-        customBgColor={true}
+        customBgColor="#C94031"
         alertParent={() => deleteUser(userId)}
       >
         Delete user

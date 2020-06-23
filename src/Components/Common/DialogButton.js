@@ -58,7 +58,12 @@ function DialogButton({
         color={color || "primary"}
         variant={variant || "contained"}
         style={
-          customBgColor ? { backgroundColor: `${color}`, color: "#FFFFFF" } : {}
+          customBgColor
+            ? {
+                backgroundColor: `${customBgColor}`,
+                color: "#FFFFFF"
+              }
+            : {}
         }
       >
         {children}
