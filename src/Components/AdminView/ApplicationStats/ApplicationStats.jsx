@@ -1,52 +1,127 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { fetchAdminViewStats } from "../../../Actions/admin";
-import { Chart } from "react-charts";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from "recharts";
+
+import "./ApplicationStats.css";
 
 const ApplicationStats = (props) => {
   useEffect(() => {
-    props.fetchAdminViewStats(this.props.match.params.app_id);
+    props.fetchAdminViewStats(props.match.params.organizationId);
   }, []);
 
-  const data = React.useMemo(
-    () => [
+  const getData = (type) => {
+    let transpiledData;
+    if (type == "Rankings") {
+      transpiledData = props.rankings;
+    } else {
+      transpiledData = props.ratings;
+    }
+    if (!transpiledData) {
+      return null;
+    }
+    transpiledData = Object.values(transpiledData);
+    return [
       {
-        label: "Series 1",
-        data: [
-          [0, 1],
-          [1, 2],
-          [2, 4],
-          [3, 2],
-          [4, 7]
-        ]
+        name: "1",
+        [type]: transpiledData.filter((x) => x == 1).length
+      },
+      {
+        name: "2",
+        [type]: transpiledData.filter((x) => x == 2).length
+      },
+      {
+        name: "3",
+        [type]: transpiledData.filter((x) => x == 3).length
+      },
+      {
+        name: "4",
+        [type]: transpiledData.filter((x) => x == 4).length
+      },
+      {
+        name: "5",
+        [type]: transpiledData.filter((x) => x == 5).length
       }
-    ],
-    []
-  );
+    ];
+  };
 
-  const axes = React.useMemo(
-    () => [
-      { primary: true, type: "linear", position: "bottom" },
-      { type: "linear", position: "left" }
-    ],
-    []
-  );
-
-  const getApplicationStatsRankingsChart = () => {
-    //TODO: transpile rankings data and pass as props to chart
+  const getAverage = (type, text, key) => {
     return (
-      <div>
-        <Chart data={data} axes={axes} />
+      <div className={`application-stats-${type}-average`}>
+        <h6 className="application-stats-ratings-title">
+          AVERAGE OVERALL {text}
+        </h6>
+        <div className={`application-stats-${type}-average-value`}>
+          {props[key]}
+        </div>
       </div>
     );
   };
 
-  const getApplicationStatsRatingsChart = () => {
-    //TODO: transpile ratings data and pass as props to chart
+  const getApplicationStatsRankingsChart = () => {
+    const data = getData("Rankings");
+
     return (
-      <div>
-        <Chart data={data} axes={axes} />
-      </div>
+      data && (
+        <div>
+          <BarChart
+            width={500}
+            height={300}
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="Rankings" fill="#8884d8" />
+          </BarChart>
+        </div>
+      )
+    );
+  };
+
+  const getApplicationStatsRatingsChart = () => {
+    const data = getData("Ratings");
+
+    return (
+      data && (
+        <div>
+          <BarChart
+            width={500}
+            height={300}
+            data={data}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="Ratings" fill="#32a84e" />
+          </BarChart>
+        </div>
+      )
     );
   };
 
@@ -60,7 +135,10 @@ const ApplicationStats = (props) => {
   return (
     <div className="application-stats">
       <div className="application-stats-rankings">
-        <h4 className="application-stats-rankings-title">Overall Ranking</h4>
+        <h3 className="application-stats-rankings-section-title">
+          Overall Ranking
+        </h3>
+        {getAverage("ranking", "RANKING", "averageRanking")}
         <div className="application-stats-rankings-chart">
           <div className="application-stats-rankings-chart-title">
             <h4>Ranking distribution</h4>
@@ -68,10 +146,10 @@ const ApplicationStats = (props) => {
           {getApplicationStatsRankingsChart()}
         </div>
       </div>
+      <hr className="chartDivider" />
       <div className="application-stats-ratings">
-        <div className="application-stats-ratings">
-          <h4 className="application-stats-ratings-title">Ratings</h4>
-        </div>
+        <h3 className="application-stats-ratings-section-title">Ratings</h3>
+        {getAverage("rating", "RATING", "averageRating")}
         <div className="application-stats-ratings-chart">
           <div className="application-stats-ratings-chart-title">
             <h4>Rating distribution</h4>

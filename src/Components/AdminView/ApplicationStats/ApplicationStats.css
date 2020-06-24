@@ -1,0 +1,32 @@
+.application-stats-rankings-chart,
+.application-stats-ratings-chart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.chartDivider {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.application-stats-rating-average-value,
+.application-stats-ranking-average-value {
+  font-size: 50px;
+}
+
+.application-stats-ratings-title,
+.application-stats-rankings-title {
+  margin-bottom: 0;
+}
+
+.application-stats-ratings-section-title,
+.application-stats-rankings-section-title {
+  text-align: left;
+  margin-left: 10px;
+}
+
+.application-stats {
+  margin-top: 100px;
+}

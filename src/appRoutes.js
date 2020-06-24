@@ -55,7 +55,7 @@ const routes = [
     path: "/admin/submissions/:organizationId",
     component: AdminStatsView,
     title: "Admin view of a single application",
-    groups: ["admin"]
+    groups: []
   }
 ];
 

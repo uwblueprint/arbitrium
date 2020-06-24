@@ -12,8 +12,9 @@ function adminReducer(state = defaultState, action) {
   switch (action.type) {
     case SET_ADMIN_VIEW_STATS:
       newState.allComments = action.payload.allComments;
-      newState.allComments = action.payload.allRatings;
-      newState.allComments = action.payload.averageRating;
+      newState.allRatings = action.payload.allRatings;
+      newState.averageRating = action.payload.averageRating;
+      console.log(newState);
       return newState;
     default:
       return state;
