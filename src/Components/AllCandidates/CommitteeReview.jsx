@@ -6,7 +6,7 @@ import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 // TODO: Uncomment when send email feature is complete
 //import Checkbox from '@material-ui/core/Checkbox';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 
 const GET = require("../../requests/get");
@@ -64,42 +64,65 @@ const Wrapper = styled.div`
   }
 `;
 
-function checkCommittee(user) {
-  for (let i = 0; i < user.programs.length; i++) {
-    if (user.programs[i].name === "Emergency Fund") {
-      return true
-    }
-  }
-  return false
-}
+// TODO: Filter the users based on their committee, schema might change
+// function checkCommittee(user) {
+//   for (let i = 0; i < user.programs.length; i++) {
+//     if (user.programs[i].name === "Emergency Fund") {
+//       return true
+//     }
+//   }
+//   return false
+// }
 
 class CommitteeReview extends Component {
   constructor(props) {
     super(props);
     this.goBack = this.goBack.bind(this);
+    this.sortCommittee = this.sortCommittee.bind(this);
     this.state = {
-      members: [],
-      reviews: [],
+      committee: [],
       appCount: -1,
+      sortDescending: true,
+      committeeSize: -1,
     };
   }
 
   componentDidMount() {
-    GET.getAllUsersAPI().then(users => {
-      users = users.filter(checkCommittee)
-      this.setState({ members: users });
-      for (let i = 0; i < users.length; i++) {
-        this.state.reviews.push(-1);
-        GET.getReviewCountAPI(users[i].userId).then(count => {
-          let reviews = [...this.state.reviews];
-          reviews[i] = count;
-          this.setState({reviews});
-        })
-      }
-    });
     GET.getApplicationCount().then(appCount => {
       this.setState({ appCount: appCount });
     });
+    GET.getAllUsersAPI().then(users => {
+      // TODO: Filter the users based on their committee, schema might change
+      // users = users.filter(checkCommittee)
+
+      this.setState({ committeeSize: users.length });
+      for (let i = 0; i < users.length; i++) {
+        GET.getReviewCountAPI(users[i].userId).then(count => {
+          let committee = [...this.state.committee];
+          committee[i] = {'member': users[i], 'review': count};
+          this.setState({committee});
+        })
+      }
+    });
+  }
+
+  sortCommittee() {
+    let tempCommittee;
+    if (this.state.sortDescending) {
+      tempCommittee = this.state.committee.sort((a,b)=>b.review-a.review)
+    } else {
+      tempCommittee = this.state.committee.sort((a,b)=>a.review-b.review)
+    }
+
+    let newCommittee = []
+    for (var i = 0, n = tempCommittee.length; i<n; i++) {
+      newCommittee[i] = this.state.committee[i];
+    }
+
+    this.setState(prevState => ({
+      sortDescending: !prevState.sortDescending,
+      committee: newCommittee,
+    }));
   }
 
   goBack() {
@@ -124,7 +147,13 @@ class CommitteeReview extends Component {
             <TableHead>
               <TableRow>
                 <TableCell style={{ width: "35%" }} className="header">Committee Member</TableCell>
-                <TableCell style={{ width: "35%" }} className="header"># of Candidates Reviewed</TableCell>
+                <TableCell style={{ width: "35%", cursor: "pointer" }} className="header" onClick={this.sortCommittee}>
+                  # of Candidates Reviewed
+                  <FontAwesomeIcon
+                    style={{ height: "15px", width: "15px", verticalAlign: "-0.25em", paddingLeft: '5px' }}
+                    icon={this.state.sortDescending ? faSortUp : faSortDown}
+                  />
+                </TableCell>
                 <TableCell style={{ width: "10%" }} align="left"></TableCell>
                 <TableCell style={{ width: "20%" }} className="tableContent" align="right">
                   {/* TODO: Uncomment when send email feature is complete
@@ -138,14 +167,14 @@ class CommitteeReview extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.members
-                ? this.state.members.map((member, key) => (
-                    <TableRow hover key={member._id}>
+              {(this.state.committee && this.state.committee !== [])
+                ? this.state.committee.map((committee, key) => (
+                    <TableRow hover key={committee.member._id}>
                       <TableCell component="th" scope="row" className="tableContent">
-                        {member.email}
+                        {committee.member.email}
                       </TableCell>
                       <TableCell align="left" className="tableContent">
-                        {this.state.reviews[key]} / {this.state.appCount}
+                        {committee.review} / {this.state.appCount}
                       </TableCell>
                       <TableCell align="left" className="tableContent"></TableCell>
                       <TableCell align="right">
