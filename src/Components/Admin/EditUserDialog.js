@@ -1,9 +1,11 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/Close";
+import ErrorIcon from "@material-ui/icons/Error";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
+import Snackbar from "@material-ui/core/Snackbar";
 import { userFormStateReducer } from "./UserFormStateReducer";
 import EditUserForm from "./EditUserForm";
 import DeleteUser from "./DeleteUser";
@@ -46,6 +48,20 @@ const Header = styled.div`
   }
 `;
 
+const SaveFailure = styled.div`
+  p {
+    display: inline-block;
+    color: #ffffff;
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+  background-color: #333333;
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
 const useStyles = makeStyles({
   closeRoot: {
     display: "inline-block",
@@ -67,6 +83,9 @@ function EditUserDialog({ close, data }) {
     userFormStateReducer,
     initialFormState
   );
+
+  const [showSaveFailure, setShowSaveFailure] = useState(false);
+
   const styles = useStyles();
 
   function updateUser() {
@@ -87,8 +106,15 @@ function EditUserDialog({ close, data }) {
         close();
         window.location.reload();
       })
-      .then((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setShowSaveFailure(true);
+      });
   }
+
+  const handleSnackbarClose = () => {
+    setShowSaveFailure(false);
+  };
 
   return (
     <Wrapper>
@@ -103,7 +129,11 @@ function EditUserDialog({ close, data }) {
         </IconButton>
       </Header>
       <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
-      <DeleteUser close={close} userId={data.userId} />
+      <DeleteUser
+        close={close}
+        userId={data.userId}
+        setShowSaveFailure={setShowSaveFailure}
+      />
       <Button
         onClick={() => updateUser()}
         fullWidth
@@ -112,6 +142,20 @@ function EditUserDialog({ close, data }) {
       >
         Save changes
       </Button>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center"
+        }}
+        open={showSaveFailure}
+        autoHideDuration={2000}
+        onClose={handleSnackbarClose}
+      >
+        <SaveFailure>
+          <ErrorIcon style={{ fill: "FFFFFF", marginLeft: "12px" }} />
+          <p>Failed to save changes, please try again!</p>
+        </SaveFailure>
+      </Snackbar>
     </Wrapper>
   );
 }

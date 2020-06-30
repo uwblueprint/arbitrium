@@ -27,14 +27,17 @@ const QuestionWrapper = styled.div`
   }
 `;
 
-function DeleteUser({ close, userId }) {
+function DeleteUser({ close, userId, setShowSaveFailure }) {
   function deleteUser(userId) {
     DELETE.deleteUserAPI(userId)
       .then(() => {
         close();
         window.location.reload();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setShowSaveFailure(true);
+      });
   }
 
   return (
@@ -51,7 +54,9 @@ function DeleteUser({ close, userId }) {
         closeOnEsc={true}
         variant="contained"
         customBgColor="#C94031"
-        alertParent={() => deleteUser(userId)}
+        alertParent={() => {
+          deleteUser(userId);
+        }}
       >
         Delete user
       </DialogButton>
