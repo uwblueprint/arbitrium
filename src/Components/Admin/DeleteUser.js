@@ -30,7 +30,10 @@ const QuestionWrapper = styled.div`
 function DeleteUser({ close, userId }) {
   function deleteUser(userId) {
     DELETE.deleteUserAPI(userId)
-      .then(() => close())
+      .then(() => {
+        close();
+        window.location.reload();
+      })
       .catch((err) => console.log(err));
   }
 

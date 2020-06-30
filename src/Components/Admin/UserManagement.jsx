@@ -74,7 +74,7 @@ function UserManagement() {
       //Fetch the users from the backend
       const fetched = await GET.getAllUsersAPI();
 
-      setUsers(convertToTableData(fetched));
+      setUsers(convertToTableData(fetched.filter((u) => !u.deleted)));
     }
 
     getUsers();

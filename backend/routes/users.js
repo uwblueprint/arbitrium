@@ -45,22 +45,26 @@ router.post("/", function(req, res) {
 });
 
 router.delete("/:userId", function(req, res) {
-  db.users.deleteOne({ userId: req.params.userId }, (err, result) => {
-    if (err || !result || (result && result.n !== 1)) {
-      res.status(500).send(err);
-    } else {
-      deleteUser(req.params.userId)
-        .then(() => {
-          res.status(204).send();
-        })
-        .catch((err) => {
-          console.log(`User with UID = ${req.params.userId}
-            was deleted from MongoDB but not Firebase, failed due to: ${err}`);
-          // using status code 202 (accepted) to represent partial success
-          res.status(202).send();
-        });
+  db.users.updateOne(
+    { userId: req.params.userId },
+    { $set: { deleted: true } },
+    (err, result) => {
+      if (err || !result || (result && result.n !== 1)) {
+        res.status(500).send(err);
+      } else {
+        deleteUser(req.params.userId)
+          .then(() => {
+            res.status(204).send();
+          })
+          .catch((err) => {
+            console.log(`User with UID = ${req.params.userId}
+              was marked deleted in MongoDB but not removed from Firebase, failed due to: ${err}`);
+            // using status code 202 (accepted) to represent partial success
+            res.status(202).send();
+          });
+      }
     }
-  });
+  );
 });
 
 module.exports = router;

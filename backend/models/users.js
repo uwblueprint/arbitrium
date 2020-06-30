@@ -37,6 +37,9 @@ var userSchema = new mongoose.Schema(
     },
     programs: {
       type: [program]
+    },
+    deleted: {
+      type: Boolean
     }
   },
   { collection: "user" }

@@ -85,6 +85,7 @@ function EditUserDialog({ close, data }) {
       .then((response) => {
         console.log(response);
         close();
+        window.location.reload();
       })
       .then((err) => console.log(err));
   }
