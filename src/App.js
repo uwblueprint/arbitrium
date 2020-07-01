@@ -27,6 +27,13 @@ function App() {
                 <Container>
                   <Switch>
                     <Route exact={true} path="/login" component={Login}></Route>
+                    <Route
+                      exact={true}
+                      path="/reset-password"
+                      render={() => (
+                        <Login initialCardType="passwordResetEmail" />
+                      )}
+                    ></Route>
                     {routes.map((route, i) => {
                       return (
                         <PrivateRoute

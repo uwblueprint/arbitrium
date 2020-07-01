@@ -10,9 +10,9 @@ const Wrapper = styled.div`
 
 // TODO: fetch from mongo
 const programOptions = [
-  { name: "SVP Investee Grant", id: "svp-investee-grant" },
-  { name: "SVP Teens", id: "svp-teens" },
-  { name: "SVP Perfect Pitch", id: "svp-perfect-pitch" }
+  { name: "SVP Investee Grant", id: "SVP Investee Grant" },
+  { name: "SVP Teens", id: "SVP Teens" },
+  { name: "SVP Perfect Pitch", id: "SVP Perfect Pitch" }
 ];
 
 function ProgramSelect({ value, onChange }) {

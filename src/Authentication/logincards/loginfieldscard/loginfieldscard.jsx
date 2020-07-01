@@ -3,38 +3,34 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import CardActions from "@material-ui/core/CardActions";
 import React, { useCallback, useState } from "react";
 import firebaseApp from "../../firebase.js";
 
 import styled from "styled-components";
 
 const CommentForm = styled.form`
+  text-align: left;
   .textFields {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     width: 100%;
-  }
-  button {
-    display: flex;
-    justify-content: end;
   }
   a {
     font-size: 0.9rem;
   }
+  .actions-container {
+    display: flex;
+  }
+
   .loginButton {
-    position: absolute;
-    width: 80px;
+    margin-left: auto;
+    display: inline-block;
+    width: 120px;
     height: 36px;
-    left: 244px;
-    top: 290px;
-    margin-left: 10px;
   }
   .forgotPassword {
-    position: absolute;
+    display: inline-block;
     width: 160px;
     height: 36px;
-    left: 8px;
-    top: 290px;
 
     font-family: Roboto;
     font-style: normal;
@@ -42,15 +38,13 @@ const CommentForm = styled.form`
     font-size: 14px;
     line-height: 20px;
     /* identical to box height, or 143% */
-
     letter-spacing: 0.25px;
     text-decoration-line: underline;
-
     color: #1976d2;
   }
 `;
 
-const LoginFieldsCard = (props) => {
+const LoginFieldsCard = ({ history, setLoginFlowState }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -70,13 +64,13 @@ const LoginFieldsCard = (props) => {
         await firebaseApp
           .auth()
           .signInWithEmailAndPassword(email.value, password.value);
-        props.history.push("/applications");
+        history.push("/applications");
       } catch (error) {
         alert("Wrong user name or password!");
         console.log(error);
       }
     },
-    [props.history]
+    [history]
   );
 
   const validateForm = () => {
@@ -116,12 +110,10 @@ const LoginFieldsCard = (props) => {
           {values.errorPassword ? errorPasswordMessage : ""}
         </FormHelperText>
       </FormControl>
-      <CardActions>
+      <div className="actions-container">
         <Button
           className="forgotPassword"
-          onClick={() =>
-            props.setLoginFlowState({ cardType: "passwordResetEmail" })
-          }
+          onClick={() => setLoginFlowState("passwordResetEmail")}
         >
           Forgot Password?
         </Button>
@@ -134,7 +126,7 @@ const LoginFieldsCard = (props) => {
         >
           Log in
         </Button>
-      </CardActions>
+      </div>
     </CommentForm>
   );
 };

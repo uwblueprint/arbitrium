@@ -13,7 +13,7 @@ export function userFormStateReducer(formState, action) {
         draftFormState.name = action.name;
         break;
       case EDIT_PREFERRED_NAME:
-        draftFormState.preferredName = action.preferredName;
+        draftFormState.preferredName = action.name;
         break;
       case EDIT_EMAIL:
         draftFormState.email = action.email;
@@ -25,8 +25,6 @@ export function userFormStateReducer(formState, action) {
         draftFormState.programs.has(action.program)
           ? draftFormState.programs.delete(action.program)
           : draftFormState.programs.add(action.program);
-        break;
-      default:
         break;
     }
   });
