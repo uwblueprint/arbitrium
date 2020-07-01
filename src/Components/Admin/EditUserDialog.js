@@ -26,6 +26,10 @@ const SaveFailure = styled.div`
   align-items: center;
 `;
 
+const SaveWrapper = styled.div`
+  position: relative;
+`;
+
 const useStyles = makeStyles({
   closeRoot: {
     display: "inline-block",
@@ -98,28 +102,31 @@ function EditUserDialog({ close, data }) {
         userId={data.userId}
         setShowSaveFailure={setShowSaveFailure}
       />
-      <Button
-        onClick={() => updateUser()}
-        fullWidth
-        variant="contained"
-        color="primary"
-      >
-        Save changes
-      </Button>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center"
-        }}
-        open={showSaveFailure}
-        autoHideDuration={2000}
-        onClose={handleSnackbarClose}
-      >
-        <SaveFailure>
-          <ErrorIcon style={{ fill: "FFFFFF", marginLeft: "12px" }} />
-          <p>Failed to save changes, please try again!</p>
-        </SaveFailure>
-      </Snackbar>
+      <SaveWrapper>
+        <Button
+          onClick={() => updateUser()}
+          fullWidth
+          variant="contained"
+          color="primary"
+        >
+          Save changes
+        </Button>
+        <Snackbar
+          open={showSaveFailure}
+          autoHideDuration={2000}
+          onClose={handleSnackbarClose}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            minWidth: "max-content"
+          }}
+        >
+          <SaveFailure>
+            <ErrorIcon style={{ fill: "#FFFFFF", marginLeft: "12px" }} />
+            <p>Failed to save changes, please try again!</p>
+          </SaveFailure>
+        </Snackbar>
+      </SaveWrapper>
     </Wrapper>
   );
 }
