@@ -12,8 +12,6 @@ import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/pa
 
 const StyledCard = styled(Card)`
   width: 350px;
-
-  //Center
   margin: 2 auto;
   position: absolute;
   top: 50%;
@@ -38,22 +36,39 @@ const StyledCard = styled(Card)`
   }
 `;
 
-const Login = ({ history }) => {
+function Login({ history, initialCardType }) {
   const { currentUser } = useContext(AuthContext);
-  const [loginFlowState, setLoginFlowState] = useState({
-    cardType: "loginFields"
-  });
+  const [loginFlowState, setLoginFlowState] = useState(
+    initialCardType ? initialCardType : "loginFields"
+  );
+
+  function onResetPassword() {
+    setLoginFlowState("passwordResetResponse");
+  }
+
+  const backToLogin = () => {
+    setLoginFlowState("loginFields");
+  };
+
+  if (currentUser != null) {
+    console.log("Redirecting");
+    return <Redirect to={"/applications"} />;
+  }
 
   const getCardContent = () => {
-    switch (loginFlowState.cardType) {
+    switch (loginFlowState) {
       case "passwordResetEmail":
-        return <PasswordResetEmailCard setLoginFlowState={setLoginFlowState} />;
+        return (
+          <PasswordResetEmailCard
+            onSubmit={onResetPassword}
+            backToLogin={backToLogin}
+          />
+        );
       case "passwordResetResponse":
         return (
           <PasswordResetResponseCard setLoginFlowState={setLoginFlowState} />
         );
       default:
-      case "loginFields":
         return (
           <LoginFieldsCard
             history={history}
@@ -63,22 +78,19 @@ const Login = ({ history }) => {
     }
   };
 
-  if (currentUser != null) {
-    console.log("Redirecting");
-    return <Redirect to={"/applications"} />;
-  } else {
-    return (
-      <div>
-        <StyledCard>
-          <CardHeader
-            title="arbitrium"
-            subheader={loginFlowState === "loginFields" ? "Sign-In" : null}
-          />
-          <CardContent>{getCardContent()}</CardContent>
-        </StyledCard>
-      </div>
-    );
-  }
-};
+  const content = getCardContent();
+
+  return (
+    <div>
+      <StyledCard>
+        <CardHeader
+          title="arbitrium"
+          subheader={loginFlowState === "loginFields" ? "Sign-In" : null}
+        />
+        <CardContent>{content}</CardContent>
+      </StyledCard>
+    </div>
+  );
+}
 
 export default withRouter(Login);

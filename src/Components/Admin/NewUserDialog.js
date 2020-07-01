@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/Close";
@@ -6,6 +6,8 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import { userFormStateReducer } from "./UserFormStateReducer";
 import EditUserForm from "./EditUserForm";
+import LoadingOverlay from "../Common/LoadingOverlay";
+import { createUserAPI } from "../../requests/update";
 
 const padding = "28px";
 const Wrapper = styled.div`
@@ -50,7 +52,8 @@ const useStyles = makeStyles({
 const initialFormState = {
   name: "",
   preferredName: "",
-  role: "member",
+  email: "",
+  role: "User",
   programs: new Set()
 };
 
@@ -60,11 +63,29 @@ function NewUserDialog({ onSubmit, close }) {
     userFormStateReducer,
     initialFormState
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const styles = useStyles();
 
-  function addNewUser(newUser) {
-    // TODO
-    onSubmit(newUser); // callback for dialog user }
+  async function addNewUser() {
+    setIsSubmitting(true);
+    try {
+      const data = { ...formState };
+      data.programs = Array.from(formState.programs).map((p) => ({
+        name: p,
+        access: "regular user" // TODO: shouldn't this be a field in the user drawer UI
+      }));
+      const user = await createUserAPI(data);
+      close();
+      onSubmit && onSubmit(user);
+    } catch (e) {
+      console.error(e);
+      if (e.code === "auth/email-already-exists") {
+        alert(e.message);
+      } else {
+        alert("Something went wrong. User created unsuccessfully.");
+      }
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -79,12 +100,23 @@ function NewUserDialog({ onSubmit, close }) {
           <Close />
         </IconButton>
       </Header>
+      {isSubmitting && (
+        <LoadingOverlay
+          spinnerProps={{
+            radius: 120,
+            color: "#333",
+            stroke: 2,
+            visible: true
+          }}
+        />
+      )}
       <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
       <Button
         onClick={addNewUser}
         fullWidth
         variant="contained"
         color="primary"
+        disabled={isSubmitting}
       >
         Send Invitiation
       </Button>

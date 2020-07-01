@@ -25,6 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # secrets/configs
+backend/*.config
 backend/firebase.config.js
 backend/mongo.config.js
 backend/mongo.config
