@@ -9,44 +9,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import { userFormStateReducer } from "./UserFormStateReducer";
 import EditUserForm from "./EditUserForm";
 import DeleteUser from "./DeleteUser";
+import { Wrapper, Header } from "./DialogWrappers";
 import * as UPDATE from "../../requests/update";
-
-const padding = "28px";
-const Wrapper = styled.div`
-  background: white;
-  display: inline-block;
-  left: 50%;
-  margin: auto;
-  padding: ${padding};
-  position: fixed;
-  top: 50%;
-  width: 400px;
-  z-index: 1000;
-
-  -moz-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  -o-transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-
-  h4 {
-    display: inline-block;
-  }
-  max-height: 95%;
-  overflow-y: scroll;
-  overflow-x: hidden;
-`;
-
-const Header = styled.div`
-  display: flex;
-  padding-bottom: ${padding};
-  h4 {
-    margin: 0;
-    font-weight: normal;
-    display: inline-block;
-    font-size: calc(0.3vh + 0.5vw + 10px);
-  }
-`;
 
 const SaveFailure = styled.div`
   p {
