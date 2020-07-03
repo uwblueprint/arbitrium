@@ -71,7 +71,6 @@ export default class AllCandidates extends Component {
   }
 
   render() {
-    console.log(this.totalReviews);
     return (
       <Wrapper className="application-list">
         <Paper>
