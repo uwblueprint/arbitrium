@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   h1 {
     font-size: 24px;
     font-weight: normal;
+    text-align: left;
   }
   .table {
     border-radius: 4px 4px 0px 0px;
@@ -31,27 +32,46 @@ const Wrapper = styled.div`
   }
 `;
 
+function checkCommittee(user) {
+  for (let i = 0; i < user.programs.length; i++) {
+    if (user.programs[i].name === "Emergency Fund") {
+      return true;
+    }
+  }
+  return false;
+}
+
 export default class AllCandidates extends Component {
   constructor(props) {
-    super(props); 
+    super(props);
     this.routeChange = this.routeChange.bind(this);
     this.state = {
-      reviews: []
+      applications: [],
+      reviewers: []
     };
   }
 
   componentDidMount() {
-    GET.getUserReviewsAPI(this.props.user).then(res => {
-      this.setState({ reviews: res });
+    GET.getAllUsersAPI().then((users) => {
+      users = users.filter(checkCommittee);
+      this.setState({ reviewers: users });
     });
+
+    fetch("http://localhost:4000/api/admin/candidate-submissions")
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState({ applications: data });
+      })
+      .catch(console.log);
   }
 
   routeChange() {
-    let path = `/admin/committeereview`; 
+    let path = `/admin/committeereview`;
     this.props.history.push(path);
   }
 
   render() {
+    console.log(this.totalReviews);
     return (
       <Wrapper className="application-list">
         <Paper>
@@ -59,31 +79,35 @@ export default class AllCandidates extends Component {
           <Table className="table">
             <TableHead>
               <TableRow>
-                <TableCell style={{ width: "20%" }}>
-                  Average Rank
-                </TableCell>
-                <TableCell style={{ width: "20%" }}>
-                  Candidate Name
-                </TableCell>
+                <TableCell style={{ width: "20%" }}>Average Rank</TableCell>
+                <TableCell style={{ width: "20%" }}>Candidate Name</TableCell>
                 <TableCell style={{ width: "20%" }} align="left">
                   Average Rating
                 </TableCell>
-                <TableCell style={{ width: "20%" }} align="left" onClick={this.routeChange} style={{cursor: 'pointer', color: '#2261AD'}}>
+                <TableCell
+                  style={{ width: "20%", cursor: "pointer", color: "#2261AD" }}
+                  align="left"
+                  onClick={this.routeChange}
+                >
                   # of Reviews
                 </TableCell>
                 <TableCell style={{ width: "20%" }} align="left"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.reviews
-                ? this.state.reviews.map(application => (
+              {this.state.applications
+                ? this.state.applications.map((application) => (
                     <TableRow hover key={application._id}>
-                      <TableCell component="th" scope="row">
-                        {application["Organization Name"]}
+                      <TableCell component="th" scope="row"></TableCell>
+                      <TableCell align="left">
+                        {application.candidateName}
                       </TableCell>
-                      <TableCell align="left"></TableCell>
-                      <TableCell align="left"></TableCell>
-                      <TableCell align="left"></TableCell>
+                      <TableCell align="left">
+                        {application.avgRating} / 5
+                      </TableCell>
+                      <TableCell align="left">
+                        {application.numReviews} / {this.state.reviewers.length}
+                      </TableCell>
                       <TableCell align="right">
                         <Button
                           variant="contained"
@@ -92,7 +116,7 @@ export default class AllCandidates extends Component {
                           value="OpenApplication"
                           onClick={() => {
                             this.props.history.push(
-                              "submissions/" + application._id
+                              "/admin/submissions/" + application._id
                             );
                           }}
                         >
