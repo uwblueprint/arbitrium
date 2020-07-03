@@ -103,10 +103,10 @@ export default class AllCandidates extends Component {
                         {application.candidateName}
                       </TableCell>
                       <TableCell align="left">
-                        {application.avgRating} / 5
+                        {application.avgRating}/5
                       </TableCell>
                       <TableCell align="left">
-                        {application.numReviews} / {this.state.reviewers.length}
+                        {application.numReviews}/{this.state.reviewers.length}
                       </TableCell>
                       <TableCell align="right">
                         <Button
