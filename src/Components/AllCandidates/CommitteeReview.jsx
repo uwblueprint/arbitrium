@@ -167,7 +167,7 @@ class CommitteeReview extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {(this.state.committee && this.state.committee !== [])
+              {(this.state.committee && this.state.committee !== [] && !this.state.committee.includes(undefined))
                 ? this.state.committee.map((committee, key) => (
                     <TableRow hover key={committee.member.id}>
                       <TableCell component="th" scope="row" className="tableContent">
