@@ -157,7 +157,7 @@ class CommitteeReview extends Component {
                 <TableCell style={{ width: "10%" }} align="left"></TableCell>
                 <TableCell style={{ width: "20%" }} className="tableContent" align="right">
                   {/* TODO: Uncomment when send email feature is complete
-                  Select all 
+                  Select all
                   <Checkbox
                     color="primary"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
@@ -169,7 +169,7 @@ class CommitteeReview extends Component {
             <TableBody>
               {(this.state.committee && this.state.committee !== [])
                 ? this.state.committee.map((committee, key) => (
-                    <TableRow hover key={committee.member._id}>
+                    <TableRow hover key={committee.member.id}>
                       <TableCell component="th" scope="row" className="tableContent">
                         {committee.member.email}
                       </TableCell>
