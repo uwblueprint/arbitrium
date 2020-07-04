@@ -39,13 +39,13 @@ router.get("/candidate-submissions", function(req, res) {
          ],
          as: "applicationReviews"
       },
-      
     },
     {
       $project:{
               candidateName: '$Organization Name',
               numReviews:{$size:"$applicationReviews"},
-              avgRating: {$round: [{$avg: "$applicationReviews.rating" }, 2]} 
+              avgRating: {$round: [{$avg: "$applicationReviews.rating" }, 2]},
+              avgRanking: {$round: [{$add: [{$avg: "$applicationReviews.rating" }, -1]}, 0]} //temp dummy data field
           }
     },
   ])
