@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
@@ -16,8 +17,6 @@ const Wrapper = styled.div`
     text-align: left;
   }
   .table {
-    border-radius: 4px 4px 0px 0px;
-
     max-width: 864px;
     margin: 0 auto;
   }
@@ -32,14 +31,12 @@ const Wrapper = styled.div`
   }
 `;
 
-function checkCommittee(user) {
-  for (let i = 0; i < user.programs.length; i++) {
-    if (user.programs[i].name === "Emergency Fund") {
-      return true;
-    }
+const StyledTableCell = withStyles((theme) => ({
+  body: {
+    fontSize: 20,
+    fontWeight: 500
   }
-  return false;
-}
+}))(TableCell);
 
 export default class AllCandidates extends Component {
   constructor(props) {
@@ -47,14 +44,13 @@ export default class AllCandidates extends Component {
     this.routeChange = this.routeChange.bind(this);
     this.state = {
       applications: [],
-      reviewers: []
+      totalReviews: -1
     };
   }
 
   componentDidMount() {
     GET.getAllUsersAPI().then((users) => {
-      users = users.filter(checkCommittee);
-      this.setState({ reviewers: users });
+      this.setState({ totalReviews: users.length });
     });
 
     fetch("http://localhost:4000/api/admin/candidate-submissions")
@@ -80,9 +76,7 @@ export default class AllCandidates extends Component {
               <TableRow>
                 <TableCell style={{ width: "20%" }}>Average Rank</TableCell>
                 <TableCell style={{ width: "20%" }}>Candidate Name</TableCell>
-                <TableCell style={{ width: "20%" }} align="left">
-                  Average Rating
-                </TableCell>
+                <TableCell style={{ width: "20%" }}>Average Rating</TableCell>
                 <TableCell
                   style={{ width: "20%", cursor: "pointer", color: "#2261AD" }}
                   align="left"
@@ -95,9 +89,11 @@ export default class AllCandidates extends Component {
             </TableHead>
             <TableBody>
               {this.state.applications
-                ? this.state.applications.map((application) => (
+                ? this.state.applications.map((application, index) => (
                     <TableRow hover key={application._id}>
-                      <TableCell component="th" scope="row"></TableCell>
+                      <StyledTableCell component="th" scope="row">
+                        {index + 1}
+                      </StyledTableCell>
                       <TableCell align="left">
                         {application.candidateName}
                       </TableCell>
@@ -105,7 +101,7 @@ export default class AllCandidates extends Component {
                         {application.avgRating}/5
                       </TableCell>
                       <TableCell align="left">
-                        {application.numReviews}/{this.state.reviewers.length}
+                        {application.numReviews}/{this.state.totalReviews}
                       </TableCell>
                       <TableCell align="right">
                         <Button
