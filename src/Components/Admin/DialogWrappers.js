@@ -23,7 +23,7 @@ export const Wrapper = styled.div`
     margin: 5px 0px;
     font-size: 16px;
   }
-  max-height: 95%;
+  max-height: 70%;
   overflow-y: scroll;
   overflow-x: hidden;
 `;

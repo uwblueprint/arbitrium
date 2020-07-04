@@ -119,11 +119,13 @@ function Application({ applications, newReview, history, match, user }) {
 
   return (
     <PageWrapper>
-      <FlowSelector>
-        <button>1. Letter of Interest</button>
-        <button disabled>2. Full Application</button>
-      </FlowSelector>
       <BodyWrapper>
+        {/* //This should be in the body wrapper
+        <FlowSelector>
+          <button>1. Letter of Interest</button>
+          <button disabled>2. Full Application</button>
+        </FlowSelector>
+        */}
         <h1>
           <Button
             className="all-applicants"

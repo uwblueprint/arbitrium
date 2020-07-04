@@ -6,7 +6,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
-import { userFormStateReducer } from "./UserFormStateReducer";
+import { userFormStateReducer } from "Reducers/UserFormStateReducer";
 import EditUserForm from "./EditUserForm";
 import DeleteUser from "./DeleteUser";
 import { Wrapper, Header } from "./DialogWrappers";

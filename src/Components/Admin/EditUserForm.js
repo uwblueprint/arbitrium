@@ -10,7 +10,7 @@ import {
   EDIT_EMAIL,
   EDIT_ROLE,
   EDIT_PROGRAMS
-} from "./UserFormStateReducer";
+} from "Reducers/UserFormStateReducer";
 
 const StyledLabel = styled(InputLabel)`
   margin-bottom: 4px;

@@ -26,7 +26,7 @@ const Header = styled.div`
       margin-right: auto;
     }
     .button-container {
-      display: inline-block;
+      display: flex;
     }
   }
   `;
