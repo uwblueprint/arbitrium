@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Table from "@material-ui/core/Table";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
@@ -12,8 +12,15 @@ const Wrapper = styled.div`
   margin-top: 150px;
   padding: 0 136px;
   h1 {
-    font-size: 24px;
+    font-family: Roboto;
+    font-style: normal;
     font-weight: normal;
+    font-size: 24px;
+    line-height: 36px;
+    max-width: 854px;
+    width: 90vw;
+    margin: 0 auto;
+    padding-bottom: 20px;
     text-align: left;
   }
   .table {
@@ -143,7 +150,7 @@ export default class AllCandidates extends Component {
             </TableHead>
             <TableBody>
               {this.state.applications
-                ? this.state.applications.sort((a, b) => parseInt(a.avgRanking) > parseInt(b.avgRanking) ? 1 : -1)
+                ? this.state.applications.sort((a, b) => parseFloat(a.avgRanking) > parseFloat(b.avgRanking) ? 1 : -1)
                   .map((application, index) => (
                     <TableRow hover key={application._id}>
                       <StyledTableCell component="th" scope="row">
