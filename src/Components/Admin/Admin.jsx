@@ -11,8 +11,8 @@ const Wrapper = styled.div`
 `;
 
 async function calc(rankings, applications, reviews) {
-  //console.log("Applications")
-  //console.log(applications)
+  // ("Applications")
+  // (applications)
 
   const display = [];
 
@@ -72,20 +72,20 @@ async function calc(rankings, applications, reviews) {
       avgRating: averageRating
     };
     display.push(dis);
-    // console.log(dis.avgRating)
+    //  (dis.avgRating)
     // if (i % 2 == 0){
-    //   console.log(dis.numRated)
+    //    (dis.numRated)
     // }
     // else {
-    //   console.log(dis.numRated)
+    //    (dis.numRated)
     // }
   });
-  console.log(display)
+   (display)
 
 }
 
 async function getComments(applications, reviews, users){
-  console.log(users)
+   (users)
   let commentsTotal = []
   applications.forEach((application, i) => {
     let comments = []
@@ -124,7 +124,7 @@ async function getComments(applications, reviews, users){
     })
     let commentList = []
     comments.forEach(comment => {
-      console.log(comment)
+       (comment)
       comment.comments.map(c => {
         let t = {
           comment: c.value,
@@ -139,24 +139,24 @@ async function getComments(applications, reviews, users){
     }
     commentsTotal.push(newComment)
   });
-  console.log(commentsTotal)
+   (commentsTotal)
 
 
   commentsTotal.forEach((app, i) => {
-    //console.log(app.name + "( Total Comments: " + app.comments.length + ")")
+    // (app.name + "( Total Comments: " + app.comments.length + ")")
     if (i % 2 == 0){
-      console.log("<<<")
+       ("<<<")
     }
     else {
-      console.log(">>>")
+       (">>>")
     }
     app.comments.forEach((c, index) => {
-      console.log( '"' + c.comment + '"' + " (" + c.user + ")")
+       ( '"' + c.comment + '"' + " (" + c.user + ")")
       // if (index % 2 == 0){
-      //   console.log("<<<")
+      //    ("<<<")
       // }
       // else {
-      //   console.log(">>>")
+      //    (">>>")
       // }
     });
   })
