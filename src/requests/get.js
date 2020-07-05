@@ -26,12 +26,10 @@ async function getReviewAPI(user, applicationId) {
 }
 
 async function getUserReviewsAPI(user) {
-  const token = await user.getIdToken();
   const response = await fetch(proxy + `/api/ratings/${user.uid}`, {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      authorization: `Bearer ${token}`
     }
   });
   const body = await response.json();
@@ -85,6 +83,20 @@ async function getAllReviewsAPI() {
   return body;
 }
 
+async function getCandidateSubmissions() {
+  const response = await fetch(proxy + `/api/admin/candidate-submissions`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    }
+  });
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
 //-----------------------------------------------------------------------------
 
 async function getApplicationTableData(user) {
@@ -103,16 +115,14 @@ async function getApplicationTableData(user) {
   return body;
 }
 
-async function getReviewCountAPI(user) {
-  const token = await user.getIdToken();
+async function getReviewCountAPI(userId) {
   const url = new URL(
-    proxy + `/api/ratings/${user.uid}/?` + new URLSearchParams({ count: true })
+    proxy + `/api/ratings/${userId}/?` + new URLSearchParams({ count: true })
   );
   const response = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      authorization: `Bearer ${token}`
     }
   });
   const body = await response.json();
@@ -225,5 +235,6 @@ export {
   getAllReviewsAPI,
   getAllUsersAPI,
   getAllRankingsAPI,
-  getApplicationReviewsAPI
+  getApplicationReviewsAPI,
+  getCandidateSubmissions
 };
