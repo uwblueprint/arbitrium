@@ -22,6 +22,7 @@ const Wrapper = styled.div`
   }
   table.MuiTable-root {
     border: 1px solid #cccccc;
+    margin-bottom: 30px;
   }
   button {
     max-width: 200px;
@@ -44,21 +45,73 @@ export default class AllCandidates extends Component {
     this.routeChange = this.routeChange.bind(this);
     this.state = {
       applications: [],
-      totalReviews: -1
+      totalReviews: -1,
+      rankings: [],
+      reviews: [],
+      avgRankings: []
     };
   }
 
   componentDidMount() {
     GET.getAllUsersAPI().then((users) => {
-      this.setState({ totalReviews: users.length });
+      this.setState({
+        totalReviews: users.length
+      });
     });
 
-    fetch("http://localhost:4000/api/admin/candidate-submissions")
-      .then((res) => res.json())
-      .then((data) => {
-        this.setState({ applications: data });
-      })
-      .catch(console.log);
+    GET.getCandidateSubmissions().then((data) => {
+      this.setState({
+        applications: data
+      });
+    });
+
+    GET.getAllRankingsAPI().then((data) => {
+      this.setState({
+        rankings: data,
+      });
+    });
+          
+    GET.getAllReviewsAPI().then((data) => {
+      this.setState({
+        reviews: data,
+      });
+    });
+  }
+    
+ //Calculate the average ranking
+  calculateAverageRanking = () => {
+    this.state.applications.forEach((application) => {
+    let numRank = 0;
+    let rankingTotal = 0;
+
+    //Calculate the average ranking
+    this.state.rankings.forEach((rank) => {
+      if (
+        rank.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+        rank.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+      ) {
+        const apps = rank.applications;
+        let pos = 0;
+
+        let found = false;
+        apps.forEach((app) => {
+          if (!found) {
+            pos += 1;
+          }
+          if (app.appId === application._id) {
+            found = true;
+          }
+        });
+        if (pos !== 0) {
+          numRank += 1;
+          rankingTotal += pos;
+        }
+      }
+    });
+    const averageRanking = (rankingTotal / numRank).toFixed(2);
+
+    application.avgRanking = averageRanking;
+  });
   }
 
   routeChange() {
@@ -67,6 +120,7 @@ export default class AllCandidates extends Component {
   }
 
   render() {
+    this.calculateAverageRanking()
     return (
       <Wrapper className="application-list">
         <Paper>
@@ -89,10 +143,11 @@ export default class AllCandidates extends Component {
             </TableHead>
             <TableBody>
               {this.state.applications
-                ? this.state.applications.map((application, index) => (
+                ? this.state.applications.sort((a, b) => parseInt(a.avgRanking) > parseInt(b.avgRanking) ? 1 : -1)
+                  .map((application, index) => (
                     <TableRow hover key={application._id}>
                       <StyledTableCell component="th" scope="row">
-                        {index + 1}
+                        {application.avgRanking}
                       </StyledTableCell>
                       <TableCell align="left">
                         {application.candidateName}
@@ -111,7 +166,7 @@ export default class AllCandidates extends Component {
                           value="OpenApplication"
                           onClick={() => {
                             this.props.history.push(
-                              "/admin/submissions/" + application._id
+                              "/submissions/" + application._id
                             );
                           }}
                         >

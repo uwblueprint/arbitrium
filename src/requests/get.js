@@ -83,6 +83,20 @@ async function getAllReviewsAPI() {
   return body;
 }
 
+async function getCandidateSubmissions() {
+  const response = await fetch(proxy + `/api/admin/candidate-submissions`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    }
+  });
+  const body = await response.json();
+  if (response.status !== 200) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
 //-----------------------------------------------------------------------------
 
 async function getApplicationTableData(user) {
@@ -221,5 +235,6 @@ export {
   getAllReviewsAPI,
   getAllUsersAPI,
   getAllRankingsAPI,
-  getApplicationReviewsAPI
+  getApplicationReviewsAPI,
+  getCandidateSubmissions
 };
