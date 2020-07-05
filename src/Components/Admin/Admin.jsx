@@ -139,13 +139,13 @@ async function getComments(applications, reviews, users){
 
 
   commentsTotal.forEach((app, i) => {
-    //console.log(app.name + "( Total Comments: " + app.comments.length + ")")
-    if (i % 2 == 0){
+      //console.log(app.name + "( Total Comments: " + app.comments.length + ")")
+      //if (i % 2 == 0){
       //console.log("<<<")
-    }
-    else {
+      //  }
+      //else {
       //console.log(">>>")
-    }
+      //  }
     app.comments.forEach((c, index) => {
       //console.log( '"' + c.comment + '"' + " (" + c.user + ")")
       // if (index % 2 == 0){

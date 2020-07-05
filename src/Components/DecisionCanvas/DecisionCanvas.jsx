@@ -84,7 +84,6 @@ function DecisionCanvas({ update, review, categoryData }) {
     }, {});
   }, [review]);
 
-  console.log(categoryData)
   let a = 0;
   let b = 0;
   return (

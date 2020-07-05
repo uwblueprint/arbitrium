@@ -107,7 +107,6 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
     setSelected(id);
     push(path);
   };
-  console.log(SectionList)
 
   const nextApp = getNextValidApplication();
   return (

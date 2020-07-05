@@ -46,7 +46,6 @@ function ApplicationTable({ history, user }) {
       if (Array.isArray(res)) setApps(res);
     });
   }, [user]);
-  console.log(applications)
   return (
     <Wrapper className="application-list">
       <Paper>
