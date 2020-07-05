@@ -11,8 +11,6 @@ const Wrapper = styled.div`
 `;
 
 async function calc(rankings, applications, reviews) {
-  // ("Applications")
-  // (applications)
 
   const display = [];
 
@@ -72,20 +70,19 @@ async function calc(rankings, applications, reviews) {
       avgRating: averageRating
     };
     display.push(dis);
-    //  (dis.avgRating)
+    // console.log(dis.avgRating)
     // if (i % 2 == 0){
-    //    (dis.numRated)
+    //   console.log(dis.numRated)
     // }
     // else {
-    //    (dis.numRated)
+    //   console.log(dis.numRated)
     // }
   });
-   (display)
+
 
 }
 
 async function getComments(applications, reviews, users){
-   (users)
   let commentsTotal = []
   applications.forEach((application, i) => {
     let comments = []
@@ -124,7 +121,7 @@ async function getComments(applications, reviews, users){
     })
     let commentList = []
     comments.forEach(comment => {
-       (comment)
+
       comment.comments.map(c => {
         let t = {
           comment: c.value,
@@ -139,24 +136,23 @@ async function getComments(applications, reviews, users){
     }
     commentsTotal.push(newComment)
   });
-   (commentsTotal)
 
 
   commentsTotal.forEach((app, i) => {
-    // (app.name + "( Total Comments: " + app.comments.length + ")")
+    //console.log(app.name + "( Total Comments: " + app.comments.length + ")")
     if (i % 2 == 0){
-       ("<<<")
+      //console.log("<<<")
     }
     else {
-       (">>>")
+      //console.log(">>>")
     }
     app.comments.forEach((c, index) => {
-       ( '"' + c.comment + '"' + " (" + c.user + ")")
+      //console.log( '"' + c.comment + '"' + " (" + c.user + ")")
       // if (index % 2 == 0){
-      //    ("<<<")
+      //   console.log("<<<")
       // }
       // else {
-      //    (">>>")
+      //   console.log(">>>")
       // }
     });
   })
