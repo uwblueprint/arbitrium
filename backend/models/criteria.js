@@ -18,12 +18,6 @@ var criteriaSchema = new mongoose.Schema(
     criteriaRole: { // admin, committe members...
       type: String, 
     },
-    applicationId: {
-      type: mongoose.Schema.ObjectId
-    },
-    rating: {
-      type: Number
-    },
     // incase you have multiple notes you want to add
     subCriteriaList: [subCriteria]
   },

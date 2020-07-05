@@ -37,4 +37,7 @@ module.exports.applications = require("./models/application");
 module.exports.reviews = require("./models/ratings");
 module.exports.stackedRankings = require("./models/stackedRankings");
 module.exports.users = require("./models/users");
+module.exports.comments = require("./models/comment");
+module.exports.criterias = require("./models/criteria");
+module.exports.newratings = require("./models/denormRatings");
 //module.exports.applications = require("./models/application");

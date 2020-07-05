@@ -4,21 +4,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../mongo.js");
 
-
-
-// Get Criteria's by AppId
-// Notes & Criteria Ratings
-router.get("/app/:appId", function(req, res) {
-  try {
-    db.criterias.find({ applicationId: req.params.appId }).then(function(found) {
-      res.json(found);
-    });
-  } catch (err) {
-    res.send(err);
-  }
-});
-
-// Gets all Criteria's 
+// Get All Criteria's
 router.get("/", function(req, res) {
   db.criterias
     .find()
@@ -30,25 +16,24 @@ router.get("/", function(req, res) {
     });
 });
 
-// Get all reviews by userId and appID
-router.get("/:userid/:appId", function(req, res) {
-  db.adminreviews
-    .findOne({ applicationId: req.params.appId, userId: req.params.userid })
-    .then(function(found) {
+// To Get One Criteria By Name
+router.get("/:criteriaId", function(req, res) {
+  try {
+    db.criterias.find({ criteriaId: req.params.criteriaId }).then(function(found) {
       res.json(found);
-    })
-    .catch(function(err) {
-      res.send(err);
     });
+  } catch (err) {
+    res.send(err);
+  }
 });
 
-// create a new document if we did not get any documents satisfying the criteria 
+// Will be used to create new criterias
 router.post("/", function(req, res) {
-  db.adminreviews
+  db.criterias
     .updateOne(
-      { userId: req.body.userId, applicationId: req.body.applicationId },
+      {},
       req.body,
-      { upsert: true }
+      {upsert: true }
     )
     // created
     .then(function(newSchedule) {
