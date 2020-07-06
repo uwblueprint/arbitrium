@@ -26,6 +26,7 @@ function AuthProvider({ initialAppLoad, children }) {
         return;
       }
       const appUser = await getUserAPI(user);
+      console.log(appUser)
       //If the user doesn't have access to this program, sign them out
       if (!appUser) {
         alert(
@@ -42,6 +43,7 @@ function AuthProvider({ initialAppLoad, children }) {
         appUser.programs.some(
           (program) => program.name === process.env.REACT_APP_PROGRAM
         );
+      console.log(appUser.programs)
 
       if (!hasProgramAcess) {
         firebaseApp.auth().signOut();

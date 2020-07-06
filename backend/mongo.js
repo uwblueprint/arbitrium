@@ -13,7 +13,7 @@ mongoose.set("debug", true);
 
 //connect to database server; if database doesn't exist, it will create it
 
-let toConnect = ["Development","Production","EmergencyFund","NotCreated"]
+let toConnect = ["Development","Production","EmergencyFund","NotCreated","Authentication"]
 let connections = {}
 
 toConnect.forEach(item => {
