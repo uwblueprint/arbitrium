@@ -8,7 +8,7 @@ const userSchema = require("./../models/users");
 const db = require("../mongo.js");
 
 console.log(db)
-userModel = db[0].model("userModel", userSchema);
+//userModel = db["EmergencyFund"].model("userModel", userSchema);
 console.log(db.length)
 
 router.get("/all", function(req, res) {
