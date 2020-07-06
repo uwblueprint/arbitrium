@@ -93,7 +93,15 @@ class CommitteeReview extends Component {
     });
     GET.getAllUsersAPI().then(users => {
       // TODO: Filter the users based on their committee, schema might change
-      // users = users.filter(checkCommittee)
+      users = users.filter((user) => {
+        return Array.isArray(user.programs) && (
+          user.programs.some(
+            (program) => program.name === process.env.REACT_APP_PROGRAM
+          ) &&
+          user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+          user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+        )
+      });
 
       this.setState({ committeeSize: users.length });
       for (let i = 0; i < users.length; i++) {

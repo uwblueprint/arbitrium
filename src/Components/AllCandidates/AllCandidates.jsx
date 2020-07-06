@@ -61,12 +61,22 @@ export default class AllCandidates extends Component {
 
   componentDidMount() {
     GET.getAllUsersAPI().then((users) => {
+      users = users.filter((user) => {
+        return Array.isArray(user.programs) && (
+          user.programs.some(
+            (program) => program.name === process.env.REACT_APP_PROGRAM
+          ) &&
+          user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+          user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+        )
+      });
       this.setState({
         totalReviews: users.length
       });
     });
 
     GET.getCandidateSubmissions().then((data) => {
+      console.log(data);
       this.setState({
         applications: data
       });
@@ -77,14 +87,14 @@ export default class AllCandidates extends Component {
         rankings: data,
       });
     });
-          
+
     GET.getAllReviewsAPI().then((data) => {
       this.setState({
         reviews: data,
       });
     });
   }
-    
+
  //Calculate the average ranking
   calculateAverageRanking = () => {
     this.state.applications.forEach((application) => {
@@ -128,6 +138,7 @@ export default class AllCandidates extends Component {
 
   render() {
     this.calculateAverageRanking()
+    console.log(this.state.applications)
     return (
       <Wrapper className="application-list">
         <Paper>
@@ -154,13 +165,13 @@ export default class AllCandidates extends Component {
                   .map((application, index) => (
                     <TableRow hover key={application._id}>
                       <StyledTableCell component="th" scope="row">
-                        {application.avgRanking}
+                        {application.avgRanking > 0 ? application.avgRanking : "N/A"}
                       </StyledTableCell>
                       <TableCell align="left">
                         {application.candidateName}
                       </TableCell>
                       <TableCell align="left">
-                        {application.avgRating}/5
+                        {application.avgRating > 0 ? application.avgRating : 0}/5
                       </TableCell>
                       <TableCell align="left">
                         {application.numReviews}/{this.state.totalReviews}

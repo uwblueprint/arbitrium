@@ -32,6 +32,9 @@ router.get("/candidate-submissions", function(req, res) {
                      { $and:
                          [
                           { $eq: ["$applicationId", "$$appId"] },
+                          { $ne: ["$Rating", -1]},
+                          { $ne: ["$userId", "vBUgTex5MeNd57fdB8u4wv7kXZ52"]},
+                          { $ne: ["$userId", "hM9QRmlybTdaQkLX25FupXqjiuF2"]}
                          ]
                      }
                  }
@@ -39,13 +42,13 @@ router.get("/candidate-submissions", function(req, res) {
          ],
          as: "applicationReviews"
       },
-      
+
     },
     {
       $project:{
-              candidateName: '$Organization Name',
-              numReviews:{$size:"$applicationReviews"},
-              avgRating: {$round: [{$avg: "$applicationReviews.rating" }, 2]} 
+              candidateName: '$Organization Name (legal name)',
+              numReviews: {$size:"$applicationReviews"},
+              avgRating: {$round: [{$avg: "$applicationReviews.rating" }, 2]}
           }
     },
   ])
