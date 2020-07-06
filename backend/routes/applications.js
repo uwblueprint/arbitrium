@@ -6,12 +6,12 @@ const db = require("../mongo.js");
 
 router.get("/", function(req, res) {
   if (req.query.count) {
-    db.applications.countDocuments().then(count => {
+    db["EmergencyFund"].applications.countDocuments().then(count => {
       res.json(count);
     });
     return;
   }
-  db.applications
+  db["EmergencyFund"].applications
     .find()
     .then(function(found) {
       res.json(found);
@@ -22,7 +22,7 @@ router.get("/", function(req, res) {
 });
 
 router.get("/:userid", function(req, res) {
-  db.applications
+  db["EmergencyFund"].applications
     .aggregate([
       {
         $project: { "Organization Name": 1 }

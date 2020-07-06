@@ -19,7 +19,7 @@ var question = new mongoose.Schema({
   }
 });
 
-var reviewSchema = new mongoose.Schema(
+var ratingSchema = new mongoose.Schema(
   {
     applicationId: {
       type: mongoose.Schema.ObjectId
@@ -39,6 +39,5 @@ var reviewSchema = new mongoose.Schema(
   { collection: "Reviews" }
 );
 
-var Ratings = mongoose.model("Ratings", reviewSchema);
-
-module.exports = Ratings;
+//var Ratings = mongoose.model("Ratings", reviewSchema);
+module.exports = ratingSchema

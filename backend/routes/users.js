@@ -26,7 +26,7 @@ router.get("/all", function(req, res) {
 
 router.get("/:userid", function(req, res) {
   //If user doesn't exist, create one and return it
-
+  console.log("Getting user")
   db["Authentication"].users
     .findOne({ userId: req.params.userid })
     .then(function(found) {

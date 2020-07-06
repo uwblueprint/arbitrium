@@ -6,6 +6,5 @@ var appSchema = new mongoose.Schema({
 }, { collection: 'Applications' });
 
 
-var App = mongoose.model('Application', appSchema);
-
-module.exports = App;
+//var App = mongoose.model('Application', appSchema);
+module.exports = appSchema

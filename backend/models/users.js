@@ -42,7 +42,7 @@ var userSchema = new mongoose.Schema(
       type: Boolean
     }
   },
-  { collection: "user" }
+  { collection: "users" }
 );
 
 //var User = mongoose.model("Users", userSchema);

@@ -1,6 +1,11 @@
 const MONGO_CONFIGS = require("./mongo.config");
 const mongoose = require("mongoose");
+
+//Load in all of the schemas, they will attached to each successful connection
 const userSchema = require("./models/users");
+const applicationSchema = require("./models/application")
+const rankingSchema = require("./models/stackedRankings")
+const ratingSchema = require("./models/ratings")
 
 console.log("Attempting to connect to Mongo...");
 
@@ -30,10 +35,16 @@ toConnect.forEach(item => {
     }
   );
 
-  let myModel = mongo.model("userModel", userSchema)
+  let userModel = mongo.model("userModel", userSchema);
+  let applicationModel = mongo.model("applicationModel", applicationSchema);
+  let rankingModel = mongo.model("rankingModel", rankingSchema);
+  let ratingModel = mongo.model("ratingModel", ratingSchema);
   let newConnection = {
     mongo: mongo,
-    users: myModel
+    users: userModel,
+    applications: applicationModel,
+    rankings: rankingModel,
+    ratings: ratingModel
   }
   connections[item] = newConnection
 });

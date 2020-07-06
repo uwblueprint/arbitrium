@@ -18,6 +18,6 @@ var stackedSchema = new mongoose.Schema(
   { collection: "StackedRankings" }
 );
 
-var Stackings = mongoose.model("Stackings", stackedSchema);
+//var Stackings = mongoose.model("Stackings", stackedSchema);
 
-module.exports = Stackings;
+module.exports = stackedSchema;
