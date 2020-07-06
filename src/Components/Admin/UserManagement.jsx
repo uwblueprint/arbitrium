@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
+
 import UserManagementTable from "./UserManagementTable";
-import Button from "@material-ui/core/Button";
+import EditUserDialog from "./EditUserDialog";
+import NewUserDialog from "./NewUserDialog";
+import DialogButton from "../Common/DialogButton";
+
 import styled from "styled-components";
 import Spinner from "react-spinner-material";
-const GET = require("../../requests/get");
+import * as GET from "../../requests/get";
 
 const Wrapper = styled.div`
   margin-top: 148px;
   text-align: left;
   padding: 0 64px;
-  .header {
+`;
+
+const Header = styled.div`
     display: flex;
     align-items: center;
     h1 {
@@ -20,72 +26,13 @@ const Wrapper = styled.div`
       margin-right: auto;
     }
     .button-container {
-      display: inline-block;
-    }
-    button {
-      height: fit-content;
-      margin-top: auto;
-      margin-bottom: auto;
+      display: flex;
     }
   }
-`;
+  `;
 
-function UserManagement() {
-  const [users, setUsers] = useState(null);
-
-  useEffect(() => {
-    //Option 1
-    /*
-    GET.getAllUsersAPI().then(res => {
-      if (Array.isArray(res)) setUsers(res);
-    });
-    */
-
-    //Option 2: Define an async function to call at the end of useEffect
-    async function getUsers() {
-      //Fetch the users from the backend
-      const fetched = await GET.getAllUsersAPI();
-
-      //Convert data into a format used by the table using convertData
-      //Update the state and re-render
-      setUsers(convertData(fetched));
-    }
-
-    //Call the defined async function
-    getUsers();
-
-    //DANGER, ONLY RUN TO SYNC THE FIREBASE USERS WITH THE MONGO USERS.
-    //WILL RUN AN UPDATE USER ON EACH USER FROM FIREBASE
-    //IT WILL OVERRIDE CHANGES MADE
-    //seedDB()
-  }, []);
-
-  return (
-    <div>
-      {users != null ? (
-        <Wrapper>
-          <div className="header">
-            <h1>User Management</h1>
-            <div className="button-container">
-              <Button color="primary" variant="contained">
-                Create New User
-              </Button>
-            </div>
-          </div>
-          <UserManagementTable data={users} />
-        </Wrapper>
-      ) : (
-        <div>
-          <h1>Loading Users...</h1>
-          <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
-        </div>
-      )}
-    </div>
-  );
-}
-
-//Helper Function
-function convertData(fetched) {
+// convert fetched users to table format
+function convertToTableData(fetched) {
   const userList = [];
   if (fetched != null) {
     fetched.forEach((user) => {
@@ -101,14 +48,60 @@ function convertData(fetched) {
         programAccess: programsList,
         role: user.role,
         userLink: (
-          <Button variant="outlined" color="primary">
-            Edit
-          </Button>
+          <div className="button-container">
+            <DialogButton
+              Dialog={EditUserDialog}
+              closeOnEsc={true}
+              variant="outlined"
+              data={user}
+            >
+              Edit
+            </DialogButton>
+          </div>
         )
       });
     });
   }
   return userList;
+}
+
+function UserManagement() {
+  const [users, setUsers] = useState(null);
+
+  useEffect(() => {
+    //Option 2: Define an async function to call at the end of useEffect
+    async function getUsers() {
+      //Fetch the users from the backend
+      const fetched = await GET.getAllUsersAPI();
+
+      setUsers(convertToTableData(fetched.filter((u) => !u.deleted)));
+    }
+
+    getUsers();
+  }, []);
+
+  return (
+    <Wrapper>
+      {users != null ? (
+        <>
+          <Header>
+            <h1>User Management</h1>
+            <div className="button-container">
+              <DialogButton Dialog={NewUserDialog} closeOnEsc={true}>
+                Create New User
+              </DialogButton>
+            </div>
+          </Header>
+          <UserManagementTable data={users} />
+        </>
+      ) : (
+        <>
+          <h4>Loading Users...</h4>
+          <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+        </>
+      )}
+    </Wrapper>
+  );
 }
 
 //Take all firebase users and create an entry in mongo if one doesn't exist

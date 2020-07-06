@@ -6,6 +6,7 @@ const router = express.Router();
 
 const userSchema = require("./../models/users");
 const db = require("../mongo.js");
+const deleteUser = require("./admin").deleteUser;
 
 console.log(db)
 //userModel = db["EmergencyFund"].model("userModel", userSchema);
@@ -49,6 +50,29 @@ router.post("/", function(req, res) {
     .catch(function(err) {
       res.send(err);
     });
+});
+
+router.delete("/:userId", function(req, res) {
+  db.users.updateOne(
+    { userId: req.params.userId },
+    { $set: { deleted: true } },
+    (err, result) => {
+      if (err || !result || (result && result.n !== 1)) {
+        res.status(500).send(err);
+      } else {
+        deleteUser(req.params.userId)
+          .then(() => {
+            res.status(204).send();
+          })
+          .catch((err) => {
+            console.log(`User with UID = ${req.params.userId}
+              was marked deleted in MongoDB but not removed from Firebase, failed due to: ${err}`);
+            // using status code 202 (accepted) to represent partial success
+            res.status(202).send();
+          });
+      }
+    }
+  );
 });
 
 module.exports = router;

@@ -1,10 +1,10 @@
-let proxy = "http://localhost:4000"
-console.log(process.env.REACT_APP_NODE_ENV)
-if (process.env.REACT_APP_NODE_ENV === "production"){
-  proxy = process.env.REACT_APP_SERVER_PROD
+let proxy = "http://localhost:4000";
+console.log(process.env.REACT_APP_NODE_ENV);
+if (process.env.REACT_APP_NODE_ENV === "production") {
+  proxy = process.env.REACT_APP_SERVER_PROD;
 }
-if (process.env.REACT_APP_NODE_ENV === "qa"){
-  proxy = process.env.REACT_APP_SERVER_QA
+if (process.env.REACT_APP_NODE_ENV === "qa") {
+  proxy = process.env.REACT_APP_SERVER_QA;
 }
 
 async function updateReviewAPI(databody) {
@@ -41,7 +41,6 @@ async function updateStackedAPI(databody) {
   return body;
 }
 
-
 async function updateUserAPI(databody) {
   const response = await fetch(proxy + "/api/users", {
     method: "POST",
@@ -52,9 +51,10 @@ async function updateUserAPI(databody) {
     }
   });
 
-  const body = await response.json();
+  const body = response.json();
   if (response.status !== 201) {
-    console.log("Error with posting stacked ranking");
+    console.log("Error posting user");
+    throw Error(body);
   }
   return body;
 }
