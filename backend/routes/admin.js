@@ -46,7 +46,7 @@ router.get("/candidate-submissions", function(req, res) {
       $project:{
               candidateName: '$Organization Name (legal name)',
               numReviews: {$size:"$applicationReviews"},
-              avgRating: {$round: [{$avg: "$applicationReviews.rating" }, 2]}it is t
+              avgRating: {$round: [{$avg: "$applicationReviews.rating" }, 2]}
           }
     },
   ])
