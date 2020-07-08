@@ -33,40 +33,28 @@ const Header = styled.div`
 
 // convert fetched users to table format
 function convertToTableData(fetched) {
-  const userList = [];
-  if (fetched != null) {
-    fetched.forEach((user) => {
-      const programsList = [];
-      if (user.programs != null) {
-        user.programs.forEach((program) => {
-          programsList.push(program.name);
-        });
-      }
-      userList.push({
-        name: user.name,
-        email: user.email,
-        programAccess: programsList,
-        role: user.role,
-        userLink: (
-          <Button variant="outlined" color="primary">
-            Edit
-          </Button>
-        )
-      });
-    });
-  }
-  return userList;
+  if (fetched == null) return [];
+  return fetched.map((user) => ({
+    name: user.name,
+    email: user.email,
+    programAccess: user.programs.map((p) => p.name),
+    role: user.role,
+    userLink: (
+      <Button variant="outlined" color="primary">
+        Edit
+      </Button>
+    )
+  }));
 }
 
 function UserManagement() {
   const [users, setUsers] = useState(null);
 
   useEffect(() => {
-    //Option 2: Define an async function to call at the end of useEffect
+    // Define an async function since callback must be synchronous
     async function getUsers() {
-      //Fetch the users from the backend
+      // Fetch the users from the backend
       const fetched = await GET.getAllUsersAPI();
-
       setUsers(convertToTableData(fetched));
     }
 
@@ -96,28 +84,5 @@ function UserManagement() {
     </Wrapper>
   );
 }
-
-//Take all firebase users and create an entry in mongo if one doesn't exist
-// function seedDB() {
-//   ADMIN.getAllFirebaseUsers().then(function(users) {
-//     users.forEach((item) => {
-//       let p = {
-//         name: "SVP Investee Grant",
-//         access: "regular user"
-//       };
-//       let programs = [];
-//       programs.push(p);
-//       let user = {
-//         userId: item.uid,
-//         name: "",
-//         email: item.email,
-//         role: "User",
-//         programs: programs
-//       };
-//       //2 FACTOR AUTH. CONTACT GREG BEFORE UNCOMMENTING
-//       //UPDATE.updateUserAPI(user)
-//     });
-//   });
-// }
 
 export default UserManagement;
