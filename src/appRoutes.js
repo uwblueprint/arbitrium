@@ -4,6 +4,7 @@ import UserManagement from "./Components/AdminView/UserManagement/UserManagement
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import AdminStatsView from "./Components/AdminView/ApplicationStats/ApplicationStats";
+import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
 import Admin from "./Components/Admin/Admin";
 
 /*
@@ -37,6 +38,12 @@ const routes = [
     path: "/admin/allcandidates",
     component: AllCandidates,
     title: "Admin view to view all candidates",
+    groups: ["Admin"]
+  },
+  {
+    path: "/admin/committeereview",
+    component: CommitteeReview,
+    title: "Admin view to review the status of committee members",
     groups: ["Admin"]
   },
   {

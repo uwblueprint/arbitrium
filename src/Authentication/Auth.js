@@ -56,7 +56,7 @@ function AuthProvider({ initialAppLoad, children }) {
       }
 
       const applications = await GET.getAllApplicationsAPI();
-      const reviewCount = await GET.getReviewCountAPI(user);
+      const reviewCount = await GET.getReviewCountAPI(user.uid);
       //Load the initial data into redux
       initialAppLoad(applications, reviewCount);
       // differentiate between the firebase user and the user retrieved from mongo (firebaseUser and appUser)

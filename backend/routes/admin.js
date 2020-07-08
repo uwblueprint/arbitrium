@@ -19,6 +19,45 @@ const express = require("express");
 const router = express.Router();
 const db = require("../mongo.js");
 
+router.get("/candidate-submissions", function(req, res) {
+  db.applications
+  .aggregate([
+    {
+      $lookup: {
+        from: "Reviews",
+        let: { appId: "$_id" },
+        pipeline: [
+             { $match:
+                 { $expr:
+                     { $and:
+                         [
+                          { $eq: ["$applicationId", "$$appId"] },
+                         ]
+                     }
+                 }
+             }
+         ],
+         as: "applicationReviews"
+      },
+      
+    },
+    {
+      $project:{
+              candidateName: '$Organization Name',
+              numReviews:{$size:"$applicationReviews"},
+              avgRating: {$round: [{$avg: "$applicationReviews.rating" }, 2]} 
+          }
+    },
+  ])
+  .then(function(found) {
+    res.json(found);
+  })
+  .catch(function(err) {
+    res.send(err);
+  });
+});
+
+
 router.get("/", function(req, res) {
 
 
@@ -49,5 +88,6 @@ router.get("/", function(req, res) {
   listAllUsers()
 
 });
+
 
 module.exports = router;
