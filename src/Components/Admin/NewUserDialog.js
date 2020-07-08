@@ -100,16 +100,13 @@ function NewUserDialog({ onSubmit, close }) {
           <Close />
         </IconButton>
       </Header>
-      {isSubmitting && (
-        <LoadingOverlay
-          spinnerProps={{
-            radius: 120,
-            color: "#333",
-            stroke: 2,
-            visible: true
-          }}
-        />
-      )}
+      <LoadingOverlay
+        show={isSubmitting}
+        spinnerProps={{
+          radius: 120,
+          stroke: 2
+        }}
+      />
       <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
       <Button
         onClick={addNewUser}
