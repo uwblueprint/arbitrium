@@ -6,9 +6,9 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import styled from "styled-components";
-import LoginFieldsCard from "./logincards/loginfieldscard/loginfieldscard.jsx";
-import PasswordResetEmailCard from "./logincards/passwordresetemailcard/passwordresetemailcard.jsx";
-import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/passwordresetresponsecard.jsx";
+import LoginFieldsCard from "./logincards/loginfieldscard/LoginFieldsCard";
+import PasswordResetEmailCard from "./logincards/passwordresetemailcard/PasswordResetEmailCard";
+import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/PasswordResetResponseCard";
 
 const StyledCard = styled(Card)`
   width: 350px;
