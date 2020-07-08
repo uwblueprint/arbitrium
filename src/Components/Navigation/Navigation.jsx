@@ -10,12 +10,14 @@ import Button from "@material-ui/core/Button";
 
 import { makeStyles } from "@material-ui/core/styles";
 
+export const MAX_NAVBAR_WIDTH = 300;
+
 const useStyles = makeStyles({
   root: {
     // Entire Nav
     "& .MuiDrawer-paper": {
       marginTop: "56px",
-      maxWidth: "300px",
+      maxWidth: `${MAX_NAVBAR_WIDTH}px`,
       padding: "4px 0",
       position: "fixed",
       marginBottom: "50px",

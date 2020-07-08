@@ -6,7 +6,11 @@ import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 // TODO: Uncomment when send email feature is complete
 //import Checkbox from '@material-ui/core/Checkbox';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faSortDown,
+  faSortUp
+} from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 
 const GET = require("../../requests/get");
@@ -32,7 +36,7 @@ const Wrapper = styled.div`
     font-size: 14px;
     line-height: 21px;
     letter-spacing: 0.5px;
-    color: #2261AD;
+    color: #2261ad;
     max-width: 854px;
     width: 90vw;
     margin: 0 auto;
@@ -83,25 +87,25 @@ class CommitteeReview extends Component {
       committee: [],
       appCount: -1,
       sortDescending: true,
-      committeeSize: -1,
+      committeeSize: -1
     };
   }
 
   componentDidMount() {
-    GET.getApplicationCount().then(appCount => {
+    GET.getApplicationCount().then((appCount) => {
       this.setState({ appCount: appCount });
     });
-    GET.getAllUsersAPI().then(users => {
+    GET.getAllUsersAPI().then((users) => {
       // TODO: Filter the users based on their committee, schema might change
       // users = users.filter(checkCommittee)
 
       this.setState({ committeeSize: users.length });
       for (let i = 0; i < users.length; i++) {
-        GET.getReviewCountAPI(users[i].userId).then(count => {
+        GET.getReviewCountAPI(users[i].userId).then((count) => {
           let committee = [...this.state.committee];
-          committee[i] = {'member': users[i], 'review': count};
-          this.setState({committee});
-        })
+          committee[i] = { member: users[i], review: count };
+          this.setState({ committee });
+        });
       }
     });
   }
@@ -109,34 +113,38 @@ class CommitteeReview extends Component {
   sortCommittee() {
     let tempCommittee;
     if (this.state.sortDescending) {
-      tempCommittee = this.state.committee.sort((a,b)=>b.review-a.review)
+      tempCommittee = this.state.committee.sort((a, b) => b.review - a.review);
     } else {
-      tempCommittee = this.state.committee.sort((a,b)=>a.review-b.review)
+      tempCommittee = this.state.committee.sort((a, b) => a.review - b.review);
     }
 
-    let newCommittee = []
-    for (var i = 0, n = tempCommittee.length; i<n; i++) {
+    let newCommittee = [];
+    for (var i = 0, n = tempCommittee.length; i < n; i++) {
       newCommittee[i] = this.state.committee[i];
     }
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       sortDescending: !prevState.sortDescending,
-      committee: newCommittee,
+      committee: newCommittee
     }));
   }
 
   goBack() {
-    this.props.history.push('/admin/allcandidates');
+    this.props.history.push("/admin/allcandidates");
   }
 
   render() {
     return (
-      <Wrapper className="application-list">
-        <Paper style={{paddingBottom: '30px'}}>
+      <Wrapper>
+        <Paper style={{ paddingBottom: "30px" }}>
           <p align="left" onClick={this.goBack}>
-            <span style={{cursor: 'pointer'}}>
+            <span style={{ cursor: "pointer" }}>
               <FontAwesomeIcon
-                style={{ height: "25px", width: "25px", verticalAlign: "-0.5em" }}
+                style={{
+                  height: "25px",
+                  width: "25px",
+                  verticalAlign: "-0.5em"
+                }}
                 icon={faAngleLeft}
               />
               Back to Candidate Submissions
@@ -146,16 +154,31 @@ class CommitteeReview extends Component {
           <Table className="table">
             <TableHead>
               <TableRow>
-                <TableCell style={{ width: "35%" }} className="header">Committee Member</TableCell>
-                <TableCell style={{ width: "35%", cursor: "pointer" }} className="header" onClick={this.sortCommittee}>
+                <TableCell style={{ width: "35%" }} className="header">
+                  Committee Member
+                </TableCell>
+                <TableCell
+                  style={{ width: "35%", cursor: "pointer" }}
+                  className="header"
+                  onClick={this.sortCommittee}
+                >
                   # of Candidates Reviewed
                   <FontAwesomeIcon
-                    style={{ height: "15px", width: "15px", verticalAlign: "-0.25em", paddingLeft: '5px' }}
+                    style={{
+                      height: "15px",
+                      width: "15px",
+                      verticalAlign: "-0.25em",
+                      paddingLeft: "5px"
+                    }}
                     icon={this.state.sortDescending ? faSortUp : faSortDown}
                   />
                 </TableCell>
                 <TableCell style={{ width: "10%" }} align="left"></TableCell>
-                <TableCell style={{ width: "20%" }} className="tableContent" align="right">
+                <TableCell
+                  style={{ width: "20%" }}
+                  className="tableContent"
+                  align="right"
+                >
                   {/* TODO: Uncomment when send email feature is complete
                   Select all
                   <Checkbox
@@ -167,16 +190,25 @@ class CommitteeReview extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {(this.state.committee && this.state.committee !== [] && !this.state.committee.includes(undefined))
+              {this.state.committee &&
+              this.state.committee !== [] &&
+              !this.state.committee.includes(undefined)
                 ? this.state.committee.map((committee, key) => (
                     <TableRow hover key={committee.member.id}>
-                      <TableCell component="th" scope="row" className="tableContent">
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className="tableContent"
+                      >
                         {committee.member.email}
                       </TableCell>
                       <TableCell align="left" className="tableContent">
                         {committee.review} / {this.state.appCount}
                       </TableCell>
-                      <TableCell align="left" className="tableContent"></TableCell>
+                      <TableCell
+                        align="left"
+                        className="tableContent"
+                      ></TableCell>
                       <TableCell align="right">
                         {/* TODO: Uncomment when send email feature is complete
                         <Checkbox
