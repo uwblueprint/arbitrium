@@ -4,13 +4,16 @@ import { fetchAdminViewStats } from "../../../Actions/admin";
 import {
   BarChart,
   Bar,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend
 } from "recharts";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import NativeSelect from "@material-ui/core/NativeSelect";
+import moment from "moment";
 
 import "./ApplicationStats.css";
 
@@ -18,6 +21,75 @@ const ApplicationStats = (props) => {
   useEffect(() => {
     props.fetchAdminViewStats(props.match.params.organizationId);
   }, []);
+
+  const [sortType, setSortType] = useState("none");
+
+  const getSortedComments = (comments) => {
+    if (sortType == "date") {
+      return comments.sort(
+        (a, b) => moment(a.lastReviewed) < moment(b.lastReviewed)
+      );
+    } else if (sortType == "name") {
+      return comments.sort((a, b) => {
+        return a.email.localeCompare(b.email);
+      });
+    } else {
+      return comments;
+    }
+  };
+
+  const getFormattedComments = () => {
+    const formattedComments =
+      props.comments &&
+      getSortedComments([...props.comments]).map((comment, index) => (
+        <div className="comment" key={"comment-" + index}>
+          <div className="comment-details">
+            <div className="comment-logo">
+              {comment.email.substring(0, 2).toUpperCase()}
+            </div>
+            <div className="comment-email">
+              <b>{comment.email}</b>
+            </div>
+            <div className="comment-date">
+              {moment(comment.lastReviewed)
+                .toDate()
+                .toString()
+                .substring(4, 16)}
+            </div>
+          </div>
+          <div className="comment-content">{comment.value}</div>
+        </div>
+      ));
+
+    return (
+      <div className="application-stats-comments-section-body">
+        <div className="application-stats-comments-section-controller">
+          <h4>Overall Comments</h4>
+          <div className="application-stats-comments-section-sort">
+            <FormControl
+              className={"application-stats-comments-section-sort-dropdown"}
+            >
+              <InputLabel htmlFor="demo-customized-select-native">
+                Sort by
+              </InputLabel>
+              <NativeSelect
+                id="demo-customized-select-native"
+                value={sortType}
+                onChange={(evt) => setSortType(evt.target.value)}
+              >
+                <option value={"none"}>None</option>
+                <option value={"date"}>Date</option>
+                <option value={"name"}>Name</option>
+              </NativeSelect>
+            </FormControl>
+          </div>
+        </div>
+        <div className="application-stats-comments-section-results">
+          {formattedComments}
+        </div>
+      </div>
+    );
+  };
 
   const getData = (type) => {
     let transpiledData;
@@ -124,13 +196,6 @@ const ApplicationStats = (props) => {
       )
     );
   };
-
-  const getFormattedComments = () =>
-    //TODO: style comments appropriately
-    props.comments &&
-    props.comments.map((comment, index) => (
-      <span key={"comment-" + index}>{comment.content}</span>
-    ));
 
   return (
     <div className="application-stats">

@@ -4,6 +4,53 @@ const express = require("express");
 const router = express.Router();
 const db = require("../mongo.js");
 
+
+router.get("/admin/:appId", function(req, res) {
+  db.stackedRankings
+  .aggregate([
+    {
+      $unwind: "$applications"
+    },
+    {
+      $lookup: {
+        from: "Reviews",
+        let: { appId: req.params.appId  },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$applicationId", "$$appId"]
+              }
+            }
+          },
+          { $project: { rating: 1 } }
+        ],
+        as: "ratingInfo"
+      }
+    },
+    {
+      $replaceRoot: {
+        newRoot: {
+          $mergeObjects: [
+            "$$ROOT",
+            { $arrayElemAt: ["$ratingInfo", 0] },
+          ]
+        }
+      }
+    },
+    {
+      $project: { ratingInfo: 0 }
+    }
+  ])
+  .then(function(found) {
+    console.log(found);
+    res.json(found);
+  })
+  .catch(function(err) {
+    res.send(err);
+  });
+})
+
 router.get("/:userid", function(req, res) {
   db.stackedRankings
     .aggregate([

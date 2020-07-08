@@ -29,4 +29,54 @@
 
 .application-stats {
   margin-top: 100px;
+  padding-left: 70px;
+  padding-right: 70px;
+}
+
+.application-stats-comments-section-body {
+  margin-top: 20px;
+  height: 200px;
+}
+
+.application-stats-comments-section-controller {
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment {
+  font-size: 12px;
+  text-align: left;
+  margin-bottom: 10px;
+}
+.comment-details {
+  display: flex;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  margin-bottom: 3px;
+  align-items: center;
+}
+
+.comment-content {
+  display: flex;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.comment-email {
+  margin-right: 5px;
+}
+
+.comment-logo {
+  border-radius: 50%;
+  border: 1px solid black;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
 }
