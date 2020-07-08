@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import UserManagementTable from "./UserManagementTable";
 import EditUserDialog from "./EditUserDialog";
 import NewUserDialog from "./NewUserDialog";
-import DialogButton from "../Common/DialogButton";
+import DialogTriggerButton from "../Common/Dialogs/DialogTriggerButton";
 
 import styled from "styled-components";
 import Spinner from "react-spinner-material";
@@ -49,14 +49,14 @@ function convertToTableData(fetched) {
         role: user.role,
         userLink: (
           <div className="button-container">
-            <DialogButton
+            <DialogTriggerButton
               Dialog={EditUserDialog}
               closeOnEsc={true}
               variant="outlined"
               data={user}
             >
               Edit
-            </DialogButton>
+            </DialogTriggerButton>
           </div>
         )
       });
@@ -86,9 +86,9 @@ function UserManagement() {
           <Header>
             <h1>User Management</h1>
             <div className="button-container">
-              <DialogButton Dialog={NewUserDialog} closeOnEsc={true}>
+              <DialogTriggerButton Dialog={NewUserDialog} closeOnEsc={true}>
                 Create New User
-              </DialogButton>
+              </DialogTriggerButton>
             </div>
           </Header>
           <UserManagementTable data={users} />

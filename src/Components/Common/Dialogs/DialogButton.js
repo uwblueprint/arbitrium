@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from "react";
-
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 
@@ -14,13 +13,12 @@ const DialogOverlay = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `;
 
-function DialogButton({
+function DialogTriggerButton({
   children,
   closeOnEsc,
   color,
   Dialog,
   dialogProps,
-  onClose,
   variant,
   customBgColor,
   alertParent,
@@ -31,8 +29,7 @@ function DialogButton({
 
   const closeDialog = useCallback(() => {
     setShowDialog(false);
-    onClose && onClose();
-  }, [onClose]);
+  }, []);
 
   useEffect(() => {
     function detectEscape(event) {
@@ -43,7 +40,7 @@ function DialogButton({
     if (dialogRef.current) {
       window.addEventListener("keydown", detectEscape);
     }
-  }, [closeDialog, closeOnEsc, dialogRef, onClose]);
+  }, [closeDialog, closeOnEsc, dialogRef]);
 
   function onClick() {
     setShowDialog(true);
@@ -83,4 +80,4 @@ function DialogButton({
   );
 }
 
-export default DialogButton;
+export default DialogTriggerButton;
