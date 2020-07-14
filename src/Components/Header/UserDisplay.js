@@ -26,7 +26,7 @@ const UserDisplay = () => {
           {currentUser.email}
           <button
             color="primary"
-            style={{ height: "32px", borderRadius: "100%" }}
+            style={{ height: "32px", borderRadius: "100%", cursor: "pointer" }}
             onClick={() => firebaseApp.auth().signOut()}
           >
             <FontAwesomeIcon

@@ -5,6 +5,7 @@ import EditUserDialog from "./EditUserDialog";
 import NewUserDialog from "./NewUserDialog";
 import DialogButton from "../Common/DialogButton";
 
+import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import Spinner from "react-spinner-material";
 import * as GET from "../../requests/get";
@@ -26,7 +27,7 @@ const Header = styled.div`
       margin-right: auto;
     }
     .button-container {
-      display: flex;
+      display: inline-block; //This may need to be flex (changed during a merge conflict)
     }
   }
   `;
@@ -70,8 +71,9 @@ function UserManagement() {
 
   useEffect(() => {
     //Option 2: Define an async function to call at the end of useEffect
+    // Define an async function since callback must be synchronous
     async function getUsers() {
-      //Fetch the users from the backend
+      // Fetch the users from the backend
       const fetched = await GET.getAllUsersAPI();
 
       setUsers(convertToTableData(fetched.filter((u) => !u.deleted)));

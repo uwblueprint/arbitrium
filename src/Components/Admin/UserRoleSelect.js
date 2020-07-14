@@ -7,7 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 const userRoles = [
   { name: "Admin", id: "Admin" },
   { name: "Committee Member", id: "User" },
-  { name: "Guest (view only)", id: "guest" }
+  { name: "Guest (view only)", id: "Guest" }
 ];
 
 const StyledSelect = styled(Select)`

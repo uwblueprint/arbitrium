@@ -6,14 +6,12 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import styled from "styled-components";
-import LoginFieldsCard from "./logincards/loginfieldscard/loginfieldscard.jsx";
-import PasswordResetEmailCard from "./logincards/passwordresetemailcard/passwordresetemailcard.jsx";
-import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/passwordresetresponsecard.jsx";
+import LoginFieldsCard from "./logincards/loginfieldscard/LoginFieldsCard";
+import PasswordResetEmailCard from "./logincards/passwordresetemailcard/PasswordResetEmailCard";
+import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/PasswordResetResponseCard";
 
 const StyledCard = styled(Card)`
   width: 350px;
-
-  //Center
   margin: 2 auto;
   position: absolute;
   top: 50%;
@@ -38,22 +36,39 @@ const StyledCard = styled(Card)`
   }
 `;
 
-const Login = ({ history }) => {
+function Login({ history, initialCardType }) {
   const { currentUser } = useContext(AuthContext);
-  const [loginFlowState, setLoginFlowState] = useState({
-    cardType: "loginFields"
-  });
+  const [loginFlowState, setLoginFlowState] = useState(
+    initialCardType ? initialCardType : "loginFields"
+  );
+
+  function onResetPassword() {
+    setLoginFlowState("passwordResetResponse");
+  }
+
+  const backToLogin = () => {
+    setLoginFlowState("loginFields");
+  };
+
+  if (currentUser != null) {
+    console.log("Redirecting");
+    return <Redirect to={"/applications"} />;
+  }
 
   const getCardContent = () => {
-    switch (loginFlowState.cardType) {
+    switch (loginFlowState) {
       case "passwordResetEmail":
-        return <PasswordResetEmailCard setLoginFlowState={setLoginFlowState} />;
+        return (
+          <PasswordResetEmailCard
+            onSubmit={onResetPassword}
+            backToLogin={backToLogin}
+          />
+        );
       case "passwordResetResponse":
         return (
           <PasswordResetResponseCard setLoginFlowState={setLoginFlowState} />
         );
       default:
-      case "loginFields":
         return (
           <LoginFieldsCard
             history={history}
@@ -63,22 +78,19 @@ const Login = ({ history }) => {
     }
   };
 
-  if (currentUser != null) {
-    console.log("Redirecting");
-    return <Redirect to={"/applications"} />;
-  } else {
-    return (
-      <div>
-        <StyledCard>
-          <CardHeader
-            title="arbitrium"
-            subheader={loginFlowState === "loginFields" ? "Sign-In" : null}
-          />
-          <CardContent>{getCardContent()}</CardContent>
-        </StyledCard>
-      </div>
-    );
-  }
-};
+  const content = getCardContent();
+
+  return (
+    <div>
+      <StyledCard>
+        <CardHeader
+          title="arbitrium"
+          subheader={loginFlowState === "loginFields" ? "Sign-In" : null}
+        />
+        <CardContent>{content}</CardContent>
+      </StyledCard>
+    </div>
+  );
+}
 
 export default withRouter(Login);

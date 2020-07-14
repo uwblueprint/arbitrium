@@ -18,12 +18,13 @@ import * as GET from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 
 const PageWrapper = styled.div`
-  display: flex;
+  padding-top: 50px;
 `;
 
 const BodyWrapper = styled.div`
   margin: 0 auto;
-  padding-top: 50px;
+  padding-left: 80px;
+  padding-right: 80px;
   max-width: 800px;
   h1 {
     font-size: 28px;

@@ -4,7 +4,7 @@ import { AuthProvider } from "./Authentication/Auth";
 import Container from "./Components/Container/Container";
 import Header from "./Components/Header/Header";
 import { initialAppLoad } from "./Actions";
-import Login from "./Authentication/login.js";
+import Login from "./Authentication/Login.js";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -27,6 +27,13 @@ function App() {
                 <Container>
                   <Switch>
                     <Route exact={true} path="/login" component={Login}></Route>
+                    <Route
+                      exact={true}
+                      path="/reset-password"
+                      render={() => (
+                        <Login initialCardType="passwordResetEmail" />
+                      )}
+                    ></Route>
                     {routes.map((route, i) => {
                       return (
                         <PrivateRoute
