@@ -5,7 +5,7 @@ const firebaseAdmin = require("../firebaseAdmin");
 const router = express.Router();
 const db = require("../mongo.js");
 
-const { sendWelcomeEmail } = require("../nodemailer");
+const { sendWelcomeEmail } = require("../nodemailer.config");
 const { createFirebaseUser } = require("./userUtils");
 const { deleteFirebaseUser } = require("./userUtils");
 
