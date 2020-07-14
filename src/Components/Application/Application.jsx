@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
-import FlowSelector from "../FlowSelector/FlowSelector";
 import Rating from "../Rating/Rating";
 import {
   createReview,

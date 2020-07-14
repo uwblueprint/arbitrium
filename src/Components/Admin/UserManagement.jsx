@@ -5,7 +5,6 @@ import EditUserDialog from "./EditUserDialog";
 import NewUserDialog from "./NewUserDialog";
 import DialogButton from "../Common/DialogButton";
 
-import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import Spinner from "react-spinner-material";
 import * as GET from "../../requests/get";
