@@ -69,8 +69,6 @@ function UserManagement() {
   const [users, setUsers] = useState(null);
 
   useEffect(() => {
-    //Option 2: Define an async function to call at the end of useEffect
-    // Define an async function since callback must be synchronous
     async function getUsers() {
       // Fetch the users from the backend
       const fetched = await GET.getAllUsersAPI();
