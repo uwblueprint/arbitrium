@@ -6,6 +6,7 @@ import ErrorIcon from "@material-ui/icons/Error";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
+import LoadingOverlay from "../Common/LoadingOverlay";
 import { userFormStateReducer } from "../../Reducers/UserFormStateReducer";
 import EditUserForm from "./EditUserForm";
 import DeleteUser from "./DeleteUser";
@@ -53,10 +54,12 @@ function EditUserDialog({ close, data }) {
   );
 
   const [showSaveFailure, setShowSaveFailure] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const styles = useStyles();
 
   function updateUser() {
+    setIsSubmitting(true);
     const requestBody = {
       userId: data.userId,
       name: formState.name,
@@ -76,6 +79,7 @@ function EditUserDialog({ close, data }) {
       })
       .catch((err) => {
         console.log(err);
+        setIsSubmitting(false);
         setShowSaveFailure(true);
       });
   }
@@ -96,11 +100,19 @@ function EditUserDialog({ close, data }) {
           <Close />
         </IconButton>
       </Header>
+      <LoadingOverlay
+        show={isSubmitting}
+        spinnerProps={{
+          radius: 120,
+          stroke: 2
+        }}
+      />
       <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
       <DeleteUser
         close={close}
         userId={data.userId}
         setShowSaveFailure={setShowSaveFailure}
+        setIsSubmitting={setIsSubmitting}
       />
       <SaveWrapper>
         <Button

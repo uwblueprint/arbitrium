@@ -27,10 +27,11 @@ const QuestionWrapper = styled.div`
   }
 `;
 
-function DeleteUser({ close, userId, setShowSaveFailure }) {
+function DeleteUser({ close, userId, setShowSaveFailure, setIsSubmitting }) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   function deleteUser(userId) {
+    setIsSubmitting(true);
     DELETE.deleteUserAPI(userId)
       .then(() => {
         close();
@@ -38,6 +39,7 @@ function DeleteUser({ close, userId, setShowSaveFailure }) {
       })
       .catch((err) => {
         console.log(err);
+        setIsSubmitting(false);
         setShowDeleteConfirmation(false);
         setShowSaveFailure(true);
       });
