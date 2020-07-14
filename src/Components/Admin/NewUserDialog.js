@@ -5,8 +5,7 @@ import Close from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 
-
-import { userFormStateReducer } from "Reducers/UserFormStateReducer";
+import { userFormStateReducer } from "../../Reducers/UserFormStateReducer";
 import EditUserForm from "./EditUserForm";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import { createUserAPI } from "../../requests/update";
