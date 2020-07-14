@@ -69,6 +69,7 @@ router.delete("/:userId", function(req, res) {
       }
     }
   );
+});
 
 // Create a new user in firebase and mongodb
 // Sends welcome email to user on creation
