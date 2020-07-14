@@ -33,7 +33,7 @@ function EditUserForm({ dispatch, formState }) {
     (event) => {
       dispatch({
         type: EDIT_PREFERRED_NAME,
-        preferredName: event.target.value
+        name: event.target.value
       });
     },
     [dispatch]
