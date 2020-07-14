@@ -4,10 +4,10 @@ const express = require("express");
 const firebaseAdmin = require("../firebaseAdmin");
 const router = express.Router();
 const db = require("../mongo.js");
-const deleteUser = require("./admin").deleteUser;
 
 const { sendWelcomeEmail } = require("../nodemailer");
 const { createFirebaseUser } = require("./userUtils");
+const { deleteFirebaseUser } = require("./userUtils");
 
 router.get("/all", function(req, res) {
   db.users
@@ -56,7 +56,7 @@ router.delete("/:userId", function(req, res) {
       if (err || !result || (result && result.n !== 1)) {
         res.status(500).send(err);
       } else {
-        deleteUser(req.params.userId)
+        deleteFirebaseUser(req.params.userId)
           .then(() => {
             res.status(204).send();
           })

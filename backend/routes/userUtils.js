@@ -25,4 +25,20 @@ async function createFirebaseUser(user) {
   }
 }
 
-module.exports = { createFirebaseUser };
+function deleteFirebaseUser(userId) {
+  return new Promise((resolve, reject) => {
+    firebaseAdmin
+      .auth()
+      .deleteUser(userId)
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        console.log(`
+          Error occurred deleting user with UID ${userId}: ${error}`);
+        reject(error);
+      });
+  });
+}
+
+module.exports = { createFirebaseUser, deleteFirebaseUser };

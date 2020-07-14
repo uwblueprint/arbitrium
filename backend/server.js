@@ -103,7 +103,7 @@ const applicationRoutes = require("./routes/applications");
 const ratingsRoutes = require("./routes/ratings");
 const stackedRoutes = require("./routes/stackedRankings");
 const usersRoutes = require("./routes/users");
-const adminRoutes = require("./routes/admin").router;
+const adminRoutes = require("./routes/admin");
 
 // allows us to access request body in a post or put
 app.use(cors(corsOptions));
