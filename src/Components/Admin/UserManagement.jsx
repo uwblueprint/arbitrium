@@ -26,7 +26,7 @@ const Header = styled.div`
       margin-right: auto;
     }
     .button-container {
-      display: inline-block; //This may need to be flex (changed during a merge conflict)
+      display: inline-block;
     }
   }
   `;
