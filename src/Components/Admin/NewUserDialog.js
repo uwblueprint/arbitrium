@@ -4,7 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Close from "@material-ui/icons/Close";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import { userFormStateReducer } from "./UserFormStateReducer";
+
+import { userFormStateReducer } from "../../Reducers/UserFormStateReducer";
 import EditUserForm from "./EditUserForm";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import { createUserAPI } from "../../requests/update";
@@ -63,8 +64,10 @@ function NewUserDialog({ onSubmit, close }) {
     userFormStateReducer,
     initialFormState
   );
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const styles = useStyles();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function addNewUser() {
     setIsSubmitting(true);
@@ -100,16 +103,13 @@ function NewUserDialog({ onSubmit, close }) {
           <Close />
         </IconButton>
       </Header>
-      {isSubmitting && (
-        <LoadingOverlay
-          spinnerProps={{
-            radius: 120,
-            color: "#333",
-            stroke: 2,
-            visible: true
-          }}
-        />
-      )}
+      <LoadingOverlay
+        show={isSubmitting}
+        spinnerProps={{
+          radius: 120,
+          stroke: 2
+        }}
+      />
       <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
       <Button
         onClick={addNewUser}

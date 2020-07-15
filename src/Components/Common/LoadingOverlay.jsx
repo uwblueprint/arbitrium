@@ -17,12 +17,12 @@ const OverlayWrapper = styled.div`
   }
 `;
 
-function LoadingOverlay({ spinnerProps }) {
-  //   const radius = spinnerProps.radius ? spinnerProps.radius : 30;
+function LoadingOverlay({ show, spinnerProps }) {
+  if (!show) return null;
   return (
     <OverlayWrapper>
       <div>
-        <Spinner {...spinnerProps} />
+        <Spinner color="#333" radius={64} visible {...spinnerProps} />
       </div>
     </OverlayWrapper>
   );

@@ -15,11 +15,10 @@ function PrivateRoute({ component: RouteComponent, route, ...rest }) {
 
   return isLoading ? (
     <LoadingOverlay
+      show
       spinnerProps={{
         radius: 220,
-        color: "#333",
-        stroke: 2,
-        visible: true
+        stroke: 2
       }}
     />
   ) : access ? (

@@ -3,11 +3,12 @@ import React, { useEffect, useState, useCallback } from "react";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 
+// TODO: fix height issue, currently setting to 150% as hacky fix
 const DialogOverlay = styled.div`
   position: fixed;
   left: 0;
   top: 0;
-  height: 100vh;
+  height: 150%;
   width: 100vw;
   z-index: 110;
   background: rgba(0, 0, 0, 0.5);
@@ -20,7 +21,10 @@ function DialogButton({
   Dialog,
   dialogProps,
   onClose,
-  variant
+  variant,
+  customBgColor,
+  alertParent,
+  data
 }) {
   const [showDialog, setShowDialog] = useState(false);
   const dialogRef = React.createRef();
@@ -46,19 +50,33 @@ function DialogButton({
     dialogRef.current.focus();
   }
 
+  // TODO: find better way to specify custom button colour
   return (
     <div className="button-container" ref={dialogRef}>
       <Button
         onClick={onClick}
         color={color || "primary"}
         variant={variant || "contained"}
+        style={
+          customBgColor
+            ? {
+                backgroundColor: `${customBgColor}`,
+                color: "#FFFFFF"
+              }
+            : {}
+        }
       >
         {children}
       </Button>
       {showDialog && (
         <>
           <DialogOverlay />
-          <Dialog {...dialogProps} close={closeDialog} />
+          <Dialog
+            {...dialogProps}
+            close={closeDialog}
+            confirm={alertParent}
+            data={data}
+          />
         </>
       )}
     </div>

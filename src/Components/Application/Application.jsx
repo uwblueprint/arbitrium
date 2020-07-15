@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
-import FlowSelector from "../FlowSelector/FlowSelector";
 import Rating from "../Rating/Rating";
 import {
   createReview,
@@ -25,6 +24,7 @@ const BodyWrapper = styled.div`
   margin: 0 auto;
   padding-left: 80px;
   padding-right: 80px;
+  max-width: 800px;
   h1 {
     font-size: 28px;
     font-weight: normal;
@@ -119,11 +119,13 @@ function Application({ applications, newReview, history, match, user }) {
 
   return (
     <PageWrapper>
-      <FlowSelector>
-        <button>1. Letter of Interest</button>
-        <button disabled>2. Full Application</button>
-      </FlowSelector>
       <BodyWrapper>
+        {/* //This should be in the body wrapper
+        <FlowSelector>
+          <button>1. Letter of Interest</button>
+          <button disabled>2. Full Application</button>
+        </FlowSelector>
+        */}
         <h1>
           <Button
             className="all-applicants"
