@@ -81,7 +81,7 @@ function UserManagement() {
 
   return (
     <Wrapper>
-      {users != null ? (
+      {users !== null ? (
         <>
           <Header>
             <h1>User Management</h1>
