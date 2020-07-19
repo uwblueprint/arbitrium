@@ -34,37 +34,6 @@ if (db != null && realtime != null) {
 }
 
 //------------------------------------------------------------------------------
-//FIREBASE INIT Admin
-//------------------------------------------------------------------------------
-
-/*var admin = require('firebase-admin');
-var serviceAccount = require('./firebaseAdmin.json');
-
-let firebaseAdmin = admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.REACT_APP_FIREBASE_ADMIN_DATABASE_URL
-})
-
-function listAllUsers(nextPageToken) {
-  // List batch of users, 1000 at a time.
-  firebaseAdmin.auth().listUsers(1000, nextPageToken)
-    .then(function(listUsersResult) {
-      listUsersResult.users.forEach(function(userRecord) {
-        console.log('user', userRecord.toJSON());
-      });
-      if (listUsersResult.pageToken) {
-        // List next batch of users.
-        listAllUsers(listUsersResult.pageToken);
-      }
-    })
-    .catch(function(error) {
-      console.log('Error listing users:', error);
-    });
-}
-
-listAllUsers()
-*/
-//------------------------------------------------------------------------------
 //CORS
 //------------------------------------------------------------------------------
 
@@ -94,16 +63,18 @@ var corsOptions = {
 //------------------------------------------------------------------------------
 //MONGO INIT
 //------------------------------------------------------------------------------
+//This section must be in this order. CORS must load before everything else
 
 //Routes are endpoints defined for a specific collection
-//Each has their own file
+//Each has their own file (models/routes/...)
+const programRoutes = require("./routes/programs")
 const applicationRoutes = require("./routes/applications");
 const ratingsRoutes = require("./routes/ratings");
 const stackedRoutes = require("./routes/stackedRankings");
 const usersRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin").router;
 
-// allows us to access request body in a post or put
+//Allows us to access request body in a post or put
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -113,13 +84,9 @@ app.get("/", function(req, res) {
   res.send("root");
 });
 
-//FUCK CORS. FUCK FUCK FUCK FUCK FUCK FUCK FUCK
-//-GREG MAXIN
-//P.S: FUCK CORS
-//P.P.S: Long story short this "MONGO INIT" section must be in this order
-//https://codefor.life/FUCK-CORS-FUCKFUCKFUCKFUCK/
 
 //prefix route for the routes
+app.use("/api/program", programRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/ratings", ratingsRoutes);
 app.use("/api/stackings", stackedRoutes);
@@ -265,20 +232,3 @@ app.put(
     );
   }
 );
-
-//Get all documents in a collection
-app.get("/api/questions", (req, res) => {
-  var col = db.collection("applications");
-  var questions = [];
-  col
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach(function(doc) {
-        // doc.data() is never undefined for query doc snapshots
-        //console.log(doc.id, " => ", doc.data());
-        questions.push(doc.data());
-      });
-      res.json(questions);
-    })
-    .catch((err) => res.send(err));
-});

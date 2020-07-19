@@ -1,16 +1,13 @@
 const express = require("express");
 
-// allows routes to be sent out
+//Allows api routes to be posted
 const router = express.Router();
-
-
-const userSchema = require("./../models/users");
+//Database connections: returns object of connections (connections["item"])
 const db = require("../mongo.js");
+
 const deleteUser = require("./admin").deleteUser;
 
-console.log(db)
 //userModel = db["EmergencyFund"].model("userModel", userSchema);
-console.log(db.length)
 
 router.get("/all", function(req, res) {
 
