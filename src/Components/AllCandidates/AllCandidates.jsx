@@ -44,7 +44,6 @@ const Wrapper = styled.div`
   }
   table.MuiTable-root {
     border: 1px solid #cccccc;
-    margin-bottom: 30px;
   }
   button {
     max-width: 200px;
@@ -171,7 +170,7 @@ export default class AllCandidates extends Component {
         {(this.state.applications !== null && this.state.applications.length !== 0) ? (
           <>
             <Header>
-              <h1>All Candidates</h1>
+              <h1 style={{color: 'black'}}>All Candidates</h1>
               <div className="button-container">
                 <Button
                   variant="contained"
@@ -189,11 +188,14 @@ export default class AllCandidates extends Component {
                 </Button>
               </div>
             </Header>
-            <AllCandidatesTable data={convertToTableData(this.state.applications, this.state.totalReviews)} totalReviews={this.state.totalReviews} />
+            <AllCandidatesTable
+              data={convertToTableData(this.state.applications, this.state.totalReviews)}
+              style={{marginBottom: '30px'}}
+            />
           </>
         ) : (
           <>
-            <h4>Loading Users...</h4>
+            <h4>Loading All Candidates...</h4>
             <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
           </>
         )}

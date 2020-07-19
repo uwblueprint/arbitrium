@@ -77,7 +77,7 @@ function AllCandidatesTable(props) {
         columns={columns}
         {...props}
         options={{
-          pageSize: Math.min(10, props.data.length),
+          pageSize: 10,
           rowStyle: rowStyle,
           search: true,
           showTitle: false

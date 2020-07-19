@@ -1,19 +1,30 @@
 import React, { Component } from "react";
-import Table from "@material-ui/core/Table";
-import Paper from "@material-ui/core/Paper";
+import CommitteeReviewTable from "./CommitteeReviewTable";
 import styled from "styled-components";
-import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 // TODO: Uncomment when send email feature is complete
 //import Checkbox from '@material-ui/core/Checkbox';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faSortDown,
-  faSortUp
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
+import Spinner from "react-spinner-material";
 
 const GET = require("../../requests/get");
+
+const Header = styled.div`
+    display: flex;
+    align-items: center;
+    h1 {
+      font-size: 24px;
+      font-weight: normal;
+      font-size: 24px;
+      display: inline-block;
+      margin-right: auto;
+    }
+    .button-container {
+      display: inline-block;
+    }
+  }
+`;
 
 const Wrapper = styled.div`
   margin-top: 150px;
@@ -78,11 +89,23 @@ const Wrapper = styled.div`
 //   return false
 // }
 
+function convertToTableData(fetched, appCount) {
+  const committeeList = [];
+  if (fetched !== null) {
+    fetched.forEach((member) => {
+      committeeList.push({
+        committeeMember: member.member.email,
+        candidatesReviewed: member.review + '/' + appCount,
+      });
+    });
+  }
+  return committeeList;
+}
+
 class CommitteeReview extends Component {
   constructor(props) {
     super(props);
     this.goBack = this.goBack.bind(this);
-    this.sortCommittee = this.sortCommittee.bind(this);
     this.state = {
       committee: [],
       appCount: -1,
@@ -110,25 +133,6 @@ class CommitteeReview extends Component {
     });
   }
 
-  sortCommittee() {
-    let tempCommittee;
-    if (this.state.sortDescending) {
-      tempCommittee = this.state.committee.sort((a, b) => b.review - a.review);
-    } else {
-      tempCommittee = this.state.committee.sort((a, b) => a.review - b.review);
-    }
-
-    let newCommittee = [];
-    for (var i = 0, n = tempCommittee.length; i < n; i++) {
-      newCommittee[i] = this.state.committee[i];
-    }
-
-    this.setState((prevState) => ({
-      sortDescending: !prevState.sortDescending,
-      committee: newCommittee
-    }));
-  }
-
   goBack() {
     this.props.history.push("/admin/allcandidates");
   }
@@ -136,93 +140,35 @@ class CommitteeReview extends Component {
   render() {
     return (
       <Wrapper>
-        <Paper style={{ paddingBottom: "30px" }}>
-          <p align="left" onClick={this.goBack}>
-            <span style={{ cursor: "pointer" }}>
-              <FontAwesomeIcon
-                style={{
-                  height: "25px",
-                  width: "25px",
-                  verticalAlign: "-0.5em"
-                }}
-                icon={faAngleLeft}
-              />
-              Back to Candidate Submissions
-            </span>
-          </p>
-          <h1 align="left">Committee Review Completion</h1>
-          <Table className="table">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ width: "35%" }} className="header">
-                  Committee Member
-                </TableCell>
-                <TableCell
-                  style={{ width: "35%", cursor: "pointer" }}
-                  className="header"
-                  onClick={this.sortCommittee}
-                >
-                  # of Candidates Reviewed
+        {(this.state.committee && this.state.committee !== [] && !this.state.committee.includes(undefined)) ? (
+          <>
+            <Header>
+              <p align="left" onClick={this.goBack}>
+                <span style={{ cursor: "pointer" }}>
                   <FontAwesomeIcon
                     style={{
-                      height: "15px",
-                      width: "15px",
-                      verticalAlign: "-0.25em",
-                      paddingLeft: "5px"
+                      height: "25px",
+                      width: "25px",
+                      verticalAlign: "-0.5em"
                     }}
-                    icon={this.state.sortDescending ? faSortUp : faSortDown}
+                    icon={faAngleLeft}
                   />
-                </TableCell>
-                <TableCell style={{ width: "10%" }} align="left"></TableCell>
-                <TableCell
-                  style={{ width: "20%" }}
-                  className="tableContent"
-                  align="right"
-                >
-                  {/* TODO: Uncomment when send email feature is complete
-                  Select all
-                  <Checkbox
-                    color="primary"
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                  />
-                  */}
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.committee &&
-              this.state.committee !== [] &&
-              !this.state.committee.includes(undefined)
-                ? this.state.committee.map((committee, key) => (
-                    <TableRow hover key={committee.member.id}>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        className="tableContent"
-                      >
-                        {committee.member.email}
-                      </TableCell>
-                      <TableCell align="left" className="tableContent">
-                        {committee.review} / {this.state.appCount}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        className="tableContent"
-                      ></TableCell>
-                      <TableCell align="right">
-                        {/* TODO: Uncomment when send email feature is complete
-                        <Checkbox
-                          color="primary"
-                          inputProps={{ 'aria-label': 'secondary checkbox' }}
-                        />
-                        */}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : "ERROR LOADING APPLICATIONS FROM DATABASE"}
-            </TableBody>
-          </Table>
-        </Paper>
+                  Back to Candidate Submissions
+                </span>
+              </p>
+            </Header>
+            <h1 align="left" style={{color: 'black'}}>Committee Review Completion</h1>
+            <CommitteeReviewTable
+              data={convertToTableData(this.state.committee, this.state.appCount)}
+              style={{marginBottom: '30px'}}
+            />
+          </>
+        ) : (
+          <>
+            <h4>Loading Committee Members...</h4>
+            <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+          </>
+        )}
       </Wrapper>
     );
   }
