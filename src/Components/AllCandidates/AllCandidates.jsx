@@ -1,12 +1,27 @@
 import React, { Component } from "react";
-import Table from "@material-ui/core/Table";
-import Paper from "@material-ui/core/Paper";
+import AllCandidatesTable from "./AllCandidatesTable";
 import styled from "styled-components";
-import { withStyles } from "@material-ui/core/styles";
-import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import Spinner from "react-spinner-material";
 
 const GET = require("../../requests/get");
+
+const Header = styled.div`
+    display: flex;
+    align-items: center;
+    h1 {
+      font-size: 24px;
+      font-weight: normal;
+      font-size: 24px;
+      display: inline-block;
+      margin-right: auto;
+    }
+    .button-container {
+      display: inline-block;
+    }
+  }
+`;
+
 
 const Wrapper = styled.div`
   margin-top: 150px;
@@ -39,12 +54,35 @@ const Wrapper = styled.div`
   }
 `;
 
-const StyledTableCell = withStyles((theme) => ({
-  body: {
-    fontSize: 20,
-    fontWeight: 500
+function convertToTableData(fetched, totalReviews) {
+  const applicationList = [];
+  if (fetched !== null) {
+    fetched.forEach((application) => {
+      applicationList.push({
+        avgRanking: parseFloat(application.avgRanking),
+        candidateName: application.candidateName,
+        avgRating: application.avgRating + '/5',
+        numReviews: application.numReviews + '/' + totalReviews,
+        candidateLink: (
+          <Button
+            variant="contained"
+            color="primary"
+            target="_blank"
+            value="OpenApplication"
+            onClick={() => {
+              this.props.history.push(
+                "/submissions/" + application._id
+              );
+            }}
+          >
+            Open
+          </Button>
+        )
+      });
+    });
   }
-}))(TableCell);
+  return applicationList;
+}
 
 export default class AllCandidates extends Component {
   constructor(props) {
@@ -139,62 +177,35 @@ export default class AllCandidates extends Component {
     this.calculateAverageRanking();
     return (
       <Wrapper>
-        <Paper>
-          <h1>All Candidates</h1>
-          <Table className="table">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ width: "20%" }}>Average Rank</TableCell>
-                <TableCell style={{ width: "20%" }}>Candidate Name</TableCell>
-                <TableCell style={{ width: "20%" }}>Average Rating</TableCell>
-                <TableCell
-                  style={{ width: "20%", cursor: "pointer", color: "#2261AD" }}
-                  align="left"
-                  onClick={this.routeChange}
+        {(this.state.applications !== null && this.state.applications.length !== 0) ? (
+          <>
+            <Header>
+              <h1>All Candidates</h1>
+              <div className="button-container">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  target="_blank"
+                  value="OpenCommittee"
+                  style={{width: '250px', maxWidth: '250px'}}
+                  onClick={() => {
+                    this.props.history.push(
+                      "/admin/committeereview"
+                    );
+                  }}
                 >
-                  # of Reviews
-                </TableCell>
-                <TableCell style={{ width: "20%" }} align="left"></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.applications
-                ? this.state.applications.sort((a, b) => parseFloat(a.avgRanking) > parseFloat(b.avgRanking) ? 1 : -1)
-                  .map((application, index) => (
-                    <TableRow hover key={application._id}>
-                      <StyledTableCell component="th" scope="row">
-                        {application.avgRanking > 0 ? application.avgRanking : "N/A"}
-                      </StyledTableCell>
-                      <TableCell align="left">
-                        {application.candidateName}
-                      </TableCell>
-                      <TableCell align="left">
-                        {application.avgRating > 0 ? application.avgRating : 0}/5
-                      </TableCell>
-                      <TableCell align="left">
-                        {application.numReviews}/{this.state.totalReviews}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          target="_blank"
-                          value="OpenApplication"
-                          onClick={() => {
-                            this.props.history.push(
-                              "/submissions/" + application._id
-                            );
-                          }}
-                        >
-                          Open
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : "ERROR LOADING APPLICATIONS FROM DATABASE"}
-            </TableBody>
-          </Table>
-        </Paper>
+                  View Committee Review
+                </Button>
+              </div>
+            </Header>
+            <AllCandidatesTable data={convertToTableData(this.state.applications, this.state.totalReviews)} totalReviews={this.state.totalReviews} />
+          </>
+        ) : (
+          <>
+            <h4>Loading Users...</h4>
+            <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+          </>
+        )}
       </Wrapper>
     );
   }
