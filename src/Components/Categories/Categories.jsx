@@ -85,7 +85,11 @@ const useStyles = makeStyles({
 });
 
 const Categories = ({ categoryData }) => {
-  const { contact } = categoryData;
+
+  console.log(categoryData)
+  const { admin } = categoryData.admin;
+  const { mission } = categoryData.mission;
+  const { funding } = categoryData.funding;
   const classes = useStyles();
 
   return (
@@ -106,9 +110,9 @@ const Categories = ({ categoryData }) => {
               classes={{ root: classes.secondaryDetailsPanel }}
             >
               <CategoryWrapper>
-                {contact.map(({ title, value }, index) => (
+                {categoryData.admin.map(({ title, value }, index) => (
                   <div className="category" key={index}>
-                    {title !== "Organization Website" ? (
+                    {title !== "Agency Website" && title != "Other Social Media" ? (
                       <>
                         <span className="title">{title}</span>
                         <span className="value">{value}</span>
@@ -129,21 +133,63 @@ const Categories = ({ categoryData }) => {
               </CategoryWrapper>
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
-          {/*}
-          <SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
-              Social Media
+              Grant Amount
             </SecondarySummaryPanel>
             <ExpansionPanelDetails
               classes={{ root: classes.secondaryDetailsPanel }}
             >
               <CategoryWrapper>
-                {socialMedia.map(({ title, value }, index) => (
+                {categoryData.grant.map(({ title, value }, index) => (
                   <div className="category" key={index}>
-                    <span className="title">{title}</span>
-                    <span className="value">
-                      <Link href={value}> {value} </Link>
-                    </span>
+                  {title !== "Organization Website" ? (
+                    <>
+                      <span className="title">{title}</span>
+                      <span className="value">{value}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="title">{title}</span>
+                      <span className="value">
+                        <Link target="_blank" href={value}>
+                          {" "}
+                          {value}{" "}
+                        </Link>
+                      </span>
+                    </>
+                  )}
+                  </div>
+                ))}
+              </CategoryWrapper>
+            </ExpansionPanelDetails>
+          </SecondaryExpansionPanel>
+          <SecondaryExpansionPanel>
+            <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
+              Other Funding?
+            </SecondarySummaryPanel>
+            <ExpansionPanelDetails
+              classes={{ root: classes.secondaryDetailsPanel }}
+            >
+              <CategoryWrapper>
+                {categoryData.funding.map(({ title, value }, index) => (
+                  <div className="category" key={index}>
+                  {title !== "Organization Website" ? (
+                    <>
+                      <span className="title">{title}</span>
+                      <span className="value">{value}</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="title">{title}</span>
+                      <span className="value">
+                        <Link target="_blank" href={value}>
+                          {" "}
+                          {value}{" "}
+                        </Link>
+                      </span>
+                    </>
+                  )}
                   </div>
                 ))}
               </CategoryWrapper>
@@ -152,13 +198,13 @@ const Categories = ({ categoryData }) => {
 
           <SecondaryExpansionPanel>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
-              Organization Information
+              Mission
             </SecondarySummaryPanel>
             <ExpansionPanelDetails
               classes={{ root: classes.secondaryDetailsPanel }}
             >
               <CategoryWrapper>
-                {organizationInformation.map(({ title, value }, index) => (
+                {categoryData.mission.map(({ title, value }, index) => (
                   <div className="category" key={index}>
                     <span className="title">{title}</span>
                     <span className="value">{value}</span>
@@ -167,7 +213,7 @@ const Categories = ({ categoryData }) => {
               </CategoryWrapper>
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
-
+          {/*
           <SecondaryExpansionPanel>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Application Information

@@ -38,6 +38,7 @@ function AuthProvider({ initialAppLoad, children }) {
         });
         return;
       }
+      console.log(appUser.programs)
       const hasProgramAcess =
         Array.isArray(appUser.programs) &&
         appUser.programs.some(

@@ -4,6 +4,7 @@ import UserManagement from "./Components/Admin/UserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import Admin from "./Components/Admin/Admin";
+import DatabaseManagement from "./Components/Admin/DatabaseManagement";
 
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
@@ -42,6 +43,12 @@ const routes = [
     path: "/admin/user-management",
     component: UserManagement,
     title: "Admin view to view all users",
+    groups: ["Admin"]
+  },
+  {
+    path: "/admin/database",
+    component: DatabaseManagement,
+    title: "Access and change the database being used",
     groups: ["Admin"]
   },
   {
