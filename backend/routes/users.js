@@ -50,7 +50,7 @@ router.post("/", function(req, res) {
 });
 
 router.delete("/:userId", function(req, res) {
-  db.users.updateOne(
+  db["Authentication"].users.updateOne(
     { userId: req.params.userId },
     { $set: { deleted: true } },
     (err, result) => {

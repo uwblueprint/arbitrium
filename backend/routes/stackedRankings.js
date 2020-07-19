@@ -5,7 +5,7 @@ const router = express.Router();
 const db = require("../mongo.js");
 
 router.get("/:userid", function(req, res) {
-  db.stackedRankings
+  db[req.headers.database].stackedRankings
     .aggregate([
       {
         $match: { userId: req.params.userid }
@@ -69,9 +69,9 @@ router.get("/:userid", function(req, res) {
 });
 
 
-//Admin stats 
+//Admin stats
 router.get("/", function(req, res) {
-  db.stackedRankings
+  db[req.headers.database].stackedRankings
     .find()
     .then(function(found) {
       res.json(found);
@@ -89,7 +89,7 @@ router.post("/", function(req, res) {
     userId: req.body.userId,
     applications: req.body.rankings
   };
-  db.stackedRankings
+  db[req.headers.database].stackedRankings
     .updateOne({ userId: req.body.userId }, stacked, { upsert: true })
     // status code 201 means created
     .then(function(newSchedule) {

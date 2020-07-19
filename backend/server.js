@@ -87,10 +87,11 @@ app.get("/", function(req, res) {
 
 //prefix route for the routes
 app.use("/api/program", programRoutes);
+app.use("/api/users", usersRoutes);
+
 app.use("/api/applications", applicationRoutes);
 app.use("/api/ratings", ratingsRoutes);
 app.use("/api/stackings", stackedRoutes);
-app.use("/api/users", usersRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.listen(4000, () => {

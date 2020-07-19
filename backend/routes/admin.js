@@ -12,16 +12,13 @@ if (firebaseAdmin){
   console.log("Firebase service account connection successful")
 }
 
-
 const express = require("express");
 
 // allows routes to be sent out
 const router = express.Router();
-const db = require("../mongo.js");
+
 
 router.get("/", function(req, res) {
-
-
   //Note: Firebase only returns 1000 users at a time so you have to do it in batches
   //https://firebase.google.com/docs/auth/admin/manage-users#list_all_users
   function listAllUsers(nextPageToken) {
@@ -43,7 +40,6 @@ router.get("/", function(req, res) {
       .catch(function(error) {
         console.log('Error listing users:', error);
       });
-
       console.log("Hello there", users);
   }
   listAllUsers()

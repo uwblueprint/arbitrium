@@ -16,78 +16,90 @@ ENV = MONGO_CONFIGS.module.environment;
 //For debugging the database
 mongoose.set("debug", true);
 
-//connect to database server; if database doesn't exist, it will create it
-let toConnect = ["Development","Production","EmergencyFund","NotCreated"]
+//A object to store connections - this is what we export
 let connections = {}
+
+//------------------------------------------------------------------------------
+//FETCH PROGRAMS
+//------------------------------------------------------------------------------
 
 //Our Authentication database holds a list of all programs.
 //Once we load in the programs we can make a connection to each of them
+var mongoPrograms = connect("Authentication")
 
-var mongoP = mongoose.createConnection(
-  `mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.mongodb.net/Authentication`,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  function(err) {
-    if (err) {
-      console.log("Mongo DB connection failed: " + "Authentication");
-      console.log(err);
-    } else {
-      console.log("Mongo DB connection successful: " + "Authentication");
-    }
-  }
-);
 //Authentication database only holds the users and programs (global scope)
-let programModel = mongoP.model("programModel", programSchema);
-let userModel = mongoP.model("userModel", userSchema);
+let programModel = mongoPrograms.model("programModel", programSchema);
+let userModel = mongoPrograms.model("userModel", userSchema);
 let newConnection = {
-  mongo: mongoP,
+  mongo: mongoPrograms,
   users: userModel,
   programs: programModel,
 }
 connections["Authentication"] = newConnection
 
 
+//------------------------------------------------------------------------------
+//LOAD PROGRAMS
+//------------------------------------------------------------------------------
+
 connections["Authentication"].programs.find()
   .then(function(found) {
-    console.log("We found some stuff yayaaaaayayayayayaay" + found)
-    console.log(found)
+
+    //For each program create a new database connection.
+    //If a database does not exist it will be created
+    found.forEach(item => {
+      addConnection(item.name)
+    });
   })
   .catch(function(err) {
+    console.log("ERROR fetching programs")
+    console.log(err)
 });
 
-
-
-
-toConnect.forEach(item => {
-  var mongo = mongoose.createConnection(
-    `mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.mongodb.net/${item}`,
+//Helper
+function connect(database) {
+  return mongoose.createConnection(
+    `mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.mongodb.net/${database}`,
     { useNewUrlParser: true, useUnifiedTopology: true },
     function(err) {
       if (err) {
-        console.log("Mongo DB connection failed: " + item);
+        console.log("Mongo DB connection failed: " + database);
         console.log(err);
       } else {
-        console.log("Mongo DB connection successful: " + item);
+        console.log("Mongo DB connection successful: " + database);
       }
     }
   );
+}
 
-  //These collections exist in every database except Authentication (program scope)
-  let applicationModel = mongo.model("applicationModel", applicationSchema);
-  let rankingModel = mongo.model("rankingModel", rankingSchema);
-  let ratingModel = mongo.model("ratingModel", ratingSchema);
-  let newConnection = {
-    mongo: mongo,
-    users: userModel,
-    applications: applicationModel,
-    rankings: rankingModel,
-    ratings: ratingModel
+
+function addConnection(database) {
+
+  if (connections[database] == null) {
+    var mongo = connect(database)
+
+    //These collections exist in every database except Authentication (program scope)
+    let applicationModel = mongo.model("applicationModel", applicationSchema);
+    let rankingModel = mongo.model("rankingModel", rankingSchema);
+    let ratingModel = mongo.model("ratingModel", ratingSchema);
+    let newConnection = {
+      mongo: mongo,
+      users: userModel,
+      applications: applicationModel,
+      rankings: rankingModel,
+      ratings: ratingModel
+    }
+    connections[database] = newConnection
   }
-  connections[item] = newConnection
-});
+}
+
+
+
+
 
 console.log("Number of connections: " + mongoose.connections.length)
 // need this for promises
 mongoose.Promise = Promise;
 
 module.exports = connections;
-//module.exports.applications = require("./models/application");
+module.exports.addConnection = addConnection;
