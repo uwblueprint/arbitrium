@@ -16,27 +16,11 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
-import { Paper, Tooltip } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 
 const Container = styled(Paper)`
   table {
     border: 1px solid #cccccc;
-  }
-`;
-
-const OverflowTooltip = styled(Tooltip)`
-  color: #2261ad;
-  margin: 0 1em;
-  .MuiTooltip-popper {
-    padding: 16px;
-  }
-`;
-
-const Overflow = styled.div`
-  font-size: 12px;
-  padding: 16px;
-  div {
-    margin-bottom: 0.4em;
   }
 `;
 
@@ -70,46 +54,11 @@ const tableIcons = {
 };
 
 const columns = [
-  { title: "Average Rank", field: "ranking" },
-  { title: "Candidate Name", field: "name" },
-  { title: "Average Ranking", field: "ranking" },
-  {
-    title: "# of Reviews",
-    field: "reviews",
-    // render: (rowData) => {
-    //   if (rowData.programAccess.length === 0) {
-    //     return "None";
-    //   }
-    //   if (rowData.programAccess.length > 1) {
-    //     return (
-    //       <div>
-    //         {rowData.programAccess[0]}
-    //         <OverflowTooltip
-    //           title={
-    //             <Overflow>
-    //               {rowData.programAccess.slice(1).map((program, i) => (
-    //                 <div key={i}>{program}</div>
-    //               ))}
-    //             </Overflow>
-    //           }
-    //         >
-    //           <span>{rowData.programAccess.length - 1} more</span>
-    //         </OverflowTooltip>
-    //       </div>
-    //     );
-    //   }
-    //   return rowData.programAccess.join(", ");
-    // }
-  },
-  {
-    title: "",
-    field: "candidateLink",
-    sorting: false,
-    searchable: false
-  }
+  { title: "Committee Member", field: "committeeMember" },
+  { title: "# of Candidates Reviewed", field: "candidatesReviewed" }
 ];
 
-function UserManagementTable(props) {
+function CommitteeReviewTable(props) {
   return (
     <div>
       <MaterialTable
@@ -120,7 +69,7 @@ function UserManagementTable(props) {
         columns={columns}
         {...props}
         options={{
-          pageSize: Math.min(10, props.data.length),
+          pageSize: 10,
           rowStyle: rowStyle,
           search: true,
           showTitle: false
@@ -130,4 +79,4 @@ function UserManagementTable(props) {
   );
 }
 
-export default UserManagementTable;
+export default CommitteeReviewTable;
