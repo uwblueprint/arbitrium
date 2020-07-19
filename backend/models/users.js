@@ -45,6 +45,4 @@ var userSchema = new mongoose.Schema(
   { collection: "users" }
 );
 
-//var User = mongoose.model("Users", userSchema);
-
 module.exports = userSchema

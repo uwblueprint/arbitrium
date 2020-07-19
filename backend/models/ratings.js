@@ -39,5 +39,4 @@ var ratingSchema = new mongoose.Schema(
   { collection: "Reviews" }
 );
 
-//var Ratings = mongoose.model("Ratings", reviewSchema);
 module.exports = ratingSchema
