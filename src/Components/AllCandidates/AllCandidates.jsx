@@ -35,7 +35,6 @@ const Wrapper = styled.div`
     max-width: 854px;
     width: 90vw;
     margin: 0 auto;
-    padding-bottom: 20px;
     text-align: left;
   }
   .table {

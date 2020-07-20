@@ -38,7 +38,6 @@ const Wrapper = styled.div`
     max-width: 854px;
     width: 90vw;
     margin: 0 auto;
-    padding-bottom: 20px;
   }
   p {
     font-family: Roboto;
@@ -144,12 +143,13 @@ class CommitteeReview extends Component {
           <>
             <Header>
               <p align="left" onClick={this.goBack}>
-                <span style={{ cursor: "pointer" }}>
+                <span style={{ cursor: "pointer", color: '#2261AD' }}>
                   <FontAwesomeIcon
                     style={{
                       height: "25px",
                       width: "25px",
-                      verticalAlign: "-0.5em"
+                      verticalAlign: "-0.5em",
+                      color: '#2261AD'
                     }}
                     icon={faAngleLeft}
                   />
