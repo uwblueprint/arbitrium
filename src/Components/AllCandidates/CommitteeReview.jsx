@@ -37,7 +37,7 @@ const Wrapper = styled.div`
     line-height: 36px;
     max-width: 854px;
     width: 90vw;
-    margin: 0 auto;
+    margin: 0;
   }
   p {
     font-family: Roboto;
@@ -49,7 +49,7 @@ const Wrapper = styled.div`
     color: #2261ad;
     max-width: 854px;
     width: 90vw;
-    margin: 0 auto;
+    margin: 0;
     padding-bottom: 20px;
     vertical-align: center;
   }

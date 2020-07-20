@@ -32,9 +32,8 @@ const Wrapper = styled.div`
     font-weight: normal;
     font-size: 24px;
     line-height: 36px;
-    max-width: 854px;
     width: 90vw;
-    margin: 0 auto;
+    margin: 0;
     text-align: left;
   }
   .table {
