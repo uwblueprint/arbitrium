@@ -148,7 +148,7 @@ class CommitteeReview extends Component {
     return (
       <Wrapper>
         {(this.state.committee && this.state.committee !== [] && !this.state.committee.includes(undefined)) ? (
-          <>
+          <div>
             <Header>
               <p align="left" onClick={this.goBack}>
                 <span style={{ cursor: "pointer", color: '#2261AD' }}>
@@ -171,12 +171,12 @@ class CommitteeReview extends Component {
               appCount={this.state.appCount}
               style={{marginBottom: '30px'}}
             />
-          </>
+          </div>
         ) : (
-          <>
+          <div>
             <h4>Loading Committee Members...</h4>
             <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
-          </>
+          </div>
         )}
       </Wrapper>
     );
