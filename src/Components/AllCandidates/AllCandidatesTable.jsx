@@ -14,20 +14,14 @@ const rowStyle = {
   border: "1px solid #cccccc"
 };
 
-const columns = [
-  { title: "Average Rank", field: "avgRanking" },
-  { title: "Candidate Name", field: "candidateName" },
-  { title: "Average Rating", field: "avgRating" },
-  { title: "# of Reviews", field: "numReviews" },
-  {
-    title: "",
-    field: "candidateLink",
-    sorting: false,
-    searchable: false
-  }
-];
-
 function AllCandidatesTable(props) {
+  const columns = [
+    { title: "Average Rank", field: "avgRanking" },
+    { title: "Candidate Name", field: "candidateName" },
+    { title: "Average Rating (/5)", field: "avgRating" },
+    { title: `# of Reviews (/${props.totalReviews})`, field: "numReviews" },
+    { title: "", field: "candidateLink", sorting: false, searchable: false }
+  ];
   return (
     <div>
       <MaterialTable
