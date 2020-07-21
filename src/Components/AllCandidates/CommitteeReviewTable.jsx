@@ -14,12 +14,12 @@ const rowStyle = {
   border: "1px solid #cccccc"
 };
 
-const columns = [
-  { title: "Committee Member", field: "committeeMember" },
-  { title: "# of Candidates Reviewed", field: "candidatesReviewed" }
-];
-
 function CommitteeReviewTable(props) {
+  const columns = [
+    { title: "Committee Member", field: "committeeMember" },
+    { title: `# of Candidates Reviewed (/${props.appCount})`, field: "candidatesReviewed" }
+  ];
+
   return (
     <div>
       <MaterialTable

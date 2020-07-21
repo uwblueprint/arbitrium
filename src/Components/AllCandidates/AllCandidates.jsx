@@ -51,29 +51,26 @@ const Wrapper = styled.div`
   }
 `;
 
-function convertToTableData(fetched, totalReviews) {
+function convertToTableData(fetched) {
   const applicationList = [];
   if (fetched !== null) {
     fetched.forEach((application) => {
       applicationList.push({
         avgRanking: parseFloat(application.avgRanking),
         candidateName: application.candidateName,
-        avgRating: application.avgRating + '/5',
-        numReviews: application.numReviews + '/' + totalReviews,
+        avgRating: application.avgRating,
+        numReviews: application.numReviews,
         candidateLink: (
-          <Button
-            variant="contained"
-            color="primary"
-            target="_blank"
-            value="OpenApplication"
-            onClick={() => {
-              this.props.history.push(
-                "/submissions/" + application._id
-              );
-            }}
-          >
-            Open
-          </Button>
+          <a href={`/submissions/${application._id}`}>
+            <Button
+              variant="contained"
+              color="primary"
+              target="_blank"
+              value="OpenApplication"
+            >
+              Open
+            </Button>
+          </a>
         )
       });
     });
@@ -196,7 +193,9 @@ export default class AllCandidates extends Component {
               </div>
             </Header>
             <AllCandidatesTable
-              data={convertToTableData(this.state.applications, this.state.totalReviews)}
+              data={convertToTableData(this.state.applications)}
+              totalReviews={this.state.totalReviews}
+              history={this.props.history}
               style={{marginBottom: '30px'}}
             />
           </>

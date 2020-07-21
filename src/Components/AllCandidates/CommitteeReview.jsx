@@ -88,13 +88,13 @@ const Wrapper = styled.div`
 //   return false
 // }
 
-function convertToTableData(fetched, appCount) {
+function convertToTableData(fetched) {
   const committeeList = [];
   if (fetched !== null) {
     fetched.forEach((member) => {
       committeeList.push({
         committeeMember: member.member.email,
-        candidatesReviewed: member.review + '/' + appCount,
+        candidatesReviewed: member.review,
       });
     });
   }
@@ -167,7 +167,8 @@ class CommitteeReview extends Component {
             </Header>
             <h1 align="left" style={{color: 'black'}}>Committee Review Completion</h1>
             <CommitteeReviewTable
-              data={convertToTableData(this.state.committee, this.state.appCount)}
+              data={convertToTableData(this.state.committee)}
+              appCount={this.state.appCount}
               style={{marginBottom: '30px'}}
             />
           </>
