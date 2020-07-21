@@ -163,7 +163,7 @@ export default class AllCandidates extends Component {
     return (
       <Wrapper>
         {(this.state.applications !== null && this.state.applications.length !== 0) ? (
-          <>
+          <div>
             <Header>
               <h1 style={{color: 'black'}}>All Candidates</h1>
               <div className="button-container">
@@ -186,15 +186,14 @@ export default class AllCandidates extends Component {
             <AllCandidatesTable
               data={convertToTableData(this.state.applications)}
               totalReviews={this.state.totalReviews}
-              history={this.props.history}
               style={{marginBottom: '30px'}}
             />
-          </>
+          </div>
         ) : (
-          <>
+          <div>
             <h4>Loading All Candidates...</h4>
             <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
-          </>
+          </div>
         )}
       </Wrapper>
     );
