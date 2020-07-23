@@ -7,6 +7,14 @@ import * as GET from "../requests/get";
 
 export const AuthContext = React.createContext();
 
+const isTokenExpired = (user) => {
+  const MILLISECONDS_PER_HOUR = 3600 * 1000;
+  const NOW = new Date().getTime();
+  // tokens expire every hour and Firebase automatically refreshes them,
+  // so we check "expiry" by seeing if lastLoginAt is more than an hour ago
+  return Number(user.toJSON().lastLoginAt) < NOW - MILLISECONDS_PER_HOUR;
+};
+
 const AUTH_STATES = {
   LOADING: "LOADING",
   NOT_AUTHENTICATED: "NOT_AUTHENTICATED",
@@ -25,6 +33,13 @@ function AuthProvider({ initialAppLoad, children }) {
         setAuthState({ state: AUTH_STATES.NOT_AUTHENTICATED, user });
         return;
       }
+
+      if (user && isTokenExpired(user)) {
+        firebaseApp.auth().signOut();
+        setAuthState({ state: AUTH_STATES.NOT_AUTHENTICATED, user: null });
+        return;
+      }
+
       const appUser = await getUserAPI(user);
       //If the user doesn't have access to this program, sign them out
       if (!appUser) {
@@ -65,7 +80,12 @@ function AuthProvider({ initialAppLoad, children }) {
         user: { firebaseUser: user, appUser }
       });
     }
-    firebaseApp.auth().onAuthStateChanged(setUser);
+
+    const unsubscribe = firebaseApp.auth().onAuthStateChanged(setUser);
+
+    return () => {
+      unsubscribe();
+    };
   }, [initialAppLoad]);
 
   return (
