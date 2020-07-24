@@ -42,9 +42,17 @@ function ApplicationTable({ history, user }) {
   const [applications, setApps] = useState([]);
 
   useEffect(() => {
+    let hasUnmounted = false;
+
     GET.getApplicationTableData(user).then((res) => {
-      if (Array.isArray(res)) setApps(res);
+      if (Array.isArray(res) && !hasUnmounted) {
+        setApps(res);
+      }
     });
+
+    return () => {
+      hasUnmounted = true;
+    };
   }, [user]);
   return (
     <Wrapper>

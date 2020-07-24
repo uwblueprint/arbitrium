@@ -164,15 +164,28 @@ function Admin({ applications }) {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
+    let hasUnmounted = false;
+
     GET.getAllRankingsAPI().then((rankings) => {
-      setRankings(rankings);
+      if (!hasUnmounted) {
+        setRankings(rankings);
+      }
     });
     GET.getAllReviewsAPI().then((reviews) => {
-      setReviews(reviews);
+      if (!hasUnmounted) {
+        setReviews(reviews);
+      }
     });
+<<<<<<< HEAD
     GET.getAllUsersAPI().then((users) => {
       setUsers(users)
     })
+=======
+
+    return () => {
+      hasUnmounted = true;
+    };
+>>>>>>> 1df143d... Prevent state updates on unmounted components
   }, []);
 
   if (isNonEmptyArray(rankings) && isNonEmptyArray(reviews)) {

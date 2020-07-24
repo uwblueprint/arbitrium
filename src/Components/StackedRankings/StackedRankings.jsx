@@ -120,6 +120,8 @@ function StackedRankings({ applications, reviewCount, user }) {
     reviewCount == null || reviewCount < applications.length;
 
   useEffect(() => {
+    let hasUnmounted = false;
+
     if (shouldRedirect) return; // do not fetch data if going to redirect
     (async function() {
       if (user == null || applications.length === 0) return;
@@ -163,11 +165,18 @@ function StackedRankings({ applications, reviewCount, user }) {
               item.name = applications.find(element => element._id === item._id)["Organization Name (legal name)"]
             });
         });
-        setRankings(fetched);
+
+        if (!hasUnmounted) {
+          setRankings(fetched);
+        }
       } catch (e) {
         console.error(e);
       }
     })();
+
+    return () => {
+      hasUnmounted = true;
+    };
   }, [shouldRedirect, applications, user]);
 
   const numOrgs = rankings.length;

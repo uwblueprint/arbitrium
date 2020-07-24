@@ -65,32 +65,49 @@ function Application({ applications, newReview, history, match, user }) {
 
   //Returns a review from DB if exists, otherwise null
   useEffect(() => {
+    let hasUnmounted = false;
+
     GET.getReviewAPI(user, appId).then((res) => {
       const reviewExists = res != null;
       if (reviewExists) {
         isRated.current = res.rating > -1;
       }
-      dispatchReviewUpdate({
-        type: LOAD_REVIEW,
-        review: reviewExists ? res : createReview(user, appId)
-      });
+
+      if (!hasUnmounted) {
+        dispatchReviewUpdate({
+          type: LOAD_REVIEW,
+          review: reviewExists ? res : createReview(user, appId)
+        });
+      }
     });
+
+    return () => {
+      hasUnmounted = true;
+    };
   }, [appId, user]);
 
   //Updates a review when any update happens from the user
   useEffect(() => {
+    let hasUnmounted = false;
+
     if (appId == null || user == null || review == null) {
       return;
     }
     UPDATE.updateReviewAPI(review).then((res) => {
       if (!isRated.current && review.rating > -1) {
         isRated.current = true;
-        newReview();
+        if (!hasUnmounted) {
+          newReview();
+        }
       }
       if (res.ok !== 1) {
         alert("Error in saving your review!");
       }
     });
+
+    return () => {
+      hasUnmounted = true;
+    };
   }, [appId, newReview, review, user]);
 
   const [application, appIndex] = useMemo(() => {

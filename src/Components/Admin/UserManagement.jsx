@@ -69,14 +69,22 @@ function UserManagement() {
   const [users, setUsers] = useState(null);
 
   useEffect(() => {
+    let hasUnmounted = false;
+
     async function getUsers() {
       // Fetch the users from the backend
       const fetched = await GET.getAllUsersAPI();
 
-      setUsers(convertToTableData(fetched.filter((u) => !u.deleted)));
+      if (!hasUnmounted) {
+        setUsers(convertToTableData(fetched.filter((u) => !u.deleted)));
+      }
     }
 
     getUsers();
+
+    return () => {
+      hasUnmounted = true;
+    };
   }, []);
 
   return (
