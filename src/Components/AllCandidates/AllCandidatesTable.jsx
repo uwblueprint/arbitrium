@@ -35,7 +35,11 @@ function AllCandidatesTable(props) {
           pageSize: 10,
           rowStyle: rowStyle,
           search: true,
-          showTitle: false
+          showTitle: false,
+          exportButton: true,
+          exportCsv: (columns, data) => {
+            alert('You should develop a code to export ' + data.length + ' rows');
+          }
         }}
       />
     </div>

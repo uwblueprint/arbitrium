@@ -183,7 +183,7 @@ export default class AllCandidates extends Component {
                   View Committee Review
                 </Button>
               </div>
-              <div className="button-container">
+              {/*<div className="button-container">
                 <CSVLink data={this.state.applications}>
                   <Button
                     variant="contained"
@@ -195,7 +195,7 @@ export default class AllCandidates extends Component {
                     Export Table Data
                   </Button>
                 </CSVLink>
-              </div>
+              </div>*/}
             </Header>
             <AllCandidatesTable
               data={convertToTableData(this.state.applications)}
