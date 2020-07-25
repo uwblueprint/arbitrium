@@ -20,7 +20,7 @@ function AllCandidatesTable(props) {
     { title: "Candidate Name", field: "candidateName" },
     { title: "Average Rating (/5)", field: "avgRating" },
     { title: `# of Reviews (/${props.totalReviews})`, field: "numReviews" },
-    { title: "", field: "candidateLink", sorting: false, searchable: false }
+    { title: "", field: "candidateLink", sorting: false, searchable: false, export: false }
   ];
   return (
     <div>
@@ -37,9 +37,7 @@ function AllCandidatesTable(props) {
           search: true,
           showTitle: false,
           exportButton: true,
-          exportCsv: (columns, data) => {
-            alert('You should develop a code to export ' + data.length + ' rows');
-          }
+          exportAllData: true
         }}
       />
     </div>

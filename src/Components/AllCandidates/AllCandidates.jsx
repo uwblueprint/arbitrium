@@ -3,7 +3,6 @@ import AllCandidatesTable from "./AllCandidatesTable";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
-import {CSVLink} from 'react-csv';
 
 const GET = require("../../requests/get");
 
@@ -192,19 +191,6 @@ export default class AllCandidates extends Component {
                   View Committee Review
                 </Button>
               </div>
-              {/*<div className="button-container">
-                <CSVLink data={this.state.applications}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    target="_blank"
-                    value="ExportData"
-                    style={{width: '250px', maxWidth: '250px', marginLeft: '10px'}}
-                  >
-                    Export Table Data
-                  </Button>
-                </CSVLink>
-              </div>*/}
             </Header>
             <AllCandidatesTable
               data={convertToTableData(this.state.applications)}
