@@ -83,13 +83,13 @@ export default class AllCandidates extends Component {
 
     GET.getAllRankingsAPI().then((data) => {
       this.setState({
-        rankings: data,
+        rankings: data
       });
     });
 
     GET.getAllReviewsAPI().then((data) => {
       this.setState({
-        reviews: data,
+        reviews: data
       });
     });
   }
@@ -97,38 +97,38 @@ export default class AllCandidates extends Component {
  //Calculate the average ranking
   calculateAverageRanking = () => {
     this.state.applications.forEach((application) => {
-    let numRank = 0;
-    let rankingTotal = 0;
+      let numRank = 0;
+      let rankingTotal = 0;
 
-    //Calculate the average ranking
-    this.state.rankings.forEach((rank) => {
-      if (
-        rank.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-        rank.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
-      ) {
-        const apps = rank.applications;
-        let pos = 0;
+      //Calculate the average ranking
+      this.state.rankings.forEach((rank) => {
+        if (
+          rank.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+          rank.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+        ) {
+          const apps = rank.applications;
+          let pos = 0;
 
-        let found = false;
-        apps.forEach((app) => {
-          if (!found) {
-            pos += 1;
+          let found = false;
+          apps.forEach((app) => {
+            if (!found) {
+              pos += 1;
+            }
+            if (app.appId === application._id) {
+              found = true;
+            }
+          });
+          if (pos !== 0) {
+            numRank += 1;
+            rankingTotal += pos;
           }
-          if (app.appId === application._id) {
-            found = true;
-          }
-        });
-        if (pos !== 0) {
-          numRank += 1;
-          rankingTotal += pos;
         }
-      }
-    });
-    const averageRanking = (rankingTotal / numRank).toFixed(2);
+      });
+      const averageRanking = (rankingTotal / numRank).toFixed(2);
 
-    application.avgRanking = averageRanking;
-  });
-  }
+      application.avgRanking = averageRanking;
+    });
+  };
 
   routeChange() {
     let path = `/admin/committeereview`;
@@ -136,9 +136,9 @@ export default class AllCandidates extends Component {
   }
 
   render() {
-    this.calculateAverageRanking()
+    this.calculateAverageRanking();
     return (
-      <Wrapper className="application-list">
+      <Wrapper>
         <Paper>
           <h1>All Candidates</h1>
           <Table className="table">

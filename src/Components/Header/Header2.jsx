@@ -1,9 +1,26 @@
 import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { HEADER_HEIGHT } from "./Header";
 import FlowSelector from "../FlowSelector/FlowSelector";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { MAX_NAVBAR_HEIGHT } from "../Navigation/Navigation";
+
+const Container = styled.div`
+  position: fixed;
+  height: calc(${HEADER_HEIGHT} + 2) px;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  margin-top: ${HEADER_HEIGHT}px;
+  margin-left: ${MAX_NAVBAR_HEIGHT}px;
+
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  z-index: 100;
+`;
 
 const APPLICATION_STAGE = {
   interest: "letter_of_interest",
@@ -36,7 +53,7 @@ const Header2 = ({ pathname, push }) => {
   }, [pathname]);
 
   //Update selected state, and load new path (attach /full in the path)
-  const onNavClick = id => {
+  const onNavClick = (id) => {
     setSelected(id);
 
     const parts = pathname.split("/");
@@ -53,7 +70,7 @@ const Header2 = ({ pathname, push }) => {
   };
 
   return (
-    <div className="header2-container">
+    <Container>
       <FlowSelector>
         <button
           id={APPLICATION_STAGE.interest}
@@ -82,12 +99,12 @@ const Header2 = ({ pathname, push }) => {
           2. Full Application
         </button>
       </FlowSelector>
-    </div>
+    </Container>
   );
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     pathname: state.router.location.pathname
   }),
   { push }

@@ -47,7 +47,7 @@ function ApplicationTable({ history, user }) {
     });
   }, [user]);
   return (
-    <Wrapper className="application-list">
+    <Wrapper>
       <Paper>
         {applications ? (
           <div>

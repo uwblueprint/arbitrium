@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
-import FlowSelector from "../FlowSelector/FlowSelector";
 import Rating from "../Rating/Rating";
 import Files from "../Files/Files";
 //column categories
@@ -15,11 +14,49 @@ import {
   transpileCheckBoxData
 } from "./applicationDataHelpers";
 import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
-
 import { connect } from "react-redux";
 import { newReview } from "../../Actions";
-const GET = require("../../requests/get");
-const UPDATE = require("../../requests/update");
+import * as GET from "../../requests/get";
+import * as UPDATE from "../../requests/update";
+
+const PageWrapper = styled.div`
+  padding-top: 50px;
+`;
+
+const BodyWrapper = styled.div`
+  margin: 0 auto;
+  padding-left: 80px;
+  padding-right: 80px;
+  max-width: 800px;
+  h1 {
+    font-size: 28px;
+    font-weight: normal;
+    .all-applicants {
+      display: block;
+      color: #888888;
+      border-radius: 0;
+      transform: translateX(-4px);
+    }
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: 500;
+  }
+  hr {
+    border: 0px solid #cccccc;
+    border-bottom-width: 1px;
+    margin: 20px 0;
+  }
+`;
+
+const ApplicationSelector = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 37px;
+  button {
+    border-radius: 0px;
+  }
+`;
 
 function Application({ applications, newReview, history, match, user }) {
   const appId = match.params.organizationId;
@@ -85,12 +122,14 @@ function Application({ applications, newReview, history, match, user }) {
   }
 
   return (
-    <div className="pagecontainer">
-      <FlowSelector>
-        <button>1. Letter of Interest</button>
-        <button disabled>2. Full Application</button>
-      </FlowSelector>
-      <Wrapper>
+    <PageWrapper>
+      <BodyWrapper>
+        {/* //This should be in the body wrapper
+        <FlowSelector>
+          <button>1. Letter of Interest</button>
+          <button disabled>2. Full Application</button>
+        </FlowSelector>
+        */}
         <h1>
           <Button
             className="all-applicants"
@@ -145,8 +184,8 @@ function Application({ applications, newReview, history, match, user }) {
             Next Applicant
           </Button>
         </ApplicationSelector>
-      </Wrapper>
-    </div>
+      </BodyWrapper>
+    </PageWrapper>
   );
 }
 
@@ -171,37 +210,3 @@ const mapDispatchToProps = {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Application);
-
-const Wrapper = styled.div`
-  margin: 0 auto;
-  padding-top: 50px;
-  max-width: 800px;
-  h1 {
-    font-size: 28px;
-    font-weight: normal;
-    .all-applicants {
-      display: block;
-      color: #888888;
-      border-radius: 0;
-      transform: translateX(-4px);
-    }
-  }
-  h2 {
-    font-size: 20px;
-    font-weight: 500;
-  }
-  hr {
-    border: 0px solid #cccccc;
-    border-bottom-width: 1px;
-    margin: 20px 0;
-  }
-`;
-
-const ApplicationSelector = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 37px;
-  button {
-    border-radius: 0px;
-  }
-`;

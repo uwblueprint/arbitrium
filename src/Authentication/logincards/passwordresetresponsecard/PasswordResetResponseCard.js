@@ -47,7 +47,7 @@ const CommentForm = styled.form`
   }
 `;
 
-const PasswordResetResponseCard = props => {
+const PasswordResetResponseCard = (props) => {
   return (
     <CommentForm>
       <div className="emailSentTitle">Email has been sent!</div>
