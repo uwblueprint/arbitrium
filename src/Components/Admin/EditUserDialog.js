@@ -1,16 +1,14 @@
 import React, { useReducer, useState } from "react";
 import styled from "styled-components";
-import { makeStyles } from "@material-ui/core/styles";
-import Close from "@material-ui/icons/Close";
 import ErrorIcon from "@material-ui/icons/Error";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
+import Dialog from "../Common/Dialogs/Dialog";
+import DialogHeader from "../Common/Dialogs/DialogHeader";
 import Snackbar from "@material-ui/core/Snackbar";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import { userFormStateReducer } from "../../Reducers/UserFormStateReducer";
 import EditUserForm from "./EditUserForm";
 import DeleteUser from "./DeleteUser";
-import { Wrapper, Header } from "./DialogWrappers";
 import * as UPDATE from "../../requests/update";
 
 const SaveFailure = styled.div`
@@ -31,13 +29,6 @@ const SaveWrapper = styled.div`
   position: relative;
 `;
 
-const useStyles = makeStyles({
-  closeRoot: {
-    display: "inline-block",
-    marginLeft: "auto"
-  }
-});
-
 // onAddNewUser: callback for when a new user is added
 function EditUserDialog({ close, data }) {
   const initialFormState = {
@@ -55,8 +46,6 @@ function EditUserDialog({ close, data }) {
 
   const [showSaveFailure, setShowSaveFailure] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const styles = useStyles();
 
   function updateUser() {
     setIsSubmitting(true);
@@ -89,17 +78,13 @@ function EditUserDialog({ close, data }) {
   };
 
   return (
-    <Wrapper>
-      <Header>
-        <h4>Edit existing user</h4>
-        <IconButton
-          onClick={close}
-          classes={{ root: styles.closeRoot }}
-          size="small"
-        >
-          <Close />
-        </IconButton>
-      </Header>
+    <Dialog
+      width={400}
+      maxHeight="70%"
+      paddingHorizontal={28}
+      paddingVertical={28}
+    >
+      <DialogHeader onClose={close} title="Edit existing user" />
       <LoadingOverlay
         show={isSubmitting}
         spinnerProps={{
@@ -139,7 +124,7 @@ function EditUserDialog({ close, data }) {
           </SaveFailure>
         </Snackbar>
       </SaveWrapper>
-    </Wrapper>
+    </Dialog>
   );
 }
 
