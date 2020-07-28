@@ -9,27 +9,34 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;
-  padding-left: 100px;
-  padding-right: 100px;
 `;
 
 const Header = styled.div`
-  padding-top: 48px;
-  padding-bottom: 48px;
+  padding: 48px 100px;
+  box-sizing: border-box;
+  height: 176px;
+  box-shadow: 0 2px 3px 1px #cccccc;
 `;
 
 const TitleInput = styled(InputBase)`
   input {
     font-size: 24px;
   }
+  && {
+    margin-bottom: 16px;
+    line-height: 36px;
+  }
 `;
 
 const DescriptionInput = styled(InputBase)`
   && {
+    width: 646px
     display: block;
+    line-height: 21px;
+    overflow-y: auto;
+    max-height: 48px;
   }
   textarea {
-    width: 646px
     font-size: 14px;
     color: #888888;
   }
@@ -43,13 +50,19 @@ const defaultForm = {
 function CreateEditForm() {
   const [formState, dispatch] = useReducer(customFormStateReducer, defaultForm);
 
-  const onTitleChange = useCallback((e) => {
-    dispatch({ type: EDIT_TITLE, title: e.target.value });
-  }, []);
+  const onTitleChange = useCallback(
+    (e) => {
+      dispatch({ type: EDIT_TITLE, title: e.target.value });
+    },
+    [dispatch]
+  );
 
-  const onDescriptionChange = useCallback((e) => {
-    dispatch({ type: EDIT_DESCRIPTION, description: e.target.value });
-  }, []);
+  const onDescriptionChange = useCallback(
+    (e) => {
+      dispatch({ type: EDIT_DESCRIPTION, description: e.target.value });
+    },
+    [dispatch]
+  );
 
   return (
     <Wrapper>
