@@ -5,8 +5,9 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
 import RankingCard from "./RankingCard";
-const GET = require("../../requests/get");
-const UPDATE = require("../../requests/update");
+import usePromise from "../../Hooks/usePromise";
+import { getAllStackingsAPI } from "../../requests/get";
+import * as UPDATE from "../../requests/update";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -112,41 +113,51 @@ function compare(a, b) {
 }
 
 function StackedRankings({ applications, reviewCount, user }) {
-  const [rankings, setRankings] = useState([]);
-  const classes = useStyles();
+  const [fetchedRankings, refetch] = usePromise(
+    getAllStackingsAPI,
+    { user },
+    []
+  );
+  const [rankings, setRankings] = useState(fetchedRankings.value);
   const shouldTranslate = useRef(false);
+  const shouldSort = useRef(false);
+  const classes = useStyles();
 
   const shouldRedirect =
     reviewCount == null || reviewCount < applications.length;
 
   useEffect(() => {
-    (async function() {
-      if (user == null || applications.length === 0) return;
-      try {
-        let fetchedRankings = await GET.getAllStackingsAPI(user);
-        if (fetchedRankings.length !== applications.length) {
-          // Otherwise we need to initialize the user's rankings
-          const initApps = applications.map((app) => ({ appId: app._id }));
-          await UPDATE.updateStackedAPI({
-            userId: user.uid,
-            rankings: initApps
-          });
-          fetchedRankings = await GET.getAllStackingsAPI(user);
-          fetchedRankings.sort(compare);
-        }
-        setRankings(
-          fetchedRankings.map((rank) => ({
-            ...rank,
-            name:
-              rank["Organization Name (legal name)"] ||
-              rank["Organization Name"]
-          }))
-        );
-      } catch (e) {
-        console.error(e);
+    async function createRankings() {
+      // we should initialize the user's rankings
+      const initApps = applications.map((app) => ({ appId: app._id }));
+      await UPDATE.updateStackedAPI({
+        userId: user.uid,
+        rankings: initApps
+      });
+      refetch({ user });
+      shouldSort.current = true;
+    }
+
+    if (
+      !fetchedRankings.isPending &&
+      fetchedRankings.value.length !== applications.length
+    ) {
+      createRankings();
+    } else {
+      let updatedRankings = fetchedRankings.value;
+      if (shouldSort.current) {
+        updatedRankings = [...fetchedRankings.value].sort(compare);
+        shouldSort.current = false;
       }
-    })();
-  }, [shouldRedirect, applications, user]);
+      setRankings(
+        updatedRankings.map((rank) => ({
+          ...rank,
+          name:
+            rank["Organization Name (legal name)"] || rank["Organization Name"]
+        }))
+      );
+    }
+  }, [fetchedRankings, applications, user, refetch]);
 
   const numOrgs = rankings.length;
   const column = useMemo(() => {

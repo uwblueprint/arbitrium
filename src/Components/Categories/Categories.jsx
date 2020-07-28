@@ -85,8 +85,6 @@ const useStyles = makeStyles({
 });
 
 const Categories = ({ categoryData }) => {
-
-  console.log(categoryData)
   const classes = useStyles();
 
   return (
@@ -109,7 +107,8 @@ const Categories = ({ categoryData }) => {
               <CategoryWrapper>
                 {categoryData.admin.map(({ title, value }, index) => (
                   <div className="category" key={index}>
-                    {title !== "Agency Website" && title !== "Other Social Media" ? (
+                    {title !== "Agency Website" &&
+                    title !== "Other Social Media" ? (
                       <>
                         <span className="title">{title}</span>
                         <span className="value">{value}</span>
@@ -140,22 +139,22 @@ const Categories = ({ categoryData }) => {
               <CategoryWrapper>
                 {categoryData.grant.map(({ title, value }, index) => (
                   <div className="category" key={index}>
-                  {title !== "Organization Website" ? (
-                    <>
-                      <span className="title">{title}</span>
-                      <span className="value">{value}</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="title">{title}</span>
-                      <span className="value">
-                        <Link target="_blank" href={value}>
-                          {" "}
-                          {value}{" "}
-                        </Link>
-                      </span>
-                    </>
-                  )}
+                    {title !== "Organization Website" ? (
+                      <>
+                        <span className="title">{title}</span>
+                        <span className="value">{value}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="title">{title}</span>
+                        <span className="value">
+                          <Link target="_blank" href={value}>
+                            {" "}
+                            {value}{" "}
+                          </Link>
+                        </span>
+                      </>
+                    )}
                   </div>
                 ))}
               </CategoryWrapper>
@@ -171,22 +170,22 @@ const Categories = ({ categoryData }) => {
               <CategoryWrapper>
                 {categoryData.funding.map(({ title, value }, index) => (
                   <div className="category" key={index}>
-                  {title !== "Organization Website" ? (
-                    <>
-                      <span className="title">{title}</span>
-                      <span className="value">{value}</span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="title">{title}</span>
-                      <span className="value">
-                        <Link target="_blank" href={value}>
-                          {" "}
-                          {value}{" "}
-                        </Link>
-                      </span>
-                    </>
-                  )}
+                    {title !== "Organization Website" ? (
+                      <>
+                        <span className="title">{title}</span>
+                        <span className="value">{value}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="title">{title}</span>
+                        <span className="value">
+                          <Link target="_blank" href={value}>
+                            {" "}
+                            {value}{" "}
+                          </Link>
+                        </span>
+                      </>
+                    )}
                   </div>
                 ))}
               </CategoryWrapper>

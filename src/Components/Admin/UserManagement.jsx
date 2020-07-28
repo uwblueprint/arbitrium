@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-
-import UserManagementTable from "./UserManagementTable";
+import React, { useMemo } from "react";
+import Spinner from "react-spinner-material";
+import styled from "styled-components";
+import usePromise from "../../Hooks/usePromise";
+import * as GET from "../../requests/get";
+import DialogTriggerButton from "../Common/Dialogs/DialogTriggerButton";
 import EditUserDialog from "./EditUserDialog";
 import NewUserDialog from "./NewUserDialog";
-import DialogTriggerButton from "../Common/Dialogs/DialogTriggerButton";
-
-import styled from "styled-components";
-import Spinner from "react-spinner-material";
-import * as GET from "../../requests/get";
+import UserManagementTable from "./UserManagementTable";
 
 const Wrapper = styled.div`
   margin-top: 148px;
@@ -32,56 +31,39 @@ const Header = styled.div`
   `;
 
 // convert fetched users to table format
+// fetched: array
 function convertToTableData(fetched) {
-  const userList = [];
-  if (fetched != null) {
-    fetched.forEach((user) => {
-      const programsList = [];
-      if (user.programs != null) {
-        user.programs.forEach((program) => {
-          programsList.push(program.name);
-        });
-      }
-      userList.push({
-        name: user.name,
-        email: user.email,
-        programAccess: programsList,
-        role: user.role,
-        userLink: (
-          <div className="button-container">
-            <DialogTriggerButton
-              Dialog={EditUserDialog}
-              closeOnEsc={true}
-              variant="outlined"
-              dialogProps={{ data: user }}
-            >
-              Edit
-            </DialogTriggerButton>
-          </div>
-        )
-      });
-    });
-  }
-  return userList;
+  return fetched.map((user) => ({
+    name: user.name,
+    email: user.email,
+    programAccess: (user.programs || []).map((p) => p.name),
+    role: user.role,
+    userLink: (
+      <div className="button-container">
+        <DialogTriggerButton
+          Dialog={EditUserDialog}
+          closeOnEsc={true}
+          variant="outlined"
+          dialogProps={{ data: user }}
+        >
+          Edit
+        </DialogTriggerButton>
+      </div>
+    )
+  }));
 }
 
 function UserManagement() {
-  const [users, setUsers] = useState(null);
+  const [loadUsers] = usePromise(GET.getAllUsersAPI, {}, []);
 
-  useEffect(() => {
-    async function getUsers() {
-      // Fetch the users from the backend
-      const fetched = await GET.getAllUsersAPI();
-
-      setUsers(convertToTableData(fetched.filter((u) => !u.deleted)));
-    }
-
-    getUsers();
-  }, []);
+  const users = useMemo(
+    () => convertToTableData(loadUsers.value.filter((u) => !u.deleted)),
+    [loadUsers]
+  );
 
   return (
     <Wrapper>
-      {users !== null ? (
+      {!loadUsers.isPending ? (
         <>
           <Header>
             <h1 style={{ color: "black" }}>User Management</h1>
@@ -102,28 +84,5 @@ function UserManagement() {
     </Wrapper>
   );
 }
-
-//Take all firebase users and create an entry in mongo if one doesn't exist
-// function seedDB() {
-//   ADMIN.getAllFirebaseUsers().then(function(users) {
-//     users.forEach((item) => {
-//       let p = {
-//         name: "SVP Investee Grant",
-//         access: "regular user"
-//       };
-//       let programs = [];
-//       programs.push(p);
-//       let user = {
-//         userId: item.uid,
-//         name: "",
-//         email: item.email,
-//         role: "User",
-//         programs: programs
-//       };
-//       //2 FACTOR AUTH. CONTACT GREG BEFORE UNCOMMENTING
-//       //UPDATE.updateUserAPI(user)
-//     });
-//   });
-// }
 
 export default UserManagement;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import CommitteeReviewTable from "./CommitteeReviewTable";
 import styled from "styled-components";
 // TODO: Uncomment when send email feature is complete
@@ -8,7 +8,13 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import Spinner from "react-spinner-material";
 
-const GET = require("../../requests/get");
+import usePromise from "../../Hooks/usePromise";
+
+import {
+  getAllUsersAPI,
+  getApplicationCount,
+  getReviewCountAPI
+} from "../../requests/get";
 
 const Header = styled.div`
     display: flex;
@@ -96,43 +102,36 @@ function convertToTableData(fetched) {
   }));
 }
 
+async function fetchCommitteeData() {
+  const users = await getAllUsersAPI();
+  // TODO: Filter the users based on their committee, schema might change
+  const appUsers = users.filter(
+    (user) =>
+      Array.isArray(user.programs) &&
+      user.programs.some(
+        (program) => program.name === process.env.REACT_APP_PROGRAM
+      ) &&
+      (process.env.REACT_APP_NODE_ENV === "development" ||
+        (user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+          user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"))
+  );
+
+  const requests = appUsers.map((user) => getReviewCountAPI(user.userId));
+  console.log("ye");
+  const reviewCounts = await Promise.all(requests);
+  const committee = appUsers.map((user, i) => ({
+    member: user,
+    review: reviewCounts[i]
+  }));
+  return {
+    committee,
+    committeeSize: users.length
+  };
+}
+
 function CommitteeReview({ history }) {
-  const [committeeState, setCommitteeState] = useState({
-    committee: [],
-    commiteeSize: -1
-  });
-  const [appCount, setAppCount] = useState(-1);
-
-  useEffect(() => {
-    async function fetchData() {
-      const appCount = await GET.getApplicationCount();
-      setAppCount(appCount);
-      let users = await GET.getAllUsersAPI();
-      // TODO: Filter the users based on their committee, schema might change
-      users = users.filter((user) => {
-        return (
-          Array.isArray(user.programs) &&
-          user.programs.some(
-            (program) => program.name === process.env.REACT_APP_PROGRAM
-          ) &&
-          (process.env.REACT_APP_NODE_ENV === "development" ||
-            (user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-              user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"))
-        );
-      });
-
-      const committee = [];
-      for (let i = 0; i < users.length; i++) {
-        const reviewCount = await GET.getReviewCountAPI(users[i].userId);
-        committee.push({ member: users[i], review: reviewCount });
-      }
-      setCommitteeState({
-        committee,
-        committeeSize: users.length
-      });
-    }
-    fetchData();
-  }, []);
+  const [appCount] = usePromise(getApplicationCount, {}, -1);
+  const [committeeState] = usePromise(fetchCommitteeData, {});
 
   const goBack = () => {
     history.push("/admin/allcandidates");
@@ -140,7 +139,7 @@ function CommitteeReview({ history }) {
 
   return (
     <Wrapper>
-      {committeeState.committee && committeeState.committee !== [] ? (
+      {!committeeState.isPending && !appCount.isPending ? (
         <div>
           <Header>
             <p align="left" onClick={goBack}>
@@ -162,8 +161,8 @@ function CommitteeReview({ history }) {
             Committee Review Completion
           </h1>
           <CommitteeReviewTable
-            data={convertToTableData(committeeState.committee)}
-            appCount={appCount}
+            data={convertToTableData(committeeState.value.committee)}
+            appCount={appCount.value}
             style={{ marginBottom: "30px" }}
           />
         </div>
