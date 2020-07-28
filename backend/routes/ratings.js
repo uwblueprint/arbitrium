@@ -33,9 +33,32 @@ router.get("/app/:appId", function(req, res) {
   }
 });
 
-router.get("/", function(req, res) {
+router.get("/", function(_, res) {
   db.reviews
-    .find()
+    .aggregate([
+      {
+        $lookup: {
+          from: "user",
+          let: { reviewUserId: "$userId" },
+          pipeline: [
+            {
+              $match: { $expr: { $eq: ["$userId", "$$reviewUserId"] } }
+            },
+            {
+              $project: { email: 1 }
+            }
+          ],
+          as: "userInfo"
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ["$$ROOT", { $arrayElemAt: ["$userInfo", 0] }]
+          }
+        }
+      }
+    ])
     .then(function(found) {
       res.json(found);
     })
