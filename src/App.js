@@ -25,7 +25,6 @@ const AppWrapper = styled.div`
   p {
     color: black;
   }
-  color: white;
   margin: 0px;
   padding: 0px;
 `;

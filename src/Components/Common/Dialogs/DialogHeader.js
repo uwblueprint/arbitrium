@@ -15,8 +15,10 @@ const Header = styled.div`
   display: flex;
   padding-bottom: 24px;
   h4 {
+    color: black;
     margin: 0;
     font-weight: normal;
+    font-size: 16px;
     display: inline-block;
   }
 `;

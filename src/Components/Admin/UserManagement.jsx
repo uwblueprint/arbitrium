@@ -53,7 +53,7 @@ function convertToTableData(fetched) {
               Dialog={EditUserDialog}
               closeOnEsc={true}
               variant="outlined"
-              data={user}
+              dialogProps={{ data: user }}
             >
               Edit
             </DialogTriggerButton>

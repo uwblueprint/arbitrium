@@ -6,7 +6,7 @@ const DialogOverlay = styled.div`
   position: fixed;
   left: 0;
   top: 0;
-  height: 100vh;
+  height: 150%;
   width: 100vw;
   z-index: 110;
   background: rgba(0, 0, 0, 0.5);
@@ -18,6 +18,8 @@ function DialogTriggerButton({
   color,
   Dialog,
   dialogProps,
+  customBgColor,
+  alertParent,
   variant
 }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -49,13 +51,21 @@ function DialogTriggerButton({
         onClick={onClick}
         color={color || "primary"}
         variant={variant || "contained"}
+        style={
+          customBgColor
+            ? {
+                backgroundColor: `${customBgColor}`,
+                color: "#FFFFFF"
+              }
+            : {}
+        }
       >
         {children}
       </Button>
       {showDialog && (
         <>
           <DialogOverlay />
-          <Dialog {...dialogProps} close={closeDialog} />
+          <Dialog {...dialogProps} confirm={alertParent} close={closeDialog} />
         </>
       )}
     </div>

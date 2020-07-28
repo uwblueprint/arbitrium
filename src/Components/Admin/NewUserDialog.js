@@ -4,7 +4,7 @@ import EditUserForm from "./EditUserForm";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
-import { userFormStateReducer } from "./UserFormStateReducer";
+import { userFormStateReducer } from "../../Reducers/UserFormStateReducer";
 import { createUserAPI } from "../../requests/update";
 
 const initialFormState = {
@@ -47,18 +47,15 @@ function NewUserDialog({ onSubmit, close }) {
   }
 
   return (
-    <Dialog width={400} paddingHorizontal={28} paddingVertical={28}>
+    <Dialog width="400px" paddingHorizontal={28} paddingVertical={28}>
       <DialogHeader onClose={close} title="Create a new user" />
-      {isSubmitting && (
-        <LoadingOverlay
-          spinnerProps={{
-            radius: 120,
-            color: "#333",
-            stroke: 2,
-            visible: true
-          }}
-        />
-      )}
+      <LoadingOverlay
+        show={isSubmitting}
+        spinnerProps={{
+          radius: 120,
+          stroke: 2
+        }}
+      />
       <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
       <Button
         onClick={addNewUser}
