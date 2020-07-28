@@ -1,10 +1,8 @@
 import { useCallback } from "react";
 import usePromise, { ResultObject } from "./usePromise";
 
-// TODO delete after greg/scaling merged, use GET from Helper.js
 async function GET({ url }: { url: string }): Promise<unknown> {
-  url;
-  return;
+  return url;
 }
 
 export default function useAsyncFetch<ResultType>(

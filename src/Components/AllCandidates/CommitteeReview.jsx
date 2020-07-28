@@ -117,7 +117,6 @@ async function fetchCommitteeData() {
   );
 
   const requests = appUsers.map((user) => getReviewCountAPI(user.userId));
-  console.log("ye");
   const reviewCounts = await Promise.all(requests);
   const committee = appUsers.map((user, i) => ({
     member: user,

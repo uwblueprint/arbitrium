@@ -20,7 +20,13 @@ function AllCandidatesTable(props) {
     { title: "Candidate Name", field: "candidateName" },
     { title: "Average Rating (/5)", field: "avgRating" },
     { title: `# of Reviews (/${props.totalReviews})`, field: "numReviews" },
-    { title: "", field: "candidateLink", sorting: false, searchable: false, export: false }
+    {
+      title: "",
+      field: "candidateLink",
+      sorting: false,
+      searchable: false,
+      export: false
+    }
   ];
   return (
     <div>
