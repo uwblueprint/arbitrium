@@ -34,7 +34,7 @@ function AuthProvider({ initialAppLoad, children }) {
         return;
       }
 
-      if (user && isTokenExpired(user)) {
+      if (isTokenExpired(user)) {
         firebaseApp.auth().signOut();
         setAuthState({ state: AUTH_STATES.NOT_AUTHENTICATED, user: null });
         return;
