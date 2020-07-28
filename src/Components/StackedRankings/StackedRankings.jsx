@@ -132,8 +132,13 @@ function StackedRankings({ applications, reviewCount, user }) {
             userId: user.uid,
             rankings: initApps
           });
+          let initSort = await GET.getAllStackingsAPI(user);
+          initSort.sort(compare);
+          await UPDATE.updateStackedAPI({
+            userId: user.uid,
+            rankings: initSort.map((app) => ({ appId: app._id }))
+          });
           fetched = await GET.getAllStackingsAPI(user);
-          fetched.sort(compare);
         }
         const reviews = await GET.getUserReviewsAPI(user);
         reviews.forEach((review) => {
@@ -150,10 +155,12 @@ function StackedRankings({ applications, reviewCount, user }) {
           if (numRatings > 0) {
             averageRating = averageRating / numRatings;
           }
+
           fetched
             .filter((app) => app._id === review.applicationId)
             .forEach((item) => {
               item.suggested = averageRating;
+              item.name = applications.find(element => element._id === item._id)["Organization Name (legal name)"]
             });
         });
         setRankings(fetched);
@@ -250,7 +257,7 @@ function StackedRankings({ applications, reviewCount, user }) {
                         >
                           <RankingCard
                             appId={item._id}
-                            companyName={item["Organization Name"]}
+                            companyName={item.name}
                             rating={item.rating}
                             suggested={item.suggested}
                           />

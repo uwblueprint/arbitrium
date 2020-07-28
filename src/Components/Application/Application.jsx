@@ -4,11 +4,14 @@ import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import Rating from "../Rating/Rating";
+import Files from "../Files/Files";
+//column categories
 import {
   createReview,
   transpileCategoryData,
   transpileFileData,
-  transpileLongAnswerData
+  transpileLongAnswerData,
+  transpileCheckBoxData
 } from "./applicationDataHelpers";
 import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 import { connect } from "react-redux";
@@ -99,7 +102,8 @@ function Application({ applications, newReview, history, match, user }) {
     return {
       categoryData: transpileCategoryData(application),
       fileData: transpileFileData(application),
-      longAnswers: transpileLongAnswerData(application)
+      longAnswers: transpileLongAnswerData(application),
+      checkBoxAnswers: transpileCheckBoxData(application),
     };
   }, [application]);
 
@@ -114,7 +118,7 @@ function Application({ applications, newReview, history, match, user }) {
 
   let name = "Loading... (Submission not found)";
   if (application) {
-    name = application["Organization Name"];
+    name = application["Organization Name (legal name)"];
   }
 
   return (
@@ -142,18 +146,7 @@ function Application({ applications, newReview, history, match, user }) {
           <div className="application-information">
             <Categories categoryData={appData.categoryData} />
             <hr />
-            <span>
-              <a
-                className="name"
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://drive.google.com/file/d/1GT2l4PLYnavReVWjYU3cXzdQmCTg_tXN/view?usp=sharing"
-              >
-                {" "}
-                {"Link to Decision Making Matrix"}
-              </a>
-            </span>
-            {/*}<Files fileData={appData.fileData} />*/}
+            <Files fileData={appData.fileData}/>
             <hr />
             <DecisionCanvas
               categoryData={appData.longAnswers}

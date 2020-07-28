@@ -46,7 +46,6 @@ function ApplicationTable({ history, user }) {
       if (Array.isArray(res)) setApps(res);
     });
   }, [user]);
-
   return (
     <Wrapper>
       <Paper>
@@ -71,7 +70,7 @@ function ApplicationTable({ history, user }) {
                     <TableBody key={application._id}>
                       <TableRow hover>
                         <TableCell component="th" scope="row">
-                          {application["Organization Name"]}
+                          {application["Organization Name (legal name)"]}
                         </TableCell>
                         <TableCell align="left">
                           {application.rating && application.rating > 0
