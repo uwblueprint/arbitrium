@@ -56,22 +56,18 @@ export function transpileCategoryData(application) {
       title: adminCategory,
       value: application[adminCategory]
     })),
-    funding: Object.keys(adminCategories.funding).map(
-      adminCategory => ({
-        title: adminCategory,
-        value: application[adminCategory]
-      })
-    ),
-    mission: Object.keys(adminCategories.mission
-    ).map(adminCategory => ({
+    funding: Object.keys(adminCategories.funding).map((adminCategory) => ({
       title: adminCategory,
       value: application[adminCategory]
     })),
-    grant: Object.keys(adminCategories.grant
-    ).map(adminCategory => ({
+    mission: Object.keys(adminCategories.mission).map((adminCategory) => ({
       title: adminCategory,
       value: application[adminCategory]
     })),
+    grant: Object.keys(adminCategories.grant).map((adminCategory) => ({
+      title: adminCategory,
+      value: application[adminCategory]
+    }))
     /*
     applicationInformation: Object.keys(
       adminCategories.applicationInformation
@@ -124,31 +120,36 @@ export function transpileLongAnswerData(application) {
     id: 1,
     answers: [],
     title: "Vulnerable Populations Served",
-    description: "Do the vulnerable populations selected align with the project/program described?"
+    description:
+      "Do the vulnerable populations selected align with the project/program described?"
   });
   data.push({
     id: 2,
     answers: [],
     title: "Service Types and Output Tracking",
-    description: "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
+    description:
+      "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
   });
   data.push({
     id: 3,
     answers: [],
     title: "Types of Activities",
-    description: "Do the activities, geographic area, and timelines make sense for the program? Are they aligned with the criteria of the ECSF?"
+    description:
+      "Do the activities, geographic area, and timelines make sense for the program? Are they aligned with the criteria of the ECSF?"
   });
   data.push({
     id: 4,
     answers: [],
     title: "Service Description (Long Answer)",
-    description: "Does the description adequately answer the questions? Do the answers provided present a logical implementation plan?"
+    description:
+      "Does the description adequately answer the questions? Do the answers provided present a logical implementation plan?"
   });
   data.push({
     id: 5,
     answers: [],
     title: "Additional Service Information",
-    description: "Has additional service information been provided? Are the responses reasonable within the ECSF context?"
+    description:
+      "Has additional service information been provided? Are the responses reasonable within the ECSF context?"
   });
   answers.forEach((answer) => {
     data.forEach((item) => {
@@ -163,22 +164,18 @@ export function transpileLongAnswerData(application) {
   return data;
 }
 export function transpileCheckBoxData(application) {
-
   const answers = Object.keys(checkBoxCategories).map((checkBoxCategory) => {
-      console.log("Checkbox categories:" + checkBoxCategory)
-      console.log(application[checkBoxCategory])
-
-      let p = {
-        id: checkBoxCategories[checkBoxCategory],
-        answers: {
-          question: checkBoxCategory,
-          response: application[checkBoxCategory]
-        },
+    const p = {
+      id: checkBoxCategories[checkBoxCategory],
+      answers: {
+        question: checkBoxCategory,
+        response: application[checkBoxCategory]
       }
-      return p
-    });
+    };
+    return p;
+  });
 
-/*
+  /*
 {
   id: checkBoxCategories[checkBoxCategory],
   answers: {
@@ -215,7 +212,6 @@ export function transpileCheckBoxData(application) {
     title: "Addition Service Information"
   });
   answers.forEach((answer) => {
-    console.log(answer)
     data.forEach((item) => {
       if (answer.id === item.id) {
         item.answers.push({

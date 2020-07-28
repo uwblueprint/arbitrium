@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Spinner from "react-spinner-material";
 
 const OverlayWrapper = styled.div`
+  z-index: 100;
   position: absolute;
   top: 0;
   left: 0;

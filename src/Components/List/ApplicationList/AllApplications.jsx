@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
 import AllApplicationsTable from "./AllApplicationsTable";
 
-const GET = require("../../../requests/get");
+import usePromise from "../../../Hooks/usePromise";
+
+import { getApplicationTableData } from "../../../requests/get";
 
 const Wrapper = styled.div`
   margin-top: 150px;
@@ -32,7 +34,10 @@ function convertToTableData(fetched) {
   if (fetched !== null) {
     fetched.forEach((application) => {
       applicantsList.push({
-        rating: (!application.rating || application.rating === -1) ? "Not Rated" : application.rating,
+        rating:
+          !application.rating || application.rating === -1
+            ? "Not Rated"
+            : application.rating,
         applicantName: application["Organization Name"],
         lastEdited: application["lastReviewed"],
         applicantLink: (
@@ -53,24 +58,18 @@ function convertToTableData(fetched) {
   return applicantsList;
 }
 
-function ApplicationTable({ history, user }) {
+function AllApplications({ user }) {
   // Applications, with reviews attached
-  const [applications, setApps] = useState([]);
-
-  useEffect(() => {
-    GET.getApplicationTableData(user).then((res) => {
-      if (Array.isArray(res)) setApps(res);
-    });
-  }, [user]);
+  const [applications] = usePromise(getApplicationTableData, { user }, []);
 
   return (
     <Wrapper>
       <Paper>
-        {applications ? (
+        {!applications.isPending ? (
           <div>
             <h1>All Applicants</h1>
             <AllApplicationsTable
-              data={convertToTableData(applications)}
+              data={convertToTableData(applications.value)}
             />
           </div>
         ) : (
@@ -84,4 +83,4 @@ function ApplicationTable({ history, user }) {
   );
 }
 
-export default ApplicationTable;
+export default AllApplications;
