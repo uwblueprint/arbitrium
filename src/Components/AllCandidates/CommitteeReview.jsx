@@ -52,7 +52,7 @@ const Wrapper = styled.div`
     max-width: 854px;
     width: 90vw;
     margin: 0;
-    padding-bottom: 20px;
+    padding-bottom: 0px;
     vertical-align: center;
   }
   .table {
@@ -231,18 +231,6 @@ class CommitteeReview extends Component {
                 </span>
               </p>
               <div className="button-container">
-                {/*<Button
-                  variant="contained"
-                  color="primary"
-                  target="_blank"
-                  value="OpenCommittee"
-                  style={{width: '250px', maxWidth: '250px'}}
-                  onClick={() => {
-                    this.getComments()
-                  }}
-                >
-                  Get Comments
-                </Button>*/}
                 <CSVLink data={this.state.comments}>
                   <Button
                     variant="contained"
@@ -250,11 +238,9 @@ class CommitteeReview extends Component {
                     target="_blank"
                     value="ExportData"
                     style={{width: '250px', maxWidth: '250px'}}
-                    onClick={() => {
-                      this.getComments()
-                    }}
+                    onClick={() => { this.getComments() }}
                   >
-                    Export Comments Data
+                    Export Comments
                   </Button>
                 </CSVLink>
               </div>
