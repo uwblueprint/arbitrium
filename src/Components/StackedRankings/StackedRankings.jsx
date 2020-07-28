@@ -120,50 +120,28 @@ function StackedRankings({ applications, reviewCount, user }) {
     reviewCount == null || reviewCount < applications.length;
 
   useEffect(() => {
-    if (shouldRedirect) return; // do not fetch data if going to redirect
     (async function() {
       if (user == null || applications.length === 0) return;
       try {
-        let fetched = await GET.getAllStackingsAPI(user);
-        if (fetched.length !== applications.length) {
+        let fetchedRankings = await GET.getAllStackingsAPI(user);
+        if (fetchedRankings.length !== applications.length) {
           // Otherwise we need to initialize the user's rankings
           const initApps = applications.map((app) => ({ appId: app._id }));
           await UPDATE.updateStackedAPI({
             userId: user.uid,
             rankings: initApps
           });
-          let initSort = await GET.getAllStackingsAPI(user);
-          initSort.sort(compare);
-          await UPDATE.updateStackedAPI({
-            userId: user.uid,
-            rankings: initSort.map((app) => ({ appId: app._id }))
-          });
-          fetched = await GET.getAllStackingsAPI(user);
+          fetchedRankings = await GET.getAllStackingsAPI(user);
+          fetchedRankings.sort(compare);
         }
-        const reviews = await GET.getUserReviewsAPI(user);
-        reviews.forEach((review) => {
-          let averageRating = 0;
-          let numRatings = 0;
-          if (review && review.questionList) {
-            review.questionList.forEach((item) => {
-              if (item.rating > 0) {
-                averageRating += item.rating;
-                numRatings += 1;
-              }
-            });
-          }
-          if (numRatings > 0) {
-            averageRating = averageRating / numRatings;
-          }
-
-          fetched
-            .filter((app) => app._id === review.applicationId)
-            .forEach((item) => {
-              item.suggested = averageRating;
-              item.name = applications.find(element => element._id === item._id)["Organization Name (legal name)"]
-            });
-        });
-        setRankings(fetched);
+        setRankings(
+          fetchedRankings.map((rank) => ({
+            ...rank,
+            name:
+              rank["Organization Name (legal name)"] ||
+              rank["Organization Name"]
+          }))
+        );
       } catch (e) {
         console.error(e);
       }

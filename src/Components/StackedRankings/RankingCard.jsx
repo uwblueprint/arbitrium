@@ -73,7 +73,10 @@ function RankingCard({ companyName, rating, appId, push, suggested }) {
           ) : (
             <div className={classes.rating}>
               Suggested Rating:{" "}
-              {suggested !== 0 ? suggested.toFixed(2) : rating.toFixed(2)}/5
+              {suggested != null && suggested !== 0
+                ? suggested.toFixed(2)
+                : rating.toFixed(2)}
+              /5
             </div>
           )}
           <Button
