@@ -8,11 +8,11 @@ import * as GET from "../requests/get";
 export const AuthContext = React.createContext();
 
 const isTokenExpired = (user) => {
-  const MILLISECONDS_PER_HOUR = 3600 * 1000;
+  const MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
   const NOW = new Date().getTime();
-  // tokens expire every hour and Firebase automatically refreshes them,
-  // so we check "expiry" by seeing if lastLoginAt is more than an hour ago
-  return Number(user.toJSON().lastLoginAt) < NOW - MILLISECONDS_PER_HOUR;
+  // Firebase tokens don't expire, they automatically refresh every hour
+  // we impose our own "expiration" time of 24 hours
+  return Number(user.toJSON().lastLoginAt) < NOW - MILLISECONDS_PER_DAY;
 };
 
 const AUTH_STATES = {
