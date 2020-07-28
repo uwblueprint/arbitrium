@@ -84,8 +84,6 @@ function DecisionCanvas({ update, review, categoryData }) {
     }, {});
   }, [review]);
 
-  let a = 0;
-  let b = 0;
   return (
     <SectionWrapper>
       <CanvasHeader>

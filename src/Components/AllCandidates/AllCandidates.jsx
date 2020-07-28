@@ -76,7 +76,6 @@ export default class AllCandidates extends Component {
     });
 
     GET.getCandidateSubmissions().then((data) => {
-      console.log(data);
       this.setState({
         applications: data
       });
@@ -138,7 +137,6 @@ export default class AllCandidates extends Component {
 
   render() {
     this.calculateAverageRanking()
-    console.log(this.state.applications)
     return (
       <Wrapper className="application-list">
         <Paper>
