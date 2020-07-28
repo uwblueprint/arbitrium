@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import Spinner from "react-spinner-material";
+import Button from "@material-ui/core/Button";
+import { CSVLink } from 'react-csv';
 
 const GET = require("../../requests/get");
 
@@ -76,6 +78,12 @@ const Wrapper = styled.div`
   table.MuiTable-root {
     border: 1px solid #cccccc;
   }
+  button {
+    max-width: 200px;
+    padding: 5px 5px;
+    text-transform: uppercase;
+    font-size: 15px;
+  }
 `;
 
 // TODO: Filter the users based on their committee, schema might change
@@ -109,7 +117,8 @@ class CommitteeReview extends Component {
       committee: [],
       appCount: -1,
       sortDescending: true,
-      committeeSize: -1
+      committeeSize: -1,
+      comments: []
     };
   }
 
@@ -121,7 +130,10 @@ class CommitteeReview extends Component {
       // TODO: Filter the users based on their committee, schema might change
       // users = users.filter(checkCommittee)
 
-      this.setState({ committeeSize: users.length });
+      this.setState({
+        committeeSize: users.length,
+        users: users
+      });
       for (let i = 0; i < users.length; i++) {
         GET.getReviewCountAPI(users[i].userId).then((count) => {
           let committee = [...this.state.committee];
@@ -130,11 +142,73 @@ class CommitteeReview extends Component {
         });
       }
     });
+    GET.getAllReviewsAPI().then(reviews => {
+      this.setState({ reviews: reviews });
+    })
+    GET.getAllApplicationsAPI().then(applications => {
+      this.setState({ applications: applications });
+    })
   }
 
   goBack() {
     this.props.history.push("/admin/allcandidates");
   }
+
+  //Calculate the average ranking
+  getComments = () => {
+    let commentsTotal = []
+    this.state.applications.sort().forEach((application, i) => {
+      let comments = []
+      this.state.reviews.forEach((review) => {
+        if (
+          review.applicationId === application._id &&
+          review.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+          review.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+        ) {
+          //Go through questions and tally the comments
+          let temp = []
+          review.comments.forEach(comment =>{
+            temp.push(comment)
+          });
+          review.questionList.forEach(question =>{
+            question.notes.forEach(note => {
+              temp.push(note)
+            });
+          });
+          let email = ""
+          this.state.users.forEach(user => {
+            if (user.userId === review.userId){
+              email = user.email
+            }
+          });
+
+          let comment = {
+            comments: temp,
+            userId: email
+          }
+          if (comment.comments.length !== 0){
+            comments.push(comment)
+          }
+
+        }
+      })
+      let newComment = {
+        Name: application["Organization Name"] + ' (Total Commenters: ' + comments.length + ')',
+        Comments: ""
+      }
+      commentsTotal.push(newComment)
+      comments.forEach(comment => {
+        comment.comments.forEach(c => {
+          let newComment = {
+            Name: "",
+            Comments: c.value + ' (' + comment.userId + ')'
+          }
+          commentsTotal.push(newComment)
+        });
+      });
+    });
+    this.setState({ comments: commentsTotal });
+  };
 
   render() {
     return (
@@ -156,6 +230,34 @@ class CommitteeReview extends Component {
                   Back to Candidate Submissions
                 </span>
               </p>
+              <div className="button-container">
+                {/*<Button
+                  variant="contained"
+                  color="primary"
+                  target="_blank"
+                  value="OpenCommittee"
+                  style={{width: '250px', maxWidth: '250px'}}
+                  onClick={() => {
+                    this.getComments()
+                  }}
+                >
+                  Get Comments
+                </Button>*/}
+                <CSVLink data={this.state.comments}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    target="_blank"
+                    value="ExportData"
+                    style={{width: '250px', maxWidth: '250px'}}
+                    onClick={() => {
+                      this.getComments()
+                    }}
+                  >
+                    Export Comments Data
+                  </Button>
+                </CSVLink>
+              </div>
             </Header>
             <h1 align="left" style={{color: 'black'}}>Committee Review Completion</h1>
             <CommitteeReviewTable
