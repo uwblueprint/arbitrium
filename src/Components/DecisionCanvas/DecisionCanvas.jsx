@@ -77,7 +77,7 @@ function DecisionCanvas({ update, review, categoryData }) {
   );
 
   const categoryToReviewMap = useMemo(() => {
-    if (review == null) return {};
+    if (review === null) return {};
     return review.questionList.reduce((reviewMap, review) => {
       reviewMap[review.id] = review;
       return reviewMap;
@@ -126,21 +126,21 @@ function DecisionCanvas({ update, review, categoryData }) {
                   <h3>Candidate Answer</h3>
                   <ol>
                     {section.answers.map((item, i) => (
-                      (typeof item.response) == "object" ? (
+                      (typeof item.response) === "object" ? (
                         <React.Fragment key={i}>
                           <li key={i}>{item.question}</li>
                           <ul>
                           <li key={i+"Primary"}>{"Primary (Select 3 Max):"}</li>
-                          {Object.keys(item.response).map((key, j)=> {
-                            if (item.response[key] == "Primary (Select 3 Max)"){
+                          {Object.keys(item.response).forEach((key, j)=> {
+                            if (item.response[key] === "Primary (Select 3 Max)"){
                               return (
                                   <ul style={{"paddingLeft": '35px'}} key={i+"."+j}>{key}</ul>
                               )
                             }
                           })}
                           <li key={i+"All"}>{"All Who Apply:"}
-                            {Object.keys(item.response).map((key, j)=> {
-                              if (item.response[key] == "All Who Apply"){
+                            {Object.keys(item.response).forEach((key, j)=> {
+                              if (item.response[key] === "All Who Apply"){
                                 return (
                                     <ul style={{"paddingLeft": '35px'}} key={i+"."+j}>{key}</ul>
                                 )
@@ -155,7 +155,7 @@ function DecisionCanvas({ update, review, categoryData }) {
 
                       <React.Fragment key={i}>
                         <li key={i}>{item.response}</li>
-                        {item.question == "One-Line Description (approximately 25 words)" ? (
+                        {item.question === "One-Line Description (approximately 25 words)" ? (
                           <p> --------------------------------------------------------------------------------------------- </p>
                         )
                         : (

@@ -29,7 +29,7 @@ function AllApplicationsTable(props) {
           .substring(4, 16);
       }
     },
-    { title: "", field: "applicantLink", sorting: false, searchable: false }
+    { title: "", field: "applicantLink", sorting: false, searchable: false, export: false }
   ];
   return (
     <div>
@@ -44,7 +44,9 @@ function AllApplicationsTable(props) {
           pageSize: 10,
           rowStyle: rowStyle,
           search: true,
-          showTitle: false
+          showTitle: false,
+          exportButton: true,
+          exportAllData: true
         }}
       />
     </div>

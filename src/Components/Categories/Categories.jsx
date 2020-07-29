@@ -87,9 +87,6 @@ const useStyles = makeStyles({
 const Categories = ({ categoryData }) => {
 
   console.log(categoryData)
-  const { admin } = categoryData.admin;
-  const { mission } = categoryData.mission;
-  const { funding } = categoryData.funding;
   const classes = useStyles();
 
   return (
@@ -112,7 +109,7 @@ const Categories = ({ categoryData }) => {
               <CategoryWrapper>
                 {categoryData.admin.map(({ title, value }, index) => (
                   <div className="category" key={index}>
-                    {title !== "Agency Website" && title != "Other Social Media" ? (
+                    {title !== "Agency Website" && title !== "Other Social Media" ? (
                       <>
                         <span className="title">{title}</span>
                         <span className="value">{value}</span>

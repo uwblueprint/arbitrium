@@ -51,7 +51,7 @@ async function calc(rankings, applications, reviews) {
         review.applicationId === application._id &&
         review.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
         review.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2" &&
-        review.rating != -1
+        review.rating !== -1
       ) {
         numRated += 1;
         ratingTotal += review.rating;
@@ -94,11 +94,11 @@ async function getComments(applications, reviews, users){
       ) {
         //Go through questions and tally the comments
         let temp = []
-        review.comments.map(comment =>{
+        review.comments.forEach(comment =>{
           temp.push(comment)
         });
-        review.questionList.map(question =>{
-          question.notes.map(note => {
+        review.questionList.forEach(question =>{
+          question.notes.forEach(note => {
             temp.push(note)
           });
         });
@@ -113,7 +113,7 @@ async function getComments(applications, reviews, users){
           comments: temp,
           userId: email
         }
-        if (comment.comments.length != 0){
+        if (comment.comments.length !== 0){
           comments.push(comment)
         }
 
@@ -122,7 +122,7 @@ async function getComments(applications, reviews, users){
     let commentList = []
     comments.forEach(comment => {
 
-      comment.comments.map(c => {
+      comment.comments.forEach(c => {
         let t = {
           comment: c.value,
           user: comment.userId

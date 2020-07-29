@@ -37,6 +37,7 @@ const columns = [
   {
     title: "Program Access",
     field: "programs",
+    export: false,
     render: (rowData) => {
       if (rowData.programAccess.length === 0) {
         return "None";
@@ -66,7 +67,8 @@ const columns = [
     title: "",
     field: "userLink",
     sorting: false,
-    searchable: false
+    searchable: false,
+    export: false
   }
 ];
 
@@ -84,7 +86,9 @@ function UserManagementTable(props) {
           pageSize: Math.min(10, props.data.length),
           rowStyle: rowStyle,
           search: true,
-          showTitle: false
+          showTitle: false,
+          exportButton: true,
+          exportAllData: true
         }}
       />
     </div>
