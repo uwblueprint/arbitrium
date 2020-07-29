@@ -50,7 +50,7 @@ const Wrapper = styled.div`
     max-width: 854px;
     width: 90vw;
     margin: 0;
-    padding-bottom: 10px;
+    padding-bottom: 20px;
     vertical-align: center;
   }
   .table {
@@ -75,12 +75,6 @@ const Wrapper = styled.div`
   }
   table.MuiTable-root {
     border: 1px solid #cccccc;
-  }
-  button {
-    max-width: 200px;
-    padding: 5px 5px;
-    text-transform: uppercase;
-    font-size: 15px;
   }
 `;
 
@@ -115,8 +109,7 @@ class CommitteeReview extends Component {
       committee: [],
       appCount: -1,
       sortDescending: true,
-      committeeSize: -1,
-      comments: []
+      committeeSize: -1
     };
   }
 
@@ -128,9 +121,7 @@ class CommitteeReview extends Component {
       // TODO: Filter the users based on their committee, schema might change
       // users = users.filter(checkCommittee)
 
-      this.setState({
-        committeeSize: users.length
-      });
+      this.setState({ committeeSize: users.length });
       for (let i = 0; i < users.length; i++) {
         GET.getReviewCountAPI(users[i].userId).then((count) => {
           let committee = [...this.state.committee];
