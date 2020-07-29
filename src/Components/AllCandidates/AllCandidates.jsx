@@ -3,7 +3,7 @@ import AllCandidatesTable from "./AllCandidatesTable";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
-import { CSVLink, CSVDownload } from 'react-csv';
+import { CSVLink } from 'react-csv';
 import moment from "moment";
 
 const GET = require("../../requests/get");
@@ -219,10 +219,8 @@ export default class AllCandidates extends Component {
   };
 
   exportData = () => {
-    console.log(this.refs)
     let exportApps = this.refs.csvApplications;
     let exportComments = this.refs.csvComments;
-    console.log(this.refs.csvComments.props)
     exportApps.link.click();
     exportComments.link.click();
   }
@@ -253,7 +251,7 @@ export default class AllCandidates extends Component {
                 </Button>
               </div>
               <div className="button-container">
-                <CSVLink ref="csvApplications" filename={'Ratings and Rankings - ' + moment().format("DD-MM-YYYY hh-mm-ss") + '.csv'} data={ this.state.applications } style={{display:'none'}}/>
+                <CSVLink ref="csvApplications" filename={'Ratings and Rankings - ' + moment().format("DD-MM-YYYY hh-mm-ss") + '.csv'} data={ this.state.applications.map(({ _id, ...item }) => item) } style={{display:'none'}}/>
                 <CSVLink ref="csvComments" filename={'Comments - ' + moment().format("DD-MM-YYYY hh-mm-ss") + '.csv'} data={ comments } style={{display:'none'}}/>
                 <Button
                   variant="contained"
