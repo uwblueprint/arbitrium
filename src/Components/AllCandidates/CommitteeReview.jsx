@@ -50,7 +50,7 @@ const Wrapper = styled.div`
     max-width: 854px;
     width: 90vw;
     margin: 0;
-    padding-bottom: 0px;
+    padding-bottom: 10px;
     vertical-align: center;
   }
   .table {

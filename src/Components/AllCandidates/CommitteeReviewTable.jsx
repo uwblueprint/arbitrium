@@ -33,7 +33,9 @@ function CommitteeReviewTable(props) {
           pageSize: 10,
           rowStyle: rowStyle,
           search: true,
-          showTitle: false
+          showTitle: false,
+          exportButton: true,
+          exportAllData: true
         }}
       />
     </div>
