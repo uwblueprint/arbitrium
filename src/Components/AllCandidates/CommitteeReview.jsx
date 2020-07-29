@@ -154,7 +154,7 @@ class CommitteeReview extends Component {
     this.props.history.push("/admin/allcandidates");
   }
 
-  //Calculate the average ranking
+  // Get comments from users on each application
   getComments = () => {
     let commentsTotal = []
     this.state.applications.sort().forEach((application, i) => {

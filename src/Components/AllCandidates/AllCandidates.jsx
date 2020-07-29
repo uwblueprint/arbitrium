@@ -3,6 +3,8 @@ import AllCandidatesTable from "./AllCandidatesTable";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
+import { CSVLink, CSVDownload } from 'react-csv';
+import moment from "moment";
 
 const GET = require("../../requests/get");
 
@@ -84,6 +86,7 @@ export default class AllCandidates extends Component {
     this.routeChange = this.routeChange.bind(this);
     this.state = {
       applications: [],
+      comments: [],
       totalReviews: -1,
       rankings: [],
       reviews: [],
@@ -94,30 +97,31 @@ export default class AllCandidates extends Component {
   componentDidMount() {
     GET.getAllUsersAPI().then((users) => {
       this.setState({
-        totalReviews: users.length
+        totalReviews: users.length,
+        users: users
       });
     });
 
-    GET.getCandidateSubmissions().then((data) => {
+    GET.getCandidateSubmissions().then((apps) => {
       this.setState({
-        applications: data
+        applications: apps
       });
     });
 
-    GET.getAllRankingsAPI().then((data) => {
+    GET.getAllRankingsAPI().then((rankings) => {
       this.setState({
-        rankings: data
+        rankings: rankings
       });
     });
 
-    GET.getAllReviewsAPI().then((data) => {
+    GET.getAllReviewsAPI().then((reviews) => {
       this.setState({
-        reviews: data
+        reviews: reviews
       });
     });
   }
 
-  //Calculate the average ranking
+  // Calculate the average ranking and rating for each application
   calculateAverageRanking = () => {
     this.state.applications.forEach((application) => {
       let numRank = 0;
@@ -158,8 +162,74 @@ export default class AllCandidates extends Component {
     this.props.history.push(path);
   }
 
+  // Get comments from users on each application
+  getComments = () => {
+    let commentsTotal = []
+    this.state.applications.sort().forEach((application, i) => {
+      let comments = []
+      this.state.reviews.forEach((review) => {
+        if (
+          review.applicationId === application._id &&
+          review.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+          review.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+        ) {
+          //Go through questions and tally the comments
+          let temp = []
+          review.comments.forEach(comment =>{
+            temp.push(comment)
+          });
+          review.questionList.forEach(question =>{
+            question.notes.forEach(note => {
+              temp.push(note)
+            });
+          });
+          let email = ""
+          this.state.users.forEach(user => {
+            if (user.userId === review.userId){
+              email = user.email
+            }
+          });
+
+          let comment = {
+            comments: temp,
+            userId: email
+          }
+          if (comment.comments.length !== 0){
+            comments.push(comment)
+          }
+
+        }
+      })
+      let newComment = {
+        Name: application.candidateName + ' (Total Commenters: ' + comments.length + ')',
+        Comments: ""
+      }
+      commentsTotal.push(newComment)
+      comments.forEach(comment => {
+        comment.comments.forEach(c => {
+          let newComment = {
+            Name: "",
+            Comments: c.value + ' (' + comment.userId + ')'
+          }
+          commentsTotal.push(newComment)
+        });
+      });
+    });
+    return commentsTotal;
+  };
+
+  exportData = () => {
+    console.log(this.refs)
+    let exportApps = this.refs.csvApplications;
+    let exportComments = this.refs.csvComments;
+    console.log(this.refs.csvComments.props)
+    exportApps.link.click();
+    exportComments.link.click();
+  }
+
   render() {
     this.calculateAverageRanking();
+    let comments = this.getComments()
     return (
       <Wrapper>
         {(this.state.applications !== null && this.state.applications.length !== 0) ? (
@@ -180,6 +250,20 @@ export default class AllCandidates extends Component {
                   }}
                 >
                   View Committee Review
+                </Button>
+              </div>
+              <div className="button-container">
+                <CSVLink ref="csvApplications" filename={'Ratings and Rankings - ' + moment().format("DD-MM-YYYY hh-mm-ss") + '.csv'} data={ this.state.applications } style={{display:'none'}}/>
+                <CSVLink ref="csvComments" filename={'Comments - ' + moment().format("DD-MM-YYYY hh-mm-ss") + '.csv'} data={ comments } style={{display:'none'}}/>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  target="_blank"
+                  value="ExportData"
+                  style={{width: '250px', maxWidth: '250px', marginLeft: '10px'}}
+                  onClick={() => { this.exportData() }}
+                >
+                  Export Data
                 </Button>
               </div>
             </Header>
