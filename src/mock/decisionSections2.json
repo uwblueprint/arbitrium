@@ -2,26 +2,26 @@
   {
     "id": 1,
     "questions": ["q1-ownership", "q2-ownership"],
-    "title": "Vulnerable Populations Served"
+    "title": "Organization Part 1"
   },
   {
     "id": 2,
     "questions": ["q1-problem", "q2-problem"],
-    "title": "Service Types and Output Tracking"
+    "title": "Organization Part 2"
   },
   {
     "id": 3,
     "questions": ["q1-bus", "q2-bus"],
-    "title": "Types of Activities"
+    "title": "SVP Partnership"
   },
   {
     "id": 4,
     "questions": ["q1-prod", "q2-prod"],
-    "title": "Service Description (Long Answer)"
+    "title": "Funding and Budget Part 1"
   },
   {
     "id": 5,
     "questions": ["q1-market", "q2-market"],
-    "title": "Additional Service Information"
+    "title": "Funding and Budget Part 2"
   }
 ]

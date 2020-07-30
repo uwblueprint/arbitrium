@@ -5,7 +5,7 @@ import {
   adminCategories,
   longAnswerCategories,
   checkBoxCategories
-} from "./column_categories3";
+} from "./column_categories4";
 
 export function createReview(user, appId) {
   let review = {};
@@ -123,32 +123,32 @@ export function transpileLongAnswerData(application) {
   data.push({
     id: 1,
     answers: [],
-    title: "Vulnerable Populations Served",
-    description: "Do the vulnerable populations selected align with the project/program described?"
+    title: "Organization Part 1",
+    description: ""
   });
   data.push({
     id: 2,
     answers: [],
-    title: "Service Types and Output Tracking",
-    description: "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
+    title: "Organization Part 2",
+    description: ""
   });
   data.push({
     id: 3,
     answers: [],
-    title: "Types of Activities",
-    description: "Do the activities, geographic area, and timelines make sense for the program? Are they aligned with the criteria of the ECSF?"
+    title: "SVP Partnership",
+    description: ""
   });
   data.push({
     id: 4,
     answers: [],
-    title: "Service Description (Long Answer)",
-    description: "Does the description adequately answer the questions? Do the answers provided present a logical implementation plan?"
+    title: "Funding and Budget Part 1",
+    description: ""
   });
   data.push({
     id: 5,
     answers: [],
-    title: "Additional Service Information",
-    description: "Has additional service information been provided? Are the responses reasonable within the ECSF context?"
+    title: "Funding and Budget Part 2",
+    description: ""
   });
   answers.forEach((answer) => {
     data.forEach((item) => {
