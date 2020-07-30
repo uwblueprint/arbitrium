@@ -3,7 +3,7 @@ import AllCandidatesTable from "./AllCandidatesTable";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
-import { CSVLink } from 'react-csv';
+import { CSVLink } from "react-csv";
 import moment from "moment";
 
 const GET = require("../../requests/get");
@@ -23,7 +23,6 @@ const Header = styled.div`
     }
   }
 `;
-
 
 const Wrapper = styled.div`
   margin-top: 150px;
@@ -97,13 +96,14 @@ export default class AllCandidates extends Component {
   componentDidMount() {
     GET.getAllUsersAPI().then((users) => {
       users = users.filter((user) => {
-        return Array.isArray(user.programs) && (
+        return (
+          Array.isArray(user.programs) &&
           user.programs.some(
             (program) => program.name === process.env.REACT_APP_PROGRAM
           ) &&
           user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
           user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
-        )
+        );
       });
       this.setState({
         totalReviews: users.length,
@@ -173,9 +173,9 @@ export default class AllCandidates extends Component {
 
   // Get comments from users on each application
   getComments = () => {
-    let commentsTotal = []
-    this.state.applications.sort().forEach((application, i) => {
-      let comments = []
+    let commentsTotal = [];
+    this.state.applications.forEach((application, i) => {
+      let comments = [];
       this.state.reviews.forEach((review) => {
         if (
           review.applicationId === application._id &&
@@ -183,44 +183,47 @@ export default class AllCandidates extends Component {
           review.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
         ) {
           //Go through questions and tally the comments
-          let temp = []
-          review.comments.forEach(comment =>{
-            temp.push(comment)
+          let temp = [];
+          review.comments.forEach((comment) => {
+            temp.push(comment);
           });
-          review.questionList.forEach(question =>{
-            question.notes.forEach(note => {
-              temp.push(note)
+          review.questionList.forEach((question) => {
+            question.notes.forEach((note) => {
+              temp.push(note);
             });
           });
-          let email = ""
-          this.state.users.forEach(user => {
-            if (user.userId === review.userId){
-              email = user.email
+          let email = "";
+          this.state.users.forEach((user) => {
+            if (user.userId === review.userId) {
+              email = user.email;
             }
           });
 
           let comment = {
             comments: temp,
             userId: email
+          };
+          if (comment.comments.length !== 0) {
+            comments.push(comment);
           }
-          if (comment.comments.length !== 0){
-            comments.push(comment)
-          }
-
         }
-      })
+      });
       let newComment = {
-        Name: application.candidateName + ' (Total Commenters: ' + comments.length + ')',
+        Name:
+          application.candidateName +
+          " (Total Commenters: " +
+          comments.length +
+          ")",
         Comments: ""
-      }
-      commentsTotal.push(newComment)
-      comments.forEach(comment => {
-        comment.comments.forEach(c => {
+      };
+      commentsTotal.push(newComment);
+      comments.forEach((comment) => {
+        comment.comments.forEach((c) => {
           let newComment = {
             Name: "",
-            Comments: c.value + ' (' + comment.userId + ')'
-          }
-          commentsTotal.push(newComment)
+            Comments: c.value + " (" + comment.userId + ")"
+          };
+          commentsTotal.push(newComment);
         });
       });
     });
@@ -232,52 +235,76 @@ export default class AllCandidates extends Component {
     let exportComments = this.refs.csvComments;
     exportApps.link.click();
     exportComments.link.click();
-  }
+  };
 
   render() {
     this.calculateAverageRanking();
-    let comments = this.getComments()
+    let comments = this.getComments();
+    let data = convertToTableData(this.state.applications);
     return (
       <Wrapper>
-        {(this.state.applications !== null && this.state.applications.length !== 0) ? (
+        {this.state.applications !== null &&
+        this.state.applications.length !== 0 ? (
           <div>
             <Header>
-              <h1 style={{color: 'black'}}>All Candidates</h1>
+              <h1 style={{ color: "black" }}>All Candidates</h1>
               <div className="button-container">
                 <Button
                   variant="contained"
                   color="primary"
                   target="_blank"
                   value="OpenCommittee"
-                  style={{width: '250px', maxWidth: '250px'}}
+                  style={{ width: "250px", maxWidth: "250px" }}
                   onClick={() => {
-                    this.props.history.push(
-                      "/admin/committeereview"
-                    );
+                    this.props.history.push("/admin/committeereview");
                   }}
                 >
                   View Committee Review
                 </Button>
               </div>
               <div className="button-container">
-                <CSVLink ref="csvApplications" filename={'Ratings and Rankings - ' + moment().format("DD-MM-YYYY hh-mm-ss") + '.csv'} data={ this.state.applications.map(({ _id, ...item }) => item) } style={{display:'none'}}/>
-                <CSVLink ref="csvComments" filename={'Comments - ' + moment().format("DD-MM-YYYY hh-mm-ss") + '.csv'} data={ comments } style={{display:'none'}}/>
+                <CSVLink
+                  ref="csvApplications"
+                  filename={
+                    "Ratings and Rankings - " +
+                    moment().format("DD-MM-YYYY hh-mm-ss") +
+                    ".csv"
+                  }
+                  data={this.state.applications.map(({ _id, ...item }) => item)}
+                  style={{ display: "none" }}
+                />
+                <CSVLink
+                  ref="csvComments"
+                  filename={
+                    "Comments - " +
+                    moment().format("DD-MM-YYYY hh-mm-ss") +
+                    ".csv"
+                  }
+                  data={comments}
+                  style={{ display: "none" }}
+                />
                 <Button
                   variant="contained"
                   color="primary"
                   target="_blank"
                   value="ExportData"
-                  style={{width: '250px', maxWidth: '250px', marginLeft: '10px'}}
-                  onClick={() => { this.exportData() }}
+                  style={{
+                    width: "250px",
+                    maxWidth: "250px",
+                    marginLeft: "10px"
+                  }}
+                  onClick={() => {
+                    this.exportData();
+                  }}
                 >
                   Export Data
                 </Button>
               </div>
             </Header>
             <AllCandidatesTable
-              data={convertToTableData(this.state.applications)}
+              data={data}
               totalReviews={this.state.totalReviews}
-              style={{marginBottom: '30px'}}
+              style={{ marginBottom: "30px" }}
             />
           </div>
         ) : (
