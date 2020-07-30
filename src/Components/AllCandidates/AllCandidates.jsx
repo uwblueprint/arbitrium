@@ -64,13 +64,14 @@ export default class AllCandidates extends Component {
   componentDidMount() {
     GET.getAllUsersAPI().then((users) => {
       users = users.filter((user) => {
-        return Array.isArray(user.programs) && (
+        return (
+          Array.isArray(user.programs) &&
           user.programs.some(
             (program) => program.name === process.env.REACT_APP_PROGRAM
           ) &&
-          user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-          user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
-        )
+            user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+            user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+        );
       });
       if (!this.hasUnmounted) {
         this.setState({
@@ -104,15 +105,11 @@ export default class AllCandidates extends Component {
     });
   }
 
-<<<<<<< HEAD
- //Calculate the average ranking
-=======
   componentWillUnmount() {
     this.hasUnmounted = true;
   }
 
   //Calculate the average ranking
->>>>>>> 36f1b23... Add component unmounted check to AllCandidates and CommitteeReview
   calculateAverageRanking = () => {
     this.state.applications.forEach((application) => {
       let numRank = 0;
@@ -177,38 +174,48 @@ export default class AllCandidates extends Component {
             </TableHead>
             <TableBody>
               {this.state.applications
-                ? this.state.applications.sort((a, b) => parseFloat(a.avgRanking) > parseFloat(b.avgRanking) ? 1 : -1)
-                  .map((application, index) => (
-                    <TableRow hover key={application._id}>
-                      <StyledTableCell component="th" scope="row">
-                        {application.avgRanking > 0 ? application.avgRanking : "N/A"}
-                      </StyledTableCell>
-                      <TableCell align="left">
-                        {application.candidateName}
-                      </TableCell>
-                      <TableCell align="left">
-                        {application.avgRating > 0 ? application.avgRating : 0}/5
-                      </TableCell>
-                      <TableCell align="left">
-                        {application.numReviews}/{this.state.totalReviews}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          target="_blank"
-                          value="OpenApplication"
-                          onClick={() => {
-                            this.props.history.push(
-                              "/submissions/" + application._id
-                            );
-                          }}
-                        >
-                          Open
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                ? this.state.applications
+                    .sort((a, b) =>
+                      parseFloat(a.avgRanking) > parseFloat(b.avgRanking)
+                        ? 1
+                        : -1
+                    )
+                    .map((application, index) => (
+                      <TableRow hover key={application._id}>
+                        <StyledTableCell component="th" scope="row">
+                          {application.avgRanking > 0
+                            ? application.avgRanking
+                            : "N/A"}
+                        </StyledTableCell>
+                        <TableCell align="left">
+                          {application.candidateName}
+                        </TableCell>
+                        <TableCell align="left">
+                          {application.avgRating > 0
+                            ? application.avgRating
+                            : 0}
+                          /5
+                        </TableCell>
+                        <TableCell align="left">
+                          {application.numReviews}/{this.state.totalReviews}
+                        </TableCell>
+                        <TableCell align="right">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            target="_blank"
+                            value="OpenApplication"
+                            onClick={() => {
+                              this.props.history.push(
+                                "/submissions/" + application._id
+                              );
+                            }}
+                          >
+                            Open
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
                 : "ERROR LOADING APPLICATIONS FROM DATABASE"}
             </TableBody>
           </Table>
