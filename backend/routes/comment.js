@@ -46,3 +46,5 @@ router.post("/", function(req, res) {
         res.send(err);
       });
   });
+
+module.exports = router;

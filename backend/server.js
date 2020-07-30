@@ -69,7 +69,7 @@ const usersRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
 const commentRoutes = require("./routes/comment");
 const criteriaRoutes = require("./routes/criteria");
-const newratingRoutes = require("./routes/criteria");
+const newratingRoutes = require("./routes/denormRatings");
 
 // allows us to access request body in a post or put
 app.use(cors(corsOptions));
