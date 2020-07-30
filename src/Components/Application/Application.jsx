@@ -88,26 +88,18 @@ function Application({ applications, newReview, history, match, user }) {
 
   //Updates a review when any update happens from the user
   useEffect(() => {
-    let hasUnmounted = false;
-
     if (appId == null || user == null || review == null) {
       return;
     }
     UPDATE.updateReviewAPI(review).then((res) => {
       if (!isRated.current && review.rating > -1) {
         isRated.current = true;
-        if (!hasUnmounted) {
-          newReview();
-        }
+        newReview();
       }
       if (res.ok !== 1) {
         alert("Error in saving your review!");
       }
     });
-
-    return () => {
-      hasUnmounted = true;
-    };
   }, [appId, newReview, review, user]);
 
   const [application, appIndex] = useMemo(() => {
