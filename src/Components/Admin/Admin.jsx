@@ -11,7 +11,6 @@ const Wrapper = styled.div`
 `;
 
 async function calc(rankings, applications, reviews) {
-
   const display = [];
 
   applications.forEach((application, i) => {
@@ -62,7 +61,10 @@ async function calc(rankings, applications, reviews) {
 
     const dis = {
       name: application["Organization Name (legal name)"],
-      amount: application["What is the total grant request from United Way Waterloo Region Communities (Ex- 20000)"],
+      amount:
+        application[
+          "What is the total grant request from United Way Waterloo Region Communities (Ex- 20000)"
+        ],
       numRanked: numRank,
       service: application["Service Name"],
       avgRanking: averageRanking,
@@ -78,14 +80,12 @@ async function calc(rankings, applications, reviews) {
     //   console.log(dis.numRated)
     // }
   });
-
-
 }
 
-async function getComments(applications, reviews, users){
-  let commentsTotal = []
+async function getComments(applications, reviews, users) {
+  let commentsTotal = [];
   applications.forEach((application, i) => {
-    let comments = []
+    let comments = [];
     reviews.forEach((review) => {
       if (
         review.applicationId === application._id &&
@@ -93,59 +93,56 @@ async function getComments(applications, reviews, users){
         review.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
       ) {
         //Go through questions and tally the comments
-        let temp = []
-        review.comments.map(comment =>{
-          temp.push(comment)
+        let temp = [];
+        review.comments.map((comment) => {
+          temp.push(comment);
         });
-        review.questionList.map(question =>{
-          question.notes.map(note => {
-            temp.push(note)
+        review.questionList.map((question) => {
+          question.notes.map((note) => {
+            temp.push(note);
           });
         });
-        let email = ""
-        users.forEach(user => {
-          if (user.userId === review.userId){
-            email = user.email
+        let email = "";
+        users.forEach((user) => {
+          if (user.userId === review.userId) {
+            email = user.email;
           }
         });
 
         let comment = {
           comments: temp,
           userId: email
+        };
+        if (comment.comments.length != 0) {
+          comments.push(comment);
         }
-        if (comment.comments.length != 0){
-          comments.push(comment)
-        }
-
       }
-    })
-    let commentList = []
-    comments.forEach(comment => {
-
-      comment.comments.map(c => {
+    });
+    let commentList = [];
+    comments.forEach((comment) => {
+      comment.comments.map((c) => {
         let t = {
           comment: c.value,
           user: comment.userId
-        }
-        commentList.push(t)
+        };
+        commentList.push(t);
       });
     });
     let newComment = {
       name: application["Organization Name (legal name)"],
       comments: commentList
-    }
-    commentsTotal.push(newComment)
+    };
+    commentsTotal.push(newComment);
   });
 
-
   commentsTotal.forEach((app, i) => {
-      //console.log(app.name + "( Total Comments: " + app.comments.length + ")")
-      //if (i % 2 == 0){
-      //console.log("<<<")
-      //  }
-      //else {
-      //console.log(">>>")
-      //  }
+    //console.log(app.name + "( Total Comments: " + app.comments.length + ")")
+    //if (i % 2 == 0){
+    //console.log("<<<")
+    //  }
+    //else {
+    //console.log(">>>")
+    //  }
     app.comments.forEach((c, index) => {
       //console.log( '"' + c.comment + '"' + " (" + c.user + ")")
       // if (index % 2 == 0){
@@ -155,7 +152,7 @@ async function getComments(applications, reviews, users){
       //   console.log(">>>")
       // }
     });
-  })
+  });
 }
 
 function Admin({ applications }) {
@@ -176,21 +173,20 @@ function Admin({ applications }) {
         setReviews(reviews);
       }
     });
-<<<<<<< HEAD
     GET.getAllUsersAPI().then((users) => {
-      setUsers(users)
-    })
-=======
+      if (!this.hasUnmounted) {
+        setUsers(users);
+      }
+    });
 
     return () => {
       hasUnmounted = true;
     };
->>>>>>> 1df143d... Prevent state updates on unmounted components
   }, []);
 
   if (isNonEmptyArray(rankings) && isNonEmptyArray(reviews)) {
     calc(rankings, applications, reviews);
-    getComments(applications, reviews, users)
+    getComments(applications, reviews, users);
   }
 
   return (
