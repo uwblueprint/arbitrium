@@ -79,6 +79,8 @@ const Wrapper = styled.div`
 // }
 
 class CommitteeReview extends Component {
+  hasUnmounted = false;
+
   constructor(props) {
     super(props);
     this.goBack = this.goBack.bind(this);
@@ -93,8 +95,11 @@ class CommitteeReview extends Component {
 
   componentDidMount() {
     GET.getApplicationCount().then((appCount) => {
-      this.setState({ appCount: appCount });
+      if (!this.hasUnmounted) {
+        this.setState({ appCount: appCount });
+      }
     });
+
     GET.getAllUsersAPI().then((users) => {
       // TODO: Filter the users based on their committee, schema might change
       users = users.filter((user) => {
@@ -107,15 +112,24 @@ class CommitteeReview extends Component {
         )
       });
 
-      this.setState({ committeeSize: users.length });
+      if (!this.hasUnmounted) {
+        this.setState({ committeeSize: users.length });
+      }
+
       for (let i = 0; i < users.length; i++) {
         GET.getReviewCountAPI(users[i].userId).then((count) => {
           let committee = [...this.state.committee];
           committee[i] = { member: users[i], review: count };
-          this.setState({ committee });
+          if (!this.hasUnmounted) {
+            this.setState({ committee });
+          }
         });
       }
     });
+  }
+
+  componentWillUnmount() {
+    this.hasUnmounted = true;
   }
 
   sortCommittee() {

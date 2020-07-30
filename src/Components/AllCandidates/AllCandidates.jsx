@@ -47,6 +47,8 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 export default class AllCandidates extends Component {
+  hasUnmounted = false;
+
   constructor(props) {
     super(props);
     this.routeChange = this.routeChange.bind(this);
@@ -70,31 +72,47 @@ export default class AllCandidates extends Component {
           user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
         )
       });
-      this.setState({
-        totalReviews: users.length
-      });
+      if (!this.hasUnmounted) {
+        this.setState({
+          totalReviews: users.length
+        });
+      }
     });
 
     GET.getCandidateSubmissions().then((data) => {
-      this.setState({
-        applications: data
-      });
+      if (!this.hasUnmounted) {
+        this.setState({
+          applications: data
+        });
+      }
     });
 
     GET.getAllRankingsAPI().then((data) => {
-      this.setState({
-        rankings: data
-      });
+      if (!this.hasUnmounted) {
+        this.setState({
+          rankings: data
+        });
+      }
     });
 
     GET.getAllReviewsAPI().then((data) => {
-      this.setState({
-        reviews: data
-      });
+      if (!this.hasUnmounted) {
+        this.setState({
+          reviews: data
+        });
+      }
     });
   }
 
+<<<<<<< HEAD
  //Calculate the average ranking
+=======
+  componentWillUnmount() {
+    this.hasUnmounted = true;
+  }
+
+  //Calculate the average ranking
+>>>>>>> 36f1b23... Add component unmounted check to AllCandidates and CommitteeReview
   calculateAverageRanking = () => {
     this.state.applications.forEach((application) => {
       let numRank = 0;
