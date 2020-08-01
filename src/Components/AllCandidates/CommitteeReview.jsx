@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router";
 import CommitteeReviewTable from "./CommitteeReviewTable";
 import styled from "styled-components";
 // TODO: Uncomment when send email feature is complete
@@ -50,7 +51,7 @@ const Wrapper = styled.div`
     max-width: 854px;
     width: 90vw;
     margin: 0;
-    padding-bottom: 20px;
+    padding-bottom: 15px;
     vertical-align: center;
   }
   .table {
@@ -94,93 +95,93 @@ function convertToTableData(fetched) {
     fetched.forEach((member) => {
       committeeList.push({
         committeeMember: member.member.email,
-        candidatesReviewed: member.review,
+        candidatesReviewed: member.review
       });
     });
   }
   return committeeList;
 }
 
-class CommitteeReview extends Component {
-  constructor(props) {
-    super(props);
-    this.goBack = this.goBack.bind(this);
-    this.state = {
-      committee: [],
-      appCount: -1,
-      sortDescending: true,
-      committeeSize: -1
-    };
-  }
+function CommitteeReview() {
+  const [committee, setCommittee] = useState([]);
+  const [appCount, setAppCount] = useState(-1);
+  const [sortDescending, setSortDescending] = useState(true);
+  const [committeeSize, setCommitteeSize] = useState(-1);
 
-  componentDidMount() {
+  useEffect(() => {
     GET.getApplicationCount().then((appCount) => {
-      this.setState({ appCount: appCount });
+      setAppCount({ appCount: appCount });
     });
     GET.getAllUsersAPI().then((users) => {
       // TODO: Filter the users based on their committee, schema might change
       users = users.filter((user) => {
-        return Array.isArray(user.programs) && (
+        return (
+          Array.isArray(user.programs) &&
           user.programs.some(
             (program) => program.name === process.env.REACT_APP_PROGRAM
           ) &&
-          user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-          user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
-        )
+            user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+            user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+        );
       });
 
-      this.setState({ committeeSize: users.length });
+      setCommitteeSize({ committeeSize: users.length });
       for (let i = 0; i < users.length; i++) {
         GET.getReviewCountAPI(users[i].userId).then((count) => {
-          let committee = [...this.state.committee];
-          committee[i] = { member: users[i], review: count };
-          this.setState({ committee });
+          let newCommittee = committee;
+          newCommittee[i] = { member: users[i], review: count };
+          setCommittee([...newCommittee]);
+          // setCommittee([...committee, { member: users[i], review: count }])
         });
       }
     });
-  }
+  });
 
-  goBack() {
-    this.props.history.push("/admin/allcandidates");
-  }
+  const goBack = () => {
+    const history = useHistory();
+    history.push({
+      pathname: "/admin/allcandidates"
+    });
+    // this.props.history.push("/admin/allcandidates");
+  };
 
-  render() {
-    return (
-      <Wrapper>
-        {(this.state.committee && this.state.committee !== [] && !this.state.committee.includes(undefined)) ? (
-          <div>
-            <Header>
-              <p align="left" onClick={this.goBack}>
-                <span style={{ cursor: "pointer", color: '#2261AD' }}>
-                  <FontAwesomeIcon
-                    style={{
-                      height: "25px",
-                      width: "25px",
-                      verticalAlign: "-0.5em",
-                      color: '#2261AD'
-                    }}
-                    icon={faAngleLeft}
-                  />
-                  Back to Candidate Submissions
-                </span>
-              </p>
-            </Header>
-            <h1 align="left" style={{color: 'black'}}>Committee Review Completion</h1>
-            <CommitteeReviewTable
-              data={convertToTableData(this.state.committee)}
-              appCount={this.state.appCount}
-              style={{marginBottom: '30px'}}
-            />
-          </div>
-        ) : (
-          <div>
-            <h4>Loading Committee Members...</h4>
-            <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
-          </div>
-        )}
-      </Wrapper>
-    );
-  }
+  return (
+    <Wrapper>
+      {committee && committee !== [] && !committee.includes(undefined) ? (
+        <div>
+          <Header>
+            <p align="left" onClick={goBack}>
+              <span style={{ cursor: "pointer", color: "#2261AD" }}>
+                <FontAwesomeIcon
+                  style={{
+                    height: "25px",
+                    width: "25px",
+                    verticalAlign: "-0.5em",
+                    color: "#2261AD"
+                  }}
+                  icon={faAngleLeft}
+                />
+                Back to Candidate Submissions
+              </span>
+            </p>
+          </Header>
+          <h1 align="left" style={{ color: "black" }}>
+            Committee Review Completion
+          </h1>
+          <CommitteeReviewTable
+            data={convertToTableData(committee)}
+            appCount={appCount}
+            style={{ marginBottom: "30px" }}
+          />
+        </div>
+      ) : (
+        <div>
+          <h4>Loading Committee Members...</h4>
+          <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+        </div>
+      )}
+    </Wrapper>
+  );
 }
 
 const mapStateToProps = (state) => {
