@@ -125,7 +125,6 @@ function CommitteeReview({ history }) {
       for (let i = 0; i < users.length; i++) {
         const reviewCount = await GET.getReviewCountAPI(users[i].userId);
         committee.push({ member: users[i], review: reviewCount });
-        // setCommittee([...committee, { member: users[i], review: count }])
       }
       setCommitteeState({
         committee,
@@ -180,8 +179,7 @@ function CommitteeReview({ history }) {
 
 const mapStateToProps = (state) => {
   return {
-    applications: state.applications,
-    reviewCount: state.reviewCount
+    applications: state.applications
   };
 };
 
