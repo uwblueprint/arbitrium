@@ -84,7 +84,7 @@ function UserManagement() {
       {users !== null ? (
         <>
           <Header>
-            <h1 style={{color: 'black'}}>User Management</h1>
+            <h1 style={{ color: "black" }}>User Management</h1>
             <div className="button-container">
               <DialogTriggerButton Dialog={NewUserDialog} closeOnEsc={true}>
                 Create New User

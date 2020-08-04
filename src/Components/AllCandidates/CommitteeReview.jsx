@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router";
 import CommitteeReviewTable from "./CommitteeReviewTable";
 import styled from "styled-components";
 // TODO: Uncomment when send email feature is complete
@@ -90,27 +89,28 @@ const Wrapper = styled.div`
 // }
 
 function convertToTableData(fetched) {
-  const committeeList = [];
-  if (fetched !== null) {
-    fetched.forEach((member) => {
-      committeeList.push({
-        committeeMember: member.member.email,
-        candidatesReviewed: member.review
-      });
-    });
-  }
-  return committeeList;
+  console.log("convert");
+  console.log(fetched);
+  if (fetched == null) return [];
+  const test = fetched.map((member) => ({
+    committeeMember: member.member.email,
+    candidatesReviewed: member.review
+  }));
+  console.log(test);
+  return test;
 }
 
-function CommitteeReview() {
-  const [committee, setCommittee] = useState([]);
+function CommitteeReview({ history }) {
+  const [committeeState, setCommitteeState] = useState({
+    committee: [],
+    commiteeSize: -1
+  });
   const [appCount, setAppCount] = useState(-1);
-  const [sortDescending, setSortDescending] = useState(true);
-  const [committeeSize, setCommitteeSize] = useState(-1);
 
   useEffect(() => {
     GET.getApplicationCount().then((appCount) => {
       setAppCount({ appCount: appCount });
+      console.log(appCount);
     });
     GET.getAllUsersAPI().then((users) => {
       // TODO: Filter the users based on their committee, schema might change
@@ -120,34 +120,33 @@ function CommitteeReview() {
           user.programs.some(
             (program) => program.name === process.env.REACT_APP_PROGRAM
           ) &&
-            user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-            user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+          user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+          user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
         );
       });
 
-      setCommitteeSize({ committeeSize: users.length });
+      const committee = [];
       for (let i = 0; i < users.length; i++) {
         GET.getReviewCountAPI(users[i].userId).then((count) => {
-          let newCommittee = committee;
-          newCommittee[i] = { member: users[i], review: count };
-          setCommittee([...newCommittee]);
+          committee.push({ member: users[i], review: count });
           // setCommittee([...committee, { member: users[i], review: count }])
         });
       }
+      setCommitteeState({
+        committee,
+        committeeSize: users.length
+      });
     });
-  });
+  }, []);
 
   const goBack = () => {
-    const history = useHistory();
-    history.push({
-      pathname: "/admin/allcandidates"
-    });
-    // this.props.history.push("/admin/allcandidates");
+    history.push("/admin/allcandidates");
   };
 
+  console.log(committeeState);
   return (
     <Wrapper>
-      {committee && committee !== [] && !committee.includes(undefined) ? (
+      {committeeState.committee && committeeState.committee !== [] ? (
         <div>
           <Header>
             <p align="left" onClick={goBack}>
@@ -169,7 +168,7 @@ function CommitteeReview() {
             Committee Review Completion
           </h1>
           <CommitteeReviewTable
-            data={convertToTableData(committee)}
+            data={convertToTableData(committeeState.committee)}
             appCount={appCount}
             style={{ marginBottom: "30px" }}
           />

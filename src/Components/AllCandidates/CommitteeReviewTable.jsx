@@ -15,9 +15,13 @@ const rowStyle = {
 };
 
 function CommitteeReviewTable(props) {
+  console.log(props);
   const columns = [
     { title: "Committee Member", field: "committeeMember" },
-    { title: `# of Candidates Reviewed (/${props.appCount})`, field: "candidatesReviewed" }
+    {
+      title: `# of Candidates Reviewed (/${props.appCount})`,
+      field: "candidatesReviewed"
+    }
   ];
 
   return (
