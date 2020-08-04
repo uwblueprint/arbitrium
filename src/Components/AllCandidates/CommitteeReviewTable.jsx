@@ -15,7 +15,6 @@ const rowStyle = {
 };
 
 function CommitteeReviewTable(props) {
-  console.log(props);
   const columns = [
     { title: "Committee Member", field: "committeeMember" },
     {

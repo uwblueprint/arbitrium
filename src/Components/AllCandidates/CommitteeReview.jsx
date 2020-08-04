@@ -89,15 +89,11 @@ const Wrapper = styled.div`
 // }
 
 function convertToTableData(fetched) {
-  console.log("convert");
-  console.log(fetched);
   if (fetched == null) return [];
-  const test = fetched.map((member) => ({
+  return fetched.map((member) => ({
     committeeMember: member.member.email,
     candidatesReviewed: member.review
   }));
-  console.log(test);
-  return test;
 }
 
 function CommitteeReview({ history }) {
@@ -108,11 +104,10 @@ function CommitteeReview({ history }) {
   const [appCount, setAppCount] = useState(-1);
 
   useEffect(() => {
-    GET.getApplicationCount().then((appCount) => {
-      setAppCount({ appCount: appCount });
-      console.log(appCount);
-    });
-    GET.getAllUsersAPI().then((users) => {
+    async function fetchData() {
+      const appCount = await GET.getApplicationCount();
+      setAppCount(appCount);
+      let users = await GET.getAllUsersAPI();
       // TODO: Filter the users based on their committee, schema might change
       users = users.filter((user) => {
         return (
@@ -120,30 +115,30 @@ function CommitteeReview({ history }) {
           user.programs.some(
             (program) => program.name === process.env.REACT_APP_PROGRAM
           ) &&
-          user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-          user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+          (process.env.REACT_APP_NODE_ENV === "development" ||
+            (user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+              user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"))
         );
       });
 
       const committee = [];
       for (let i = 0; i < users.length; i++) {
-        GET.getReviewCountAPI(users[i].userId).then((count) => {
-          committee.push({ member: users[i], review: count });
-          // setCommittee([...committee, { member: users[i], review: count }])
-        });
+        const reviewCount = await GET.getReviewCountAPI(users[i].userId);
+        committee.push({ member: users[i], review: reviewCount });
+        // setCommittee([...committee, { member: users[i], review: count }])
       }
       setCommitteeState({
         committee,
         committeeSize: users.length
       });
-    });
+    }
+    fetchData();
   }, []);
 
   const goBack = () => {
     history.push("/admin/allcandidates");
   };
 
-  console.log(committeeState);
   return (
     <Wrapper>
       {committeeState.committee && committeeState.committee !== [] ? (
