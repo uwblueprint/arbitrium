@@ -1,12 +1,28 @@
 import React, { Component } from "react";
-import Table from "@material-ui/core/Table";
-import Paper from "@material-ui/core/Paper";
+import AllCandidatesTable from "./AllCandidatesTable";
 import styled from "styled-components";
-import { withStyles } from "@material-ui/core/styles";
-import { TableRow, TableHead, TableCell, TableBody } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import Spinner from "react-spinner-material";
+import { CSVLink } from "react-csv";
+import moment from "moment";
 
 const GET = require("../../requests/get");
+
+const Header = styled.div`
+    display: flex;
+    align-items: center;
+    h1 {
+      font-size: 24px;
+      font-weight: normal;
+      font-size: 24px;
+      display: inline-block;
+      margin-right: auto;
+    }
+    .button-container {
+      display: inline-block;
+    }
+  }
+`;
 
 const Wrapper = styled.div`
   margin-top: 150px;
@@ -17,10 +33,8 @@ const Wrapper = styled.div`
     font-weight: normal;
     font-size: 24px;
     line-height: 36px;
-    max-width: 854px;
     width: 90vw;
-    margin: 0 auto;
-    padding-bottom: 20px;
+    margin: 0;
     text-align: left;
   }
   .table {
@@ -29,7 +43,6 @@ const Wrapper = styled.div`
   }
   table.MuiTable-root {
     border: 1px solid #cccccc;
-    margin-bottom: 30px;
   }
   button {
     max-width: 200px;
@@ -39,12 +52,32 @@ const Wrapper = styled.div`
   }
 `;
 
-const StyledTableCell = withStyles((theme) => ({
-  body: {
-    fontSize: 20,
-    fontWeight: 500
+function convertToTableData(fetched) {
+  const applicationList = [];
+  if (fetched !== null) {
+    fetched.forEach((application) => {
+      applicationList.push({
+        avgRanking: parseFloat(application.avgRanking),
+        candidateName: application.candidateName,
+        avgRating: application.avgRating,
+        numReviews: application.numReviews,
+        candidateLink: (
+          <a href={`/submissions/${application._id}`}>
+            <Button
+              variant="contained"
+              color="primary"
+              target="_blank"
+              value="OpenApplication"
+            >
+              Open
+            </Button>
+          </a>
+        )
+      });
+    });
   }
-}))(TableCell);
+  return applicationList;
+}
 
 export default class AllCandidates extends Component {
   constructor(props) {
@@ -52,6 +85,7 @@ export default class AllCandidates extends Component {
     this.routeChange = this.routeChange.bind(this);
     this.state = {
       applications: [],
+      comments: [],
       totalReviews: -1,
       rankings: [],
       reviews: [],
@@ -62,39 +96,41 @@ export default class AllCandidates extends Component {
   componentDidMount() {
     GET.getAllUsersAPI().then((users) => {
       users = users.filter((user) => {
-        return Array.isArray(user.programs) && (
+        return (
+          Array.isArray(user.programs) &&
           user.programs.some(
             (program) => program.name === process.env.REACT_APP_PROGRAM
           ) &&
           user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
           user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
-        )
+        );
       });
       this.setState({
-        totalReviews: users.length
-      });
-    });
-
-    GET.getCandidateSubmissions().then((data) => {
-      this.setState({
-        applications: data
+        totalReviews: users.length,
+        users: users
       });
     });
 
-    GET.getAllRankingsAPI().then((data) => {
+    GET.getCandidateSubmissions().then((apps) => {
       this.setState({
-        rankings: data
+        applications: apps
       });
     });
 
-    GET.getAllReviewsAPI().then((data) => {
+    GET.getAllRankingsAPI().then((rankings) => {
       this.setState({
-        reviews: data
+        rankings: rankings
+      });
+    });
+
+    GET.getAllReviewsAPI().then((reviews) => {
+      this.setState({
+        reviews: reviews
       });
     });
   }
 
- //Calculate the average ranking
+  // Calculate the average ranking and rating for each application
   calculateAverageRanking = () => {
     this.state.applications.forEach((application) => {
       let numRank = 0;
@@ -135,66 +171,148 @@ export default class AllCandidates extends Component {
     this.props.history.push(path);
   }
 
+  // Get comments from users on each application
+  getComments = () => {
+    let commentsTotal = [];
+    this.state.applications.forEach((application, i) => {
+      let comments = [];
+      this.state.reviews.forEach((review) => {
+        if (
+          review.applicationId === application._id &&
+          review.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+          review.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
+        ) {
+          //Go through questions and tally the comments
+          let temp = [];
+          review.comments.forEach((comment) => {
+            temp.push(comment);
+          });
+          review.questionList.forEach((question) => {
+            question.notes.forEach((note) => {
+              temp.push(note);
+            });
+          });
+          let email = "";
+          this.state.users.forEach((user) => {
+            if (user.userId === review.userId) {
+              email = user.email;
+            }
+          });
+
+          let comment = {
+            comments: temp,
+            userId: email
+          };
+          if (comment.comments.length !== 0) {
+            comments.push(comment);
+          }
+        }
+      });
+      let newComment = {
+        Name:
+          application.candidateName +
+          " (Total Commenters: " +
+          comments.length +
+          ")",
+        Comments: ""
+      };
+      commentsTotal.push(newComment);
+      comments.forEach((comment) => {
+        comment.comments.forEach((c) => {
+          let newComment = {
+            Name: "",
+            Comments: c.value + " (" + comment.userId + ")"
+          };
+          commentsTotal.push(newComment);
+        });
+      });
+    });
+    return commentsTotal;
+  };
+
+  exportData = () => {
+    let exportApps = this.refs.csvApplications;
+    let exportComments = this.refs.csvComments;
+    exportApps.link.click();
+    exportComments.link.click();
+  };
+
   render() {
     this.calculateAverageRanking();
+    let comments = this.getComments();
+    let data = convertToTableData(this.state.applications);
     return (
       <Wrapper>
-        <Paper>
-          <h1>All Candidates</h1>
-          <Table className="table">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ width: "20%" }}>Average Rank</TableCell>
-                <TableCell style={{ width: "20%" }}>Candidate Name</TableCell>
-                <TableCell style={{ width: "20%" }}>Average Rating</TableCell>
-                <TableCell
-                  style={{ width: "20%", cursor: "pointer", color: "#2261AD" }}
-                  align="left"
-                  onClick={this.routeChange}
+        {this.state.applications !== null &&
+        this.state.applications.length !== 0 ? (
+          <div>
+            <Header>
+              <h1 style={{ color: "black" }}>All Candidates</h1>
+              <div className="button-container">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  target="_blank"
+                  value="OpenCommittee"
+                  style={{ width: "250px", maxWidth: "250px" }}
+                  onClick={() => {
+                    this.props.history.push("/admin/committeereview");
+                  }}
                 >
-                  # of Reviews
-                </TableCell>
-                <TableCell style={{ width: "20%" }} align="left"></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.applications
-                ? this.state.applications.sort((a, b) => parseFloat(a.avgRanking) > parseFloat(b.avgRanking) ? 1 : -1)
-                  .map((application, index) => (
-                    <TableRow hover key={application._id}>
-                      <StyledTableCell component="th" scope="row">
-                        {application.avgRanking > 0 ? application.avgRanking : "N/A"}
-                      </StyledTableCell>
-                      <TableCell align="left">
-                        {application.candidateName}
-                      </TableCell>
-                      <TableCell align="left">
-                        {application.avgRating > 0 ? application.avgRating : 0}/5
-                      </TableCell>
-                      <TableCell align="left">
-                        {application.numReviews}/{this.state.totalReviews}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          target="_blank"
-                          value="OpenApplication"
-                          onClick={() => {
-                            this.props.history.push(
-                              "/submissions/" + application._id
-                            );
-                          }}
-                        >
-                          Open
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : "ERROR LOADING APPLICATIONS FROM DATABASE"}
-            </TableBody>
-          </Table>
-        </Paper>
+                  View Committee Review
+                </Button>
+              </div>
+              <div className="button-container">
+                <CSVLink
+                  ref="csvApplications"
+                  filename={
+                    "Ratings and Rankings - " +
+                    moment().format("DD-MM-YYYY hh-mm-ss") +
+                    ".csv"
+                  }
+                  data={this.state.applications.map(({ _id, ...item }) => item)}
+                  style={{ display: "none" }}
+                />
+                <CSVLink
+                  ref="csvComments"
+                  filename={
+                    "Comments - " +
+                    moment().format("DD-MM-YYYY hh-mm-ss") +
+                    ".csv"
+                  }
+                  data={comments}
+                  style={{ display: "none" }}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  target="_blank"
+                  value="ExportData"
+                  style={{
+                    width: "250px",
+                    maxWidth: "250px",
+                    marginLeft: "10px"
+                  }}
+                  onClick={() => {
+                    this.exportData();
+                  }}
+                >
+                  Export Data
+                </Button>
+              </div>
+            </Header>
+            <AllCandidatesTable
+              data={data}
+              totalReviews={this.state.totalReviews}
+              style={{ marginBottom: "30px" }}
+            />
+          </div>
+        ) : (
+          <div>
+            <h4>Loading All Candidates...</h4>
+            <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+          </div>
+        )}
       </Wrapper>
     );
   }

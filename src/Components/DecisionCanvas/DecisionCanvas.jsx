@@ -125,45 +125,61 @@ function DecisionCanvas({ update, review, categoryData }) {
                 <div className="answers">
                   <h3>Candidate Answer</h3>
                   <ol>
-                    {section.answers.map((item, i) => (
-                      (typeof item.response) == "object" ? (
+                    {section.answers.map((item, i) =>
+                      typeof item.response === "object" ? (
                         <React.Fragment key={i}>
                           <li key={i}>{item.question}</li>
                           <ul>
-                          <li key={i+"Primary"}>{"Primary (Select 3 Max):"}</li>
-                          {Object.keys(item.response).map((key, j)=> {
-                            if (item.response[key] == "Primary (Select 3 Max)"){
-                              return (
-                                  <ul style={{"paddingLeft": '35px'}} key={i+"."+j}>{key}</ul>
-                              )
-                            }
-                          })}
-                          <li key={i+"All"}>{"All Who Apply:"}
-                            {Object.keys(item.response).map((key, j)=> {
-                              if (item.response[key] == "All Who Apply"){
+                            <li key={i + "Primary"}>
+                              {"Primary (Select 3 Max):"}
+                            </li>
+                            {Object.keys(item.response).forEach((key, j) => {
+                              if (
+                                item.response[key] === "Primary (Select 3 Max)"
+                              ) {
                                 return (
-                                    <ul style={{"paddingLeft": '35px'}} key={i+"."+j}>{key}</ul>
-                                )
+                                  <ul
+                                    style={{ paddingLeft: "35px" }}
+                                    key={i + "." + j}
+                                  >
+                                    {key}
+                                  </ul>
+                                );
                               }
                             })}
-                          </li>
-                        </ul>
-                        <h1> {"    "}</h1>
+                            <li key={i + "All"}>
+                              {"All Who Apply:"}
+                              {Object.keys(item.response).forEach((key, j) => {
+                                if (item.response[key] === "All Who Apply") {
+                                  return (
+                                    <ul
+                                      style={{ paddingLeft: "35px" }}
+                                      key={i + "." + j}
+                                    >
+                                      {key}
+                                    </ul>
+                                  );
+                                }
+                              })}
+                            </li>
+                          </ul>
+                          <h1> {"    "}</h1>
                         </React.Fragment>
-                    )
-                    : (
-
-                      <React.Fragment key={i}>
-                        <li key={i}>{item.response}</li>
-                        {item.question == "One-Line Description (approximately 25 words)" ? (
-                          <p> --------------------------------------------------------------------------------------------- </p>
-                        )
-                        : (
+                      ) : (
+                        <React.Fragment key={i}>
+                          <li key={i}>{item.response}</li>
+                          {item.question ===
+                          "One-Line Description (approximately 25 words)" ? (
+                            <p>
+                              {" "}
+                              ---------------------------------------------------------------------------------------------{" "}
+                            </p>
+                          ) : (
                             <h1> {"    "}</h1>
-                        )}
-                      </React.Fragment>
-                    )
-                    ))}
+                          )}
+                        </React.Fragment>
+                      )
+                    )}
                   </ol>
                 </div>
               </CardBody>

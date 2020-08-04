@@ -1,5 +1,5 @@
 import Application from "./Components/Application/Application";
-import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTable";
+import AllApplications from "./Components/List/ApplicationList/AllApplications";
 import UserManagement from "./Components/Admin/UserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
@@ -18,7 +18,7 @@ groups: []          =>A list of groups Ex. ["admink", "user"].
 const routes = [
   {
     path: "/applications",
-    component: ApplicationsTable,
+    component: AllApplications,
     title: "List of Applications",
     groups: []
   },

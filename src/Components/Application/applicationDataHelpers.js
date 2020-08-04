@@ -168,7 +168,6 @@ export function transpileCheckBoxData(application) {
       console.log("Checkbox categories:" + checkBoxCategory)
       console.log(application[checkBoxCategory])
 
-      let answers = []
       let p = {
         id: checkBoxCategories[checkBoxCategory],
         answers: {
