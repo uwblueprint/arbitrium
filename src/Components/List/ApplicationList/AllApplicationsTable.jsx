@@ -19,9 +19,11 @@ function AllApplicationsTable(props) {
   const columns = [
     { title: "Applicant Name", field: "applicantName" },
     { title: "Rating (/5)", field: "rating" },
-    { title: "Last Edited", field: "lastEdited",
+    {
+      title: "Last Edited",
+      field: "lastEdited",
       render: (rowData) => {
-        let date = rowData.lastEdited
+        const date = rowData.lastEdited;
         if (!date) return "Never";
         return moment(date)
           .toDate()
@@ -29,7 +31,13 @@ function AllApplicationsTable(props) {
           .substring(4, 16);
       }
     },
-    { title: "", field: "applicantLink", sorting: false, searchable: false, export: false }
+    {
+      title: "",
+      field: "applicantLink",
+      sorting: false,
+      searchable: false,
+      export: false
+    }
   ];
   return (
     <div>

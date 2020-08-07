@@ -8,13 +8,13 @@ import Footer from "../Footer/Footer";
 const PageLayout = ({ children }) => {
   return (
     <>
-      <Navigation/>
-      <Header/>
-      <Header2/>
+      <Navigation />
+      <Header />
+      <Header2 />
       <div style={{ marginLeft: 305 }} id="container">
         {children}
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };

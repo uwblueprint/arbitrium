@@ -1,4 +1,4 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 //Short answer
 //paragraphs
 //multiple choice
@@ -6,7 +6,7 @@ var mongoose = require("mongoose");
 //file type
 //checkbox grid?
 
-var option = new mongoose.Schema({
+const option = new mongoose.Schema({
   min: {
     type: Number
   },
@@ -19,7 +19,7 @@ var option = new mongoose.Schema({
   }
 });
 
-var regularExpressions = new mongoose.Schema({
+const regularExpressions = new mongoose.Schema({
   name: {
     type: String
   },
@@ -27,7 +27,6 @@ var regularExpressions = new mongoose.Schema({
     type: String
   }
 });
-
 
 //Yoptions and Xoptions explained:
 //Each Xoption is a collumn and ech Yoption is a row
@@ -45,7 +44,7 @@ var regularExpressions = new mongoose.Schema({
 //You have multiple rows or Yoptions and one Xoption.
 //To validate the checkboxes we will use the min/max of the Xoption ("selected")
 
-var question = new mongoose.Schema({
+const question = new mongoose.Schema({
   name: {
     type: String
   },
@@ -63,11 +62,11 @@ var question = new mongoose.Schema({
     type: [option]
   },
   Xoptions: {
-    type: [option],
+    type: [option]
   }
 });
 
-var section = new mongoose.Schema({
+const section = new mongoose.Schema({
   name: {
     type: String
   },
@@ -76,11 +75,10 @@ var section = new mongoose.Schema({
   },
   questions: {
     type: [question]
-  },
+  }
 });
 
-
-var formsSchema = new mongoose.Schema(
+const formsSchema = new mongoose.Schema(
   {
     name: {
       type: String
@@ -98,6 +96,5 @@ var formsSchema = new mongoose.Schema(
   { collection: "Forms" }
 );
 
-
-var Forms = mongoose.model("Forms", reviewSchema);
+const Forms = mongoose.model("Forms", formsSchema);
 module.exports = Forms;

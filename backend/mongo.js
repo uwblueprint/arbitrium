@@ -3,15 +3,15 @@ const mongoose = require("mongoose");
 
 console.log("Attempting to connect to Mongo...");
 
-USERNAME = MONGO_CONFIGS.module.mongoUsername;
-PASS = MONGO_CONFIGS.module.mongoPassword;
-ENV = MONGO_CONFIGS.module.environment;
+const USERNAME = MONGO_CONFIGS.module.mongoUsername;
+const PASS = MONGO_CONFIGS.module.mongoPassword;
+const ENV = MONGO_CONFIGS.module.environment;
 
 // for debugging the database
 mongoose.set("debug", true);
 
 // connect to database server; if database doesn't exist, it will create it
-var mongo = mongoose.connect(
+mongoose.connect(
   `mongodb+srv://${USERNAME}:${PASS}@cluster0-kbiz0.mongodb.net/${ENV}`,
   { useNewUrlParser: true, useUnifiedTopology: true },
   function(err) {

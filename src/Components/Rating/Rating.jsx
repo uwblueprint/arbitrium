@@ -45,7 +45,7 @@ const Rating = ({ update, review }) => {
   let numRatings = 0;
   let comments = [];
   if (review) {
-    review.questionList.forEach(item => {
+    review.questionList.forEach((item) => {
       if (item.rating > 0) {
         averageRating += item.rating;
         numRatings += 1;
