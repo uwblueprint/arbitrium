@@ -13,11 +13,11 @@ export const adminCategories = {
     "Street Address or P-O- Box": 9,
     "Community/Region Name": 10,
     "Province or Territory": 11,
-    "Postal Code": 12,
+    "Postal Code": 12
   },
   grant: {
     "What is the total grant request from United Way Waterloo Region Communities (Ex- 20000)": 1,
-    "Will the service be provided if awarded a lesser amount": 1,
+    "Will the service be provided if awarded a lesser amount": 1
   },
   funding: {
     "1-2 Has the organization applied to any other funder (i-e- Canadian Red Cross or Community Foundations Canada) for this specific request": 1,
@@ -31,8 +31,8 @@ export const adminCategories = {
 };
 
 export const fileCategories = {
-  "Budget": 1,
-  "Authorization and Confirmation": 2,
+  Budget: 1,
+  "Authorization and Confirmation": 2
 };
 
 export const longAnswerCategories = {
@@ -45,7 +45,7 @@ export const longAnswerCategories = {
   "Gender, Sexual Identity, and Newcomers ": 1,
   "Vulnerable Workers ": 1,
   "Linguistic Minorities ": 1,
-  "Other": 1,
+  Other: 1,
   "Food Security": 2,
   "Financial Wellness": 2,
   "Home Care or Personal Support": 2,
@@ -53,10 +53,10 @@ export const longAnswerCategories = {
   "Information and Navigation": 2,
   "Legal Support": 2,
   "Mental Health and Wellness": 2,
-  "Shelter": 2,
+  Shelter: 2,
   "Personal Safety": 2,
   "Social Inclusion and Learning": 2,
-  "Transportation": 2,
+  Transportation: 2,
   "Other, Specify:": 2,
   "Types of Activities": 3,
   "Geographic Areas of Service": 3,
@@ -75,13 +75,12 @@ export const longAnswerCategories = {
   "3-9 Will this service engage the support/involvement of Canadians/Businesses": 5,
   "If yes, How many volunteers": 5,
   "If yes, How many businesses": 5,
-  "If yes, How many Donors": 5,
+  "If yes, How many Donors": 5
 };
 
 export const checkBoxCategories = {
-    "Populations by Children, Youth, or Elderly ": 1,
-
-}
+  "Populations by Children, Youth, or Elderly ": 1
+};
 
 export const ratingCategories = {
   //todo upon completion of ratings API call

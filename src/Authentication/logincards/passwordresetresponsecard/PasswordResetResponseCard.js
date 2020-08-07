@@ -55,7 +55,7 @@ const PasswordResetResponseCard = (props) => {
         Please check your inbox and click the link to change your password.
         <br />
         <br />
-        Didn't receive the email?{" "}
+        Didn&apos;t receive the email?{" "}
         <span
           className="resendLink"
           onClick={() =>

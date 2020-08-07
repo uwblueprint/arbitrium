@@ -27,7 +27,7 @@ const Files = ({ fileData }) => {
   return (
     <div>
       <h2>Files</h2>
-      {fileData.map(({ name, size, link }, index) => (
+      {fileData.map(({ name, link }, index) => (
         <FileButton key={index}>
           <span role="img" aria-label="fileIcon">
             📎

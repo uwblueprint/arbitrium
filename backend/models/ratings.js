@@ -1,6 +1,6 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-var comment = new mongoose.Schema({
+const comment = new mongoose.Schema({
   lastReviewed: {
     type: String
   },
@@ -9,7 +9,7 @@ var comment = new mongoose.Schema({
   }
 });
 
-var question = new mongoose.Schema({
+const question = new mongoose.Schema({
   id: {
     type: String
   },
@@ -19,7 +19,7 @@ var question = new mongoose.Schema({
   }
 });
 
-var reviewSchema = new mongoose.Schema(
+const reviewSchema = new mongoose.Schema(
   {
     applicationId: {
       type: mongoose.Schema.ObjectId
@@ -39,6 +39,6 @@ var reviewSchema = new mongoose.Schema(
   { collection: "Reviews" }
 );
 
-var Ratings = mongoose.model("Ratings", reviewSchema);
+const Ratings = mongoose.model("Ratings", reviewSchema);
 
 module.exports = Ratings;

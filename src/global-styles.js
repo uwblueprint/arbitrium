@@ -1,6 +1,6 @@
-import tungstenMedium from './styles/Tungsten-Medium.otf';
-import tungstenSemibold from './styles/Tungsten-Semibold.otf';
-import { createGlobalStyle } from 'styled-components';
+import tungstenMedium from "./styles/Tungsten-Medium.otf";
+import tungstenSemibold from "./styles/Tungsten-Semibold.otf";
+import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   @font-face {

@@ -22,6 +22,7 @@
     "prettier/prettier": "error",
     "react/prefer-stateless-function": "warn",
     "react/prop-types": "off",
+    "react/display-name": "off",
     "no-case-declarations": "off",
     "eqeqeq": ["error", "smart"],
     "no-unused-vars": ["warn"],

@@ -55,7 +55,7 @@ const ratings = [
 const RatingList = ({ onRatingChange, selectedRating }) => {
   return (
     <Wrapper>
-      {ratings.map(rate => (
+      {ratings.map((rate) => (
         <button
           key={rate.value}
           onClick={() => onRatingChange && onRatingChange(rate.value)}
