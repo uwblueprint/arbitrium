@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useMemo, useRef } from "react";
+import React, { useReducer, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
@@ -6,6 +6,9 @@ import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import Rating from "../Rating/Rating";
 import Files from "../Files/Files";
 import LoadingOverlay from "../Common/LoadingOverlay";
+import Pdf from "react-to-pdf";
+import ReactDOMServer from "react-dom/server";
+import { PDFExport } from '@progress/kendo-react-pdf';
 //column categories
 import {
   transpileCategoryData,
@@ -23,6 +26,8 @@ import * as UPDATE from "../../requests/update";
 const PageWrapper = styled.div`
   padding-top: 50px;
 `;
+
+const ref = React.createRef();
 
 const BodyWrapper = styled.div`
   margin: 0 auto;
@@ -61,6 +66,7 @@ const ApplicationSelector = styled.div`
 
 function Application({ applications, newReview, history, match, user }) {
   const appId = match.params.organizationId;
+  const [printing, setPrinting] = useState(false);
 
   const [loadedReview] = usePromise(GET.getReviewAPI, {
     user,
@@ -129,10 +135,44 @@ function Application({ applications, newReview, history, match, user }) {
       ? "/submissions/" + applications[appIndex + 1]["_id"]
       : null;
 
+  const options = {
+    orientation: 'p',
+    unit: 'in',
+    format: [1000,800]
+  };
+  let resume = null
+
+  const exportPDF = () => {
+    setPrinting(true)
+  }
+
+  async function print() {
+    let res = await resume.save();
+    setPrinting(false)
+  }
+
   return (
+    <div>
+    <PDFExport paperSize={'Letter'}
+      fileName="_____.pdf"
+      title=""
+      subject=""
+      keywords=""
+      ref={(r) => resume = r}>
+        <div style={{
+         padding: 'none',
+         backgroundColor: 'white',
+         boxShadow: '5px 5px 5px black',
+         margin: 'auto',
+         overflowX: 'hidden',
+         overflowY: 'hidden'
+       }}>
     <PageWrapper>
       <LoadingOverlay show={loadedReview.isPending} />
+
       <BodyWrapper>
+        <button onClick={exportPDF}>prepare to print</button>
+        <button onClick={print}>print</button>
         <h1>
           <Button
             className="all-applicants"
@@ -146,18 +186,21 @@ function Application({ applications, newReview, history, match, user }) {
         {/*}<Rubric />*/}
         <hr />
         {applications.length > 0 && application != null ? (
-          <div className="application-information">
+          <div className="application-information" ref={ref}>
             <Categories categoryData={appData.categoryData} />
             <hr />
             <Files fileData={appData.fileData} />
             <hr />
             <DecisionCanvas
+              printing={printing}
               categoryData={appData.longAnswers}
               update={dispatchReviewUpdate}
               review={review}
             />
             <hr />
-            <Rating review={review} update={dispatchReviewUpdate} />
+            {!printing ? (
+              <Rating review={review} update={dispatchReviewUpdate} />
+            ) : null}
             <hr />
           </div>
         ) : null}
@@ -189,6 +232,9 @@ function Application({ applications, newReview, history, match, user }) {
         </ApplicationSelector>
       </BodyWrapper>
     </PageWrapper>
+    </div>
+    </PDFExport>
+    </div>
   );
 }
 

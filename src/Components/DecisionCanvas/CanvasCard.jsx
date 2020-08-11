@@ -79,7 +79,8 @@ function CanvasCard({
   onLinkClick,
   review,
   title,
-  update
+  update,
+  printing
 }) {
   const index = parseInt(id.substring(7), 10);
   const classes = useStyles(index);
@@ -110,16 +111,20 @@ function CanvasCard({
           timeout="auto"
         >
           {children}
-          <SectionRating
-            id={id}
-            update={update}
-            rating={review ? review.rating : -1}
-          ></SectionRating>
-          <SectionComments
-            comments={notes}
-            id={id}
-            update={update}
-          ></SectionComments>
+          {!printing ? (
+            <div>
+              <SectionRating
+                id={id}
+                update={update}
+                rating={review ? review.rating : -1}
+              ></SectionRating>
+              <SectionComments
+                comments={notes}
+                id={id}
+                update={update}
+              ></SectionComments>
+            </div>
+          ) : null}
         </Collapse>
         {!expanded && (
           <ReadMoreLink

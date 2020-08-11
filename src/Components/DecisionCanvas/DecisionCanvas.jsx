@@ -70,7 +70,7 @@ function expandArrayReducer(expandedArr, { type, index }) {
   });
 }
 
-function DecisionCanvas({ update, review, categoryData }) {
+function DecisionCanvas({ update, review, categoryData, printing }) {
   const [expandArray, dispatch] = useReducer(
     expandArrayReducer,
     categoryData.map(() => false)
@@ -103,7 +103,8 @@ function DecisionCanvas({ update, review, categoryData }) {
       {categoryData
         ? categoryData.map((section, index) => (
             <CanvasCard
-              expanded={expandArray[index]}
+              expanded={printing ? true : expandArray[index]}
+              printing={printing}
               key={section.id}
               id={"canvas_" + section.id}
               onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
