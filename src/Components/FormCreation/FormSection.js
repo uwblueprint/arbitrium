@@ -23,6 +23,19 @@ const useStyles = makeStyles({
     color: "#000",
     fontSize: "20px",
     fontWeight: "500"
+  },
+  section_title: {
+    borderTopLeftRadius: "4px",
+    borderTopRightRadius: "4px",
+    marginBottom: "0px",
+    fontSize: "14px",
+    backgroundColor: "#2261AD",
+    color: "white",
+    width: "fit-content",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    paddingTop: "5px",
+    paddingBottom: "5px"
   }
 });
 
@@ -40,23 +53,7 @@ function FormSection({
 
   return (
     <div>
-      <p
-        style={{
-          borderTopLeftRadius: "4px",
-          borderTopRightRadius: "4px",
-          marginBottom: "0px",
-          fontSize: "14px",
-          backgroundColor: "#2261AD",
-          color: "white",
-          width: "fit-content",
-          paddingLeft: "10px",
-          paddingRight: "10px",
-          paddingTop: "5px",
-          paddingBottom: "5px"
-        }}
-      >
-        Section 1 of 2
-      </p>
+      <span className={classes.section_title}>Section 1 of 2</span>
       <Card className={classes.root}>
         <CardHeader
           classes={{ title: classes.title }}
