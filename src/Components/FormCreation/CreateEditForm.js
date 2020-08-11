@@ -6,9 +6,17 @@ import customFormStateReducer, {
   EDIT_DESCRIPTION
 } from "../../Reducers/CustomFormStateReducer";
 import styled from "styled-components";
+import FormCard from "./FormCard";
+import FormSection from "./FormSection";
 
 const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;
+`;
+
+const FormWrapper = styled.div`
+  margin-top: 10%;
+  padding-left: 10%;
+  padding-right: 10%;
 `;
 
 const Header = styled.div`
@@ -79,6 +87,10 @@ function CreateEditForm() {
           onChange={onDescriptionChange}
         />
       </Header>
+      <FormWrapper>
+        <FormSection />
+        <FormCard />
+      </FormWrapper>
     </Wrapper>
   );
 }
