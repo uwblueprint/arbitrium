@@ -119,7 +119,7 @@ function CreateEditForm() {
         />
       </Header>
       {sections.map((section, key) => (
-        <FormWrapper>
+        <FormWrapper key={key + "_wrapper"}>
           <FormSection
             key={key}
             numSections={sections.length}
@@ -130,6 +130,8 @@ function CreateEditForm() {
           {section.cards.map((card, key) => (
             <FormCard
               key={key}
+              numCards={section.cards.length}
+              card={key + 1}
               type={card.type}
               question={card.question}
               options={card.options}

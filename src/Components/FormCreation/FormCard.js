@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   }
 });
 
-function FormCard({ key, type, question, options, required }) {
+function FormCard({ numCards, card, type, question, options, required }) {
   const classes = useStyles();
 
   return (
@@ -34,7 +34,7 @@ function FormCard({ key, type, question, options, required }) {
       <CardHeader
         classes={{ title: classes.title }}
         title={question}
-        id={key}
+        id={card}
       />
       <CardContent classes={{ root: classes.content }}>todo</CardContent>
     </Card>
