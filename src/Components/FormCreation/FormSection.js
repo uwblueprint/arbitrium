@@ -39,28 +39,23 @@ const useStyles = makeStyles({
   }
 });
 
-function FormSection({
-  children,
-  expanded,
-  id,
-  onHeaderClick,
-  onLinkClick,
-  review,
-  title,
-  update
-}) {
+function FormSection({ numSections, section, title, description }) {
   const classes = useStyles();
 
   return (
     <div>
-      <span className={classes.section_title}>Section 1 of 2</span>
+      <span className={classes.section_title}>
+        Section {section} of {numSections}
+      </span>
       <Card className={classes.root}>
         <CardHeader
           classes={{ title: classes.title }}
-          title={"About Your Charity"}
-          id={"sect_1"}
+          title={title}
+          id={section}
         />
-        <CardContent classes={{ root: classes.content }}>todo</CardContent>
+        <CardContent classes={{ root: classes.content }}>
+          {description}
+        </CardContent>
       </Card>
     </div>
   );

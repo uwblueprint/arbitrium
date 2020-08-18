@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from "react";
+import React, { useReducer, useState, useEffect, useCallback } from "react";
 import { HEADER_HEIGHT } from "../Header/Header";
 import InputBase from "@material-ui/core/InputBase";
 import customFormStateReducer, {
@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 `;
 
 const FormWrapper = styled.div`
-  margin-top: 10%;
+  margin-top: 50px;
   padding-left: 10%;
   padding-right: 10%;
 `;
@@ -57,6 +57,7 @@ const defaultForm = {
 
 function CreateEditForm() {
   const [formState, dispatch] = useReducer(customFormStateReducer, defaultForm);
+  const [sections, setSections] = useState([]);
 
   const onTitleChange = useCallback(
     (e) => {
@@ -71,6 +72,21 @@ function CreateEditForm() {
     },
     [dispatch]
   );
+
+  useEffect(() => {
+    let sections = [
+      {
+        title: "About Your Charity",
+        desc: "Section Type: Admin Info"
+      },
+      {
+        title: "Untitled Section",
+        desc: "Section Type: Decision Criteria"
+      }
+    ];
+
+    setSections(sections);
+  }, []);
 
   return (
     <Wrapper>
@@ -87,10 +103,18 @@ function CreateEditForm() {
           onChange={onDescriptionChange}
         />
       </Header>
-      <FormWrapper>
-        <FormSection />
-        <FormCard />
-      </FormWrapper>
+      {sections.map((section, key) => (
+        <FormWrapper>
+          <FormSection
+            key={key}
+            numSections={sections.length}
+            section={key + 1}
+            title={section.title}
+            description={section.desc}
+          />
+          <FormCard key={key} />
+        </FormWrapper>
+      ))}
     </Wrapper>
   );
 }
