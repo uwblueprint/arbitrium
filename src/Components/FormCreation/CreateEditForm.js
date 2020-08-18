@@ -77,11 +77,26 @@ function CreateEditForm() {
     let sections = [
       {
         title: "About Your Charity",
-        desc: "Section Type: Admin Info"
+        desc: "Section Type: Admin Info",
+        cards: [
+          {
+            type: "short_answer",
+            question: "What is the name of your charity?",
+            required: ""
+          }
+        ]
       },
       {
         title: "Untitled Section",
-        desc: "Section Type: Decision Criteria"
+        desc: "Section Type: Decision Criteria",
+        cards: [
+          {
+            type: "untitled",
+            question: "Untitled Question",
+            options: ["Option 1"],
+            required: ""
+          }
+        ]
       }
     ];
 
@@ -112,7 +127,15 @@ function CreateEditForm() {
             title={section.title}
             description={section.desc}
           />
-          <FormCard key={key} />
+          {section.cards.map((card, key) => (
+            <FormCard
+              key={key}
+              type={card.type}
+              question={card.question}
+              options={card.options}
+              required={card.required}
+            />
+          ))}
         </FormWrapper>
       ))}
     </Wrapper>

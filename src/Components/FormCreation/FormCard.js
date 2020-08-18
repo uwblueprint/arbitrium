@@ -26,24 +26,15 @@ const useStyles = makeStyles({
   }
 });
 
-function FormCard({
-  children,
-  expanded,
-  id,
-  onHeaderClick,
-  onLinkClick,
-  review,
-  title,
-  update
-}) {
+function FormCard({ key, type, question, options, required }) {
   const classes = useStyles();
 
   return (
     <Card className={classes.root}>
       <CardHeader
         classes={{ title: classes.title }}
-        title={"Card 1"}
-        id={"sect_1"}
+        title={question}
+        id={key}
       />
       <CardContent classes={{ root: classes.content }}>todo</CardContent>
     </Card>

@@ -39,7 +39,7 @@ const useStyles = makeStyles({
   }
 });
 
-function FormSection({ numSections, section, title, description }) {
+function FormSection({ key, numSections, section, title, description }) {
   const classes = useStyles();
 
   return (
@@ -48,11 +48,7 @@ function FormSection({ numSections, section, title, description }) {
         Section {section} of {numSections}
       </span>
       <Card className={classes.root}>
-        <CardHeader
-          classes={{ title: classes.title }}
-          title={title}
-          id={section}
-        />
+        <CardHeader classes={{ title: classes.title }} title={title} id={key} />
         <CardContent classes={{ root: classes.content }}>
           {description}
         </CardContent>
