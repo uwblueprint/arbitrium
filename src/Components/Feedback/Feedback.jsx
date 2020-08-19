@@ -9,39 +9,37 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
 import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
 import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@material-ui/icons/SentimentSatisfiedAlt";
+
+const UPDATE = require("../../requests/update");
 
 const useStyles = makeStyles({
   root: {
     maxWidth: 340,
     maxHeight: 571,
     borderRadius: 0,
-    boxShadow: "0px 2px 3px 1px #cccccc"
+    boxShadow: "0 2px 2px 2px #cccccc"
   },
   title: {
     fontSize: 20,
-    fontFamily: "Roboto",
     fontWeight: 500,
     paddingTop: 10,
     paddingBottom: 16
   },
   subtitle: {
     fontSize: 16,
-    fontFamily: "Roboto",
-    fontWeight: 500,
-    paddingBottom: 12
+    fontWeight: 500
   },
   comment: {
-    fontSize: 14,
-    fontFamily: "Roboto"
+    fontSize: 14
   },
   commentBox: {
     fontSize: 14,
-    fontFamily: "Roboto",
     minWidth: 308,
-    paddingTop: 24,
+    paddingTop: 12,
     paddingBottom: 16
   },
   button: {
@@ -51,14 +49,11 @@ const useStyles = makeStyles({
   },
   icons: {
     fontSize: 40,
-    paddingRight: 16,
-    paddingBottom: 12,
-    color: "gray",
-    cursor: "pointer"
+    color: "grey"
   }
 });
 
-export default function Feedback() {
+export default function Feedback(user) {
   const classes = useStyles();
 
   return (
@@ -76,18 +71,15 @@ export default function Feedback() {
           How is your experience?
         </Typography>
         <div>
-          <SentimentVeryDissatisfiedIcon
-            className={classes.icons}
-            onClick={console.log("test")}
-          />
-          <SentimentSatisfiedIcon
-            className={classes.icons}
-            onClick={console.log("test")}
-          />
-          <SentimentSatisfiedAltIcon
-            className={classes.icons}
-            onClick={console.log("test")}
-          />
+          <IconButton onClick={console.log("test")}>
+            <SentimentVeryDissatisfiedIcon className={classes.icons} />
+          </IconButton>
+          <IconButton onClick={console.log("test")}>
+            <SentimentSatisfiedIcon className={classes.icons} />
+          </IconButton>
+          <IconButton onClick={console.log("test")}>
+            <SentimentSatisfiedAltIcon className={classes.icons} />
+          </IconButton>
         </div>
         <Typography className={classes.subtitle}>
           Do you have anything to tell us?
@@ -99,6 +91,7 @@ export default function Feedback() {
                 value="Bug"
                 control={<Radio color="primary" />}
                 label="Bug"
+                labelPlacement="end"
               />
               <FormControlLabel
                 value="Suggestion"
