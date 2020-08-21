@@ -16,7 +16,12 @@ var commentSchema = new mongoose.Schema(
         },
         applicationId: {
         type: mongoose.Schema.ObjectId
+        },
+        userEmail: {
+          type: String
         }
+
+
     },
     { collection: "comment" }
   );
