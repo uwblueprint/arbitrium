@@ -1,8 +1,8 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var feedbackSchema = new Schema({
+const feedbackSchema = new Schema({
   id: mongoose.Schema.Types.ObjectId,
   userId: {
     type: String,
@@ -28,5 +28,5 @@ var feedbackSchema = new Schema({
 });
 
 // Model is a constructor for the Schema
-var Feedback = mongoose.model("Feedback", feedbackSchema);
+const Feedback = mongoose.model("Feedback", feedbackSchema);
 module.exports = Feedback;

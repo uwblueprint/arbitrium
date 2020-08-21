@@ -1,7 +1,6 @@
 const express = require("express");
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const router = express.Router();
-const db = require("../mongo.js");
 const Feedback = require("../models/feedback");
 
 router.post("/", function(req, res) {
