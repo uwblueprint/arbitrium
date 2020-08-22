@@ -1,7 +1,7 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 // Notes to add in Criteria's
-var subCriteria = new mongoose.Schema({
+const subCriteria = new mongoose.Schema({
   id: {
     type: String
   },
@@ -10,13 +10,15 @@ var subCriteria = new mongoose.Schema({
   }
 });
 
-var criteriaSchema = new mongoose.Schema(
-  { 
-    criteriaId: { // name of Criteria
-      type: String, 
+const criteriaSchema = new mongoose.Schema(
+  {
+    criteriaId: {
+      // name of Criteria
+      type: String
     },
-    criteriaRole: { // admin, committe members...
-      type: String, 
+    criteriaRole: {
+      // admin, committe members...
+      type: String
     },
     // incase you have multiple notes you want to add
     subCriteriaList: [subCriteria]
@@ -24,6 +26,6 @@ var criteriaSchema = new mongoose.Schema(
   { collection: "criteria" }
 );
 
-var criteria = mongoose.model("Criteria", criteriaSchema);
+const criteria = mongoose.model("Criteria", criteriaSchema);
 
 module.exports = criteria;
