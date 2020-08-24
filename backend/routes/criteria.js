@@ -19,9 +19,11 @@ router.get("/", function(req, res) {
 // To Get One Criteria By Name
 router.get("/:criteriaId", function(req, res) {
   try {
-    db.criterias.find({ criteriaId: req.params.criteriaId }).then(function(found) {
-      res.json(found);
-    });
+    db.criterias
+      .find({ criteriaId: req.params.criteriaId })
+      .then(function(found) {
+        res.json(found);
+      });
   } catch (err) {
     res.send(err);
   }
@@ -30,11 +32,7 @@ router.get("/:criteriaId", function(req, res) {
 // Will be used to create new criterias
 router.post("/", function(req, res) {
   db.criterias
-    .updateOne(
-      {},
-      req.body,
-      {upsert: true }
-    )
+    .updateOne({}, req.body, { upsert: true })
     // created
     .then(function(newSchedule) {
       res.status(201).json(newSchedule);
