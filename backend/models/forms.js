@@ -52,7 +52,15 @@ const question = new mongoose.Schema({
     type: String
   },
   type: {
-    type: String
+    type: String,
+    enum: [
+      "ShortAnswer",
+      "Paragraphs",
+      "MultipleChoice",
+      "Checkboxes",
+      "FileUpload",
+      "CheckboxGrid"
+    ]
   },
   validations: {
     type: [regularExpressions],

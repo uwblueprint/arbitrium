@@ -67,6 +67,7 @@ const ratingsRoutes = require("./routes/ratings");
 const stackedRoutes = require("./routes/stackedRankings");
 const usersRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
+const formsRoutes = require("./routes/forms");
 
 // allows us to access request body in a post or put
 app.use(cors(corsOptions));
@@ -90,6 +91,7 @@ app.use("/api/ratings", ratingsRoutes);
 app.use("/api/stackings", stackedRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/forms", formsRoutes);
 
 app.listen(4000, () => {
   console.log("Server is listening on port:4000");
