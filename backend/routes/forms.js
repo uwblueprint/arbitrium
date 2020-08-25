@@ -33,6 +33,18 @@ router.delete("/:formId", (req, res) => {
   });
 });
 
+// Get form with formId
+router.get("/:formId", (req, res) => {
+  db.forms.findById(req.params.formId, (error, result) => {
+    if (error) {
+      console.log(`Error getting form with ID = ${req.params.formId}`);
+      res.status(500).send(error);
+    } else {
+      res.status(200).json(result);
+    }
+  });
+});
+
 //------------------------------------------------------------------------------
 // Sections
 //------------------------------------------------------------------------------
