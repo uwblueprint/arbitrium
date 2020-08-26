@@ -12,7 +12,7 @@ var form = new mongoose.Schema({
   }
 });
 
-var review = new mongoose.Schema({
+var timeframe = new mongoose.Schema({
   openDate: {
     type: Date
   },
@@ -35,10 +35,9 @@ var programSchema = new mongoose.Schema(
       default: null
     },
     review: {
-      type: review,
+      type: timeframe,
       default: null
     }
-
   },
   { collection: "programs" }
 );
