@@ -75,10 +75,11 @@ const GreyRadio = withStyles({
   }
 })((props) => <Radio color="default" disabled checked={false} {...props} />);
 
-function CreateEditMultipleChoice() {
+function CreateEditMultipleChoice({ data }) {
   const styles = useStyles();
 
-  const [options, setOptions] = useState(["Option 1"]);
+  // options is a string array
+  const [options, setOptions] = useState(data);
   const [hoveredOption, setHoveredOption] = useState(-1);
 
   const onAddOption = (event) => {
