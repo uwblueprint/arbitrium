@@ -32,7 +32,11 @@ const useStyles = makeStyles({
     color: "#FFFFFF"
   },
   inputFocused: {
-    borderBottom: "1px solid #2261AD"
+    // focused styling has priority over hovered styling
+    boxShadow: "0 1px 0 #2261AD !important"
+  },
+  inputHovered: {
+    boxShadow: "0 1px 0 #DADADA"
   }
 });
 
@@ -149,6 +153,11 @@ function CreateEditMultipleChoice() {
                         />
                         <GreyRadio />
                         <OptionNameInput
+                          className={
+                            hoveredOption === index || snapshot.isDragging
+                              ? styles.inputHovered
+                              : ""
+                          }
                           classes={{ focused: styles.inputFocused }}
                           autoFocus={true}
                           placeholder="Option..."
