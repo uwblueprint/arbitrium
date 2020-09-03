@@ -66,6 +66,19 @@ function CreateEditForm() {
           <CreateEditFormHeader />
         </CreateEditFormDispatchContext.Provider>
       </CreateEditFormStateContext.Provider>
+
+      {sections.map((section, key) => (
+        <FormWrapper>
+          <FormSection
+            key={key}
+            numSections={sections.length}
+            section={key + 1}
+            title={section.title}
+            description={section.desc}
+          />
+          <FormCard key={key} />
+        </FormWrapper>
+          ))}
     </Wrapper>
   );
 }
