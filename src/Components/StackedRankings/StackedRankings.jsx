@@ -8,6 +8,7 @@ import RankingCard from "./RankingCard";
 import usePromise from "../../Hooks/usePromise";
 import { getAllStackingsAPI } from "../../requests/get";
 import * as UPDATE from "../../requests/update";
+import { reorder } from "../../Utils/dragAndDropUtils";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -92,15 +93,6 @@ const NumbersColumn = styled.div`
   position: absolute;
   right: 100%;
 `;
-
-// a little function to help us with reordering the result
-function reorder(list, startIndex, endIndex) {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-}
 
 function compare(a, b) {
   if (a.rating < b.rating) {
