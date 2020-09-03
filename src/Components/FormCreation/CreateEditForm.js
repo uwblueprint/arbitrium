@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from "react";
+import React, { useReducer, useState, useEffect, useCallback } from "react";
 import { HEADER_HEIGHT } from "../Header/Header";
 import InputBase from "@material-ui/core/InputBase";
 import customFormStateReducer, {
@@ -6,9 +6,17 @@ import customFormStateReducer, {
   EDIT_DESCRIPTION
 } from "../../Reducers/CustomFormStateReducer";
 import styled from "styled-components";
+import FormCard from "./FormCard";
+import FormSection from "./FormSection";
 
 const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;
+`;
+
+const FormWrapper = styled.div`
+  margin-top: 50px;
+  padding-left: 10%;
+  padding-right: 10%;
 `;
 
 const Header = styled.div`
@@ -49,6 +57,7 @@ const defaultForm = {
 
 function CreateEditForm() {
   const [formState, dispatch] = useReducer(customFormStateReducer, defaultForm);
+  const [sections, setSections] = useState([]);
 
   const onTitleChange = useCallback(
     (e) => {
@@ -63,6 +72,36 @@ function CreateEditForm() {
     },
     [dispatch]
   );
+
+  useEffect(() => {
+    let sections = [
+      {
+        title: "About Your Charity",
+        desc: "Section Type: Admin Info",
+        cards: [
+          {
+            type: "short_answer",
+            question: "What is the name of your charity?",
+            required: ""
+          }
+        ]
+      },
+      {
+        title: "Untitled Section",
+        desc: "Section Type: Decision Criteria",
+        cards: [
+          {
+            type: "untitled",
+            question: "Untitled Question",
+            options: ["Option 1"],
+            required: ""
+          }
+        ]
+      }
+    ];
+
+    setSections(sections);
+  }, []);
 
   return (
     <Wrapper>
@@ -79,6 +118,28 @@ function CreateEditForm() {
           onChange={onDescriptionChange}
         />
       </Header>
+      {sections.map((section, key) => (
+        <FormWrapper key={key + "_wrapper"}>
+          <FormSection
+            key={key}
+            numSections={sections.length}
+            section={key + 1}
+            title={section.title}
+            description={section.desc}
+          />
+          {section.cards.map((card, key) => (
+            <FormCard
+              key={key}
+              numCards={section.cards.length}
+              card={key + 1}
+              type={card.type}
+              question={card.question}
+              options={card.options}
+              required={card.required}
+            />
+          ))}
+        </FormWrapper>
+      ))}
     </Wrapper>
   );
 }
