@@ -1,6 +1,8 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect, useState } from "react";
 import { HEADER_HEIGHT } from "../Header/Header";
 import styled from "styled-components";
+import FormCard from "./FormCard";
+import FormSection from "./FormSection";
 
 import CreateEditFormHeader from "./CreateEditFormHeader";
 import {
@@ -14,11 +16,48 @@ const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;
 `;
 
+const FormWrapper = styled.div`
+  margin-top: 50px;
+  padding-left: 10%;
+  padding-right: 10%;
+`;
+
 function CreateEditForm() {
+  const [sections, setSections] = useState([]);
   const [formState, dispatch] = useReducer(
     customFormStateReducer,
     defaultFormState
   );
+
+  useEffect(() => {
+    let sections = [
+      {
+        title: "About Your Charity",
+        desc: "Section Type: Admin Info",
+        cards: [
+          {
+            type: "short_answer",
+            question: "What is the name of your charity?",
+            required: ""
+          }
+        ]
+      },
+      {
+        title: "Untitled Section",
+        desc: "Section Type: Decision Criteria",
+        cards: [
+          {
+            type: "untitled",
+            question: "Untitled Question",
+            options: ["Option 1"],
+            required: ""
+          }
+        ]
+      }
+    ];
+
+    setSections(sections);
+  }, []);
 
   return (
     <Wrapper>

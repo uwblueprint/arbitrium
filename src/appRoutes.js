@@ -10,7 +10,7 @@ import CreateEditForm from "./Components/FormCreation/CreateEditForm";
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
 component: Home,    =>The component to be loaded at the path specified
 title: "Home",      =>The title of the path, more for documentation
-groups: []          =>A list of groups Ex. ["admink", "user"].
+groups: []          =>A list of groups Ex. ["admin", "user"].
                       =>If [] then the user only has to be authenticated
                       =>If non-empty then the user must be apart of at LEAST ONE group and authenticated
 */

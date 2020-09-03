@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     marginRight: 26
   },
   root: {
-    height: 56,
+    minHeight: 56,
     borderRadius: 0,
     boxShadow: "0px 2px 3px 1px #cccccc"
   },
