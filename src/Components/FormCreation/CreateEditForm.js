@@ -1,13 +1,16 @@
-import React, { useReducer, useState, useEffect, useCallback } from "react";
+import React, { useReducer, useEffect, useState } from "react";
 import { HEADER_HEIGHT } from "../Header/Header";
-import InputBase from "@material-ui/core/InputBase";
-import customFormStateReducer, {
-  EDIT_TITLE,
-  EDIT_DESCRIPTION
-} from "../../Reducers/CustomFormStateReducer";
 import styled from "styled-components";
 import FormCard from "./FormCard";
 import FormSection from "./FormSection";
+
+import CreateEditFormHeader from "./CreateEditFormHeader";
+import {
+  CreateEditFormDispatchContext,
+  CreateEditFormStateContext,
+  defaultFormState
+} from "./CreateEditFormStateManagement";
+import customFormStateReducer from "../../Reducers/CustomFormStateReducer";
 
 const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;
@@ -19,58 +22,11 @@ const FormWrapper = styled.div`
   padding-right: 10%;
 `;
 
-const Header = styled.div`
-  padding: 48px 100px;
-  box-sizing: border-box;
-  height: 176px;
-  box-shadow: 0 2px 3px 1px #cccccc;
-`;
-
-const TitleInput = styled(InputBase)`
-  input {
-    font-size: 24px;
-  }
-  && {
-    margin-bottom: 16px;
-    line-height: 36px;
-  }
-`;
-
-const DescriptionInput = styled(InputBase)`
-  && {
-    width: 646px
-    display: block;
-    line-height: 21px;
-    overflow-y: auto;
-    max-height: 48px;
-  }
-  textarea {
-    font-size: 14px;
-    color: #888888;
-  }
-`;
-
-const defaultForm = {
-  title: "Untitled Form",
-  description: ""
-};
-
 function CreateEditForm() {
-  const [formState, dispatch] = useReducer(customFormStateReducer, defaultForm);
   const [sections, setSections] = useState([]);
-
-  const onTitleChange = useCallback(
-    (e) => {
-      dispatch({ type: EDIT_TITLE, title: e.target.value });
-    },
-    [dispatch]
-  );
-
-  const onDescriptionChange = useCallback(
-    (e) => {
-      dispatch({ type: EDIT_DESCRIPTION, description: e.target.value });
-    },
-    [dispatch]
+  const [formState, dispatch] = useReducer(
+    customFormStateReducer,
+    defaultFormState
   );
 
   useEffect(() => {
@@ -105,21 +61,14 @@ function CreateEditForm() {
 
   return (
     <Wrapper>
-      <Header>
-        <TitleInput
-          placeholder="Form Title"
-          value={formState.title}
-          onChange={onTitleChange}
-        />
-        <DescriptionInput
-          multiline
-          placeholder="Form description..."
-          value={formState.description}
-          onChange={onDescriptionChange}
-        />
-      </Header>
+      <CreateEditFormStateContext.Provider value={formState}>
+        <CreateEditFormDispatchContext.Provider value={dispatch}>
+          <CreateEditFormHeader />
+        </CreateEditFormDispatchContext.Provider>
+      </CreateEditFormStateContext.Provider>
+
       {sections.map((section, key) => (
-        <FormWrapper key={key + "_wrapper"}>
+        <FormWrapper key={key}>
           <FormSection
             key={key}
             numSections={sections.length}
@@ -127,17 +76,7 @@ function CreateEditForm() {
             title={section.title}
             description={section.desc}
           />
-          {section.cards.map((card, key) => (
-            <FormCard
-              key={key}
-              numCards={section.cards.length}
-              card={key + 1}
-              type={card.type}
-              question={card.question}
-              options={card.options}
-              required={card.required}
-            />
-          ))}
+          <FormCard key={key} />
         </FormWrapper>
       ))}
     </Wrapper>
