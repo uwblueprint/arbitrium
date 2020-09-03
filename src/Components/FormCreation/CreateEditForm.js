@@ -68,7 +68,7 @@ function CreateEditForm() {
       </CreateEditFormStateContext.Provider>
 
       {sections.map((section, key) => (
-        <FormWrapper>
+        <FormWrapper key={key}>
           <FormSection
             key={key}
             numSections={sections.length}
@@ -78,7 +78,7 @@ function CreateEditForm() {
           />
           <FormCard key={key} />
         </FormWrapper>
-          ))}
+      ))}
     </Wrapper>
   );
 }
