@@ -15,15 +15,21 @@ This web app (Arbitrium) is a review tool built for non-profit organizations. It
 2. A group of reviewers, usually community leaders, picked by the non-profit are then asked to rate and rank the applications
 3. Arbitrium provides dashboards to visualize the review rate, the average rating and the average ranking of each application
 
-Current Users (non-profit organizations): United Way, Social Venture Partners
+### Team
 
-Project Lead: [Greg Maxin](https://github.com/GodGreg)
-Product Manager: [Brittany Lau](https://github.com/brittanylau)
+Project Lead: [Greg Maxin](https://github.com/GodGreg)\
+Product Manager: [Brittany Lau](https://github.com/brittanylau)\
 Senior Developers: [Xin Hao Zhang](https://github.com/xinhaoz), [Sherry Li](https://github.com/sherryhli), [Hyunzee Kim](https://github.com/hyunzeekim), [Ahmed Hamodi](https://github.com/ahmedhamodi)
 
 ---------------------------------------------------------------------------------------------------
 
-## Current Usage Stats
+## Usage Stats
+
+### Current Users (non-profit organizations)
+- United Way Waterloo Region Communities
+- Social Venture Partners Waterloo Region
+
+### Usage
 - 208 Applications Submitted
 - 1388 Review Done
 - 63 Users
