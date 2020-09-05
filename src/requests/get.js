@@ -53,7 +53,6 @@ async function getAllStackingsAPI(user) {
 }
 
 async function getUserAPI(user) {
-  console.log("YEEE")
   return GET(`/api/users/${user.uid}`)
 }
 

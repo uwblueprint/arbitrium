@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean
     }
   },
-  { collection: "user" }
+  { collection: "users" }
 );
 
 module.exports = userSchema;

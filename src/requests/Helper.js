@@ -10,7 +10,7 @@ async function GET(url){
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
   //let program = window.location.pathname.split("/")[0]
-  let program = "EmergencyFund"
+  let program = "SVP Investee Grant"
 
   const response = await fetch(proxy + url, {
     headers: {
@@ -20,6 +20,7 @@ async function GET(url){
     }
   });
   const body = await response.json();
+  console.log(body)
   if (response.status !== 200) {
     throw Error(body.message);
   }
