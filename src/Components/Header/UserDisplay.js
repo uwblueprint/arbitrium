@@ -7,12 +7,17 @@ import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Signout = styled.div`
   display: inline-block;
+  line-height: 16px;
   font-size: 16px;
-  width: 350px;
+  padding-right: 32px;
 
   button {
     text-transform: uppercase;
-    margin-left: 20px;
+    margin-left: 12px;
+    height: 32px;
+    width: 32px;
+    border-radius: 100%;
+    cursor: pointer;
   }
 `;
 
@@ -24,15 +29,8 @@ const UserDisplay = () => {
       <div>
         <Signout>
           {currentUser.email}
-          <button
-            color="primary"
-            style={{ height: "32px", borderRadius: "100%" }}
-            onClick={() => firebaseApp.auth().signOut()}
-          >
-            <FontAwesomeIcon
-              style={{ height: "16px", width: "16px" }}
-              icon={faSignOutAlt}
-            />
+          <button color="primary" onClick={() => firebaseApp.auth().signOut()}>
+            <FontAwesomeIcon icon={faSignOutAlt} />
           </button>
         </Signout>
       </div>

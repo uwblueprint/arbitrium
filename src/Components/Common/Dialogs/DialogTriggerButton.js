@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
-
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 
-// TODO: fix height issue, currently setting to 150% as hacky fix
 const DialogOverlay = styled.div`
   position: fixed;
   left: 0;
@@ -14,25 +12,22 @@ const DialogOverlay = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `;
 
-function DialogButton({
+function DialogTriggerButton({
   children,
   closeOnEsc,
   color,
   Dialog,
   dialogProps,
-  onClose,
-  variant,
   customBgColor,
   alertParent,
-  data
+  variant
 }) {
   const [showDialog, setShowDialog] = useState(false);
   const dialogRef = React.createRef();
 
   const closeDialog = useCallback(() => {
     setShowDialog(false);
-    onClose && onClose();
-  }, [onClose]);
+  }, []);
 
   useEffect(() => {
     function detectEscape(event) {
@@ -43,14 +38,13 @@ function DialogButton({
     if (dialogRef.current) {
       window.addEventListener("keydown", detectEscape);
     }
-  }, [closeDialog, closeOnEsc, dialogRef, onClose]);
+  }, [closeDialog, closeOnEsc, dialogRef]);
 
   function onClick() {
     setShowDialog(true);
     dialogRef.current.focus();
   }
 
-  // TODO: find better way to specify custom button colour
   return (
     <div className="button-container" ref={dialogRef}>
       <Button
@@ -71,16 +65,11 @@ function DialogButton({
       {showDialog && (
         <>
           <DialogOverlay />
-          <Dialog
-            {...dialogProps}
-            close={closeDialog}
-            confirm={alertParent}
-            data={data}
-          />
+          <Dialog {...dialogProps} confirm={alertParent} close={closeDialog} />
         </>
       )}
     </div>
   );
 }
 
-export default DialogButton;
+export default DialogTriggerButton;

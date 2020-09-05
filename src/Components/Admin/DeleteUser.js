@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import Button from "@material-ui/core/Button";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import InputLabel from "@material-ui/core/InputLabel";
-import DialogButton from "../Common/DialogButton";
-import DeleteUserConfirmation from "./DeleteUserConfirmation";
 import * as DELETE from "../../requests/delete";
 
 const StyledLabel = styled(InputLabel)`
@@ -27,8 +27,11 @@ const QuestionWrapper = styled.div`
   }
 `;
 
-function DeleteUser({ close, userId, setShowSaveFailure }) {
+function DeleteUser({ close, userId, setShowSaveFailure, setIsSubmitting }) {
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
   function deleteUser(userId) {
+    setIsSubmitting(true);
     DELETE.deleteUserAPI(userId)
       .then(() => {
         close();
@@ -36,9 +39,15 @@ function DeleteUser({ close, userId, setShowSaveFailure }) {
       })
       .catch((err) => {
         console.log(err);
+        setIsSubmitting(false);
+        setShowDeleteConfirmation(false);
         setShowSaveFailure(true);
       });
   }
+
+  const handleDeleteClickAway = () => {
+    setShowDeleteConfirmation(false);
+  };
 
   return (
     <QuestionWrapper>
@@ -49,17 +58,24 @@ function DeleteUser({ close, userId, setShowSaveFailure }) {
           Careful, you will delete the user and all associated data forever.
         </p>
       </WarningMessage>
-      <DialogButton
-        Dialog={DeleteUserConfirmation}
-        closeOnEsc={true}
-        variant="contained"
-        customBgColor="#C94031"
-        alertParent={() => {
-          deleteUser(userId);
-        }}
-      >
-        Delete user
-      </DialogButton>
+      <ClickAwayListener onClickAway={handleDeleteClickAway}>
+        <Button
+          onClick={() => {
+            if (showDeleteConfirmation) {
+              deleteUser(userId);
+            } else {
+              setShowDeleteConfirmation(true);
+            }
+          }}
+          variant="contained"
+          style={{
+            backgroundColor: "#C94031",
+            color: "#FFFFFF"
+          }}
+        >
+          {showDeleteConfirmation ? "Please confirm deletion" : "Delete user"}
+        </Button>
+      </ClickAwayListener>
       <hr />
     </QuestionWrapper>
   );

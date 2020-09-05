@@ -1,4 +1,22 @@
 import React, { Component } from "react";
+import styled from "styled-components";
+
+const Container = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  width: 300px;
+  background: white;
+  color: blue;
+  z-index: 100;
+`;
+
+const Tagline = styled.div`
+  font-size: 0.7em;
+  color: #888888;
+`;
 
 export default class Footer extends Component {
   constructor(props) {
@@ -9,11 +27,11 @@ export default class Footer extends Component {
   }
 
   render() {
-    let madeby = "Made by ";
+    const madeby = "Made by ";
     return (
       <header>
-        <div className="footer-container">
-          <div className="tagline">
+        <Container>
+          <Tagline>
             {" "}
             {madeby}
             <a
@@ -24,8 +42,8 @@ export default class Footer extends Component {
             >
               UW Blueprint
             </a>
-          </div>
-        </div>
+          </Tagline>
+        </Container>
       </header>
     );
   }

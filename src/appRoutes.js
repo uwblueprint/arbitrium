@@ -1,10 +1,11 @@
 import Application from "./Components/Application/Application";
-import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTable";
+import AllApplications from "./Components/List/ApplicationList/AllApplications";
 import UserManagement from "./Components/Admin/UserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
-import Admin from "./Components/Admin/Admin";
 import DatabaseManagement from "./Components/Admin/DatabaseManagement";
+import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
+import CreateEditForm from "./Components/FormCreation/CreateEditForm";
 
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
@@ -17,7 +18,7 @@ groups: []          =>A list of groups Ex. ["admin", "user"].
 const routes = [
   {
     path: "/applications",
-    component: ApplicationsTable,
+    component: AllApplications,
     title: "List of Applications",
     groups: []
   },
@@ -40,21 +41,21 @@ const routes = [
     groups: ["Admin"]
   },
   {
+    path: "/admin/committeereview",
+    component: CommitteeReview,
+    title: "Admin view to review the status of committee members",
+    groups: ["Admin"]
+  },
+  {
     path: "/admin/user-management",
     component: UserManagement,
     title: "Admin view to view all users",
     groups: ["Admin"]
   },
   {
-    path: "/admin/database",
-    component: DatabaseManagement,
-    title: "Access and change the database being used",
-    groups: ["Admin"]
-  },
-  {
-    path: "/admin",
-    component: Admin,
-    title: "Admin view to view all users",
+    path: "/admin/create-form",
+    component: CreateEditForm,
+    title: "Create or edit custom form",
     groups: ["Admin"]
   }
 ];

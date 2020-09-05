@@ -1,19 +1,21 @@
 {
   "timeZone": "America/New_York",
   "dependencies": {
-    "libraries": [{
-      "userSymbol": "FirebaseApp",
-      "libraryId": "1hguuh4Zx72XVC1Zldm_vTtcUUKUA6iBUOoGnJUWLfqDWx5WlOJHqYkrt",
-      "version": "29",
-      "developmentMode": true
-    }]
+    "libraries": [
+      {
+        "userSymbol": "FirebaseApp",
+        "libraryId": "1hguuh4Zx72XVC1Zldm_vTtcUUKUA6iBUOoGnJUWLfqDWx5WlOJHqYkrt",
+        "version": "29",
+        "developmentMode": true
+      }
+    ]
   },
   "exceptionLogging": "STACKDRIVER",
   "oauthScopes": [
-    "https://www.googleapis.com/auth/firebase.database", 
-    "https://www.googleapis.com/auth/userinfo.email", 
-    "https://www.googleapis.com/auth/spreadsheets", 
-    "https://www.googleapis.com/auth/script.scriptapp", 
+    "https://www.googleapis.com/auth/firebase.database",
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/script.scriptapp",
     "https://www.googleapis.com/auth/script.external_request"
   ],
   "executionApi": {

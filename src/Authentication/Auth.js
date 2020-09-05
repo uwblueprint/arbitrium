@@ -7,6 +7,14 @@ import * as GET from "../requests/get";
 
 export const AuthContext = React.createContext();
 
+const isTokenExpired = (user) => {
+  const MILLISECONDS_PER_DAY = 24 * 3600 * 1000;
+  const NOW = new Date().getTime();
+  // Firebase tokens don't expire, they automatically refresh every hour
+  // we impose our own "expiration" time of 24 hours
+  return Number(user.toJSON().lastLoginAt) < NOW - MILLISECONDS_PER_DAY;
+};
+
 const AUTH_STATES = {
   LOADING: "LOADING",
   NOT_AUTHENTICATED: "NOT_AUTHENTICATED",
@@ -25,6 +33,13 @@ function AuthProvider({ initialAppLoad, children }) {
         setAuthState({ state: AUTH_STATES.NOT_AUTHENTICATED, user });
         return;
       }
+
+      if (isTokenExpired(user)) {
+        firebaseApp.auth().signOut();
+        setAuthState({ state: AUTH_STATES.NOT_AUTHENTICATED, user: null });
+        return;
+      }
+
       const appUser = await getUserAPI(user);
       //If the user doesn't have access to this program, sign them out
       if (!appUser) {
@@ -56,7 +71,7 @@ function AuthProvider({ initialAppLoad, children }) {
       }
 
       const applications = await GET.getAllApplicationsAPI();
-      const reviewCount = await GET.getReviewCountAPI(user);
+      const reviewCount = await GET.getReviewCountAPI(user.uid);
       //Load the initial data into redux
       initialAppLoad(applications, reviewCount);
       // differentiate between the firebase user and the user retrieved from mongo (firebaseUser and appUser)
@@ -65,7 +80,12 @@ function AuthProvider({ initialAppLoad, children }) {
         user: { firebaseUser: user, appUser }
       });
     }
-    firebaseApp.auth().onAuthStateChanged(setUser);
+
+    const unsubscribe = firebaseApp.auth().onAuthStateChanged(setUser);
+
+    return () => {
+      unsubscribe();
+    };
   }, [initialAppLoad]);
 
   return (

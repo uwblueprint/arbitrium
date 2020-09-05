@@ -1,11 +1,19 @@
 import {GET} from './Helper'
+import { createReview } from "../Components/Application/applicationDataHelpers";
 
 async function getReviewAPI(user, applicationId) {
   return GET(`/api/ratings/${user.uid}/${applicationId}`)
 }
 
-async function getUserReviewsAPI(user) {
-  return GET(`/api/ratings/${user.uid}`)
+async function getUserReviewsAPI(user, applicationId) {
+
+  let result = GET(`/api/ratings/${user.uid}`)
+  if (result != null){
+    return result
+  }
+  else {
+    return createReview(user, applicationId)
+  }
 }
 
 async function getApplicationReviewsAPI(app) {
@@ -23,9 +31,12 @@ async function getAllReviewsAPI() {
 async function getApplicationTableData(user) {
   return GET(`/api/applications/${user.uid}`)
 }
+async function getCandidateSubmissions() {
+  return GET(`/api/admin/candidate-submissions`)
+}
 
-async function getReviewCountAPI(user) {
-  return GET(`/api/ratings/${user.uid}/?` + new URLSearchParams({ count: true }))
+async function getReviewCountAPI(userId) {
+  return GET(`/api/ratings/${userId}/?` + new URLSearchParams({ count: true }))
   //const token = await user.getIdToken();
 }
 
@@ -71,5 +82,6 @@ export {
   getAllReviewsAPI,
   getAllUsersAPI,
   getAllRankingsAPI,
-  getApplicationReviewsAPI
+  getApplicationReviewsAPI,
+  getCandidateSubmissions
 };

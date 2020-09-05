@@ -25,7 +25,10 @@ router.get("/:userid", function(req, res) {
   db[req.headers.database].applications
     .aggregate([
       {
-        $project: { "Organization Name": 1 }
+        $project: {
+          "Organization Name (legal name)": 1,
+          "Organization Name": 1
+        }
       },
       {
         $lookup: {

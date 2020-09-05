@@ -8,8 +8,8 @@ import createRootReducer from "../Reducers/index";
 //Which is a function from the react library
 export const history = createBrowserHistory();
 //Scroll to top for every route
-history.listen(()=>{
-  window.scrollTo({top: 0,left: 0,behavior: 'smooth'});
+history.listen(() => {
+  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 });
 
 //createStore takes in a reducer as the first argument

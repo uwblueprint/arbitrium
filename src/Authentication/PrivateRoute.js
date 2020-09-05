@@ -9,17 +9,16 @@ function PrivateRoute({ component: RouteComponent, route, ...rest }) {
 
   // the user only has access if they are logged in and are in the proper user group
   const access =
-    user &&
+    user != null &&
     (route.groups.length === 0 ||
       (appUser && route.groups.includes(appUser.role)));
 
   return isLoading ? (
     <LoadingOverlay
+      show
       spinnerProps={{
         radius: 220,
-        color: "#333",
-        stroke: 2,
-        visible: true
+        stroke: 2
       }}
     />
   ) : access ? (

@@ -112,6 +112,38 @@ const Categories = ({ categoryData }) => {
               <CategoryWrapper>
                 {categoryData.admin.map(({ title, value }, index) => (
                   <div className="category" key={index}>
+                    {title !== "Agency Website" &&
+                    title !== "Other Social Media" ? (
+                      <>
+                        <span className="title">{title}</span>
+                        <span className="value">{value}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="title">{title}</span>
+                        <span className="value">
+                          <Link target="_blank" href={value}>
+                            {" "}
+                            {value}{" "}
+                          </Link>
+                        </span>
+                      </>
+                    )}
+                  </div>
+                ))}
+              </CategoryWrapper>
+            </ExpansionPanelDetails>
+          </SecondaryExpansionPanel>
+          <SecondaryExpansionPanel defaultExpanded>
+            <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
+              Grant Amount
+            </SecondarySummaryPanel>
+            <ExpansionPanelDetails
+              classes={{ root: classes.secondaryDetailsPanel }}
+            >
+              <CategoryWrapper>
+                {categoryData.grant.map(({ title, value }, index) => (
+                  <div className="category" key={index}>
                     {title !== "Agency Website" && title != "Other Social Media" ? (
                       <>
                         <span className="title">{title}</span>

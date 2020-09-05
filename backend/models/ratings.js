@@ -1,6 +1,6 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-var comment = new mongoose.Schema({
+const comment = new mongoose.Schema({
   lastReviewed: {
     type: String
   },
@@ -9,7 +9,7 @@ var comment = new mongoose.Schema({
   }
 });
 
-var question = new mongoose.Schema({
+const question = new mongoose.Schema({
   id: {
     type: String
   },

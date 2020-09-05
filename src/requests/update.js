@@ -12,4 +12,8 @@ async function updateUserAPI(databody) {
   return POST( "/api/users", databody)
 }
 
-export { updateReviewAPI, updateStackedAPI, updateUserAPI };
+async function createUserAPI(databody) {
+  return POST("/api/users/create-user", databody)
+}
+
+export { updateReviewAPI, updateStackedAPI, updateUserAPI, createUserAPI };

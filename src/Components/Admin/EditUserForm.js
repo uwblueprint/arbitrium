@@ -10,7 +10,7 @@ import {
   EDIT_EMAIL,
   EDIT_ROLE,
   EDIT_PROGRAMS
-} from "Reducers/UserFormStateReducer";
+} from "../../Reducers/UserFormStateReducer";
 
 const StyledLabel = styled(InputLabel)`
   margin-bottom: 4px;
@@ -33,7 +33,7 @@ function EditUserForm({ dispatch, formState }) {
     (event) => {
       dispatch({
         type: EDIT_PREFERRED_NAME,
-        preferredName: event.target.value
+        name: event.target.value
       });
     },
     [dispatch]
