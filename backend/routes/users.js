@@ -13,7 +13,6 @@ const { deleteFirebaseUser } = require("./userUtils");
 //userModel = db["EmergencyFund"].model("userModel", userSchema);
 
 router.get("/all", function(req, res) {
-
   db["Authentication"].users
     .find()
     .then(function(found) {
@@ -41,7 +40,25 @@ router.get("/:userid", function(req, res) {
 router.post("/", function(req, res) {
   console.log("Posting a new user");
   db["Authentication"].users
-    .updateOne({ userId: req.body.userId }, {"_id":"5e7ca0c3412aeae89f5eb81f","userId":"vBUgTex5MeNd57fdB8u4wv7kXZ52","__v":0,"email":"gmaxin@uwblueprint.org","name":"","programs":[{"_id":"5e8a8d9feb45930e72e2a413","name":"SVP Investee Grant","access":"regular user"}],"role":"Admin"}, { upsert: true })
+    .updateOne(
+      { userId: req.body.userId },
+      {
+        _id: "5e7ca0c3412aeae89f5eb81f",
+        userId: "vBUgTex5MeNd57fdB8u4wv7kXZ52",
+        __v: 0,
+        email: "gmaxin@uwblueprint.org",
+        name: "",
+        programs: [
+          {
+            _id: "5e8a8d9feb45930e72e2a413",
+            name: "SVP Investee Grant",
+            access: "regular user"
+          }
+        ],
+        role: "Admin"
+      },
+      { upsert: true }
+    )
     // status code 201 means created
     .then(function(newSchedule) {
       res.status(201).json(newSchedule);

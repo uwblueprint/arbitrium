@@ -4,4 +4,4 @@ const mongoose = require("mongoose");
 
 const appSchema = new mongoose.Schema({}, { collection: "Applications" });
 
-module.exports = appSchema
+module.exports = appSchema;

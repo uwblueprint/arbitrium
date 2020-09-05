@@ -3,21 +3,21 @@ const mongoose = require("mongoose");
 
 //Load in all of the schemas, they will attached to each successful connection
 const userSchema = require("./models/users");
-const applicationSchema = require("./models/application")
-const rankingSchema = require("./models/stackedRankings")
-const ratingSchema = require("./models/ratings")
-const programSchema = require("./models/programs.js")
+const applicationSchema = require("./models/application");
+const rankingSchema = require("./models/stackedRankings");
+const ratingSchema = require("./models/ratings");
+const programSchema = require("./models/programs.js");
 
 console.log("Attempting to connect to Mongo...");
-USERNAME = MONGO_CONFIGS.module.mongoUsername;
-PASS = MONGO_CONFIGS.module.mongoPassword;
-ENV = MONGO_CONFIGS.module.environment;
+const USERNAME = MONGO_CONFIGS.module.mongoUsername;
+const PASS = MONGO_CONFIGS.module.mongoPassword;
+const ENV = MONGO_CONFIGS.module.environment;
 
 //For debugging the database
 mongoose.set("debug", true);
 
 //A object to store connections - this is what we export
-let connections = {}
+const connections = {};
 
 //------------------------------------------------------------------------------
 //FETCH PROGRAMS
@@ -25,36 +25,35 @@ let connections = {}
 
 //Our Authentication database holds a list of all programs.
 //Once we load in the programs we can make a connection to each of them
-var mongoPrograms = connect("Authentication")
+const mongoPrograms = connect("Authentication");
 
 //Authentication database only holds the users and programs (global scope)
-let programModel = mongoPrograms.model("programModel", programSchema);
-let userModel = mongoPrograms.model("userModel", userSchema);
-let newConnection = {
+const programModel = mongoPrograms.model("programModel", programSchema);
+const userModel = mongoPrograms.model("userModel", userSchema);
+const newConnection = {
   mongo: mongoPrograms,
   users: userModel,
-  programs: programModel,
-}
-connections["Authentication"] = newConnection
-
+  programs: programModel
+};
+connections["Authentication"] = newConnection;
 
 //------------------------------------------------------------------------------
 //LOAD PROGRAMS
 //------------------------------------------------------------------------------
 
-connections["Authentication"].programs.find()
+connections["Authentication"].programs
+  .find()
   .then(function(found) {
-
     //For each program create a new database connection.
     //If a database does not exist it will be created
-    found.forEach(item => {
-      addConnection(item.name)
+    found.forEach((item) => {
+      addConnection(item.name);
     });
   })
   .catch(function(err) {
-    console.log("ERROR fetching programs")
-    console.log(err)
-});
+    console.log("ERROR fetching programs");
+    console.log(err);
+  });
 
 //Helper
 function connect(database) {
@@ -72,32 +71,26 @@ function connect(database) {
   );
 }
 
-
 function addConnection(database) {
-
   if (connections[database] == null) {
-    var mongo = connect(database)
+    const mongo = connect(database);
 
     //These collections exist in every database except Authentication (program scope)
-    let applicationModel = mongo.model("applicationModel", applicationSchema);
-    let rankingModel = mongo.model("rankingModel", rankingSchema);
-    let ratingModel = mongo.model("ratingModel", ratingSchema);
-    let newConnection = {
+    const applicationModel = mongo.model("applicationModel", applicationSchema);
+    const rankingModel = mongo.model("rankingModel", rankingSchema);
+    const ratingModel = mongo.model("ratingModel", ratingSchema);
+    const newConnection = {
       mongo: mongo,
       users: userModel,
       applications: applicationModel,
       rankings: rankingModel,
       ratings: ratingModel
-    }
-    connections[database] = newConnection
+    };
+    connections[database] = newConnection;
   }
 }
 
-
-
-
-
-console.log("Number of connections: " + mongoose.connections.length)
+console.log("Number of connections: " + mongoose.connections.length);
 // need this for promises
 mongoose.Promise = Promise;
 

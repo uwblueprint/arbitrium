@@ -6,11 +6,11 @@ if (process.env.REACT_APP_NODE_ENV === "qa") {
   proxy = process.env.REACT_APP_SERVER_QA;
 }
 
-async function GET(url){
+async function GET(url) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
   //let program = window.location.pathname.split("/")[0]
-  let program = "SVP Investee Grant"
+  const program = "SVP Investee Grant";
 
   const response = await fetch(proxy + url, {
     headers: {
@@ -20,18 +20,18 @@ async function GET(url){
     }
   });
   const body = await response.json();
-  console.log(body)
+  console.log(body);
   if (response.status !== 200) {
     throw Error(body.message);
   }
   return body;
 }
 
-async function POST(url, databody){
+async function POST(url, databody) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
   //let program = window.location.pathname.split("/")[0]
-  let program = "EmergencyFund"
+  const program = "EmergencyFund";
 
   const response = await fetch(proxy + url, {
     method: "POST",
@@ -50,8 +50,4 @@ async function POST(url, databody){
   return body;
 }
 
-
-export {
-  GET,
-  POST
-};
+export { GET, POST };

@@ -63,7 +63,7 @@ const corsOptions = {
 
 //Routes are endpoints defined for a specific collection
 //Each has their own file (models/routes/...)
-const programRoutes = require("./routes/programs")
+const programRoutes = require("./routes/programs");
 const applicationRoutes = require("./routes/applications");
 const ratingsRoutes = require("./routes/ratings");
 const stackedRoutes = require("./routes/stackedRankings");
@@ -80,7 +80,6 @@ app.use(express.json());
 app.get("/", function(req, res) {
   res.send("root");
 });
-
 
 //prefix route for the routes
 app.use("/api/program", programRoutes);

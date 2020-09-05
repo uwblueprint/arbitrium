@@ -1,19 +1,19 @@
-import {POST} from './Helper.js'
+import { POST } from "./Helper.js";
 
 async function updateReviewAPI(databody) {
-  return POST("/api/ratings", databody)
+  return POST("/api/ratings", databody);
 }
 
 async function updateStackedAPI(databody) {
-  return POST( "/api/stackings", databody)
+  return POST("/api/stackings", databody);
 }
 
 async function updateUserAPI(databody) {
-  return POST( "/api/users", databody)
+  return POST("/api/users", databody);
 }
 
 async function createUserAPI(databody) {
-  return POST("/api/users/create-user", databody)
+  return POST("/api/users/create-user", databody);
 }
 
 export { updateReviewAPI, updateStackedAPI, updateUserAPI, createUserAPI };

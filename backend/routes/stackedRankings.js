@@ -97,7 +97,6 @@ router.get("/:userid", function(req, res) {
     });
 });
 
-
 //Admin stats
 router.get("/", function(req, res) {
   db[req.headers.database].stackedRankings

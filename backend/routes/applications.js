@@ -6,7 +6,7 @@ const db = require("../mongo.js");
 
 router.get("/", function(req, res) {
   if (req.query.count) {
-    db[req.headers.database].applications.countDocuments().then(count => {
+    db[req.headers.database].applications.countDocuments().then((count) => {
       res.json(count);
     });
     return;

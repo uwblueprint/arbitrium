@@ -41,7 +41,7 @@ function AuthProvider({ initialAppLoad, children }) {
       }
 
       const appUser = await getUserAPI(user);
-      console.log(appUser)
+      console.log(appUser);
       //If the user doesn't have access to this program, sign them out
       if (!appUser) {
         alert(

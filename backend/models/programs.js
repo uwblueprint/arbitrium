@@ -1,6 +1,6 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-var form = new mongoose.Schema({
+const form = new mongoose.Schema({
   id: {
     type: String
   },
@@ -12,7 +12,7 @@ var form = new mongoose.Schema({
   }
 });
 
-var timeframe = new mongoose.Schema({
+const timeframe = new mongoose.Schema({
   openDate: {
     type: Date
   },
@@ -21,7 +21,7 @@ var timeframe = new mongoose.Schema({
   }
 });
 
-var programSchema = new mongoose.Schema(
+const programSchema = new mongoose.Schema(
   {
     createdBy: {
       type: String,
@@ -42,5 +42,4 @@ var programSchema = new mongoose.Schema(
   { collection: "programs" }
 );
 
-
-module.exports = programSchema
+module.exports = programSchema;

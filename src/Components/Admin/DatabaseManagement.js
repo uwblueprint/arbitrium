@@ -1,19 +1,7 @@
 import React, { useReducer, useState } from "react";
 
-
-
-
 function DatabaseManagement() {
-
-
-
-
-  return (
-    <div>
-
-    </div>
-  )
-
+  return <div></div>;
 }
 
-export default DatabaseManagement
+export default DatabaseManagement;
