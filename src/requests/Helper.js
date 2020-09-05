@@ -43,7 +43,7 @@ async function POST(url, databody){
   });
 
   const body = response.json();
-  if (response.status !== 201) {
+  if (!response.ok) {
     throw Error(body);
   }
   return body;
