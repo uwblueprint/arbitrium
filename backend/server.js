@@ -69,7 +69,7 @@ const ratingsRoutes = require("./routes/ratings");
 const stackedRoutes = require("./routes/stackedRankings");
 const usersRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
-const organizationRoutes = require("./routes/organization");
+const organizationRoutes = require("./routes/organizations");
 const formsRoutes = require("./routes/forms");
 
 //Allows us to access request body in a post or put

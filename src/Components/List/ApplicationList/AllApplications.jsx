@@ -38,7 +38,7 @@ function convertToTableData(fetched) {
           !application.rating || application.rating === -1
             ? "Not Rated"
             : application.rating,
-        applicantName: application["Organization Name"],
+        applicantName: application["Organization Name"] || application["Organization Name (legal name)"] ,
         lastEdited: application["lastReviewed"],
         applicantLink: (
           <a href={`/submissions/${application._id}`}>

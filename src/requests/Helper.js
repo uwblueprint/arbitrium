@@ -10,7 +10,7 @@ async function GET(url) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
   //let program = window.location.pathname.split("/")[0]
-  const program = "SVP Investee Grant";
+  const program = "SVPFullProposal";
 
   const response = await fetch(proxy + url, {
     headers: {
