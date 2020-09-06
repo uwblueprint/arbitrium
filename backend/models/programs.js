@@ -21,9 +21,11 @@ const timeframe = new mongoose.Schema({
   }
 });
 
+//CreatedBy is a userId
+//App Version corresponds to the release version on github
 const programSchema = new mongoose.Schema(
   {
-    createdBy: {
+    createdByUserId: {
       type: String,
       default: null
     },
@@ -37,6 +39,9 @@ const programSchema = new mongoose.Schema(
     review: {
       type: timeframe,
       default: null
+    },
+    appVersion: {
+      type: Number
     }
   },
   { collection: "programs" }

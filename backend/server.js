@@ -69,6 +69,7 @@ const ratingsRoutes = require("./routes/ratings");
 const stackedRoutes = require("./routes/stackedRankings");
 const usersRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
+const organizationRoutes = require("./routes/organization");
 const formsRoutes = require("./routes/forms");
 
 //Allows us to access request body in a post or put
@@ -84,6 +85,7 @@ app.get("/", function(req, res) {
 //prefix route for the routes
 app.use("/api/program", programRoutes);
 app.use("/api/users", usersRoutes);
+app.use("/api/organizations", organizationRoutes);
 
 app.use("/api/applications", applicationRoutes);
 app.use("/api/ratings", ratingsRoutes);

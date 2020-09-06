@@ -2,12 +2,13 @@ const express = require("express");
 
 //Allows api routes to be posted
 const router = express.Router();
+
 //Database connections: returns object of connections (connections["item"])
 const db = require("../mongo.js");
 const addConnection = require("../mongo.js").addConnection;
 
 router.get("/all", function(req, res) {
-  db["Authentication"].programs
+  db["Authentication"].organizations
     .find()
     .then(function(found) {
       res.json(found);
@@ -18,7 +19,7 @@ router.get("/all", function(req, res) {
 });
 
 router.post("/", function(req, res) {
-  db["Authentication"].programs
+  db["Authentication"].organizations
     .updateOne(
       { name: req.body.name },
       { upsert: true }
