@@ -29,7 +29,10 @@ const programSchema = new mongoose.Schema(
       type: String,
       default: null
     },
-    name: {
+    databaseName: {
+      type: String
+    },
+    displayName: {
       type: String
     },
     form: {

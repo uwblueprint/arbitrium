@@ -26,7 +26,7 @@ function PrivateRoute({ component: RouteComponent, route, ...rest }) {
       <Navigation />
       <Route
         {...rest}
-        render={(routeProps) => <RouteComponent {...routeProps} user={user} />}
+        render={(routeProps) => <RouteComponent {...routeProps} user={appUser} />}
       />
     </>
   ) : (

@@ -5,12 +5,20 @@ import * as ACTIONS from "../Constants/ActionTypes";
 //Recall from store/index.js that an action is a javascript object
 //That has a type and a payload (data)
 
-export function initialAppLoad(applications, reviewCount) {
+export function loadApplications(applications, reviewCount) {
   return {
-    type: ACTIONS.INITIAL_APP_LOAD,
+    type: ACTIONS.LOAD_APPLICATIONS,
     applications,
     reviewCount
   };
+}
+
+export function loadProgram(program) {
+  console.log("called loadProgram")
+  return {
+    type: ACTIONS.LOAD_PROGRAM,
+    program
+  }
 }
 
 export function newReview() {

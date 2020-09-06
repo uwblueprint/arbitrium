@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
 import AllApplicationsTable from "./AllApplicationsTable";
+import { connect } from "react-redux";
 
 import usePromise from "../../../Hooks/usePromise";
 
@@ -58,9 +59,13 @@ function convertToTableData(fetched) {
   return applicantsList;
 }
 
-function AllApplications({ user }) {
+function AllApplications({ user, apps }) {
+  console.log(apps)
+
   // Applications, with reviews attached
-  const [applications] = usePromise(getApplicationTableData, { user }, []);
+  //TODO: Why is this not being called again?
+  let [applications] = usePromise(getApplicationTableData, { user }, []);
+  console.log(applications)
 
   return (
     <Wrapper>
@@ -69,7 +74,7 @@ function AllApplications({ user }) {
           <div>
             <h1>All Applicants</h1>
             <AllApplicationsTable
-              data={convertToTableData(applications.value)}
+              data={convertToTableData(apps)}
             />
           </div>
         ) : (
@@ -83,4 +88,8 @@ function AllApplications({ user }) {
   );
 }
 
-export default AllApplications;
+function mapStateToProps(state) {
+  return { apps: state.applications };
+}
+
+export default connect(mapStateToProps)(AllApplications);

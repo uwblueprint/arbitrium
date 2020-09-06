@@ -47,7 +47,7 @@ connections["Authentication"].programs
     //For each program create a new database connection.
     //If a database does not exist it will be created
     found.forEach((item) => {
-      addConnection(item.name);
+      addConnection(item.databaseName);
     });
   })
   .catch(function(err) {

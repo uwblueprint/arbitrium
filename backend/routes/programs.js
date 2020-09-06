@@ -19,14 +19,12 @@ router.get("/all", function(req, res) {
 
 router.post("/", function(req, res) {
   db["Authentication"].programs
-    .updateOne(
-      { name: req.body.name },
-      { upsert: true }
+    .updateOne({databaseName: req.body.databaseName, displayName: req.body.displayName}, req.body, { upsert: true }
     )
     // status code 201 means created
     .then(function(newSchedule) {
       //This is a helper function in mongo.js that adds another connection
-      addConnection(req.body.name);
+      addConnection(req.body.databaseName);
       res.status(201).json(newSchedule);
     })
     .catch(function(err) {

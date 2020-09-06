@@ -83,7 +83,7 @@ app.get("/", function(req, res) {
 });
 
 //prefix route for the routes
-app.use("/api/program", programRoutes);
+app.use("/api/programs", programRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/organizations", organizationRoutes);
 

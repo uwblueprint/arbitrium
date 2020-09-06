@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import firebaseApp from "./firebase.js";
 import { getUserAPI } from "../requests/get";
-import { initialAppLoad } from "../Actions";
+import { authenticatedUser } from "../Actions";
 import * as GET from "../requests/get";
 
 export const AuthContext = React.createContext();
@@ -41,7 +41,6 @@ function AuthProvider({ initialAppLoad, children }) {
       }
 
       const appUser = await getUserAPI(user);
-      console.log(appUser);
       //If the user doesn't have access to this program, sign them out
       if (!appUser) {
         alert(
@@ -71,10 +70,6 @@ function AuthProvider({ initialAppLoad, children }) {
         return;
       }
 
-      const applications = await GET.getAllApplicationsAPI();
-      const reviewCount = await GET.getReviewCountAPI(user.uid);
-      //Load the initial data into redux
-      initialAppLoad(applications, reviewCount);
       // differentiate between the firebase user and the user retrieved from mongo (firebaseUser and appUser)
       setAuthState({
         state: AUTH_STATES.AUTHENTICATED,
@@ -103,7 +98,7 @@ function AuthProvider({ initialAppLoad, children }) {
 }
 
 const mapDispatchToProps = {
-  initialAppLoad
+  authenticatedUser
 };
 
 const connectedAuth = connect(null, mapDispatchToProps)(AuthProvider);
