@@ -83,12 +83,13 @@ function Application({ applications, newReview, history, match, user, program })
       if (reviewExists) {
         isRated.current = res.rating > -1;
       }
+      console.log(res)
       dispatchReviewUpdate({
         type: LOAD_REVIEW,
         review: reviewExists ? res : createReview(user, appId)
       });
     });
-  }, [appId, user]);
+  }, [appId, user, program]);
 
   // // Load the fetched review
   // useEffect(() => {
@@ -157,15 +158,13 @@ function Application({ applications, newReview, history, match, user, program })
     return [_application, _appIndex, _appData];
   }, [applications, appId]);
 
-  console.log(appData)
-
   const previousApplication =
     applications && appIndex > 0
-      ? "/submissions/" + applications[appIndex - 1]["_id"]
+      ? "/"+program._id+"/submissions/" + applications[appIndex - 1]["_id"]
       : null;
   const nextApplication =
     applications && appIndex < applications.length - 1
-      ? "/submissions/" + applications[appIndex + 1]["_id"]
+      ? "/"+program._id+"/submissions/" + applications[appIndex + 1]["_id"]
       : null;
 
 
@@ -176,16 +175,19 @@ function Application({ applications, newReview, history, match, user, program })
         <h1>
           <Button
             className="all-applicants"
-            onClick={() => history.push("/applications")}
+            onClick={() => history.push("/"+program._id+"/applications")}
           >
             &lt; All Applicants
           </Button>
           <br />
           {application ? (application["Organization Name"] || application["Organization Name (legal name)"]) : (
             <div>
+              <p> Loading... </p>
+            {/*}
               <p> This application data is not available at the moment </p>
               <p> Some applications are unavailable due to using an older version of the application. </p>
               <p> Please contact us to have the data migrated (arbitrium@uwblueprint.org) </p>
+              */}
             </div>
           )}
         </h1>

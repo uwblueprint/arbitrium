@@ -2,7 +2,7 @@ import { GET } from "./Helper";
 import { createReview } from "../Components/Application/applicationDataHelpers";
 
 async function getReviewAPI(user, applicationId) {
-  return GET(`/api/ratings/${user.uid}/${applicationId}`);
+  return GET(`/api/ratings/${user.userId}/${applicationId}`);
 }
 
 async function getUserReviewsAPI(user, applicationId) {
@@ -49,7 +49,7 @@ async function getApplicationDetails(applicationId, user) {
 }
 
 async function getAllStackingsAPI(user) {
-  return GET(`/api/stackings/${user.uid}`);
+  return GET(`/api/stackings/${user.user.userId}`);
 }
 
 async function getUserAPI(user) {

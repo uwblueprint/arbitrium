@@ -14,6 +14,8 @@ import * as GET from "../../requests/get";
 import { loadProgram, loadApplications } from "../../Actions";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { connect } from "react-redux";
+import { withRouter, Redirect } from "react-router";
+import { history } from "../../Store";
 
 export const HEADER_HEIGHT = 56;
 
@@ -81,9 +83,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+//Load the program into redux
+//Fetch the applications for the program and put it into redux
+//Then redirect
 async function updateProgram(program, loadProgram, loadApplications, currentUser) {
   loadProgram(program)
 
+  console.log("AHAHAHAHAHAHAHAHAH")
   const applications = await GET.getAllApplicationsAPI();
   let reviewCount = 0
   if (currentUser != null){
@@ -94,12 +101,14 @@ async function updateProgram(program, loadProgram, loadApplications, currentUser
   loadApplications(applications, reviewCount);
 }
 
-function Header({ loadProgram, loadApplications, programFromRedux }) {
-  const { currentUser } = useContext(AuthContext);
+function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
+  console.log(props)
 
+  const { currentUser } = useContext(AuthContext);
+  const [redirect, setRedirect] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null);
   const [loadPrograms] = usePromise(GET.getAllProgramsAPI, {}, []);
-  const [program, setProgram] = useState(programFromRedux)
+  const [program, setProgram] = useState(null)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -109,18 +118,37 @@ function Header({ loadProgram, loadApplications, programFromRedux }) {
     setAnchorEl(null);
     updateProgram(program, loadProgram, loadApplications, currentUser)
     setProgram(program)
+    history.push("/"+program._id+"/applications")
   };
 
-  if (!loadPrograms.isPending && program == null && loadPrograms.value != null) {
-    updateProgram(loadPrograms.value[0], loadProgram, loadApplications, currentUser)
-    setProgram(loadPrograms.value[0])
-  }
 
+  //On first header load for each refresh
+  if (!loadPrograms.isPending && program == null && loadPrograms.value != null) {
+    let index = loadPrograms.value.find((program, index) =>
+      program._id == window.location.pathname.split("/")[1]
+    );
+
+    //Default to the first selection in the array if no selection
+    let curProgram = loadPrograms.value.indexOf(index)
+    if (curProgram < 0) {
+      updateProgram(loadPrograms.value[0], loadProgram, loadApplications, currentUser)
+      setProgram(loadPrograms.value[0])
+      history.push("/"+loadPrograms.value[0]._id+"/applications")
+    }
+    else {
+      updateProgram(loadPrograms.value[curProgram], loadProgram, loadApplications, currentUser)
+      setProgram(loadPrograms.value[curProgram])
+    }
+  }
+  else {
+
+  }
+  const classes = useStyles()
   return (
     <Container>
       <BodyWrapper>
         <AppName>
-          <Tooltip title="Arbitrium" classes={{ tooltip: useStyles().tooltip }}>
+          <Tooltip title="Arbitrium" classes={{ tooltip: classes.tooltip }}>
             <div>
               <AppIcon/>
             </div>
@@ -154,6 +182,7 @@ function Header({ loadProgram, loadApplications, programFromRedux }) {
       </BodyWrapper>
     </Container>
   );
+
 }
 
 

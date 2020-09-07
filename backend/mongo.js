@@ -47,7 +47,7 @@ connections["Authentication"].programs
     //For each program create a new database connection.
     //If a database does not exist it will be created
     found.forEach((item) => {
-      addConnection(item.databaseName);
+      addConnection(item);
     });
   })
   .catch(function(err) {
@@ -72,8 +72,8 @@ function connect(database) {
 }
 
 function addConnection(database) {
-  if (connections[database] == null) {
-    const mongo = connect(database);
+  if (connections[database._id] == null) {
+    const mongo = connect(database.databaseName);
 
     //These collections exist in every database except Authentication (program scope)
     const applicationModel = mongo.model("applicationModel", applicationSchema);
@@ -86,7 +86,7 @@ function addConnection(database) {
       rankings: rankingModel,
       ratings: ratingModel
     };
-    connections[database] = newConnection;
+    connections[database._id] = newConnection;
   }
 }
 

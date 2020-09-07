@@ -11,21 +11,17 @@ if (process.env.REACT_APP_NODE_ENV === "qa") {
 
 //This local variable is updated via redux action (LOAD_PROGRAM)
 //Middleware in the store grabs the new program before it goes to the reducer
-let program = null
+let program = window.location.pathname.split("/")[1]
 
 function setProgram(prog){
   console.log("Setting the program")
   console.log(prog)
-  program = prog.databaseName
+  program = prog._id
 }
 
 async function GET(url) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
-  //let program = window.location.pathname.split("/")[0]
-  //const program = "SVPFullProposal";
-  console.log(program)
-  console.log(url)
 
   const response = await fetch(proxy + url, {
     headers: {
@@ -45,7 +41,6 @@ async function POST(url, databody) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
   //let program = window.location.pathname.split("/")[0]
-  const program = "EmergencyFund";
 
   const response = await fetch(proxy + url, {
     method: "POST",
@@ -59,7 +54,7 @@ async function POST(url, databody) {
 
   const body = response.json();
   if (!response.ok) {
-    throw Error(body);
+    throw Error(body.message);
   }
   return body;
 }

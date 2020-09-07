@@ -123,7 +123,7 @@ function StackedRankings({ applications, reviewCount, user }) {
       // we should initialize the user's rankings
       const initApps = applications.map((app) => ({ appId: app._id }));
       await UPDATE.updateStackedAPI({
-        userId: user.uid,
+        userId: user.userId,
         rankings: initApps
       });
       refetch({ user });

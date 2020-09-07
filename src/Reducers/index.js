@@ -10,7 +10,6 @@ import {
 //Reducers take 2 params, a state and an action
 //Notice how the initial state is passed as a default parameter
 function applications(state = [], action) {
-  console.log("Called app reducer");
   switch (action.type) {
     case LOAD_APPLICATIONS:
       return action.applications || [];
@@ -20,8 +19,6 @@ function applications(state = [], action) {
 }
 
 function program(state = [], action) {
-  console.log("called program reducer")
-  console.log(action)
   switch (action.type) {
     case LOAD_PROGRAM:
       return action.program || [];

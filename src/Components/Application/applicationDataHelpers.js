@@ -4,7 +4,7 @@ import moment from "moment";
 
 //UnitedWay
 //Emergency Community Support Fund (ECSF) Round 1 and 2
-import * as UnitedWay1 from "./column_categories3";
+import * as UnitedWay from "./column_categories3";
 import * as UnitedWay2 from "./column_categories3";
 import * as SVPFullProposal from "./column_categories4";
 
@@ -45,7 +45,7 @@ export function createReview(user, appId) {
   });
   review = {
     applicationId: appId,
-    userId: user.uid,
+    userId: user.userId,
     rating: -1,
     comments: comments,
     lastReviewed: moment(),
@@ -56,9 +56,14 @@ export function createReview(user, appId) {
 
 export function transpileCategoryData(application, program) {
   //todo when category data is made available, currently leverages mock data
-  let adminCategories = {}
-  if (program == "UnitedWay1"){
-    adminCategories = UnitedWay1.adminCategories;
+  let adminCategories = {
+    contact: {},
+    grant: {},
+    funding: {},
+    mission: {}
+  }
+  if (program == "UnitedWay"){
+    adminCategories = UnitedWay.adminCategories;
   }
   if (program == "UnitedWay2"){
     adminCategories = UnitedWay2.adminCategories;
@@ -67,9 +72,9 @@ export function transpileCategoryData(application, program) {
     adminCategories = SVPFullProposal.adminCategories;
   }
 
-
+  console.log(adminCategories.contact)
   return {
-    admin: Object.keys(adminCategories.contact).map((adminCategory) => ({
+    admin: Object.keys(adminCategories.contact && {}).map((adminCategory) => ({
       title: adminCategory,
       value: application[adminCategory]
     })),
@@ -99,8 +104,8 @@ export function transpileCategoryData(application, program) {
 export function transpileFileData(application, program) {
 
   let fileCategories = {}
-  if (program == "UnitedWay1"){
-    fileCategories = UnitedWay1.fileCategories;
+  if (program == "UnitedWay"){
+    fileCategories = UnitedWay.fileCategories;
   }
   if (program == "UnitedWay2"){
     fileCategories = UnitedWay2.fileCategories;
@@ -136,8 +141,8 @@ export function transpileLongAnswerData(application, program) {
 
 
   let longAnswerCategories = {}
-  if (program == "UnitedWay1"){
-    longAnswerCategories = UnitedWay1.longAnswerCategories;
+  if (program == "UnitedWay"){
+    longAnswerCategories = UnitedWay.longAnswerCategories;
   }
   if (program == "UnitedWay2"){
     longAnswerCategories = UnitedWay2.longAnswerCategories;
@@ -146,9 +151,9 @@ export function transpileLongAnswerData(application, program) {
     longAnswerCategories = SVPFullProposal.longAnswerCategories;
   }
 
-  let canvasData = {}
-  if (program == "UnitedWay1"){
-    canvasData = UnitedWay1.canvasData;
+  let canvasData = []
+  if (program == "UnitedWay"){
+    canvasData = UnitedWay.canvasData;
   }
   if (program == "UnitedWay2"){
     canvasData = UnitedWay2.canvasData;
@@ -196,8 +201,8 @@ export function transpileLongAnswerData(application, program) {
 export function transpileCheckBoxData(application, program) {
 
   let checkBoxCategories = {}
-  if (program == "UnitedWay1"){
-    checkBoxCategories = UnitedWay1.checkBoxCategories;
+  if (program == "UnitedWay"){
+    checkBoxCategories = UnitedWay.checkBoxCategories;
   }
   if (program == "UnitedWay2"){
     checkBoxCategories = UnitedWay2.checkBoxCategories;
@@ -207,9 +212,9 @@ export function transpileCheckBoxData(application, program) {
   }
 
 
-  let canvasData = {}
-  if (program == "UnitedWay1"){
-    canvasData = UnitedWay1.canvasData;
+  let canvasData = []
+  if (program == "UnitedWay"){
+    canvasData = UnitedWay.canvasData;
   }
   if (program == "UnitedWay2"){
     canvasData = UnitedWay2.canvasData;

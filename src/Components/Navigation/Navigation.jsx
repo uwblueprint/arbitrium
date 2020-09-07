@@ -89,7 +89,7 @@ function getNavId(pathname) {
   }
 }
 
-function Navigation({ applications, pathname, push, showStackedRankings }) {
+function Navigation({ applications, pathname, push, showStackedRankings, program }) {
   const classes = useStyles();
   const isApplicationReview = pathname.includes("/submissions/");
   const [selected, setSelected] = useState(getNavId(pathname));
@@ -122,7 +122,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
           id="all_applications"
           isSelected={selected === "all_applications"}
           onClick={onNavClick}
-          path="/applications"
+          path={"/"+program._id+"/applications"}
         >
           All Applicants
         </NavButton>
@@ -130,7 +130,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
           id="application_submission"
           isSelected={selected === "application_submission"}
           onClick={onNavClick}
-          path={`/submissions/${nextApp}`}
+          path={"/"+program._id+`/submissions/${nextApp}`}
         >
           Application Submission
         </NavButton>
@@ -148,7 +148,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
           disabled={!showStackedRankings}
           id="stacked_rankings"
           onClick={onNavClick}
-          path="/rankings"
+          path={"/"+program._id+"/rankings"}
         >
           Stacked Rankings
         </NavButton>
@@ -163,7 +163,8 @@ export default connect(
     showStackedRankings:
       state.reviewCount != null &&
       state.reviewCount >= state.applications.length,
-    pathname: state.router.location.pathname
+    pathname: state.router.location.pathname,
+    program: state.program
   }),
   { push }
 )(Navigation);

@@ -30,7 +30,7 @@ const Wrapper = styled.div`
   }
 `;
 
-function convertToTableData(fetched) {
+function convertToTableData(fetched, program) {
   const applicantsList = [];
   if (fetched !== null) {
     fetched.forEach((application) => {
@@ -42,7 +42,7 @@ function convertToTableData(fetched) {
         applicantName: application["Organization Name"] || application["Organization Name (legal name)"] ,
         lastEdited: application["lastReviewed"],
         applicantLink: (
-          <a href={`/submissions/${application._id}`}>
+          <a href={"/"+program._id+`/submissions/${application._id}`}>
             <Button
               variant="contained"
               color="primary"
@@ -59,7 +59,7 @@ function convertToTableData(fetched) {
   return applicantsList;
 }
 
-function AllApplications({ user, apps }) {
+function AllApplications({ user, apps, program }) {
   console.log(apps)
 
   // Applications, with reviews attached
@@ -67,7 +67,8 @@ function AllApplications({ user, apps }) {
   let [applications, refetch] = usePromise(getApplicationTableData, { user }, []);
   useEffect(() => {
     refetch({user})
-  }, [apps])
+  }, [program])
+
 
   return (
     <Wrapper>
@@ -76,7 +77,7 @@ function AllApplications({ user, apps }) {
           <div>
             <h1>All Applicants</h1>
             <AllApplicationsTable
-              data={convertToTableData(applications.value)}
+              data={convertToTableData(applications.value, program)}
             />
           </div>
         ) : (
@@ -90,8 +91,9 @@ function AllApplications({ user, apps }) {
   );
 }
 
-function mapStateToProps(state) {
-  return { apps: state.applications };
-}
+const mapStateToProps = (state) => ({
+  apps: state.applications,
+  program: state.program
+});
 
 export default connect(mapStateToProps)(AllApplications);
