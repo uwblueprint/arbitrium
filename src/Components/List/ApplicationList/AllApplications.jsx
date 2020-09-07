@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -64,8 +64,10 @@ function AllApplications({ user, apps }) {
 
   // Applications, with reviews attached
   //TODO: Why is this not being called again?
-  let [applications] = usePromise(getApplicationTableData, { user }, []);
-  console.log(applications)
+  let [applications, refetch] = usePromise(getApplicationTableData, { user }, []);
+  useEffect(() => {
+    refetch({user})
+  }, [apps])
 
   return (
     <Wrapper>
@@ -74,7 +76,7 @@ function AllApplications({ user, apps }) {
           <div>
             <h1>All Applicants</h1>
             <AllApplicationsTable
-              data={convertToTableData(apps)}
+              data={convertToTableData(applications.value)}
             />
           </div>
         ) : (
