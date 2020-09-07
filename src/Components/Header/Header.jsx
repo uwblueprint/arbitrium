@@ -94,12 +94,12 @@ async function updateProgram(program, loadProgram, loadApplications, currentUser
   loadApplications(applications, reviewCount);
 }
 
-function Header({ loadProgram, loadApplications }) {
+function Header({ loadProgram, loadApplications, programFromRedux }) {
   const { currentUser } = useContext(AuthContext);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [loadPrograms] = usePromise(GET.getAllProgramsAPI, {}, []);
-  const [program, setProgram] = useState(null)
+  const [program, setProgram] = useState(programFromRedux)
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -156,11 +156,16 @@ function Header({ loadProgram, loadApplications }) {
   );
 }
 
+
+const mapStateToProps = (state) => ({
+  program: state.program
+});
+
 const mapDispatchToProps = {
   loadProgram,
   loadApplications
 };
 
-const connectedAuth = connect(null, mapDispatchToProps)(Header);
+const connectedAuth = connect(mapStateToProps, mapDispatchToProps)(Header);
 
 export { connectedAuth as Header };

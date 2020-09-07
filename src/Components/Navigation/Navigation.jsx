@@ -100,9 +100,10 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
 
   const scrollToSection = (title) => {
     window.requestAnimationFrame(() => {
-      document
-        .getElementById("canvas_" + title)
-        .scrollIntoView({ behavior: "smooth", block: "center" });
+      let element = document.getElementById("canvas_" + title)
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     });
   };
 
@@ -134,13 +135,13 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
           Application Submission
         </NavButton>
         {isApplicationReview &&
-          SectionList.map((section) => (
+          ["1","2","3","4","5"].map((section) => (
             <Button
-              key={section.title}
+              key={"section"+section}
               className="nested"
-              onClick={() => scrollToSection(section.id)}
+              onClick={() => scrollToSection(section)}
             >
-              {section.title}
+              {"Section "+section}
             </Button>
           ))}
         <NavButton

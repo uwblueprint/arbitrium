@@ -4,23 +4,9 @@ import moment from "moment";
 
 //UnitedWay
 //Emergency Community Support Fund (ECSF) Round 1 and 2
-import {
-  fileCategories,
-  adminCategories,
-  longAnswerCategories,
-  checkBoxCategories,
-  canvasData
-} from "./column_categories3";
-
-
-//SVP Full Proposal
-import {
-  fileCategories,
-  adminCategories,
-  longAnswerCategories,
-  checkBoxCategories,
-  canvasData
-} as SVPFullProposal from "./column_categories4";
+import * as UnitedWay1 from "./column_categories3";
+import * as UnitedWay2 from "./column_categories3";
+import * as SVPFullProposal from "./column_categories4";
 
 
 
@@ -68,8 +54,20 @@ export function createReview(user, appId) {
   return review;
 }
 
-export function transpileCategoryData(application) {
+export function transpileCategoryData(application, program) {
   //todo when category data is made available, currently leverages mock data
+  let adminCategories = {}
+  if (program == "UnitedWay1"){
+    adminCategories = UnitedWay1.adminCategories;
+  }
+  if (program == "UnitedWay2"){
+    adminCategories = UnitedWay2.adminCategories;
+  }
+  if (program == "SVPFullProposal"){
+    adminCategories = SVPFullProposal.adminCategories;
+  }
+
+
   return {
     admin: Object.keys(adminCategories.contact).map((adminCategory) => ({
       title: adminCategory,
@@ -98,7 +96,19 @@ export function transpileCategoryData(application) {
   };
 }
 
-export function transpileFileData(application) {
+export function transpileFileData(application, program) {
+
+  let fileCategories = {}
+  if (program == "UnitedWay1"){
+    fileCategories = UnitedWay1.fileCategories;
+  }
+  if (program == "UnitedWay2"){
+    fileCategories = UnitedWay2.fileCategories;
+  }
+  if (program == "SVPFullProposal"){
+    fileCategories = SVPFullProposal.fileCategories;
+  }
+
   const files = Object.keys(fileCategories).map((fileCategory, index) => ({
     name: fileCategory,
     link: application[fileCategory],
@@ -122,7 +132,31 @@ export function transpileFileData(application) {
   return fileLinks;
 }
 
-export function transpileLongAnswerData(application) {
+export function transpileLongAnswerData(application, program) {
+
+
+  let longAnswerCategories = {}
+  if (program == "UnitedWay1"){
+    longAnswerCategories = UnitedWay1.longAnswerCategories;
+  }
+  if (program == "UnitedWay2"){
+    longAnswerCategories = UnitedWay2.longAnswerCategories;
+  }
+  if (program == "SVPFullProposal"){
+    longAnswerCategories = SVPFullProposal.longAnswerCategories;
+  }
+
+  let canvasData = {}
+  if (program == "UnitedWay1"){
+    canvasData = UnitedWay1.canvasData;
+  }
+  if (program == "UnitedWay2"){
+    canvasData = UnitedWay2.canvasData;
+  }
+  if (program == "SVPFullProposal"){
+    canvasData = SVPFullProposal.canvasData;
+  }
+
   const answers = Object.keys(longAnswerCategories).map(
     (longAnswerCategory) => ({
       id: longAnswerCategories[longAnswerCategory],
@@ -136,15 +170,17 @@ export function transpileLongAnswerData(application) {
 
   const data = [];
 
-  Object.keys(canvasData).map((card, index) => {
+  canvasData.map((card, index) => {
+    console.log(card);
     data.push({
-      id: index,
+      id: index+1,
       answers: [],
       title: card.title,
       description: card.description
     });
   });
 
+  console.log(data)
   answers.forEach((answer) => {
     data.forEach((item) => {
       if (answer.id === item.id) {
@@ -157,7 +193,31 @@ export function transpileLongAnswerData(application) {
   });
   return data;
 }
-export function transpileCheckBoxData(application) {
+export function transpileCheckBoxData(application, program) {
+
+  let checkBoxCategories = {}
+  if (program == "UnitedWay1"){
+    checkBoxCategories = UnitedWay1.checkBoxCategories;
+  }
+  if (program == "UnitedWay2"){
+    checkBoxCategories = UnitedWay2.checkBoxCategories;
+  }
+  if (program == "SVPFullProposal"){
+    checkBoxCategories = SVPFullProposal.checkBoxCategories;
+  }
+
+
+  let canvasData = {}
+  if (program == "UnitedWay1"){
+    canvasData = UnitedWay1.canvasData;
+  }
+  if (program == "UnitedWay2"){
+    canvasData = UnitedWay2.canvasData;
+  }
+  if (program == "SVPFullProposal"){
+    canvasData = SVPFullProposal.canvasData;
+  }
+
   const answers = Object.keys(checkBoxCategories).map((checkBoxCategory) => {
     const p = {
       id: checkBoxCategories[checkBoxCategory],
@@ -180,9 +240,9 @@ export function transpileCheckBoxData(application) {
 })
 */
   const data = [];
-  Object.keys(canvasData).map((card, index) => {
+  canvasData.map((card, index) => {
     data.push({
-      id: index,
+      id: index+1,
       answers: [],
       title: card.title,
       description: card.description

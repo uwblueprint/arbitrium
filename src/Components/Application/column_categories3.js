@@ -1,5 +1,30 @@
+//UnitedWay Applications (ESCF 1 and 2)
+
 //the format for adminCategories is properyName: displayOrder
 //(where a higher displayOrder corresponds to a higher position on the submissions page listview of categories)
+
+export const canvasData = [
+  {
+    title: "Vulnerable Populations Served",
+    description:"Do the vulnerable populations selected align with the project/program described?"
+  },
+  {
+    title: "Service Types and Output Tracking",
+    description: "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
+  },
+  {
+    title: "Types of Activities",
+    description: "Do the activities, geographic area, and timelines make sense for the program? Are they aligned with the criteria of the ECSF?"
+  },
+  {
+    title: "Service Description (Long Answer)",
+    description: "Does the description adequately answer the questions? Do the answers provided present a logical implementation plan?"
+  },
+  {
+    title: "Additional Service Information",
+    description: "Has additional service information been provided? Are the responses reasonable within the ECSF context?"
+  }
+]
 export const adminCategories = {
   contact: {
     "Organization Name (legal name)": 1,

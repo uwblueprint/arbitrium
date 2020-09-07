@@ -1,3 +1,28 @@
+//SVP Full Proposal
+
+export const canvasData = [
+  {
+    title: "Organization Part 1",
+    description: ""
+  },
+  {
+    title: "Organization Part 2",
+    description: ""
+  },
+  {
+    title: "SVP Partnership",
+    description: ""
+  },
+  {
+    title: "Funding and Budget Part 1",
+    description: ""
+  },
+  {
+    title: "Funding and Budget Part 2",
+    description: ""
+  }
+]
+
 //the format for adminCategories is properyName: displayOrder
 //(where a higher displayOrder corresponds to a higher position on the submissions page listview of categories)
 export const adminCategories = {

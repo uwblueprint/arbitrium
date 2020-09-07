@@ -8,6 +8,7 @@ import Files from "../Files/Files";
 import LoadingOverlay from "../Common/LoadingOverlay";
 //column categories
 import {
+  createReview,
   transpileCategoryData,
   transpileFileData,
   transpileLongAnswerData,
@@ -59,37 +60,73 @@ const ApplicationSelector = styled.div`
   }
 `;
 
-function Application({ applications, newReview, history, match, user }) {
+function Application({ applications, newReview, history, match, user, program }) {
+
   const appId = match.params.organizationId;
-
-  const [loadedReview] = usePromise(GET.getReviewAPI, {
-    user,
-    applicationId: appId
-  });
-
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
   const isRated = useRef(false);
 
-  // Load the fetched review
-  useEffect(() => {
-    if (loadedReview.isPending) return;
-    isRated.current = loadedReview.value.rating > -1;
-    dispatchReviewUpdate({
-      type: LOAD_REVIEW,
-      review: loadedReview.value
-    });
-  }, [loadedReview]);
+  // const [loadedReview, refetch] = usePromise(GET.getReviewAPI, {
+  //   user,
+  //   applicationId: appId
+  // });
+  //
+  // useEffect(() => {
+  //   refetch({user, applicationId: appId});
+  // }, [])
 
-  //Updates a review when the review is changed
+
+  //Returns a review from DB if exists, otherwise null
   useEffect(() => {
-    if (
-      review == null ||
-      loadedReview.isPending ||
-      review === loadedReview.value ||
-      review.applicationId !== loadedReview.value.applicationId
-    ) {
-      // Do not update the review if we are still fetching the review or
-      // if it has not been modified
+    GET.getReviewAPI(user, appId).then((res) => {
+      const reviewExists = res != null;
+      if (reviewExists) {
+        isRated.current = res.rating > -1;
+      }
+      dispatchReviewUpdate({
+        type: LOAD_REVIEW,
+        review: reviewExists ? res : createReview(user, appId)
+      });
+    });
+  }, [appId, user]);
+
+  // // Load the fetched review
+  // useEffect(() => {
+  //   if (loadedReview.isPending) return;
+  //   isRated.current = loadedReview.value.rating > -1;
+  //   dispatchReviewUpdate({
+  //     type: LOAD_REVIEW,
+  //     review: loadedReview.value
+  //   });
+  // }, [loadedReview]);
+  //
+  // //Updates a review when the review is changed
+  // useEffect(() => {
+  //   if (
+  //     review == null ||
+  //     loadedReview.isPending ||
+  //     review === loadedReview.value ||
+  //     review.applicationId !== loadedReview.value.applicationId
+  //   ) {
+  //     // Do not update the review if we are still fetching the review or
+  //     // if it has not been modified
+  //     return;
+  //   }
+  //   UPDATE.updateReviewAPI(review).then((res) => {
+  //     if (!isRated.current && review.rating > -1) {
+  //       isRated.current = true;
+  //       newReview();
+  //     }
+  //     if (res.ok !== 1) {
+  //       alert("Error in saving your review!");
+  //     }
+  //   });
+  // }, [loadedReview, newReview, review]);
+
+
+  //Updates a review when any update happens from the user
+  useEffect(() => {
+    if (appId == null || user == null || review == null) {
       return;
     }
     UPDATE.updateReviewAPI(review).then((res) => {
@@ -101,7 +138,7 @@ function Application({ applications, newReview, history, match, user }) {
         alert("Error in saving your review!");
       }
     });
-  }, [loadedReview, newReview, review]);
+  }, [appId, newReview, review, user]);
 
   const [application, appIndex, appData] = useMemo(() => {
     const [_application, _appIndex] = getApplicationDetails(
@@ -111,14 +148,16 @@ function Application({ applications, newReview, history, match, user }) {
     let _appData = null;
     if (_application != null) {
       _appData = {
-        categoryData: transpileCategoryData(_application),
-        fileData: transpileFileData(_application),
-        longAnswers: transpileLongAnswerData(_application),
-        checkBoxAnswers: transpileCheckBoxData(_application)
+        categoryData: transpileCategoryData(_application, program.databaseName),
+        fileData: transpileFileData(_application, program.databaseName),
+        longAnswers: transpileLongAnswerData(_application, program.databaseName),
+        checkBoxAnswers: transpileCheckBoxData(_application, program.databaseName)
       };
     }
     return [_application, _appIndex, _appData];
   }, [applications, appId]);
+
+  console.log(appData)
 
   const previousApplication =
     applications && appIndex > 0
@@ -129,9 +168,10 @@ function Application({ applications, newReview, history, match, user }) {
       ? "/submissions/" + applications[appIndex + 1]["_id"]
       : null;
 
+
   return (
     <PageWrapper>
-      <LoadingOverlay show={loadedReview.isPending} />
+      <LoadingOverlay show={!review} />
       <BodyWrapper>
         <h1>
           <Button
@@ -141,7 +181,13 @@ function Application({ applications, newReview, history, match, user }) {
             &lt; All Applicants
           </Button>
           <br />
-          {application && application["Organization Name (legal name)"]}
+          {application ? (application["Organization Name"] || application["Organization Name (legal name)"]) : (
+            <div>
+              <p> This application data is not available at the moment </p>
+              <p> Some applications are unavailable due to using an older version of the application. </p>
+              <p> Please contact us to have the data migrated (arbitrium@uwblueprint.org) </p>
+            </div>
+          )}
         </h1>
         {/*}<Rubric />*/}
         <hr />
@@ -205,7 +251,8 @@ function getApplicationDetails(appList, appId) {
 }
 
 const mapStateToProps = (state) => ({
-  applications: state.applications
+  applications: state.applications,
+  program: state.program
 });
 
 const mapDispatchToProps = {
