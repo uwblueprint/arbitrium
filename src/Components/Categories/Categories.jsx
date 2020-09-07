@@ -165,6 +165,7 @@ const Categories = ({ categoryData }) => {
               </CategoryWrapper>
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
+          {/*}
           <SecondaryExpansionPanel defaultExpanded>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>
               Grant Amount
@@ -245,6 +246,7 @@ const Categories = ({ categoryData }) => {
               </CategoryWrapper>
             </ExpansionPanelDetails>
           </SecondaryExpansionPanel>
+          */}
           {/*
           <SecondaryExpansionPanel>
             <SecondarySummaryPanel expandIcon={<ExpandMoreIcon />}>

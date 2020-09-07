@@ -1,18 +1,37 @@
 import moment from "moment";
 
+
+
+//UnitedWay
+//Emergency Community Support Fund (ECSF) Round 1 and 2
 import {
   fileCategories,
   adminCategories,
   longAnswerCategories,
-  checkBoxCategories
+  checkBoxCategories,
+  canvasData
 } from "./column_categories3";
+
+
+//SVP Full Proposal
+import {
+  fileCategories,
+  adminCategories,
+  longAnswerCategories,
+  checkBoxCategories,
+  canvasData
+} as SVPFullProposal from "./column_categories4";
+
+
 
 export function createReview(user, appId) {
   let review = {};
   const comments = [];
   const questionList = [];
 
+
   // THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE
+  //Legacy content
   questionList.push({
     id: "canvas_1",
     notes: [],
@@ -116,41 +135,16 @@ export function transpileLongAnswerData(application) {
   );
 
   const data = [];
-  data.push({
-    id: 1,
-    answers: [],
-    title: "Vulnerable Populations Served",
-    description:
-      "Do the vulnerable populations selected align with the project/program described?"
+
+  Object.keys(canvasData).map((card, index) => {
+    data.push({
+      id: index,
+      answers: [],
+      title: card.title,
+      description: card.description
+    });
   });
-  data.push({
-    id: 2,
-    answers: [],
-    title: "Service Types and Output Tracking",
-    description:
-      "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
-  });
-  data.push({
-    id: 3,
-    answers: [],
-    title: "Types of Activities",
-    description:
-      "Do the activities, geographic area, and timelines make sense for the program? Are they aligned with the criteria of the ECSF?"
-  });
-  data.push({
-    id: 4,
-    answers: [],
-    title: "Service Description (Long Answer)",
-    description:
-      "Does the description adequately answer the questions? Do the answers provided present a logical implementation plan?"
-  });
-  data.push({
-    id: 5,
-    answers: [],
-    title: "Additional Service Information",
-    description:
-      "Has additional service information been provided? Are the responses reasonable within the ECSF context?"
-  });
+
   answers.forEach((answer) => {
     data.forEach((item) => {
       if (answer.id === item.id) {
@@ -186,30 +180,13 @@ export function transpileCheckBoxData(application) {
 })
 */
   const data = [];
-  data.push({
-    id: 1,
-    answers: [],
-    title: "Vulnerable Populations Served"
-  });
-  data.push({
-    id: 2,
-    answers: [],
-    title: "Service Types and Output Tracking"
-  });
-  data.push({
-    id: 3,
-    answers: [],
-    title: "Types of Activities"
-  });
-  data.push({
-    id: 4,
-    answers: [],
-    title: "Service Description (Long Answer)"
-  });
-  data.push({
-    id: 5,
-    answers: [],
-    title: "Addition Service Information"
+  Object.keys(canvasData).map((card, index) => {
+    data.push({
+      id: index,
+      answers: [],
+      title: card.title,
+      description: card.description
+    });
   });
   answers.forEach((answer) => {
     data.forEach((item) => {
