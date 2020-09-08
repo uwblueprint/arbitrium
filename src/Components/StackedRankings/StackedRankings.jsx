@@ -126,7 +126,7 @@ function StackedRankings({ applications, reviewCount, user }) {
         userId: user.uid,
         rankings: initApps
       });
-      refetch({ user });
+      refetch();
       shouldSort.current = true;
     }
 
