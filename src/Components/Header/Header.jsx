@@ -128,12 +128,18 @@ function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
       program._id == window.location.pathname.split("/")[1]
     );
 
+    console.log(window.location)
+
     //Default to the first selection in the array if no selection
     let curProgram = loadPrograms.value.indexOf(index)
+
+    //If -1 then either no program was selected or it is a non-program url
     if (curProgram < 0) {
-      updateProgram(loadPrograms.value[0], loadProgram, loadApplications, currentUser)
-      setProgram(loadPrograms.value[0])
-      history.push("/"+loadPrograms.value[0]._id+"/applications")
+      if (!window.location.pathname.includes("admin")){
+        updateProgram(loadPrograms.value[0], loadProgram, loadApplications, currentUser)
+        setProgram(loadPrograms.value[0])
+        history.push("/"+loadPrograms.value[0]._id+"/applications")
+      }
     }
     else {
       updateProgram(loadPrograms.value[curProgram], loadProgram, loadApplications, currentUser)
