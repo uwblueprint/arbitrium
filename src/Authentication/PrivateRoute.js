@@ -25,14 +25,15 @@ function PrivateRoute({ component: RouteComponent, route, ...rest }) {
     />
   ) : access ? (
     <>
-      <Header/>
+      <Header />
       <Navigation />
       {RouteComponent ? (
         <Route
           {...rest}
-          render={(routeProps) => <RouteComponent {...routeProps} user={appUser} />}
-        >
-        </Route>
+          render={(routeProps) => (
+            <RouteComponent {...routeProps} user={appUser} />
+          )}
+        ></Route>
       ) : null}
     </>
   ) : (

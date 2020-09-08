@@ -1,15 +1,5 @@
 const mongoose = require("mongoose");
 
-//By default Admins have access to everything at their respective level
-const organization = new mongoose.Schema({
-  name: {
-    type: String
-  },
-  admin: {
-    type: Boolean
-  }
-});
-
 //Currently we only have one role: reviewer.
 //In the future we may want to have "spectators" for example
 const program = new mongoose.Schema({

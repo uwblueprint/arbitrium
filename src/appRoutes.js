@@ -3,7 +3,6 @@ import AllApplications from "./Components/List/ApplicationList/AllApplications";
 import UserManagement from "./Components/Admin/UserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
-import DatabaseManagement from "./Components/Admin/DatabaseManagement";
 import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
 import CreateEditForm from "./Components/FormCreation/CreateEditForm";
 import Footer from "./Components/Footer/Footer";

@@ -25,7 +25,6 @@ function program(state = [], action) {
     default:
       return state;
   }
-
 }
 
 function user(state = null, action) {

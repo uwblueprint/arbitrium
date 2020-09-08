@@ -19,7 +19,13 @@ router.get("/all", function(req, res) {
 
 router.post("/", function(req, res) {
   db["Authentication"].programs
-    .updateOne({databaseName: req.body.databaseName, displayName: req.body.displayName}, req.body, { upsert: true }
+    .updateOne(
+      {
+        databaseName: req.body.databaseName,
+        displayName: req.body.displayName
+      },
+      req.body,
+      { upsert: true }
     )
     // status code 201 means created
     .then(function(newSchedule) {

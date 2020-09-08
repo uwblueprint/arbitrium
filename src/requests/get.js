@@ -35,7 +35,6 @@ async function getCandidateSubmissions() {
 
 async function getReviewCountAPI(userId) {
   return GET(`/api/ratings/${userId}/?` + new URLSearchParams({ count: true }));
-  //const token = await user.getIdToken();
 }
 
 async function getApplicationCount() {
@@ -85,5 +84,6 @@ export {
   getAllRankingsAPI,
   getApplicationReviewsAPI,
   getCandidateSubmissions,
-  getAllProgramsAPI
+  getAllProgramsAPI,
+  getAllFirebaseUsers
 };

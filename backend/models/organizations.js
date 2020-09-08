@@ -15,13 +15,13 @@ const program = new mongoose.Schema({
   id: {
     type: String,
     unique: true
-  },
+  }
 });
 
 //Programs[] is a list of program IDs that the organization has has been assigned to.
 //They can only view these programs (unless admin).
 
-const organizations = schema = new mongoose.Schema(
+const organizationSchema = new mongoose.Schema(
   {
     users: {
       type: [user]
@@ -31,7 +31,7 @@ const organizations = schema = new mongoose.Schema(
     },
     deleted: {
       type: Boolean
-    },
+    }
   },
   { collection: "organizations" }
 );

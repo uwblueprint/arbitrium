@@ -7,6 +7,7 @@ const applicationSchema = require("./models/application");
 const rankingSchema = require("./models/stackedRankings");
 const ratingSchema = require("./models/ratings");
 const programSchema = require("./models/programs.js");
+const organizationSchema = require("./models/organizations");
 
 console.log("Attempting to connect to Mongo...");
 const USERNAME = MONGO_CONFIGS.module.mongoUsername;
@@ -30,10 +31,12 @@ const mongoPrograms = connect("Authentication");
 //Authentication database only holds the users and programs (global scope)
 const programModel = mongoPrograms.model("programModel", programSchema);
 const userModel = mongoPrograms.model("userModel", userSchema);
+const organizationModel = mongoPrograms.model("organizationModel", organizationSchema);
 const newConnection = {
   mongo: mongoPrograms,
   users: userModel,
-  programs: programModel
+  programs: programModel,
+  organizations: organizationModel
 };
 connections["Authentication"] = newConnection;
 

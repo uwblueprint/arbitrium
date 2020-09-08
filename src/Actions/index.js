@@ -17,7 +17,7 @@ export function loadProgram(program) {
   return {
     type: ACTIONS.LOAD_PROGRAM,
     program
-  }
+  };
 }
 
 export function newReview() {

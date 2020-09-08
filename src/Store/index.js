@@ -1,10 +1,8 @@
 import { createStore, applyMiddleware, compose } from "redux";
 import { createBrowserHistory } from "history";
 import { routerMiddleware } from "connected-react-router";
-import { setProgram } from "../requests/Helper"
-import {
-  LOAD_PROGRAM
-} from "../Constants/ActionTypes";
+import { setProgram } from "../requests/Helper";
+import { LOAD_PROGRAM } from "../Constants/ActionTypes";
 
 import createRootReducer from "../Reducers/index";
 
@@ -14,17 +12,15 @@ history.listen(() => {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 });
 
-
-const saveProgram = store => next => action => {
-  if(action.type === LOAD_PROGRAM) {
+const saveProgram = () => (next) => (action) => {
+  if (action.type === LOAD_PROGRAM) {
     // after the user chooses a new program, update the api calls
     setProgram(action.program);
   }
 
   // continue processing this action
   return next(action);
-}
-
+};
 
 //Store is a result from createStore
 //Which is a function from the react library
