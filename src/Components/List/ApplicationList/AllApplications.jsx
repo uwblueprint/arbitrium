@@ -63,9 +63,10 @@ function AllApplications({ user, apps, program }) {
   // Applications, with reviews attached
   //TODO: Why is this not being called again?
   let [applications, refetch] = usePromise(getApplicationTableData, { user }, []);
+
   useEffect(() => {
     refetch({user})
-  }, [program])
+  }, [program, refetch, user])
 
 
   return (

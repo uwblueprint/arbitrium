@@ -3,9 +3,7 @@ import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import UserDisplay from "./UserDisplay";
 import AppIcon from "./svgIcon.tsx";
-import LightTooltip from '@material-ui/core/Tooltip';
 import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ArrowDropDownCircleOutlinedIcon from '@material-ui/icons/ArrowDropDownCircleOutlined';
@@ -14,7 +12,6 @@ import * as GET from "../../requests/get";
 import { loadProgram, loadApplications } from "../../Actions";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { connect } from "react-redux";
-import { withRouter, Redirect } from "react-router";
 import { history } from "../../Store";
 
 export const HEADER_HEIGHT = 56;
@@ -53,12 +50,6 @@ const AppName = styled.div`
   font-weight: normal;
   font-size: 30px;
   line-height: 28px;
-`;
-
-const AppToolTip = styled.div`
-  .tooltip:hover .tooltiptext {
-    visibility: hidden;
-  }
 `;
 
 const UserDisplayWrapper = styled.div`
@@ -103,7 +94,6 @@ async function updateProgram(program, loadProgram, loadApplications, currentUser
 function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
 
   const { currentUser } = useContext(AuthContext);
-  const [redirect, setRedirect] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null);
   const [loadPrograms] = usePromise(GET.getAllProgramsAPI, {}, []);
   const [program, setProgram] = useState(null)
@@ -123,7 +113,7 @@ function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
   //On first header load for each refresh
   if (!loadPrograms.isPending && program == null && loadPrograms.value != null) {
     let index = loadPrograms.value.find((program, index) =>
-      program._id == window.location.pathname.split("/")[1]
+      program._id === window.location.pathname.split("/")[1]
     );
 
 

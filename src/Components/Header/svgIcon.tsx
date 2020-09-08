@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
 
-const AppIcon: FunctionComponent<{}> = ({}) => (
+const AppIcon: FunctionComponent<{}> = () => (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M16.0001 32C17.0812 32 17.9996 31.4772 18.3303 30.7502C18.471 30.4409 18.1861 30.1538 17.8462 30.1538H14.1539C13.814 30.1538 13.5291 30.4409 13.6698 30.7502C14.0005 31.4772 14.9189 32 16.0001 32Z" fill="#3262A8"/>
     <path d="M16 30.1538H15.3846V31.9398C15.3846 31.9398 15.5401 31.9697 15.6779 31.9832C15.8157 31.9966 16 32 16 32V30.1538Z" fill="#4995E0"/>

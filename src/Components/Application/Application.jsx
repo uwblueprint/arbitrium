@@ -17,7 +17,7 @@ import {
 import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 import { connect } from "react-redux";
 import { newReview } from "../../Actions";
-import usePromise from "../../Hooks/usePromise";
+//import usePromise from "../../Hooks/usePromise";
 import * as GET from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 
@@ -155,7 +155,7 @@ function Application({ applications, newReview, history, match, user, program })
       };
     }
     return [_application, _appIndex, _appData];
-  }, [applications, appId]);
+  }, [applications, appId, program.databaseName]);
 
   const previousApplication =
     applications && appIndex > 0
