@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React from "react";
 
 function DatabaseManagement() {
   return <div></div>;

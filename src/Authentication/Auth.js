@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import firebaseApp from "./firebase.js";
 import { getUserAPI } from "../requests/get";
 import { authenticatedUser } from "../Actions";
-import * as GET from "../requests/get";
 
 export const AuthContext = React.createContext();
 

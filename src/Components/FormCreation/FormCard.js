@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function FormCard({ card, question}) {
+function FormCard({ card, question }) {
   const classes = useStyles();
 
   return (

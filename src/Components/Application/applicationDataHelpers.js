@@ -167,7 +167,7 @@ export function transpileLongAnswerData(application, program) {
   const data = [];
 
   canvasData.map((card, index) => {
-    data.push({
+    return data.push({
       id: index + 1,
       answers: [],
       title: card.title,
@@ -233,7 +233,7 @@ export function transpileCheckBoxData(application, program) {
 */
   const data = [];
   canvasData.map((card, index) => {
-    data.push({
+    return data.push({
       id: index + 1,
       answers: [],
       title: card.title,

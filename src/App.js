@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Route, Switch, Redirect } from "react-router";
 import { AuthProvider } from "./Authentication/Auth";
 import Container from "./Components/Container/Container";
-import { Header } from "./Components/Header/Header";
 import { loadApplications } from "./Actions";
 import Login from "./Authentication/Login.js";
 import { ConnectedRouter } from "connected-react-router";

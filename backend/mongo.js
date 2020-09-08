@@ -12,7 +12,6 @@ const organizationSchema = require("./models/organizations");
 console.log("Attempting to connect to Mongo...");
 const USERNAME = MONGO_CONFIGS.module.mongoUsername;
 const PASS = MONGO_CONFIGS.module.mongoPassword;
-const ENV = MONGO_CONFIGS.module.environment;
 
 //For debugging the database
 mongoose.set("debug", true);
@@ -31,7 +30,10 @@ const mongoPrograms = connect("Authentication");
 //Authentication database only holds the users and programs (global scope)
 const programModel = mongoPrograms.model("programModel", programSchema);
 const userModel = mongoPrograms.model("userModel", userSchema);
-const organizationModel = mongoPrograms.model("organizationModel", organizationSchema);
+const organizationModel = mongoPrograms.model(
+  "organizationModel",
+  organizationSchema
+);
 const newConnection = {
   mongo: mongoPrograms,
   users: userModel,
