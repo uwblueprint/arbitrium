@@ -90,7 +90,6 @@ const useStyles = makeStyles((theme) => ({
 async function updateProgram(program, loadProgram, loadApplications, currentUser) {
   loadProgram(program)
 
-  console.log("AHAHAHAHAHAHAHAHAH")
   const applications = await GET.getAllApplicationsAPI();
   let reviewCount = 0
   if (currentUser != null){
@@ -102,7 +101,6 @@ async function updateProgram(program, loadProgram, loadApplications, currentUser
 }
 
 function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
-  console.log(props)
 
   const { currentUser } = useContext(AuthContext);
   const [redirect, setRedirect] = useState(false)
@@ -128,7 +126,6 @@ function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
       program._id == window.location.pathname.split("/")[1]
     );
 
-    console.log(window.location)
 
     //Default to the first selection in the array if no selection
     let curProgram = loadPrograms.value.indexOf(index)

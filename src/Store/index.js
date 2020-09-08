@@ -16,8 +16,6 @@ history.listen(() => {
 
 
 const saveProgram = store => next => action => {
-  console.log("here1")
-  console.log(action)
   if(action.type === LOAD_PROGRAM) {
     // after the user chooses a new program, update the api calls
     setProgram(action.program);

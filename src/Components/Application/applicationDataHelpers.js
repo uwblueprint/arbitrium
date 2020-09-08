@@ -72,7 +72,6 @@ export function transpileCategoryData(application, program) {
     adminCategories = SVPFullProposal.adminCategories;
   }
 
-  console.log(adminCategories.contact)
   return {
     admin: Object.keys(adminCategories.contact && {}).map((adminCategory) => ({
       title: adminCategory,
@@ -176,7 +175,6 @@ export function transpileLongAnswerData(application, program) {
   const data = [];
 
   canvasData.map((card, index) => {
-    console.log(card);
     data.push({
       id: index+1,
       answers: [],
@@ -185,7 +183,6 @@ export function transpileLongAnswerData(application, program) {
     });
   });
 
-  console.log(data)
   answers.forEach((answer) => {
     data.forEach((item) => {
       if (answer.id === item.id) {

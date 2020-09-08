@@ -14,7 +14,6 @@ export function loadApplications(applications, reviewCount) {
 }
 
 export function loadProgram(program) {
-  console.log("called loadProgram")
   return {
     type: ACTIONS.LOAD_PROGRAM,
     program

@@ -27,8 +27,6 @@ async function getAllReviewsAPI() {
 }
 
 async function getApplicationTableData(user) {
-  console.log("Getting Application Table Data")
-  console.log(user.user.userId)
   return GET(`/api/applications/${user.user.userId}`);
 }
 async function getCandidateSubmissions() {

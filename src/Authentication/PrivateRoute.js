@@ -14,8 +14,7 @@ function PrivateRoute({ component: RouteComponent, route, ...rest }) {
     (route.groups.length === 0 ||
       (appUser && route.groups.includes(appUser.role)));
 
-  console.log(rest)
-  console.log(appUser)
+  //Access to programs and organizations should also be decided here
   return isLoading ? (
     <LoadingOverlay
       show

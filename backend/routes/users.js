@@ -10,8 +10,6 @@ const { sendWelcomeEmail } = require("../nodemailer");
 const { createFirebaseUser } = require("./userUtils");
 const { deleteFirebaseUser } = require("./userUtils");
 
-//userModel = db["EmergencyFund"].model("userModel", userSchema);
-
 router.get("/all", function(req, res) {
   db["Authentication"].users
     .find()

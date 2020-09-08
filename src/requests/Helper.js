@@ -14,8 +14,6 @@ if (process.env.REACT_APP_NODE_ENV === "qa") {
 let program = window.location.pathname.split("/")[1]
 
 function setProgram(prog){
-  console.log("Setting the program")
-  console.log(prog)
   program = prog._id
 }
 

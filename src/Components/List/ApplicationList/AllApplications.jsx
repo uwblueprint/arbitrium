@@ -60,8 +60,6 @@ function convertToTableData(fetched, program) {
 }
 
 function AllApplications({ user, apps, program }) {
-  console.log(apps)
-
   // Applications, with reviews attached
   //TODO: Why is this not being called again?
   let [applications, refetch] = usePromise(getApplicationTableData, { user }, []);

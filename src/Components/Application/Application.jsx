@@ -83,7 +83,6 @@ function Application({ applications, newReview, history, match, user, program })
       if (reviewExists) {
         isRated.current = res.rating > -1;
       }
-      console.log(res)
       dispatchReviewUpdate({
         type: LOAD_REVIEW,
         review: reviewExists ? res : createReview(user, appId)
