@@ -33,10 +33,10 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String
     },
-    Organizations: {
+    organizations: {
       type: [String]
     },
-    Programs: {
+    programs: {
       type: [program]
     },
     deleted: {

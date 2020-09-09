@@ -4,6 +4,7 @@ import EditUserForm from "./EditUserForm";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
+import Spinner from "react-spinner-material";
 import { userFormStateReducer } from "../../Reducers/UserFormStateReducer";
 import { createUserAPI } from "../../requests/update";
 
@@ -28,10 +29,11 @@ function NewUserDialog({ onSubmit, close }) {
     setIsSubmitting(true);
     try {
       const data = { ...formState };
-      data.programs = Array.from(formState.programs).map((p) => ({
-        name: p,
-        access: "regular user" // TODO: shouldn't this be a field in the user drawer UI
-      }));
+      data.programs = Array.from(formState.programs).map((program) => ({
+        id: program,
+        role: "reviewer"
+      }))
+
       const user = await createUserAPI(data);
       close();
       onSubmit && onSubmit(user);

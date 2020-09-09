@@ -91,11 +91,11 @@ async function updateProgram(program, loadProgram, loadApplications, currentUser
   loadApplications(applications, reviewCount);
 }
 
-function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
+//programs is a list of programs that the user has access to
+function Header({ loadProgram, loadApplications, programFromRedux, programs, ...props }) {
 
   const { currentUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [loadPrograms] = usePromise(GET.getAllProgramsAPI, {}, []);
   const [program, setProgram] = useState(null)
 
   const handleClick = (event) => {
@@ -111,31 +111,28 @@ function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
 
 
   //On first header load for each refresh
-  if (!loadPrograms.isPending && program == null && loadPrograms.value != null) {
-    let index = loadPrograms.value.find((program, index) =>
+  if (program == null && programs != null && programs.length > 0) {
+
+    //Does the url contain a program? Load that into the header
+    //Private Route (caller of header) handles access permissions
+    let curProgram = programs.indexOf(programs.find((program, index) =>
       program._id === window.location.pathname.split("/")[1]
-    );
+    ));
 
-
-    //Default to the first selection in the array if no selection
-    let curProgram = loadPrograms.value.indexOf(index)
-
-    //If -1 then either no program was selected or it is a non-program url
+    //If curProgram is -1 then choose the first program in the list to load
+    //Temporary: If it is an admin page don't load the program (waiting on designs)
     if (curProgram < 0) {
       if (!window.location.pathname.includes("admin")){
-        updateProgram(loadPrograms.value[0], loadProgram, loadApplications, currentUser)
-        setProgram(loadPrograms.value[0])
-        history.push("/"+loadPrograms.value[0]._id+"/applications")
-      }
-    }
+        updateProgram(programs[0], loadProgram, loadApplications, currentUser)
+        setProgram(programs[0])
+        history.push("/"+programs[0]._id+"/applications")
+    }}
     else {
-      updateProgram(loadPrograms.value[curProgram], loadProgram, loadApplications, currentUser)
-      setProgram(loadPrograms.value[curProgram])
+      updateProgram(programs[curProgram], loadProgram, loadApplications, currentUser)
+      setProgram(programs[curProgram])
     }
   }
-  else {
 
-  }
   const classes = useStyles()
   return (
     <Container>
@@ -148,7 +145,7 @@ function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
           </Tooltip>
         </AppName>
 
-        <p> {program ? program.displayName : "Loading..."} </p>
+        <p> {program ? program.displayName : "Select a program to view applications "} </p>
         <div>
           <ArrowDropDownCircleOutlinedIcon style={{marginLeft: "4px", margin: "12px"}} onClick={handleClick}>
           </ArrowDropDownCircleOutlinedIcon>
@@ -160,11 +157,14 @@ function Header({ loadProgram, loadApplications, programFromRedux, ...props }) {
             onClose={() => {setAnchorEl(null)}}
             style={{ marginTop: HEADER_HEIGHT/2}}
           >
-            {!loadPrograms.isPending && loadPrograms.value ? (
+            {programs ? (
               <div style={{border: '1px solid #ccc'}}>
-                { loadPrograms.value.map((program, index) => (
+                { programs.map((program, index) => (
                   <MenuItem key={index} onClick={() => handleSelect(program)}> {program.displayName}</MenuItem>
                 ))}
+                { programs.length === 0 ? (
+                  <MenuItem key={"None"} >You don't have access to any programs</MenuItem>
+                ): null}
               </div>
             ) : null }
           </Menu>

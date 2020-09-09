@@ -33,30 +33,14 @@ router.get("/:userid", function(req, res) {
     });
 });
 
-//upsert create a new document if the query did not retrieve any documents
-// satisfying the criteria. It instead does an insert.
+//Update a user (Not sued for creating a new user)
 router.post("/", function(req, res) {
-  console.log("Posting a new user");
   db["Authentication"].users
     .updateOne(
-      { userId: req.body.userId },
-      {
-        _id: "5e7ca0c3412aeae89f5eb81f",
-        userId: "vBUgTex5MeNd57fdB8u4wv7kXZ52",
-        __v: 0,
-        email: "gmaxin@uwblueprint.org",
-        name: "",
-        programs: [
-          {
-            _id: "5e8a8d9feb45930e72e2a413",
-            name: "SVP Investee Grant",
-            access: "regular user"
-          }
-        ],
-        role: "Admin"
-      },
-      { upsert: true }
-    )
+        { userId: req.body.userId},
+        req.body,
+        { upsert: false}
+      )
     // status code 201 means created
     .then(function(newSchedule) {
       res.status(201).json(newSchedule);
@@ -100,12 +84,13 @@ router.post("/create-user", async function(req, res) {
       name: req.body.name,
       preferredName: req.body.preferredName,
       email: userRecord.email,
-      role: "User",
+      admin: req.body.admin,
+      organization: req.body.organization,
       programs: req.body.programs,
       deleted: false
     };
     try {
-      await db.users.updateOne({ email: userRecord.email }, mongoUserRecord, {
+      await db["Authentication"].users.updateOne({ email: userRecord.email }, mongoUserRecord, {
         upsert: true
       });
     } catch (e) {

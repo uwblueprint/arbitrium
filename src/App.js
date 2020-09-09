@@ -35,7 +35,7 @@ function App() {
         <AuthProvider>
           <ConnectedRouter history={history}>
             <>
-              <Container>
+              
                 <Switch>
                   <Route exact={true} path="/login" component={Login}></Route>
                   <Route
@@ -58,7 +58,7 @@ function App() {
                   })}
                   <Redirect to={"/applications"} />
                 </Switch>
-              </Container>
+
             </>
           </ConnectedRouter>
         </AuthProvider>

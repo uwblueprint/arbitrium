@@ -31,7 +31,7 @@ const rowStyle = {
 };
 
 const columns = [
-  { title: "User Name", field: "name" },
+  { title: "Name", field: "name" },
   { title: "Email", field: "email" },
   { title: "Role", field: "role" },
   {

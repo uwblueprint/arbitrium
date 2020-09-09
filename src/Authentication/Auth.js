@@ -51,23 +51,6 @@ function AuthProvider({ initialAppLoad, children }) {
         });
         return;
       }
-      const hasProgramAcess =
-        Array.isArray(appUser.programs) &&
-        appUser.programs.some(
-          (program) => program.name === process.env.REACT_APP_PROGRAM
-        );
-
-      if (!hasProgramAcess) {
-        firebaseApp.auth().signOut();
-        alert(
-          "You do not have access to this program. Please verify you are using the correct URL"
-        );
-        setAuthState({
-          state: AUTH_STATES.NOT_AUTHENTICATED,
-          user: null
-        });
-        return;
-      }
 
       // differentiate between the firebase user and the user retrieved from mongo (firebaseUser and appUser)
       setAuthState({

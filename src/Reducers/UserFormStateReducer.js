@@ -22,6 +22,7 @@ export function userFormStateReducer(formState, action) {
         draftFormState.role = action.role;
         break;
       case EDIT_PROGRAMS:
+        console.log(action.program)
         draftFormState.programs.has(action.program)
           ? draftFormState.programs.delete(action.program)
           : draftFormState.programs.add(action.program);

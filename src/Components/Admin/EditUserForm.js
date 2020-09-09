@@ -75,7 +75,7 @@ function EditUserForm({ dispatch, formState }) {
         />
       </QuestionWrapper>
       <QuestionWrapper>
-        <StyledLabel htmlFor="preferred-name-input">Preferred Name</StyledLabel>
+        <StyledLabel htmlFor="preferred-name-input">Preferred Name (optional)</StyledLabel>
         <OutlinedInput
           fullWidth
           id="preferred-name-input"
@@ -93,7 +93,7 @@ function EditUserForm({ dispatch, formState }) {
         />
       </QuestionWrapper>
       <QuestionWrapper>
-        <StyledLabel htmlFor="role-select">Role</StyledLabel>
+        <StyledLabel htmlFor="role-select">Admin</StyledLabel>
         <UserRoleSelect
           id="role-select"
           value={formState.role}
