@@ -3,17 +3,20 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
-import FlowSelector from "../FlowSelector/FlowSelector";
 import Rating from "../Rating/Rating";
+import Files from "../Files/Files";
+import LoadingOverlay from "../Common/LoadingOverlay";
+//column categories
 import {
-  createReview,
   transpileCategoryData,
   transpileFileData,
-  transpileLongAnswerData
+  transpileLongAnswerData,
+  transpileCheckBoxData
 } from "./applicationDataHelpers";
 import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
 import { connect } from "react-redux";
 import { newReview } from "../../Actions";
+import usePromise from "../../Hooks/usePromise";
 import * as GET from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 
@@ -25,6 +28,7 @@ const BodyWrapper = styled.div`
   margin: 0 auto;
   padding-left: 80px;
   padding-right: 80px;
+  max-width: 800px;
   h1 {
     font-size: 28px;
     font-weight: normal;
@@ -57,26 +61,35 @@ const ApplicationSelector = styled.div`
 
 function Application({ applications, newReview, history, match, user }) {
   const appId = match.params.organizationId;
+
+  const [loadedReview] = usePromise(GET.getReviewAPI, {
+    user,
+    applicationId: appId
+  });
+
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
   const isRated = useRef(false);
 
-  //Returns a review from DB if exists, otherwise null
+  // Load the fetched review
   useEffect(() => {
-    GET.getReviewAPI(user, appId).then((res) => {
-      const reviewExists = res != null;
-      if (reviewExists) {
-        isRated.current = res.rating > -1;
-      }
-      dispatchReviewUpdate({
-        type: LOAD_REVIEW,
-        review: reviewExists ? res : createReview(user, appId)
-      });
+    if (loadedReview.isPending) return;
+    isRated.current = loadedReview.value.rating > -1;
+    dispatchReviewUpdate({
+      type: LOAD_REVIEW,
+      review: loadedReview.value
     });
-  }, [appId, user]);
+  }, [loadedReview]);
 
-  //Updates a review when any update happens from the user
+  //Updates a review when the review is changed
   useEffect(() => {
-    if (appId == null || user == null || review == null) {
+    if (
+      review == null ||
+      loadedReview.isPending ||
+      review === loadedReview.value ||
+      review.applicationId !== loadedReview.value.applicationId
+    ) {
+      // Do not update the review if we are still fetching the review or
+      // if it has not been modified
       return;
     }
     UPDATE.updateReviewAPI(review).then((res) => {
@@ -88,20 +101,24 @@ function Application({ applications, newReview, history, match, user }) {
         alert("Error in saving your review!");
       }
     });
-  }, [appId, newReview, review, user]);
+  }, [loadedReview, newReview, review]);
 
-  const [application, appIndex] = useMemo(() => {
-    return getApplicationDetails(applications, appId);
+  const [application, appIndex, appData] = useMemo(() => {
+    const [_application, _appIndex] = getApplicationDetails(
+      applications,
+      appId
+    );
+    let _appData = null;
+    if (_application != null) {
+      _appData = {
+        categoryData: transpileCategoryData(_application),
+        fileData: transpileFileData(_application),
+        longAnswers: transpileLongAnswerData(_application),
+        checkBoxAnswers: transpileCheckBoxData(_application)
+      };
+    }
+    return [_application, _appIndex, _appData];
   }, [applications, appId]);
-
-  const appData = useMemo(() => {
-    if (application == null) return null;
-    return {
-      categoryData: transpileCategoryData(application),
-      fileData: transpileFileData(application),
-      longAnswers: transpileLongAnswerData(application)
-    };
-  }, [application]);
 
   const previousApplication =
     applications && appIndex > 0
@@ -112,17 +129,9 @@ function Application({ applications, newReview, history, match, user }) {
       ? "/submissions/" + applications[appIndex + 1]["_id"]
       : null;
 
-  let name = "Loading... (Submission not found)";
-  if (application) {
-    name = application["Organization Name"];
-  }
-
   return (
     <PageWrapper>
-      <FlowSelector>
-        <button>1. Letter of Interest</button>
-        <button disabled>2. Full Application</button>
-      </FlowSelector>
+      <LoadingOverlay show={loadedReview.isPending} />
       <BodyWrapper>
         <h1>
           <Button
@@ -132,7 +141,7 @@ function Application({ applications, newReview, history, match, user }) {
             &lt; All Applicants
           </Button>
           <br />
-          {name}
+          {application && application["Organization Name (legal name)"]}
         </h1>
         {/*}<Rubric />*/}
         <hr />
@@ -140,18 +149,7 @@ function Application({ applications, newReview, history, match, user }) {
           <div className="application-information">
             <Categories categoryData={appData.categoryData} />
             <hr />
-            <span>
-              <a
-                className="name"
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://drive.google.com/file/d/1GT2l4PLYnavReVWjYU3cXzdQmCTg_tXN/view?usp=sharing"
-              >
-                {" "}
-                {"Link to Decision Making Matrix"}
-              </a>
-            </span>
-            {/*}<Files fileData={appData.fileData} />*/}
+            <Files fileData={appData.fileData} />
             <hr />
             <DecisionCanvas
               categoryData={appData.longAnswers}

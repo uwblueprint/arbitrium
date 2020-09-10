@@ -7,6 +7,7 @@ const db = require("../mongo.js");
 
 const { sendWelcomeEmail } = require("../nodemailer");
 const { createFirebaseUser } = require("./userUtils");
+const { deleteFirebaseUser } = require("./userUtils");
 
 router.get("/all", function(req, res) {
   db.users
@@ -47,6 +48,29 @@ router.post("/", function(req, res) {
     });
 });
 
+router.delete("/:userId", function(req, res) {
+  db.users.updateOne(
+    { userId: req.params.userId },
+    { $set: { deleted: true } },
+    (err, result) => {
+      if (err || !result || (result && result.n !== 1)) {
+        res.status(500).send(err);
+      } else {
+        deleteFirebaseUser(req.params.userId)
+          .then(() => {
+            res.status(204).send();
+          })
+          .catch((err) => {
+            console.log(`User with UID = ${req.params.userId}
+              was marked deleted in MongoDB but not removed from Firebase, failed due to: ${err}`);
+            // using status code 202 (accepted) to represent partial success
+            res.status(202).send();
+          });
+      }
+    }
+  );
+});
+
 // Create a new user in firebase and mongodb
 // Sends welcome email to user on creation
 router.post("/create-user", async function(req, res) {
@@ -59,7 +83,8 @@ router.post("/create-user", async function(req, res) {
       preferredName: req.body.preferredName,
       email: userRecord.email,
       role: "User",
-      programs: req.body.programs
+      programs: req.body.programs,
+      deleted: false
     };
     try {
       await db.users.updateOne({ email: userRecord.email }, mongoUserRecord, {

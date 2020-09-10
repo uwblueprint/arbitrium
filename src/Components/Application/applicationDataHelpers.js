@@ -3,8 +3,9 @@ import moment from "moment";
 import {
   fileCategories,
   adminCategories,
-  longAnswerCategories
-} from "./column_categories2";
+  longAnswerCategories,
+  checkBoxCategories
+} from "./column_categories3";
 
 export function createReview(user, appId) {
   let review = {};
@@ -51,23 +52,23 @@ export function createReview(user, appId) {
 export function transpileCategoryData(application) {
   //todo when category data is made available, currently leverages mock data
   return {
-    contact: Object.keys(adminCategories.Admin).map((adminCategory) => ({
+    admin: Object.keys(adminCategories.contact).map((adminCategory) => ({
+      title: adminCategory,
+      value: application[adminCategory]
+    })),
+    funding: Object.keys(adminCategories.funding).map((adminCategory) => ({
+      title: adminCategory,
+      value: application[adminCategory]
+    })),
+    mission: Object.keys(adminCategories.mission).map((adminCategory) => ({
+      title: adminCategory,
+      value: application[adminCategory]
+    })),
+    grant: Object.keys(adminCategories.grant).map((adminCategory) => ({
       title: adminCategory,
       value: application[adminCategory]
     }))
     /*
-    socialMedia: Object.keys(adminCategories.socialMedia).map(
-      adminCategory => ({
-        title: adminCategory,
-        value: application[adminCategory]
-      })
-    ),
-    organizationInformation: Object.keys(
-      adminCategories.organizationInformation
-    ).map(adminCategory => ({
-      title: adminCategory,
-      value: application[adminCategory]
-    })),
     applicationInformation: Object.keys(
       adminCategories.applicationInformation
     ).map(adminCategory => ({
@@ -110,7 +111,7 @@ export function transpileLongAnswerData(application) {
         question: longAnswerCategory,
         response: application[longAnswerCategory]
       },
-      title: "Undetermined" + longAnswerCategories[longAnswerCategory]
+      title: "canvas_" + longAnswerCategories[longAnswerCategory]
     })
   );
 
@@ -118,27 +119,97 @@ export function transpileLongAnswerData(application) {
   data.push({
     id: 1,
     answers: [],
-    title: "Question 1"
+    title: "Vulnerable Populations Served",
+    description:
+      "Do the vulnerable populations selected align with the project/program described?"
   });
   data.push({
     id: 2,
     answers: [],
-    title: "Question 2"
+    title: "Service Types and Output Tracking",
+    description:
+      "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
   });
   data.push({
     id: 3,
     answers: [],
-    title: "Question 3"
+    title: "Types of Activities",
+    description:
+      "Do the activities, geographic area, and timelines make sense for the program? Are they aligned with the criteria of the ECSF?"
   });
   data.push({
     id: 4,
     answers: [],
-    title: "Question 4"
+    title: "Service Description (Long Answer)",
+    description:
+      "Does the description adequately answer the questions? Do the answers provided present a logical implementation plan?"
   });
   data.push({
     id: 5,
     answers: [],
-    title: "Question 5"
+    title: "Additional Service Information",
+    description:
+      "Has additional service information been provided? Are the responses reasonable within the ECSF context?"
+  });
+  answers.forEach((answer) => {
+    data.forEach((item) => {
+      if (answer.id === item.id) {
+        item.answers.push({
+          question: answer.answers.question,
+          response: answer.answers.response
+        });
+      }
+    });
+  });
+  return data;
+}
+export function transpileCheckBoxData(application) {
+  const answers = Object.keys(checkBoxCategories).map((checkBoxCategory) => {
+    const p = {
+      id: checkBoxCategories[checkBoxCategory],
+      answers: {
+        question: checkBoxCategory,
+        response: application[checkBoxCategory]
+      }
+    };
+    return p;
+  });
+
+  /*
+{
+  id: checkBoxCategories[checkBoxCategory],
+  answers: {
+    question: longAnswerCategory,
+    response: application[longAnswerCategory]
+  },
+  title: "Undetermined" + longAnswerCategories[longAnswerCategory]
+})
+*/
+  const data = [];
+  data.push({
+    id: 1,
+    answers: [],
+    title: "Vulnerable Populations Served"
+  });
+  data.push({
+    id: 2,
+    answers: [],
+    title: "Service Types and Output Tracking"
+  });
+  data.push({
+    id: 3,
+    answers: [],
+    title: "Types of Activities"
+  });
+  data.push({
+    id: 4,
+    answers: [],
+    title: "Service Description (Long Answer)"
+  });
+  data.push({
+    id: 5,
+    answers: [],
+    title: "Addition Service Information"
   });
   answers.forEach((answer) => {
     data.forEach((item) => {

@@ -1,3 +1,4 @@
+import { createReview } from "../Components/Application/applicationDataHelpers";
 let proxy = "http://localhost:4000";
 if (process.env.REACT_APP_NODE_ENV === "production") {
   proxy = process.env.REACT_APP_SERVER_PROD;
@@ -6,7 +7,7 @@ if (process.env.REACT_APP_NODE_ENV === "qa") {
   proxy = process.env.REACT_APP_SERVER_QA;
 }
 
-async function getReviewAPI(user, applicationId) {
+async function getReviewAPI({ user, applicationId }) {
   const token = await user.getIdToken();
   const response = await fetch(
     proxy + `/api/ratings/${user.uid}/${applicationId}`,
@@ -18,18 +19,21 @@ async function getReviewAPI(user, applicationId) {
       }
     }
   );
-  const body = await response.json();
+  const result = await response.json();
   if (response.status !== 200) {
-    throw Error(body.message);
+    throw Error(result.message);
   }
-  return body;
+  if (result != null) {
+    return result;
+  }
+  return createReview(user, applicationId);
 }
 
 async function getUserReviewsAPI(user) {
   const response = await fetch(proxy + `/api/ratings/${user.uid}`, {
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      Accept: "application/json"
     }
   });
   const body = await response.json();
@@ -99,7 +103,7 @@ async function getCandidateSubmissions() {
 
 //-----------------------------------------------------------------------------
 
-async function getApplicationTableData(user) {
+async function getApplicationTableData({ user }) {
   const token = await user.getIdToken();
   const response = await fetch(proxy + `/api/applications/${user.uid}`, {
     headers: {
@@ -122,7 +126,7 @@ async function getReviewCountAPI(userId) {
   const response = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      Accept: "application/json"
     }
   });
   const body = await response.json();
@@ -166,7 +170,7 @@ async function getApplicationDetails(applicationId, user) {
   return body;
 }
 
-async function getAllStackingsAPI(user) {
+async function getAllStackingsAPI({ user }) {
   const response = await fetch(proxy + `/api/stackings/${user.uid}`, {
     headers: {
       "Content-Type": "application/json",

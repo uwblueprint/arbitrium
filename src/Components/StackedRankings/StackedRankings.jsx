@@ -5,8 +5,10 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
 import RankingCard from "./RankingCard";
-const GET = require("../../requests/get");
-const UPDATE = require("../../requests/update");
+import usePromise from "../../Hooks/usePromise";
+import { getAllStackingsAPI } from "../../requests/get";
+import * as UPDATE from "../../requests/update";
+import { reorder } from "../../Utils/dragAndDropUtils";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -92,15 +94,6 @@ const NumbersColumn = styled.div`
   right: 100%;
 `;
 
-// a little function to help us with reordering the result
-function reorder(list, startIndex, endIndex) {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-}
-
 function compare(a, b) {
   if (a.rating < b.rating) {
     return 1;
@@ -112,56 +105,51 @@ function compare(a, b) {
 }
 
 function StackedRankings({ applications, reviewCount, user }) {
-  const [rankings, setRankings] = useState([]);
-  const classes = useStyles();
+  const [fetchedRankings, refetch] = usePromise(
+    getAllStackingsAPI,
+    { user },
+    []
+  );
+  const [rankings, setRankings] = useState(fetchedRankings.value);
   const shouldTranslate = useRef(false);
+  const shouldSort = useRef(false);
+  const classes = useStyles();
 
   const shouldRedirect =
     reviewCount == null || reviewCount < applications.length;
 
   useEffect(() => {
-    if (shouldRedirect) return; // do not fetch data if going to redirect
-    (async function() {
-      if (user == null || applications.length === 0) return;
-      try {
-        let fetched = await GET.getAllStackingsAPI(user);
-        if (fetched.length !== applications.length) {
-          // Otherwise we need to initialize the user's rankings
-          const initApps = applications.map((app) => ({ appId: app._id }));
-          await UPDATE.updateStackedAPI({
-            userId: user.uid,
-            rankings: initApps
-          });
-          fetched = await GET.getAllStackingsAPI(user);
-          fetched.sort(compare);
-        }
-        const reviews = await GET.getUserReviewsAPI(user);
-        reviews.forEach((review) => {
-          let averageRating = 0;
-          let numRatings = 0;
-          if (review && review.questionList) {
-            review.questionList.forEach((item) => {
-              if (item.rating > 0) {
-                averageRating += item.rating;
-                numRatings += 1;
-              }
-            });
-          }
-          if (numRatings > 0) {
-            averageRating = averageRating / numRatings;
-          }
-          fetched
-            .filter((app) => app._id === review.applicationId)
-            .forEach((item) => {
-              item.suggested = averageRating;
-            });
-        });
-        setRankings(fetched);
-      } catch (e) {
-        console.error(e);
+    async function createRankings() {
+      // we should initialize the user's rankings
+      const initApps = applications.map((app) => ({ appId: app._id }));
+      await UPDATE.updateStackedAPI({
+        userId: user.uid,
+        rankings: initApps
+      });
+      refetch({ user });
+      shouldSort.current = true;
+    }
+
+    if (
+      !fetchedRankings.isPending &&
+      fetchedRankings.value.length !== applications.length
+    ) {
+      createRankings();
+    } else {
+      let updatedRankings = fetchedRankings.value;
+      if (shouldSort.current) {
+        updatedRankings = [...fetchedRankings.value].sort(compare);
+        shouldSort.current = false;
       }
-    })();
-  }, [shouldRedirect, applications, user]);
+      setRankings(
+        updatedRankings.map((rank) => ({
+          ...rank,
+          name:
+            rank["Organization Name (legal name)"] || rank["Organization Name"]
+        }))
+      );
+    }
+  }, [fetchedRankings, applications, user, refetch]);
 
   const numOrgs = rankings.length;
   const column = useMemo(() => {
@@ -250,7 +238,7 @@ function StackedRankings({ applications, reviewCount, user }) {
                         >
                           <RankingCard
                             appId={item._id}
-                            companyName={item["Organization Name"]}
+                            companyName={item.name}
                             rating={item.rating}
                             suggested={item.suggested}
                           />

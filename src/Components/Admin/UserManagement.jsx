@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
-
-import UserManagementTable from "./UserManagementTable";
-import NewUserDialog from "./NewUserDialog";
-import DialogButton from "../Common/DialogButton";
-
-import Button from "@material-ui/core/Button";
-import styled from "styled-components";
+import React, { useMemo } from "react";
 import Spinner from "react-spinner-material";
+import styled from "styled-components";
+import usePromise from "../../Hooks/usePromise";
 import * as GET from "../../requests/get";
+import DialogTriggerButton from "../Common/Dialogs/DialogTriggerButton";
+import EditUserDialog from "./EditUserDialog";
+import NewUserDialog from "./NewUserDialog";
+import UserManagementTable from "./UserManagementTable";
 
 const Wrapper = styled.div`
   margin-top: 148px;
@@ -32,45 +31,46 @@ const Header = styled.div`
   `;
 
 // convert fetched users to table format
+// fetched: array
 function convertToTableData(fetched) {
-  if (fetched == null) return [];
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
-    programAccess: user.programs.map((p) => p.name),
+    programAccess: (user.programs || []).map((p) => p.name),
     role: user.role,
     userLink: (
-      <Button variant="outlined" color="primary">
-        Edit
-      </Button>
+      <div className="button-container">
+        <DialogTriggerButton
+          Dialog={EditUserDialog}
+          closeOnEsc={true}
+          variant="outlined"
+          dialogProps={{ data: user }}
+        >
+          Edit
+        </DialogTriggerButton>
+      </div>
     )
   }));
 }
 
 function UserManagement() {
-  const [users, setUsers] = useState(null);
+  const [loadUsers] = usePromise(GET.getAllUsersAPI, {}, []);
 
-  useEffect(() => {
-    // Define an async function since callback must be synchronous
-    async function getUsers() {
-      // Fetch the users from the backend
-      const fetched = await GET.getAllUsersAPI();
-      setUsers(convertToTableData(fetched));
-    }
-
-    getUsers();
-  }, []);
+  const users = useMemo(
+    () => convertToTableData(loadUsers.value.filter((u) => !u.deleted)),
+    [loadUsers]
+  );
 
   return (
     <Wrapper>
-      {users != null ? (
+      {!loadUsers.isPending ? (
         <>
           <Header>
-            <h1>User Management</h1>
+            <h1 style={{ color: "black" }}>User Management</h1>
             <div className="button-container">
-              <DialogButton Dialog={NewUserDialog} closeOnEsc={true}>
+              <DialogTriggerButton Dialog={NewUserDialog} closeOnEsc={true}>
                 Create New User
-              </DialogButton>
+              </DialogTriggerButton>
             </div>
           </Header>
           <UserManagementTable data={users} />

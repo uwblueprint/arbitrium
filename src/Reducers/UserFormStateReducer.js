@@ -26,6 +26,8 @@ export function userFormStateReducer(formState, action) {
           ? draftFormState.programs.delete(action.program)
           : draftFormState.programs.add(action.program);
         break;
+      default:
+        break;
     }
   });
 }

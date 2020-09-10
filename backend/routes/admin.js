@@ -13,7 +13,14 @@ router.get("/candidate-submissions", function(req, res) {
           pipeline: [
             {
               $match: {
-                $expr: { $and: [{ $eq: ["$applicationId", "$$appId"] }] }
+                $expr: {
+                  $and: [
+                    { $eq: ["$applicationId", "$$appId"] },
+                    { $ne: ["$rating", -1] },
+                    { $ne: ["$userId", "vBUgTex5MeNd57fdB8u4wv7kXZ52"] },
+                    { $ne: ["$userId", "hM9QRmlybTdaQkLX25FupXqjiuF2"] }
+                  ]
+                }
               }
             }
           ],

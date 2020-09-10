@@ -50,7 +50,7 @@ async function updateUserAPI(databody) {
     }
   });
 
-  const body = await response.json();
+  const body = response.json();
   if (response.status !== 201) {
     console.log("Error with posting user");
     return Promise.reject(body);

@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     marginRight: 26
   },
   root: {
-    height: 56,
+    minHeight: 56,
     borderRadius: 0,
     boxShadow: "0px 2px 3px 1px #cccccc"
   },
@@ -73,7 +73,10 @@ function RankingCard({ companyName, rating, appId, push, suggested }) {
           ) : (
             <div className={classes.rating}>
               Suggested Rating:{" "}
-              {suggested !== 0 ? suggested.toFixed(2) : rating.toFixed(2)}/5
+              {suggested != null && suggested !== 0
+                ? suggested.toFixed(2)
+                : rating.toFixed(2)}
+              /5
             </div>
           )}
           <Button

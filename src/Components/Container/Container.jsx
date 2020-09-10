@@ -1,11 +1,8 @@
-import React from "react";
+import styled from "styled-components";
+import { MAX_NAVBAR_WIDTH } from "../Navigation/Navigation";
 
-const Container = ({ children }) => {
-  return (
-    <div style={{ marginLeft: 305 }} id="container">
-      {children}
-    </div>
-  );
-};
+const Container = styled.div`
+  margin-left: ${MAX_NAVBAR_WIDTH}px;
+`;
 
 export default Container;
