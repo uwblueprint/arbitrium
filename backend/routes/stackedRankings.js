@@ -48,7 +48,7 @@ router.get("/admin/:appId", function(req, res) {
 });
 
 router.get("/:userid", function(req, res) {
-  db.stackedRankings
+  db[req.headers.database].rankings
     .aggregate([
       {
         $match: { userId: req.params.userid }
@@ -142,7 +142,7 @@ router.get("/:userid", function(req, res) {
 
 //Admin stats
 router.get("/", function(req, res) {
-  db.stackedRankings
+  db[req.headers.database].rankings
     .find()
     .then(function(found) {
       res.json(found);
@@ -159,7 +159,7 @@ router.post("/", function(req, res) {
     userId: req.body.userId,
     applications: req.body.rankings
   };
-  db.stackedRankings
+  db[req.headers.database].rankings
     .updateOne({ userId: req.body.userId }, stacked, { upsert: true })
     // status code 201 means created
     .then(function(newSchedule) {

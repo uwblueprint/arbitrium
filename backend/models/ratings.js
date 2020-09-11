@@ -19,7 +19,7 @@ const question = new mongoose.Schema({
   }
 });
 
-const reviewSchema = new mongoose.Schema(
+const ratingSchema = new mongoose.Schema(
   {
     applicationId: {
       type: mongoose.Schema.ObjectId
@@ -39,6 +39,4 @@ const reviewSchema = new mongoose.Schema(
   { collection: "Reviews" }
 );
 
-const Ratings = mongoose.model("Ratings", reviewSchema);
-
-module.exports = Ratings;
+module.exports = ratingSchema;

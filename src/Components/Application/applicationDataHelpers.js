@@ -1,11 +1,10 @@
 import moment from "moment";
 
-import {
-  fileCategories,
-  adminCategories,
-  longAnswerCategories,
-  checkBoxCategories
-} from "./column_categories3";
+//UnitedWay
+//Emergency Community Support Fund (ECSF) Round 1 and 2
+import * as UnitedWay from "./column_categories3";
+import * as UnitedWay2 from "./column_categories3";
+import * as SVPFullProposal from "./column_categories4";
 
 export function createReview(user, appId) {
   let review = {};
@@ -13,6 +12,7 @@ export function createReview(user, appId) {
   const questionList = [];
 
   // THIS NEEDS TO BE MADE DYNAMIC IN THE FUTURE
+  //Legacy content
   questionList.push({
     id: "canvas_1",
     notes: [],
@@ -40,7 +40,7 @@ export function createReview(user, appId) {
   });
   review = {
     applicationId: appId,
-    userId: user.uid,
+    userId: user.userId,
     rating: -1,
     comments: comments,
     lastReviewed: moment(),
@@ -49,10 +49,26 @@ export function createReview(user, appId) {
   return review;
 }
 
-export function transpileCategoryData(application) {
+export function transpileCategoryData(application, program) {
   //todo when category data is made available, currently leverages mock data
+  let adminCategories = {
+    contact: {},
+    grant: {},
+    funding: {},
+    mission: {}
+  };
+  if (program === "UnitedWay") {
+    adminCategories = UnitedWay.adminCategories;
+  }
+  if (program === "UnitedWay2") {
+    adminCategories = UnitedWay2.adminCategories;
+  }
+  if (program === "SVPFullProposal") {
+    adminCategories = SVPFullProposal.adminCategories;
+  }
+
   return {
-    admin: Object.keys(adminCategories.contact).map((adminCategory) => ({
+    admin: Object.keys(adminCategories.contact && {}).map((adminCategory) => ({
       title: adminCategory,
       value: application[adminCategory]
     })),
@@ -79,7 +95,18 @@ export function transpileCategoryData(application) {
   };
 }
 
-export function transpileFileData(application) {
+export function transpileFileData(application, program) {
+  let fileCategories = {};
+  if (program === "UnitedWay") {
+    fileCategories = UnitedWay.fileCategories;
+  }
+  if (program === "UnitedWay2") {
+    fileCategories = UnitedWay2.fileCategories;
+  }
+  if (program === "SVPFullProposal") {
+    fileCategories = SVPFullProposal.fileCategories;
+  }
+
   const files = Object.keys(fileCategories).map((fileCategory, index) => ({
     name: fileCategory,
     link: application[fileCategory],
@@ -87,7 +114,7 @@ export function transpileFileData(application) {
   }));
   const fileLinks = [];
   files.forEach((file) => {
-    if (file.link == null) return;
+    if (file.link === null) return;
     file.link.split(",").forEach((link, index) => {
       let append = "";
       if (file.link.split(",").length > 1) {
@@ -103,7 +130,29 @@ export function transpileFileData(application) {
   return fileLinks;
 }
 
-export function transpileLongAnswerData(application) {
+export function transpileLongAnswerData(application, program) {
+  let longAnswerCategories = {};
+  if (program === "UnitedWay") {
+    longAnswerCategories = UnitedWay.longAnswerCategories;
+  }
+  if (program === "UnitedWay2") {
+    longAnswerCategories = UnitedWay2.longAnswerCategories;
+  }
+  if (program === "SVPFullProposal") {
+    longAnswerCategories = SVPFullProposal.longAnswerCategories;
+  }
+
+  let canvasData = [];
+  if (program === "UnitedWay") {
+    canvasData = UnitedWay.canvasData;
+  }
+  if (program === "UnitedWay2") {
+    canvasData = UnitedWay2.canvasData;
+  }
+  if (program === "SVPFullProposal") {
+    canvasData = SVPFullProposal.canvasData;
+  }
+
   const answers = Object.keys(longAnswerCategories).map(
     (longAnswerCategory) => ({
       id: longAnswerCategories[longAnswerCategory],
@@ -116,41 +165,16 @@ export function transpileLongAnswerData(application) {
   );
 
   const data = [];
-  data.push({
-    id: 1,
-    answers: [],
-    title: "Vulnerable Populations Served",
-    description:
-      "Do the vulnerable populations selected align with the project/program described?"
+
+  canvasData.map((card, index) => {
+    return data.push({
+      id: index + 1,
+      answers: [],
+      title: card.title,
+      description: card.description
+    });
   });
-  data.push({
-    id: 2,
-    answers: [],
-    title: "Service Types and Output Tracking",
-    description:
-      "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
-  });
-  data.push({
-    id: 3,
-    answers: [],
-    title: "Types of Activities",
-    description:
-      "Do the activities, geographic area, and timelines make sense for the program? Are they aligned with the criteria of the ECSF?"
-  });
-  data.push({
-    id: 4,
-    answers: [],
-    title: "Service Description (Long Answer)",
-    description:
-      "Does the description adequately answer the questions? Do the answers provided present a logical implementation plan?"
-  });
-  data.push({
-    id: 5,
-    answers: [],
-    title: "Additional Service Information",
-    description:
-      "Has additional service information been provided? Are the responses reasonable within the ECSF context?"
-  });
+
   answers.forEach((answer) => {
     data.forEach((item) => {
       if (answer.id === item.id) {
@@ -163,7 +187,29 @@ export function transpileLongAnswerData(application) {
   });
   return data;
 }
-export function transpileCheckBoxData(application) {
+export function transpileCheckBoxData(application, program) {
+  let checkBoxCategories = {};
+  if (program === "UnitedWay") {
+    checkBoxCategories = UnitedWay.checkBoxCategories;
+  }
+  if (program === "UnitedWay2") {
+    checkBoxCategories = UnitedWay2.checkBoxCategories;
+  }
+  if (program === "SVPFullProposal") {
+    checkBoxCategories = SVPFullProposal.checkBoxCategories;
+  }
+
+  let canvasData = [];
+  if (program === "UnitedWay") {
+    canvasData = UnitedWay.canvasData;
+  }
+  if (program === "UnitedWay2") {
+    canvasData = UnitedWay2.canvasData;
+  }
+  if (program === "SVPFullProposal") {
+    canvasData = SVPFullProposal.canvasData;
+  }
+
   const answers = Object.keys(checkBoxCategories).map((checkBoxCategory) => {
     const p = {
       id: checkBoxCategories[checkBoxCategory],
@@ -186,30 +232,13 @@ export function transpileCheckBoxData(application) {
 })
 */
   const data = [];
-  data.push({
-    id: 1,
-    answers: [],
-    title: "Vulnerable Populations Served"
-  });
-  data.push({
-    id: 2,
-    answers: [],
-    title: "Service Types and Output Tracking"
-  });
-  data.push({
-    id: 3,
-    answers: [],
-    title: "Types of Activities"
-  });
-  data.push({
-    id: 4,
-    answers: [],
-    title: "Service Description (Long Answer)"
-  });
-  data.push({
-    id: 5,
-    answers: [],
-    title: "Addition Service Information"
+  canvasData.map((card, index) => {
+    return data.push({
+      id: index + 1,
+      answers: [],
+      title: card.title,
+      description: card.description
+    });
   });
   answers.forEach((answer) => {
     data.forEach((item) => {

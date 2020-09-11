@@ -1,23 +1,22 @@
 const mongoose = require("mongoose");
 
-//Name is oneOf: ["SVP Investee Grant", "SVP Teens", "SVP Perfect Pitch"]
-//Access is oneOf: ["regular", "guest", "admin"]
-
-//Regular and guest have the same access but guest users don't have their ratings
-//  used in the final rating that admins can view
-
-//Admins have guest access by default (we need to figure this out (do their ratings count?))
-//   and they have access to an admin tab/button where they can see candidates and users pages
+//Currently we only have one role: reviewer.
+//In the future we may want to have "spectators" for example
 const program = new mongoose.Schema({
-  name: {
-    type: String
+  id: {
+    type: String,
+    unique: true
   },
-  access: {
-    type: String
+  role: {
+    type: String,
+    default: "reviewer"
   }
 });
 
-//TEMP JUST HAVING A ROLE AND PROGRAM FOR EMERGENCY FUND
+//Programs[] is a list of program IDs that the user has been assigned to.
+//They can only view these programs (unless admin).
+
+//Organizations[] is the organizations they have been assigned to.
 const userSchema = new mongoose.Schema(
   {
     userId: {
@@ -34,19 +33,20 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String
     },
-    role: {
-      type: String
+    Organizations: {
+      type: [String]
     },
-    programs: {
+    Programs: {
       type: [program]
     },
     deleted: {
       type: Boolean
+    },
+    admin: {
+      type: Boolean
     }
   },
-  { collection: "user" }
+  { collection: "users" }
 );
 
-const User = mongoose.model("Users", userSchema);
-
-module.exports = User;
+module.exports = userSchema;

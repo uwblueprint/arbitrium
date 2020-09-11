@@ -1,243 +1,76 @@
+import { GET } from "./Helper";
 import { createReview } from "../Components/Application/applicationDataHelpers";
-let proxy = "http://localhost:4000";
-if (process.env.REACT_APP_NODE_ENV === "production") {
-  proxy = process.env.REACT_APP_SERVER_PROD;
-}
-if (process.env.REACT_APP_NODE_ENV === "qa") {
-  proxy = process.env.REACT_APP_SERVER_QA;
+
+async function getReviewAPI(user, applicationId) {
+  return GET(`/api/ratings/${user.userId}/${applicationId}`);
 }
 
-async function getReviewAPI({ user, applicationId }) {
-  const token = await user.getIdToken();
-  const response = await fetch(
-    proxy + `/api/ratings/${user.uid}/${applicationId}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        authorization: `Bearer ${token}`
-      }
-    }
-  );
-  const result = await response.json();
-  if (response.status !== 200) {
-    throw Error(result.message);
-  }
+async function getUserReviewsAPI(user, applicationId) {
+  const result = GET(`/api/ratings/${user.uid}`);
   if (result != null) {
     return result;
+  } else {
+    return createReview(user, applicationId);
   }
-  return createReview(user, applicationId);
 }
 
-async function getUserReviewsAPI(user) {
-  const response = await fetch(proxy + `/api/ratings/${user.uid}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
-}
-
-//Admin stats stuff
-//-----------------------------------------------------------------------------
 async function getApplicationReviewsAPI(app) {
-  const response = await fetch(proxy + `/api/ratings/app/${app}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET(`/api/ratings/app/${app}`);
 }
 
 async function getAllRankingsAPI() {
-  const response = await fetch(proxy + `/api/stackings`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET(`/api/stackings`);
 }
 
 async function getAllReviewsAPI() {
-  const response = await fetch(proxy + `/api/ratings`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET(`/api/ratings`);
 }
 
+async function getApplicationTableData(user) {
+  return GET(`/api/applications/${user.user.userId}`);
+}
 async function getCandidateSubmissions() {
-  const response = await fetch(proxy + `/api/admin/candidate-submissions`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
-}
-
-//-----------------------------------------------------------------------------
-
-async function getApplicationTableData({ user }) {
-  const token = await user.getIdToken();
-  const response = await fetch(proxy + `/api/applications/${user.uid}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: `Bearer ${token}`
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET(`/api/admin/candidate-submissions`);
 }
 
 async function getReviewCountAPI(userId) {
-  const url = new URL(
-    proxy + `/api/ratings/${userId}/?` + new URLSearchParams({ count: true })
-  );
-  const response = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET(`/api/ratings/${userId}/?` + new URLSearchParams({ count: true }));
 }
 
 async function getApplicationCount() {
-  const response = await fetch(
-    proxy + "/api/applications/?" + new URLSearchParams({ count: true }),
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      }
-    }
-  );
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET("/api/applications/?" + new URLSearchParams({ count: true }));
 }
 
 async function getApplicationDetails(applicationId, user) {
-  const response = await fetch(
-    proxy + `/api/applications/${applicationId}/${user.uid}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      }
-    }
-  );
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET(`/api/applications/${applicationId}/${user.uid}`);
 }
 
-async function getAllStackingsAPI({ user }) {
-  const response = await fetch(proxy + `/api/stackings/${user.uid}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+async function getAllStackingsAPI(user) {
+  return GET(`/api/stackings/${user.user.userId}`);
 }
 
 async function getUserAPI(user) {
-  const response = await fetch(proxy + `/api/users/${user.uid}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET(`/api/users/${user.uid}`);
 }
 
 async function getAllUsersAPI() {
-  const response = await fetch(proxy + `/api/users/all`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET("/api/users/all");
 }
 
 async function getAllApplicationsAPI() {
-  const response = await fetch(proxy + "/api/applications", {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET("/api/applications");
+}
+
+async function getAllFirebaseUsers() {
+  return GET(`/api/admin`);
+}
+
+async function getAllProgramsAPI() {
+  return GET(`/api/programs/all`);
 }
 
 async function getAdminViewStats(app_id) {
-  const response = await fetch(proxy + `/api/ratings/admin/${app_id}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  });
-  const body = await response.json();
-  if (response.status !== 200) {
-    throw Error(body.message);
-  }
-  return body;
+  return GET(`/api/ratings/admin/${app_id}`)
 }
 
 export {
@@ -255,5 +88,7 @@ export {
   getAllReviewsAPI,
   getAllRankingsAPI,
   getApplicationReviewsAPI,
-  getCandidateSubmissions
+  getCandidateSubmissions,
+  getAllProgramsAPI,
+  getAllFirebaseUsers
 };

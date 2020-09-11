@@ -2,21 +2,34 @@ import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { createBrowserHistory } from "history";
 import { routerMiddleware } from "connected-react-router";
+import { setProgram } from "../requests/Helper";
+import { LOAD_PROGRAM } from "../Constants/ActionTypes";
 
 import createRootReducer from "../Reducers/index";
 
-//Store is a result from createStore
-//Which is a function from the react library
 export const history = createBrowserHistory();
 //Scroll to top for every route
 history.listen(() => {
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 });
 
+const saveProgram = () => (next) => (action) => {
+  if (action.type === LOAD_PROGRAM) {
+    // after the user chooses a new program, update the api calls
+    setProgram(action.program);
+  }
+
+  // continue processing this action
+  return next(action);
+};
+
+//Store is a result from createStore
+//Which is a function from the react library
 //createStore takes in a reducer as the first argument
 const store = createStore(
   createRootReducer(history),
   compose(
+    applyMiddleware(saveProgram),
     applyMiddleware(routerMiddleware(history)),
     applyMiddleware(thunk),
     //https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en
