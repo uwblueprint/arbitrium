@@ -30,7 +30,7 @@ function CreateEditForm() {
   );
 
   useEffect(() => {
-    let sections = [
+    const sections = [
       {
         title: "About Your Charity",
         desc: "Section Type: Admin Info",

@@ -8,43 +8,60 @@ const db = require("../mongo.js");
 router.get("/admin/:appId", function(req, res) {
   try {
     db.reviews
-    .find({ applicationId: { $in: req.params.appId}})
-    .then(function(found) {
-      let mergedComments = [], commentUsers=[], mergedRatings={}, sectionAverageSums=new Array(5).fill(0), numRatedPerSection=new Array(5).fill(0);
-      //retrive all comments and ratings from each review
-      found.forEach((review, index)=>{
-        const processedComments = review.comments.map(comment => ({userId: review.userId, value: comment.value, lastReviewed: comment.lastReviewed}))
-        mergedComments=mergedComments.concat(processedComments);
-        commentUsers.push(review.userId);
-        mergedRatings[review.userId]=review.rating;
-        for (let i=0; i<5; i++){
-          if (review.questionList[i] && review.questionList[i].rating!=-1){
-            sectionAverageSums[i] += review.questionList[i].rating;
-            numRatedPerSection[i]++;
+      .find({ applicationId: { $in: req.params.appId } })
+      .then(function(found) {
+        let mergedComments = [],
+          commentUsers = [],
+          mergedRatings = {},
+          sectionAverageSums = new Array(5).fill(0),
+          numRatedPerSection = new Array(5).fill(0);
+        //retrive all comments and ratings from each review
+        found.forEach((review, index) => {
+          const processedComments = review.comments.map((comment) => ({
+            userId: review.userId,
+            value: comment.value,
+            lastReviewed: comment.lastReviewed
+          }));
+          mergedComments = mergedComments.concat(processedComments);
+          commentUsers.push(review.userId);
+          mergedRatings[review.userId] = review.rating;
+          for (let i = 0; i < 5; i++) {
+            if (review.questionList[i] && review.questionList[i].rating != -1) {
+              sectionAverageSums[i] += review.questionList[i].rating;
+              numRatedPerSection[i]++;
+            }
           }
-        }
+        });
+        //get user_ids from comments and query user attributes to populate comments
+        db.users.find({ userId: { $in: commentUsers } }).then(function(found) {
+          const transpiledComments = mergedComments.map((comment) => {
+            const newComment = comment;
+            const commentUser = found.filter(
+              (user) => user.userId === comment.userId
+            )[0];
+            //add user attributes to each comment
+            newComment["email"] = commentUser ? commentUser.email : null;
+            newComment["author"] = commentUser ? commentUser.name : null;
+            return newComment;
+          });
+          res.send({
+            allComments: transpiledComments,
+            allRatings: mergedRatings,
+            sectionAverages: sectionAverageSums.map((sum, index) =>
+              numRatedPerSection[index] === 0
+                ? 0
+                : (sum / numRatedPerSection[index]).toFixed(1)
+            ),
+            averageRating: (
+              Object.values(mergedRatings).reduce(
+                (ratingA, ratingB) => ratingA + ratingB,
+                0
+              ) / Object.keys(mergedRatings).length
+            ).toFixed(1)
+          });
+          //send all results based on the given application ids
+        });
       });
-      //get user_ids from comments and query user attributes to populate comments
-      db.users.find({userId: { $in: commentUsers}}).then(function(found){
-        const transpiledComments = mergedComments.map(comment => {
-          let newComment = comment;
-          const commentUser = found.filter(user => user.userId===comment.userId)[0]
-          //add user attributes to each comment
-          newComment['email'] = commentUser ? commentUser.email : null;
-          newComment['author'] = commentUser ? commentUser.name : null;
-          return newComment;
-        })
-         res.send(
-          {
-           "allComments": transpiledComments, 
-           "allRatings": mergedRatings,
-           "sectionAverages": sectionAverageSums.map((sum, index)=>(numRatedPerSection[index]===0 ? 0 : (sum/numRatedPerSection[index]).toFixed(1))),
-           "averageRating": (Object.values(mergedRatings).reduce((ratingA, ratingB) => 
-           ratingA+ratingB, 0)/Object.keys(mergedRatings).length).toFixed(1)});
-           //send all results based on the given application ids
-           
-         })
-      })  
   } catch (err) {
     res.send(err);
   }
@@ -142,7 +159,4 @@ router.post("/", function(req, res) {
     });
 });
 
-
 module.exports = router;
-
-

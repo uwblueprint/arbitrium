@@ -85,7 +85,6 @@ function PasswordResetEmailCard({ onSubmit, backToLogin }) {
     return values.email.length > 0;
   };
 
-
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
   };
