@@ -124,6 +124,7 @@ function StackedRankings() {
   useEffect(() => {
     async function createRankings() {
       // we should initialize the user's rankings
+      alert("no");
       const initApps = applications.map((app) => ({ appId: app._id }));
       await UPDATE.updateStackedAPI({
         userId: user.userId,
@@ -137,6 +138,8 @@ function StackedRankings() {
       !fetchedRankings.isPending &&
       fetchedRankings.value.length !== applications.length
     ) {
+      console.log(fetchedRankings.value);
+      console.log(applications.length);
       createRankings();
     } else {
       let updatedRankings = fetchedRankings.value;
