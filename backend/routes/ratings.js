@@ -10,7 +10,7 @@ router.get("/admin/:appId", function(req, res) {
     db.reviews
       .find({ applicationId: { $in: req.params.appId } })
       .then(function(found) {
-        let mergedComments = [],
+        let mergedComments = []
         //retrive all comments and ratings from each review
         found.forEach((review) => {
           const processedComments = review.comments.map((comment) => ({
@@ -29,10 +29,10 @@ router.get("/admin/:appId", function(req, res) {
           }
         });
         //get user_ids from comments and query user attributes to populate comments
-        db.users.find({ userId: { $in: commentUsers } }).then(function(found) {
+        db.users.find({ userId: { $in: commentUsers } }).then(function(user) {
           const transpiledComments = mergedComments.map((comment) => {
             const newComment = comment;
-            const commentUser = found.filter(
+            const commentUser = user.filter(
               (user) => user.userId === comment.userId
             )[0];
             //add user attributes to each comment
