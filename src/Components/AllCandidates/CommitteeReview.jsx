@@ -5,11 +5,8 @@ import styled from "styled-components";
 //import Checkbox from '@material-ui/core/Checkbox';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-import { connect } from "react-redux";
 import Spinner from "react-spinner-material";
-
 import usePromise from "../../Hooks/usePromise";
-
 import {
   getAllUsersAPI,
   getApplicationCount,
@@ -175,10 +172,4 @@ function CommitteeReview({ history }) {
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    applications: state.applications
-  };
-};
-
-export default connect(mapStateToProps)(CommitteeReview);
+export default CommitteeReview;

@@ -13,22 +13,15 @@ export function loadApplications(applications, reviewCount) {
   };
 }
 
-export function loadProgram(program) {
+export function loadProgram(programId) {
   return {
     type: ACTIONS.LOAD_PROGRAM,
-    program
+    program: programId
   };
 }
 
 export function newReview() {
   return {
     type: ACTIONS.NEW_REVIEW
-  };
-}
-
-export function authenticatedUser(user) {
-  return {
-    type: ACTIONS.AUTHENTICATE_USER,
-    user
   };
 }

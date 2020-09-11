@@ -60,8 +60,14 @@ const ApplicationSelector = styled.div`
   }
 `;
 
-function Application({ applications, newReview, history, match, user, program }) {
-
+function Application({
+  applications,
+  newReview,
+  history,
+  match,
+  user,
+  program
+}) {
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
   const isRated = useRef(false);
@@ -74,7 +80,6 @@ function Application({ applications, newReview, history, match, user, program })
   // useEffect(() => {
   //   refetch({user, applicationId: appId});
   // }, [])
-
 
   //Returns a review from DB if exists, otherwise null
   useEffect(() => {
@@ -123,7 +128,6 @@ function Application({ applications, newReview, history, match, user, program })
   //   });
   // }, [loadedReview, newReview, review]);
 
-
   //Updates a review when any update happens from the user
   useEffect(() => {
     if (appId == null || user == null || review == null) {
@@ -150,8 +154,14 @@ function Application({ applications, newReview, history, match, user, program })
       _appData = {
         categoryData: transpileCategoryData(_application, program.databaseName),
         fileData: transpileFileData(_application, program.databaseName),
-        longAnswers: transpileLongAnswerData(_application, program.databaseName),
-        checkBoxAnswers: transpileCheckBoxData(_application, program.databaseName)
+        longAnswers: transpileLongAnswerData(
+          _application,
+          program.databaseName
+        ),
+        checkBoxAnswers: transpileCheckBoxData(
+          _application,
+          program.databaseName
+        )
       };
     }
     return [_application, _appIndex, _appData];
@@ -159,13 +169,12 @@ function Application({ applications, newReview, history, match, user, program })
 
   const previousApplication =
     applications && appIndex > 0
-      ? "/"+program._id+"/submissions/" + applications[appIndex - 1]["_id"]
+      ? "/" + program._id + "/submissions/" + applications[appIndex - 1]["_id"]
       : null;
   const nextApplication =
     applications && appIndex < applications.length - 1
-      ? "/"+program._id+"/submissions/" + applications[appIndex + 1]["_id"]
+      ? "/" + program._id + "/submissions/" + applications[appIndex + 1]["_id"]
       : null;
-
 
   return (
     <PageWrapper>
@@ -174,15 +183,18 @@ function Application({ applications, newReview, history, match, user, program })
         <h1>
           <Button
             className="all-applicants"
-            onClick={() => history.push("/"+program._id+"/applications")}
+            onClick={() => history.push("/" + program._id + "/applications")}
           >
             &lt; All Applicants
           </Button>
           <br />
-          {application ? (application["Organization Name"] || application["Organization Name (legal name)"]) : (
+          {application ? (
+            application["Organization Name"] ||
+            application["Organization Name (legal name)"]
+          ) : (
             <div>
               <p> Loading... </p>
-            {/*}
+              {/*}
               <p> This application data is not available at the moment </p>
               <p> Some applications are unavailable due to using an older version of the application. </p>
               <p> Please contact us to have the data migrated (arbitrium@uwblueprint.org) </p>

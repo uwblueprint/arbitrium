@@ -11,17 +11,9 @@ const Wrapper = styled.div`
     display: block;
 `;
 
-// TODO: fetch from mongo
-const programOptions = [
-  { name: "SVP Investee Grant", id: "SVP Investee Grant" },
-  { name: "SVP Teens", id: "SVP Teens" },
-  { name: "SVP Perfect Pitch", id: "SVP Perfect Pitch" }
-];
-
 function ProgramSelect({ value, onChange }) {
-
-  const [programs] = usePromise(GET.getAllProgramsAPI, {}, [])
-  console.log(programs)
+  const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
+  console.log(programs);
   return (
     <Wrapper>
       {!programs.isPending ? (

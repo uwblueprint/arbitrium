@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -39,10 +39,12 @@ function convertToTableData(fetched, program) {
           !application.rating || application.rating === -1
             ? "Not Rated"
             : application.rating,
-        applicantName: application["Organization Name"] || application["Organization Name (legal name)"] ,
+        applicantName:
+          application["Organization Name"] ||
+          application["Organization Name (legal name)"],
         lastEdited: application["lastReviewed"],
         applicantLink: (
-          <a href={"/"+program._id+`/submissions/${application._id}`}>
+          <a href={`/submissions/${application._id}`}>
             <Button
               variant="contained"
               color="primary"
@@ -59,15 +61,15 @@ function convertToTableData(fetched, program) {
   return applicantsList;
 }
 
-function AllApplications({ user, apps, program }) {
+function AllApplications({ user, program }) {
   // Applications, with reviews attached
   //TODO: Why is this not being called again?
-  let [applications, refetch] = usePromise(getApplicationTableData, { user }, []);
-
-  useEffect(() => {
-    refetch({user})
-  }, [program, refetch, user])
-
+  const [applications] = usePromise(
+    getApplicationTableData,
+    { user },
+    [],
+    [program]
+  );
 
   return (
     <Wrapper>
@@ -91,7 +93,6 @@ function AllApplications({ user, apps, program }) {
 }
 
 const mapStateToProps = (state) => ({
-  apps: state.applications,
   program: state.program
 });
 

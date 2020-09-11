@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef, useContext } from "react";
 import { Redirect } from "react-router-dom";
-import { connect } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
@@ -9,6 +8,8 @@ import usePromise from "../../Hooks/usePromise";
 import { getAllStackingsAPI } from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 import { reorder } from "../../Utils/dragAndDropUtils";
+import { ProgramContext } from "../../Contexts/ProgramContext";
+import { AuthContext } from "../../Authentication/Auth";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -104,7 +105,9 @@ function compare(a, b) {
   return 0;
 }
 
-function StackedRankings({ applications, reviewCount, user }) {
+function StackedRankings() {
+  const { appUser: user } = useContext(AuthContext);
+  const { applications, reviewCount } = useContext(ProgramContext);
   const [fetchedRankings, refetch] = usePromise(
     getAllStackingsAPI,
     { user },
@@ -126,8 +129,8 @@ function StackedRankings({ applications, reviewCount, user }) {
         userId: user.userId,
         rankings: initApps
       });
-      refetch({ user });
       shouldSort.current = true;
+      refetch({ user });
     }
 
     if (
@@ -140,6 +143,10 @@ function StackedRankings({ applications, reviewCount, user }) {
       if (shouldSort.current) {
         updatedRankings = [...fetchedRankings.value].sort(compare);
         shouldSort.current = false;
+        UPDATE.updateStackedAPI({
+          userId: user.userId,
+          rankings: updatedRankings.map((app) => ({ appId: app._id }))
+        });
       }
       setRankings(
         updatedRankings.map((rank) => ({
@@ -186,11 +193,11 @@ function StackedRankings({ applications, reviewCount, user }) {
       result.destination.index
     );
     try {
+      setRankings(reorderedList);
       UPDATE.updateStackedAPI({
-        userId: user.uid,
+        userId: user.userId,
         rankings: reorderedList.map((app) => ({ appId: app._id }))
       });
-      setRankings(reorderedList);
     } catch (e) {
       setRankings(before);
       console.error(e);
@@ -268,11 +275,4 @@ function StackedRankings({ applications, reviewCount, user }) {
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    applications: state.applications,
-    reviewCount: state.reviewCount
-  };
-};
-
-export default connect(mapStateToProps)(StackedRankings);
+export default StackedRankings;
