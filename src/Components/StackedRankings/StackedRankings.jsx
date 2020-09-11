@@ -9,6 +9,7 @@ import usePromise from "../../Hooks/usePromise";
 import { getAllStackingsAPI } from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 import { reorder } from "../../Utils/dragAndDropUtils";
+import * as GET from "../../requests/get";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -105,12 +106,13 @@ function compare(a, b) {
 }
 
 function StackedRankings({ applications, reviewCount, user }) {
+
   const [fetchedRankings, refetch] = usePromise(
     getAllStackingsAPI,
     { user },
     []
   );
-  const [rankings, setRankings] = useState(fetchedRankings.value);
+  const [rankings, setRankings] = useState([]);
   const shouldTranslate = useRef(false);
   const shouldSort = useRef(false);
   const classes = useStyles();
@@ -118,29 +120,37 @@ function StackedRankings({ applications, reviewCount, user }) {
   const shouldRedirect =
     reviewCount == null || reviewCount < applications.length;
 
-  useEffect(() => {
-    async function createRankings() {
-      // we should initialize the user's rankings
-      const initApps = applications.map((app) => ({ appId: app._id }));
-      await UPDATE.updateStackedAPI({
-        userId: user.userId,
-        rankings: initApps
-      });
-      refetch({ user });
-      shouldSort.current = true;
-    }
 
-    if (
-      !fetchedRankings.isPending &&
-      fetchedRankings.value.length !== applications.length
-    ) {
-      createRankings();
+  async function createRankings() {
+    console.log("Creating Rankings")
+    
+    // we should initialize the user's rankings
+    const initApps = applications.map((app) => ({ appId: app._id }));
+    console.log(initApps)
+    await UPDATE.updateStackedAPI({
+      userId: user.userId,
+      rankings: initApps
+    });
+
+    let initSort = await GET.getAllStackingsAPI({user});
+    initSort.sort(compare);
+    await UPDATE.updateStackedAPI({
+      userId: user.userId,
+      rankings: initSort.map((app) => ({ appId: app._id }))
+    });
+
+    refetch({user})
+  }
+
+  console.log(fetchedRankings.value)
+  useEffect(() => {
+    console.log(applications.length)
+    console.log(fetchedRankings.value)
+
+    if (applications && applications.length > 0 && !fetchedRankings.isPending && fetchedRankings.value.length !== applications.length){
+        createRankings()
     } else {
       let updatedRankings = fetchedRankings.value;
-      if (shouldSort.current) {
-        updatedRankings = [...fetchedRankings.value].sort(compare);
-        shouldSort.current = false;
-      }
       setRankings(
         updatedRankings.map((rank) => ({
           ...rank,
@@ -187,7 +197,7 @@ function StackedRankings({ applications, reviewCount, user }) {
     );
     try {
       UPDATE.updateStackedAPI({
-        userId: user.uid,
+        userId: user.userId,
         rankings: reorderedList.map((app) => ({ appId: app._id }))
       });
       setRankings(reorderedList);
