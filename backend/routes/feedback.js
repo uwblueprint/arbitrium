@@ -7,7 +7,7 @@ router.post("/", function(req, res) {
   const feedback = new Feedback({
     _id: new mongoose.Types.ObjectId(),
     userId: req.body.userId,
-    expierence: req.body.expierence,
+    experience: req.body.experience,
     feedbackPar: req.boy.feedbackPar,
     comment: req.boy.comment
   });
@@ -15,7 +15,6 @@ router.post("/", function(req, res) {
   feedback
     .save()
     .then((result) => {
-      console.log(result);
       res.status(201).json({
         message: "POST request to /feedback",
         createdFeedback: feedback

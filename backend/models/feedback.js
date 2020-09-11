@@ -10,7 +10,7 @@ const feedbackSchema = new Schema({
   },
 
   // bad // okay // good // null
-  expierence: {
+  experience: {
     type: String,
     default: ""
   },
