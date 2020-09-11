@@ -11,12 +11,8 @@ router.get("/admin/:appId", function(req, res) {
       .find({ applicationId: { $in: req.params.appId } })
       .then(function(found) {
         let mergedComments = [],
-          commentUsers = [],
-          mergedRatings = {},
-          sectionAverageSums = new Array(5).fill(0),
-          numRatedPerSection = new Array(5).fill(0);
         //retrive all comments and ratings from each review
-        found.forEach((review, index) => {
+        found.forEach((review) => {
           const processedComments = review.comments.map((comment) => ({
             userId: review.userId,
             value: comment.value,
@@ -26,7 +22,7 @@ router.get("/admin/:appId", function(req, res) {
           commentUsers.push(review.userId);
           mergedRatings[review.userId] = review.rating;
           for (let i = 0; i < 5; i++) {
-            if (review.questionList[i] && review.questionList[i].rating != -1) {
+            if (review.questionList[i] && review.questionList[i].rating !== -1) {
               sectionAverageSums[i] += review.questionList[i].rating;
               numRatedPerSection[i]++;
             }
