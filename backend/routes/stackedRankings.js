@@ -75,7 +75,31 @@ router.get("/:userid", function(req, res) {
                 }
               }
             },
-            { $project: { rating: 1 } }
+            {
+              $addFields: {
+                questionRatings: {
+                  $map: {
+                    input: "$questionList",
+                    as: "item",
+                    in: {
+                      $cond: {
+                        if: { $gte: ["$$item.rating", 0] },
+                        then: "$$item.rating",
+                        else: null
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              $project: {
+                rating: 1,
+                suggested: {
+                  $avg: "$questionRatings"
+                }
+              }
+            }
           ],
           as: "ratingInfo"
         }
@@ -86,7 +110,12 @@ router.get("/:userid", function(req, res) {
           let: { appId: "$applications.appId" },
           pipeline: [
             { $match: { $expr: { $eq: ["$_id", "$$appId"] } } },
-            { $project: { "Organization Name": 1 } }
+            {
+              $project: {
+                "Organization Name": 1,
+                "Organization Name (legal name)": 1
+              }
+            }
           ],
           as: "applicationInfo"
         }
@@ -115,8 +144,7 @@ router.get("/:userid", function(req, res) {
     });
 });
 
-
-//Admin stats 
+//Admin stats
 router.get("/", function(req, res) {
   db.stackedRankings
     .find()
@@ -127,7 +155,6 @@ router.get("/", function(req, res) {
       res.send(err);
     });
 });
-
 
 //upsert create a new document if the query did not retrieve any documents
 //satisfying the criteria. It instead does an insert.

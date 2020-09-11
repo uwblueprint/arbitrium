@@ -3,52 +3,37 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import CardActions from "@material-ui/core/CardActions";
 import React, { useState } from "react";
 import firebaseApp from "../../firebase.js";
 
 import styled from "styled-components";
 
 const CommentForm = styled.form`
+  text-align: left;
+
   .textFields {
-    margin-bottom: 50px;
+    margin-bottom: 10px;
     width: 100%;
   }
-  button {
-    display: flex;
-    justify-content: end;
-  }
+
   a {
     font-size: 0.9rem;
   }
+
   .sendResetLinkButton {
-    position: absolute;
-    margin-top: 35px;
-    width: 153px;
     height: 36px;
-    right: 0px;
-    top: 270px;
-    margin-left: 0px;
+    margin-left: auto;
   }
+
   .backToLogin {
-    position: absolute;
-    margin-top: 25px;
-    width: 121px;
     height: 36px;
-    left: 8px;
-    top: 270px;
-
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 20px;
-    /* identical to box height, or 143% */
-
     letter-spacing: 0.25px;
     text-decoration-line: underline;
-
     color: #1976d2;
+  }
+
+  .action-container {
+    display: flex;
   }
 
   .forgotPasswordTitle {
@@ -70,7 +55,7 @@ const CommentForm = styled.form`
   }
 `;
 
-const PasswordResetEmailCard = (props) => {
+function PasswordResetEmailCard({ onSubmit, backToLogin }) {
   const [values, setValues] = useState({
     email: "",
     errorEmail: false,
@@ -79,31 +64,27 @@ const PasswordResetEmailCard = (props) => {
 
   const errorEmailMessage = "Couldn't find your account";
 
-  const handlePasswordResetSubmit = () => {
-    const auth = firebaseApp.auth();
-    auth
-      .sendPasswordResetEmail(values.email)
-      .then(function() {
-        props.setLoginFlowState({ cardType: "passwordResetResponse" });
-        setValues({ ...values, resetCallInProgress: false });
-      })
-      .catch(function(error) {
-        console.log(error);
-        setValues({ ...values, resetCallInProgress: false });
-      });
+  const sendPasswordReset = async () => {
+    try {
+      await firebaseApp.auth().sendPasswordResetEmail(values.email);
+      onSubmit();
+    } catch (e) {
+      console.log(e);
+    }
+    setValues({ ...values, resetCallInProgress: false });
   };
 
-  const handleForgotPasswordSubmitEvent = (event) => {
+  async function handleForgotPasswordSubmitEvent(event) {
     //execute password reset
     event.preventDefault();
     setValues({ ...values, resetCallInProgress: true });
-    //execute async request
-    handlePasswordResetSubmit();
-  };
+    sendPasswordReset();
+  }
 
   const validateForm = () => {
     return values.email.length > 0;
   };
+
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -111,7 +92,7 @@ const PasswordResetEmailCard = (props) => {
 
   return (
     <CommentForm onSubmit={handleForgotPasswordSubmitEvent}>
-      <div className="forgotPasswordTitle">Forgot your password?</div>
+      <div className="forgotPasswordTitle">Reset your password</div>
       <div className="forgotPasswordText">
         Enter the email address associated with your account.
       </div>
@@ -129,11 +110,8 @@ const PasswordResetEmailCard = (props) => {
           {values.errorEmail ? errorEmailMessage : ""}
         </FormHelperText>
       </FormControl>
-      <CardActions>
-        <Button
-          className="backToLogin"
-          onClick={() => props.setLoginFlowState({ cardType: "loginFields" })}
-        >
+      <div className="action-container">
+        <Button className="backToLogin" onClick={backToLogin}>
           Back to Login
         </Button>
         <Button
@@ -145,9 +123,9 @@ const PasswordResetEmailCard = (props) => {
         >
           Send Reset Link
         </Button>
-      </CardActions>
+      </div>
     </CommentForm>
   );
-};
+}
 
 export default PasswordResetEmailCard;

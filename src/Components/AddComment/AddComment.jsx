@@ -47,7 +47,7 @@ function AddComment({ placeholder, primaryLabel, secondaryLabel, update, id }) {
         name="comment"
         value={text}
         placeholder={placeholder}
-        onChange={e => setText(e.target.value)}
+        onChange={(e) => setText(e.target.value)}
       />
       <div className="buttonGroup">
         <Button

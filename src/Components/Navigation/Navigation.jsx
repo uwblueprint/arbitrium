@@ -10,15 +10,18 @@ import Button from "@material-ui/core/Button";
 
 import { makeStyles } from "@material-ui/core/styles";
 
+export const MAX_NAVBAR_WIDTH = 300;
+
 const useStyles = makeStyles({
   root: {
     // Entire Nav
     "& .MuiDrawer-paper": {
       marginTop: "56px",
-      maxWidth: "300px",
+      maxWidth: `${MAX_NAVBAR_WIDTH}px`,
       padding: "4px 0",
       position: "fixed",
-      marginBottom: "50px"
+      marginBottom: "50px",
+      zIndex: 100
     },
     // Header
     "& h2": {
@@ -112,7 +115,7 @@ function Navigation({ applications, pathname, push, showStackedRankings }) {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> {" Seniors Response Fund Candidates "} </h2>
+        <h2> {" Emergency Community Support Fund (ECSF) "} </h2>
         <hr />
         <NavButton
           id="all_applications"

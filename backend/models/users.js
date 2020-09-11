@@ -1,4 +1,4 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 //Name is oneOf: ["SVP Investee Grant", "SVP Teens", "SVP Perfect Pitch"]
 //Access is oneOf: ["regular", "guest", "admin"]
@@ -8,7 +8,7 @@ var mongoose = require("mongoose");
 
 //Admins have guest access by default (we need to figure this out (do their ratings count?))
 //   and they have access to an admin tab/button where they can see candidates and users pages
-var program = new mongoose.Schema({
+const program = new mongoose.Schema({
   name: {
     type: String
   },
@@ -18,12 +18,17 @@ var program = new mongoose.Schema({
 });
 
 //TEMP JUST HAVING A ROLE AND PROGRAM FOR EMERGENCY FUND
-var userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     userId: {
-      type: String
+      type: String,
+      index: true,
+      unique: true
     },
     name: {
+      type: String
+    },
+    preferredName: {
       type: String
     },
     email: {
@@ -34,11 +39,14 @@ var userSchema = new mongoose.Schema(
     },
     programs: {
       type: [program]
+    },
+    deleted: {
+      type: Boolean
     }
   },
   { collection: "user" }
 );
 
-var User = mongoose.model("Users", userSchema);
+const User = mongoose.model("Users", userSchema);
 
 module.exports = User;

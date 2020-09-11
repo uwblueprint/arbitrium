@@ -6,7 +6,7 @@ const db = require("../mongo.js");
 
 router.get("/", function(req, res) {
   if (req.query.count) {
-    db.applications.countDocuments().then(count => {
+    db.applications.countDocuments().then((count) => {
       res.json(count);
     });
     return;
@@ -25,7 +25,10 @@ router.get("/:userid", function(req, res) {
   db.applications
     .aggregate([
       {
-        $project: { "Organization Name": 1 }
+        $project: {
+          "Organization Name (legal name)": 1,
+          "Organization Name": 1
+        }
       },
       {
         $lookup: {

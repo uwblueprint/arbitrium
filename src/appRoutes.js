@@ -1,11 +1,11 @@
 import Application from "./Components/Application/Application";
-import ApplicationsTable from "./Components/List/ApplicationList/ApplicationsTable";
-import UserManagement from "./Components/AdminView/UserManagement/UserManagement";
+import AllApplications from "./Components/List/ApplicationList/AllApplications";
+import UserManagement from "./Components/Admin/UserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import AdminStatsView from "./Components/AdminView/ApplicationStats/ApplicationStats";
 import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
-import Admin from "./Components/Admin/Admin";
+import CreateEditForm from "./Components/FormCreation/CreateEditForm";
 
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
@@ -18,7 +18,7 @@ groups: []          =>A list of groups Ex. ["admin", "user"].
 const routes = [
   {
     path: "/applications",
-    component: ApplicationsTable,
+    component: AllApplications,
     title: "List of Applications",
     groups: []
   },
@@ -53,16 +53,10 @@ const routes = [
     groups: ["Admin"]
   },
   {
-    path: "/admin",
-    component: Admin,
-    title: "Admin view to view all users",
-    groups: ["admin"]
-  },
-  {
-    path: "/admin/submissions/:organizationId",
-    component: AdminStatsView,
-    title: "Admin view of a single application",
-    groups: []
+    path: "/admin/create-form",
+    component: CreateEditForm,
+    title: "Create or edit custom form",
+    groups: ["Admin"]
   }
 ];
 

@@ -15,7 +15,7 @@ const StyledCard = styled(Card)`
 
 const StyledFab = styled(Fab)``;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   typography: {
     padding: theme.spacing(2),
     maxWidth: 300,
@@ -71,7 +71,7 @@ export default function Rubric() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     if (event.currentTarget) {
       setAnchorEl(true);
     } else {
@@ -85,7 +85,7 @@ export default function Rubric() {
     // this.forceUpdate();
   };
 
-  const id = Boolean(anchorEl) ? "simple-popover" : undefined;
+  const id = anchorEl ? "simple-popover" : undefined;
 
   return (
     <div>
@@ -141,7 +141,6 @@ export default function Rubric() {
             {
               "😍 5 = The organization meets all of our criteria, I think they would definitely be a good fit for SVP, I have no or very minor concerns\n"
             }
-             
           </div>
           <div>
             {

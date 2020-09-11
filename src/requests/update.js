@@ -1,5 +1,4 @@
 let proxy = "http://localhost:4000";
-console.log(process.env.REACT_APP_NODE_ENV);
 if (process.env.REACT_APP_NODE_ENV === "production") {
   proxy = process.env.REACT_APP_SERVER_PROD;
 }
@@ -51,11 +50,28 @@ async function updateUserAPI(databody) {
     }
   });
 
-  const body = await response.json();
+  const body = response.json();
   if (response.status !== 201) {
-    console.log("Error with posting stacked ranking");
+    console.log("Error with posting user");
+    return Promise.reject(body);
   }
   return body;
 }
 
-export { updateReviewAPI, updateStackedAPI, updateUserAPI };
+async function createUserAPI(data) {
+  const response = await fetch(proxy + "/api/users/create-user", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  });
+  const res = await response.json();
+  if (!response.ok) {
+    return Promise.reject(res);
+  }
+  return res;
+}
+
+export { updateReviewAPI, updateStackedAPI, updateUserAPI, createUserAPI };
