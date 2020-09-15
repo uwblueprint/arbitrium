@@ -64,7 +64,7 @@ function NewUserDialog({ onSubmit, close }) {
         color="primary"
         disabled={isSubmitting}
       >
-        Send Invitiation
+        Send Invitation
       </Button>
     </Dialog>
   );
