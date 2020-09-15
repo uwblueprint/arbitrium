@@ -53,7 +53,7 @@ function AllApplicationsTable(props) {
           rowStyle: rowStyle,
           search: true,
           showTitle: false,
-          exportButton: true,
+          exportButton: false,
           exportAllData: true
         }}
       />
