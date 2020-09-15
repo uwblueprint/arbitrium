@@ -52,9 +52,7 @@ function AllApplicationsTable(props) {
           pageSize: 10,
           rowStyle: rowStyle,
           search: true,
-          showTitle: false,
-          exportButton: false,
-          exportAllData: true
+          showTitle: false
         }}
       />
     </div>
