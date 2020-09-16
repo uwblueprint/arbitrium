@@ -22,6 +22,17 @@ Product Manager: [Brittany Lau](https://github.com/brittanylau)\
 Senior Developers: [Xin Hao Zhang](https://github.com/xinhaoz), [Sherry Li](https://github.com/sherryhli), [Hyunzee Kim](https://github.com/hyunzeekim), [Ahmed Hamodi](https://github.com/ahmedhamodi)
 
 ---------------------------------------------------------------------------------------------------
+
+## Usage Stats
+
+### Usage
+- 283 Applications Submitted
+- 1516 Review Done
+- 71 Users
+- 9 Grant Application Rounds Supported
+- $2M+ in Funding
+
+---------------------------------------------------------------------------------------------------
 ## Available Scripts
 
 In the project directory, you can run:
