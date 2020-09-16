@@ -25,15 +25,11 @@ Senior Developers: [Xin Hao Zhang](https://github.com/xinhaoz), [Sherry Li](http
 
 ## Usage Stats
 
-### Current Users (non-profit organizations)
-- United Way Waterloo Region Communities
-- Social Venture Partners Waterloo Region
-
 ### Usage
-- 208 Applications Submitted
-- 1388 Review Done
-- 63 Users
-- 7 Grant Application Rounds Supported
+- 283 Applications Submitted
+- 1516 Review Done
+- 71 Users
+- 9 Grant Application Rounds Supported
 - $2M+ in Funding
 
 ---------------------------------------------------------------------------------------------------

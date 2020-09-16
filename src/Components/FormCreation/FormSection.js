@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: (index) => ({
+  root: () => ({
     fontSize: 14,
     borderRadius: 0,
     borderTop: `8px solid #2261AD`,

@@ -2,17 +2,26 @@ import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 import {
   NEW_REVIEW,
-  INITIAL_APP_LOAD,
-  AUTHENTICATE_USER
+  LOAD_APPLICATIONS,
+  AUTHENTICATE_USER,
+  LOAD_PROGRAM
 } from "../Constants/ActionTypes";
 
 //Reducers take 2 params, a state and an action
 //Notice how the initial state is passed as a default parameter
 function applications(state = [], action) {
-  //console.log("Called app reducer");
   switch (action.type) {
-    case INITIAL_APP_LOAD:
+    case LOAD_APPLICATIONS:
       return action.applications || [];
+    default:
+      return state;
+  }
+}
+
+function program(state = [], action) {
+  switch (action.type) {
+    case LOAD_PROGRAM:
+      return action.program || [];
     default:
       return state;
   }
@@ -27,9 +36,9 @@ function user(state = null, action) {
   }
 }
 
-function reviewCount(state = null, action) {
+function reviewCount(state = 0, action) {
   switch (action.type) {
-    case INITIAL_APP_LOAD:
+    case LOAD_APPLICATIONS:
       return action.reviewCount;
     case NEW_REVIEW:
       return state + 1;
@@ -43,7 +52,8 @@ function createRootReducer(history) {
     reviewCount,
     router: connectRouter(history),
     applications,
-    user
+    user,
+    program
   });
 }
 
