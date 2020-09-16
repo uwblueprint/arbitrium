@@ -7,16 +7,18 @@ const db = require("../mongo.js");
 router.get("/:userid", function(req, res) {
   try {
     if (req.query.count) {
-      db.reviews
+      db[req.headers.database].ratings
         .countDocuments({ userId: req.params.userid, rating: { $ne: -1 } })
         .then((count) => {
           res.json(count);
         });
       return;
     }
-    db.reviews.find({ userId: req.params.userid }).then(function(found) {
-      res.json(found);
-    });
+    db[req.headers.database].ratings
+      .find({ userId: req.params.userid })
+      .then(function(found) {
+        res.json(found);
+      });
   } catch (err) {
     res.send(err);
   }
@@ -25,16 +27,18 @@ router.get("/:userid", function(req, res) {
 //For Admin stats
 router.get("/app/:appId", function(req, res) {
   try {
-    db.reviews.find({ applicationId: req.params.appId }).then(function(found) {
-      res.json(found);
-    });
+    db[req.headers.database].ratings
+      .find({ applicationId: req.params.appId })
+      .then(function(found) {
+        res.json(found);
+      });
   } catch (err) {
     res.send(err);
   }
 });
 
-router.get("/", function(_, res) {
-  db.reviews
+router.get("/", function(req, res) {
+  db[req.headers.database].reviews
     .aggregate([
       {
         $lookup: {
@@ -68,7 +72,7 @@ router.get("/", function(_, res) {
 });
 
 router.get("/:userid/:appId", function(req, res) {
-  db.reviews
+  db[req.headers.database].ratings
     .findOne({ applicationId: req.params.appId, userId: req.params.userid })
     .then(function(found) {
       res.json(found);
@@ -81,7 +85,7 @@ router.get("/:userid/:appId", function(req, res) {
 //upsert create a new document if the query did not retrieve any documents
 //satisfying the criteria. It instead does an insert.
 router.post("/", function(req, res) {
-  db.reviews
+  db[req.headers.database].ratings
     .updateOne(
       { userId: req.body.userId, applicationId: req.body.applicationId },
       req.body,

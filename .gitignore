@@ -34,4 +34,4 @@ backend/firebase.config
 backend/firebaseAdmin.json
 src/Components/Admin/firebaseAdmin.js
 src/Components/Admin/firebaseAdmin.json
-backend/nodemailer.config
+backend/nodemailer.config.js

@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: (index) => ({
+  root: () => ({
     fontSize: 14,
     borderRadius: 0,
     borderLeft: `4px solid #2261AD`,
@@ -26,7 +26,9 @@ const useStyles = makeStyles({
   }
 });
 
-function FormCard({ numCards, card, type, question, options, required }) {
+//Other props { numCards, card, type, question, options, required }
+//commented due to lint error
+function FormCard({ card, question }) {
   const classes = useStyles();
 
   return (

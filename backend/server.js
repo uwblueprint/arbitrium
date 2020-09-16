@@ -59,18 +59,21 @@ const corsOptions = {
 //------------------------------------------------------------------------------
 //MONGO INIT
 //------------------------------------------------------------------------------
+//This section must be in this order. CORS must load before everything else
 
 //Routes are endpoints defined for a specific collection
-//Each has their own file
+//Each has their own file (models/routes/...)
+const programRoutes = require("./routes/programs");
 const applicationRoutes = require("./routes/applications");
 const ratingsRoutes = require("./routes/ratings");
 const stackedRoutes = require("./routes/stackedRankings");
 const usersRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
+const organizationRoutes = require("./routes/organizations");
 const formsRoutes = require("./routes/forms");
 const feedbackRoutes = require("./routes/feedback");
 
-// allows us to access request body in a post or put
+//Allows us to access request body in a post or put
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -80,17 +83,14 @@ app.get("/", function(req, res) {
   res.send("root");
 });
 
-//FUCK CORS. FUCK FUCK FUCK FUCK FUCK FUCK FUCK
-//-GREG MAXIN
-//P.S: FUCK CORS
-//P.P.S: Long story short this "MONGO INIT" section must be in this order
-//https://codefor.life/FUCK-CORS-FUCKFUCKFUCKFUCK/
-
 //prefix route for the routes
+app.use("/api/programs", programRoutes);
+app.use("/api/users", usersRoutes);
+app.use("/api/organizations", organizationRoutes);
+
 app.use("/api/applications", applicationRoutes);
 app.use("/api/ratings", ratingsRoutes);
 app.use("/api/stackings", stackedRoutes);
-app.use("/api/users", usersRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/forms", formsRoutes);
 app.use("/api/feedback", feedbackRoutes);

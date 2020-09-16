@@ -20,6 +20,12 @@
         ],
         "unitedway": [
           "unitedway"
+        ],
+        "svp": [
+          "svpfullproposal"
+        ],
+        "arbitrium": [
+          "arbitrium"
         ]
       }
     }
