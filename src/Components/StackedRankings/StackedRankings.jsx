@@ -108,58 +108,55 @@ function compare(a, b) {
 function StackedRankings() {
   const { appUser: user } = useContext(AuthContext);
   const { applications, reviewCount } = useContext(ProgramContext);
-  const [fetchedRankings, refetch] = usePromise(
-    getAllStackingsAPI,
-    { user },
-    []
-  );
-  const [rankings, setRankings] = useState(fetchedRankings.value);
+
+  const [fetchedRankings, refetch] = usePromise(getAllStackingsAPI, { user });
+
+  const applicationIdSet = useMemo(() => {
+    const ids = new Set();
+    applications.forEach((app) => ids.add(app._id));
+    return ids;
+  }, [applications]);
+
+  const [rankings, setRankings] = useState([]);
   const shouldTranslate = useRef(false);
-  const shouldSort = useRef(false);
   const classes = useStyles();
 
-  const shouldRedirect =
-    reviewCount == null || reviewCount < applications.length;
-
   useEffect(() => {
-    async function createRankings() {
+    async function fillInRankings(numExistingReviews) {
       // we should initialize the user's rankings
-      alert("no");
       const initApps = applications.map((app) => ({ appId: app._id }));
       await UPDATE.updateStackedAPI({
         userId: user.userId,
         rankings: initApps
       });
-      shouldSort.current = true;
+      const sortedNewRankings = await getAllStackingsAPI({ user });
+      if (numExistingReviews === 0) {
+        sortedNewRankings.sort(compare);
+      }
+      await UPDATE.updateStackedAPI({
+        userId: user.userId,
+        rankings: sortedNewRankings.map((app) => ({ appId: app._id }))
+      });
       refetch({ user });
     }
 
-    if (
-      !fetchedRankings.isPending &&
-      fetchedRankings.value.length !== applications.length
-    ) {
-      console.log(fetchedRankings.value);
-      console.log(applications.length);
-      createRankings();
-    } else {
-      let updatedRankings = fetchedRankings.value;
-      if (shouldSort.current) {
-        updatedRankings = [...fetchedRankings.value].sort(compare);
-        shouldSort.current = false;
-        UPDATE.updateStackedAPI({
-          userId: user.userId,
-          rankings: updatedRankings.map((app) => ({ appId: app._id }))
-        });
-      }
-      setRankings(
-        updatedRankings.map((rank) => ({
-          ...rank,
-          name:
-            rank["Organization Name (legal name)"] || rank["Organization Name"]
-        }))
-      );
+    if (fetchedRankings.isPending) return;
+
+    const updatedRankings = fetchedRankings.value.filter((rank) =>
+      applicationIdSet.has(rank._id)
+    );
+    if (updatedRankings.length !== applications.length) {
+      fillInRankings(updatedRankings.length);
+      return;
     }
-  }, [fetchedRankings, applications, user, refetch]);
+    setRankings(
+      updatedRankings.map((rank) => ({
+        ...rank,
+        name:
+          rank["Organization Name (legal name)"] || rank["Organization Name"]
+      }))
+    );
+  }, [fetchedRankings, applications, user, refetch, applicationIdSet]);
 
   const numOrgs = rankings.length;
   const column = useMemo(() => {
@@ -168,16 +165,14 @@ function StackedRankings() {
       numbers.push(
         <React.Fragment key={i}>
           <RankNumber>{i + 1}</RankNumber>
-          {/*i === 4 && (
-            <div className={classes.cutoff}>
-              <div>Cutoff</div>
-            </div>
-          )*/}
         </React.Fragment>
       );
     }
     return <NumbersColumn>{numbers}</NumbersColumn>;
   }, [numOrgs]);
+
+  const shouldRedirect =
+    reviewCount == null || reviewCount < applications.length;
 
   if (shouldRedirect) {
     return <Redirect to="/" />;
@@ -248,24 +243,16 @@ function StackedRankings() {
                         >
                           <RankingCard
                             appId={item._id}
-                            companyName={item.name}
+                            companyName={
+                              item["Organization Name (legal name)"] ||
+                              item["Organization Name"]
+                            }
                             rating={item.rating}
                             suggested={item.suggested}
                           />
                         </div>
                       )}
                     </Draggable>
-                    {/*}
-                    {index === 4 && (
-                      <div className={classes.divider}>
-                        <div
-                          className={classNames([
-                            shouldTranslate.current && classes.translateDivider
-                          ])}
-                        />
-                      </div>
-                    )}
-                    */}
                   </React.Fragment>
                 ))}
                 {provided.placeholder}
