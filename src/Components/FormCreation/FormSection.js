@@ -17,7 +17,8 @@ const useStyles = makeStyles({
     borderRadius: 0,
     borderTop: `8px solid #2261AD`,
     boxShadow: "0 2px 3px 1px #cccccc",
-    marginBottom: 20
+    marginBottom: 20,
+    width: 816
   }),
   title: {
     color: "#000",

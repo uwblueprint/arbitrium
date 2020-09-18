@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import AddCardComponent from "./AddCardComponent";
 
 const useStyles = makeStyles({
   collapse: {
@@ -20,7 +19,7 @@ const useStyles = makeStyles({
     borderRadius: 0,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
-    width: 816
+    width: 100
   }),
   active: () => ({
     fontSize: 14,
@@ -28,7 +27,7 @@ const useStyles = makeStyles({
     borderLeft: `4px solid #2261AD`,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
-    width: 816
+    width: 100
   }),
   title: {
     color: "#000",
@@ -39,7 +38,7 @@ const useStyles = makeStyles({
 
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function FormCard({ card, question, active }) {
+function AddCardComponent({ card, question, active }) {
   const classes = useStyles();
 
   return (
@@ -52,9 +51,8 @@ function FormCard({ card, question, active }) {
         />
         <CardContent classes={{ root: classes.content }}>todo</CardContent>
       </Card>
-      {active ? <AddCardComponent /> : null}
     </div>
   );
 }
 
-export default FormCard;
+export default AddCardComponent;
