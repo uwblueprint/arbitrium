@@ -27,6 +27,7 @@ const Wrapper = styled.div`
     padding: 5px 5px;
     text-transform: uppercase;
     font-size: 15px;
+    text-transform: none;
   }
 `;
 

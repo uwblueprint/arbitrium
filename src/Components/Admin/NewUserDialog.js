@@ -1,11 +1,18 @@
 import React, { useReducer, useState } from "react";
 import Button from "@material-ui/core/Button";
+import styled from "styled-components";
 import EditUserForm from "./EditUserForm";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
 import { userFormStateReducer } from "../../Reducers/UserFormStateReducer";
 import { createUserAPI } from "../../requests/update";
+
+const SaveFailure = styled.div`
+  .invitationButton {
+    text-transform: none;
+  }
+`;
 
 const initialFormState = {
   name: "",
@@ -58,13 +65,14 @@ function NewUserDialog({ onSubmit, close }) {
       />
       <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
       <Button
+        className="invitationButton"
         onClick={addNewUser}
         fullWidth
         variant="contained"
         color="primary"
         disabled={isSubmitting}
       >
-        Send Invitation
+        Send invitation
       </Button>
     </Dialog>
   );

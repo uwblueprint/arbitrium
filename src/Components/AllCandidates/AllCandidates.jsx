@@ -57,7 +57,7 @@ const Wrapper = styled.div`
   button {
     max-width: 200px;
     padding: 5px 5px;
-    text-transform: uppercase;
+    text-transform: none;
     font-size: 15px;
   }
 `;
@@ -213,7 +213,7 @@ function AllCandidates({ history }) {
                   history.push("/admin/committeereview");
                 }}
               >
-                View Committee Review
+                View committee review
               </Button>
             </div>
             <div className="button-container">
@@ -241,7 +241,7 @@ function AllCandidates({ history }) {
                 }}
                 onClick={exportAllData}
               >
-                Export Data
+                Export data
               </Button>
             </div>
           </Header>

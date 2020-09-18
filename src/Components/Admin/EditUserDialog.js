@@ -27,6 +27,9 @@ const SaveFailure = styled.div`
 
 const SaveWrapper = styled.div`
   position: relative;
+  button {
+    text-transform: none;
+  }
 `;
 
 // onAddNewUser: callback for when a new user is added

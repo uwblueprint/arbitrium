@@ -23,6 +23,7 @@ const CommentForm = styled.form`
   .sendResetLinkButton {
     height: 36px;
     margin-left: auto;
+    text-transform: none;
   }
 
   .backToLogin {
@@ -30,6 +31,7 @@ const CommentForm = styled.form`
     letter-spacing: 0.25px;
     text-decoration-line: underline;
     color: #1976d2;
+    text-transform: none;
   }
 
   .action-container {
@@ -113,7 +115,7 @@ function PasswordResetEmailCard({ onSubmit, backToLogin }) {
       </FormControl>
       <div className="action-container">
         <Button className="backToLogin" onClick={backToLogin}>
-          Back to Login
+          Back to login
         </Button>
         <Button
           className="sendResetLinkButton"
@@ -122,7 +124,7 @@ function PasswordResetEmailCard({ onSubmit, backToLogin }) {
           variant="contained"
           color="primary"
         >
-          Send Reset Link
+          Send reset link
         </Button>
       </div>
     </CommentForm>
