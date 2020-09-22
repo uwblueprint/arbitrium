@@ -8,7 +8,7 @@ if (process.env.REACT_APP_NODE_ENV === "qa") {
 
 //This local variable is updated via redux action (LOAD_PROGRAM)
 //Middleware in the store grabs the new program before it goes to the reducer
-let program = window.location.pathname.split("/")[1];
+let program = null;
 
 function setProgram(prog) {
   program = prog;

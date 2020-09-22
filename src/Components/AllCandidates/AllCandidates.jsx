@@ -1,5 +1,6 @@
 import React, { useMemo, useRef } from "react";
 import styled from "styled-components";
+import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
 import AllCandidatesTable from "./AllCandidatesTable";
@@ -66,7 +67,7 @@ function convertToTableData(applications) {
   if (applications == null) return [];
   return applications.map((application) => ({
     avgRanking: application.avgRanking,
-    candidateName: application.candidateName,
+    candidateName: application.candidateName || application.candidateName2,
     avgRating: application.avgRating || 0,
     numReviews: application.numReviews,
     candidateLink: (
@@ -91,6 +92,7 @@ async function getComments({ applications }) {
   applications.forEach((app) => (appsMap[app._id] = app));
   let commentsSortedByApp = [];
   reviews.forEach((review) => {
+    console.log(review);
     if (
       appsMap[review.applicationId] == null ||
       (process.env.REACT_APP_NODE_ENV !== "development" &&
@@ -103,18 +105,23 @@ async function getComments({ applications }) {
     review.questionList.forEach((question) => comments.concat(question.notes));
     // Push application name
     commentsSortedByApp.push({
-      Name: `${
-        appsMap[review.applicationId].candidateName
-      } (Total Commenters: ${comments.length})`,
+      Name: `${appsMap[review.applicationId].candidateName ||
+        appsMap[review.applicationId].candidateName2} (Total Commenters: ${
+        comments.length
+      })`,
       Comments: ""
     });
     // Push application comments
     commentsSortedByApp = commentsSortedByApp.concat(
       comments.map((c) => ({
         Name: "",
-        Comments: c.value + " (" + review.email + ")"
+        Comments: c.value
       }))
     );
+    commentsSortedByApp.push({
+      Name: "",
+      Comment: ""
+    });
   });
   return commentsSortedByApp;
 }
@@ -122,6 +129,9 @@ async function getComments({ applications }) {
 async function getCandidateSubmissionInfo() {
   const rankings = await getAllRankingsAPI();
   const applications = await getCandidateSubmissions();
+
+  console.log(applications);
+
   const appIdToAverageRanking = {};
   applications.forEach((app) => (appIdToAverageRanking[app._id] = []));
   rankings.forEach((rank) => {
@@ -148,16 +158,16 @@ async function getCandidateSubmissionInfo() {
     const avgRanking =
       numRankings > 0
         ? parseFloat((rankingsSum / numRankings).toFixed(2))
-        : "No Reviewers";
+        : "No Rankings";
     return {
       ...app,
       avgRanking,
-      numReviews: appIdToAverageRanking[app._id].length
+      numReviews: app.numReviews
     };
   });
 }
 
-function AllCandidates({ history }) {
+function AllCandidates({ history, program }) {
   const [applications] = usePromise(getCandidateSubmissionInfo, {}, []);
   const [allUsers] = usePromise(getAllUsersAPI, {}, []);
   const [comments] = usePromise(
@@ -168,20 +178,39 @@ function AllCandidates({ history }) {
   const commentsDownloadLink = useRef();
   const appsDownloadLink = useRef();
 
+  console.log(applications);
+  console.log(allUsers);
+  console.log(comments);
+
   const totalReviewers = useMemo(
-    () =>
+    (progam) =>
       allUsers.value.filter(
         (user) =>
           Array.isArray(user.programs) &&
-          user.programs.some(
-            (program) => program.name === process.env.REACT_APP_PROGRAM
-          ) &&
+          program &&
+          user.programs.some((p) => {
+            return p.id == program;
+          }) &&
           (process.env.REACT_APP_NODE_ENV === "development" ||
             (!user.email.endsWith("uwblueprint.org") &&
               !user.email.endsWith("test.com")))
       ).length,
-    [allUsers]
+    [allUsers, program]
   );
+
+  // if (!allUsers.isPending) {
+  //   allUsers.value.forEach((user) => {
+  //     const exist = user.programs.some((p) => {
+  //       if (p.id == program) {
+  //         console.log(p.id);
+  //         return true;
+  //       }
+  //     });
+  //     console.log(exist);
+  //   });
+  // }
+
+  console.log(totalReviewers);
 
   function exportAllData() {
     commentsDownloadLink.current.link.click();
@@ -261,4 +290,8 @@ function AllCandidates({ history }) {
   );
 }
 
-export default AllCandidates;
+const mapStateToProps = (state) => ({
+  program: state.program
+});
+
+export default connect(mapStateToProps)(AllCandidates);

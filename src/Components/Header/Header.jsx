@@ -78,7 +78,7 @@ const useStyles = makeStyles({
 //Fetch the applications for the program and put it into redux
 //Then redirect
 //programs is a list of programs that the user has access to
-function Header({ program, loadProgram, history }) {
+function Header({ program, loadProgram, history, admin }) {
   const { currentUser, appUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const [allPrograms] = usePromise(getAllProgramsAPI);
@@ -110,7 +110,9 @@ function Header({ program, loadProgram, history }) {
       programId: newProgram._id
     });
     loadProgram(newProgram._id);
-    history.push("/applications")
+    if (!admin) {
+      history.push("/applications");
+    }
     //Load the application data into redux
   };
 
