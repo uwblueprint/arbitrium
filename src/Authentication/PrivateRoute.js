@@ -35,7 +35,7 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   ) : roleAccess ? (
     <>
       <Container>
-        <Header history={history}/>
+        <Header history={history} />
         {!route.path.includes("admin") ? <Navigation /> : null}
         {RouteComponent ? (
           <Route
