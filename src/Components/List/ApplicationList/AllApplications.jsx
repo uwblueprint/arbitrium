@@ -62,8 +62,8 @@ function convertToTableData(fetched, program) {
 }
 
 function AllApplications({ user, program }) {
+
   // Applications, with reviews attached
-  //TODO: Why is this not being called again?
   const [applications] = usePromise(
     getApplicationTableData,
     { user },

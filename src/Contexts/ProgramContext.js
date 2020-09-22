@@ -26,7 +26,6 @@ function ProgramContextProvider({ program, children }) {
 
   const context = { isLoading: programData.isPending, ...programData.value };
 
-  console.log(context.applications);
   return (
     <ProgramContext.Provider value={context}>
       {children}
