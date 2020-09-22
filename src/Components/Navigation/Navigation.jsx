@@ -121,7 +121,7 @@ function Navigation({ applications, pathname, push, showStackedRankings, program
           onClick={onNavClick}
           path={"/"+program._id+"/applications"}
         >
-          All Applicants
+          All applicants
         </NavButton>
         <NavButton
           id="application_submission"
@@ -129,7 +129,7 @@ function Navigation({ applications, pathname, push, showStackedRankings, program
           onClick={onNavClick}
           path={"/"+program._id+`/submissions/${nextApp}`}
         >
-          Application Submission
+          Application submission
         </NavButton>
         {isApplicationReview &&
           ["1","2","3","4","5"].map((section) => (
@@ -147,7 +147,7 @@ function Navigation({ applications, pathname, push, showStackedRankings, program
           onClick={onNavClick}
           path={"/"+program._id+"/rankings"}
         >
-          Stacked Rankings
+          Stacked rankings
         </NavButton>
       </Drawer>
     </nav>

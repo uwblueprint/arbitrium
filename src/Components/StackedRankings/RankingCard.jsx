@@ -91,7 +91,7 @@ function RankingCard({ companyName, rating, appId, push, suggested }) {
               push(`/submissions/${appId}`);
             }}
           >
-            Open Application
+            Open application
           </Button>
         </div>
       </CardContent>

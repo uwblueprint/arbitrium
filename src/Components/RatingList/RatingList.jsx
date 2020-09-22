@@ -14,6 +14,7 @@ const Wrapper = styled.div`
     :hover {
       cursor: pointer;
     }
+    text-transform: none;
   }
   margin-top: 8px;
   .emojiRating {

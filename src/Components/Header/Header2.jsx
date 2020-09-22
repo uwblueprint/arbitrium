@@ -20,6 +20,9 @@ const Container = styled.div`
   background: #ffffff;
   border: 1px solid #cccccc;
   z-index: 100;
+  button {
+    text-transform: none;
+  }
 `;
 
 const APPLICATION_STAGE = {
