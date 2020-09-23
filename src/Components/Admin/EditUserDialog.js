@@ -59,8 +59,6 @@ function EditUserDialog({ close, data }) {
     programs: new Set(programs)
   };
 
-  console.log(initialFormState);
-
   const [formState, dispatchUpdateFormState] = useReducer(
     userFormStateReducer,
     initialFormState
@@ -85,12 +83,10 @@ function EditUserDialog({ close, data }) {
     };
     UPDATE.updateUserAPI(requestBody)
       .then((response) => {
-        console.log(response);
         close();
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
         setIsSubmitting(false);
         setShowSaveFailure(true);
       });

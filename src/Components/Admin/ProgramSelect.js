@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 
 function ProgramSelect({ value, onChange }) {
   const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
-  console.log(programs);
+
   return (
     <Wrapper>
       {!programs.isPending ? (

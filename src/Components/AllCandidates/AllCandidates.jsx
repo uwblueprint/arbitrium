@@ -92,7 +92,6 @@ async function getComments({ applications }) {
   applications.forEach((app) => (appsMap[app._id] = app));
   let commentsSortedByApp = [];
   reviews.forEach((review) => {
-    console.log(review);
     if (
       appsMap[review.applicationId] == null ||
       (process.env.REACT_APP_NODE_ENV !== "development" &&
@@ -129,8 +128,6 @@ async function getComments({ applications }) {
 async function getCandidateSubmissionInfo() {
   const rankings = await getAllRankingsAPI();
   const applications = await getCandidateSubmissions();
-
-  console.log(applications);
 
   const appIdToAverageRanking = {};
   applications.forEach((app) => (appIdToAverageRanking[app._id] = []));
@@ -178,10 +175,6 @@ function AllCandidates({ history, program }) {
   const commentsDownloadLink = useRef();
   const appsDownloadLink = useRef();
 
-  console.log(applications);
-  console.log(allUsers);
-  console.log(comments);
-
   const totalReviewers = useMemo(
     (progam) =>
       allUsers.value.filter(
@@ -207,8 +200,6 @@ function AllCandidates({ history, program }) {
   //     console.log(exist);
   //   });
   // }
-
-  console.log(totalReviewers);
 
   function exportAllData() {
     commentsDownloadLink.current.link.click();

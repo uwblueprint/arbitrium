@@ -101,13 +101,14 @@ function convertToTableData(fetched) {
 }
 
 async function fetchCommitteeData(program) {
-  console.log(program);
   const users = await getAllUsersAPI();
+
   // TODO: Filter the users based on their committee, schema might change
   const appUsers = users.filter(
     (user) =>
       Array.isArray(user.programs) &&
-      user.programs.some((p) => p.id == program) &&
+      user.programs.some((p) => p.id == program.program) &&
+      !user.email.includes("uwblueprint.org") &&
       (process.env.REACT_APP_NODE_ENV === "development" ||
         (user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
           user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"))
