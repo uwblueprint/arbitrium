@@ -8,7 +8,7 @@ import { ProgramContext } from "../Contexts/ProgramContext";
 import createContainer from "../Components/Container/Container";
 import { connect } from "react-redux";
 
-function PrivateRoute({ component: RouteComponent, route, ...rest }) {
+function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   const { isLoading, currentUser: user, appUser } = useContext(AuthContext);
   const { isLoading: programDataIsLoading } = useContext(ProgramContext);
 
@@ -35,7 +35,7 @@ function PrivateRoute({ component: RouteComponent, route, ...rest }) {
   ) : roleAccess ? (
     <>
       <Container>
-        <Header />
+        <Header history={history} admin={adminRoute} />
         {!route.path.includes("admin") ? <Navigation /> : null}
         {RouteComponent ? (
           <Route

@@ -5,7 +5,7 @@ const router = express.Router();
 const db = require("../mongo.js");
 
 router.get("/candidate-submissions", function(req, res) {
-  db.applications
+  db[req.headers.database].applications
     .aggregate([
       {
         $lookup: {
@@ -31,6 +31,7 @@ router.get("/candidate-submissions", function(req, res) {
       {
         $project: {
           candidateName: "$Organization Name",
+          candidateName2: "$Organization Name (legal name)",
           numReviews: { $size: "$applicationReviews" },
           avgRating: { $round: [{ $avg: "$applicationReviews.rating" }, 2] }
         }

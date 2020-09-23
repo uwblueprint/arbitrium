@@ -46,6 +46,7 @@ function App() {
                   {routes.map((route, i) => {
                     return (
                       <PrivateRoute
+                        history={history}
                         exact={true}
                         key={i}
                         route={route}

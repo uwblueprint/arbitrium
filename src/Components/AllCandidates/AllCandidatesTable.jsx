@@ -30,6 +30,7 @@ function AllCandidatesTable(props) {
   ];
   return (
     <div>
+      <button></button>
       <MaterialTable
         icons={TableIcons}
         components={{
