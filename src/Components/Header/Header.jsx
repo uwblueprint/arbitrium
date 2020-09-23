@@ -1,18 +1,18 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import UserDisplay from "./UserDisplay";
 import AppIcon from "./svgIcon.tsx";
-import Tooltip from '@material-ui/core/Tooltip';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ArrowDropDownCircleOutlinedIcon from '@material-ui/icons/ArrowDropDownCircleOutlined';
-import usePromise from "../../Hooks/usePromise";
-import * as GET from "../../requests/get";
-import { loadProgram, loadApplications } from "../../Actions";
+import Tooltip from "@material-ui/core/Tooltip";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import ArrowDropDownCircleOutlinedIcon from "@material-ui/icons/ArrowDropDownCircleOutlined";
+import { updateUserProgramAPI } from "../../requests/update";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { connect } from "react-redux";
-import { history } from "../../Store";
+import { getAllProgramsAPI } from "../../requests/get";
+import usePromise from "../../Hooks/usePromise";
+import { loadProgram } from "../../Actions/index.js";
 
 export const HEADER_HEIGHT = 56;
 
@@ -24,7 +24,7 @@ const Container = styled.div`
   width: 100vw;
   z-index: 100;
 
-  background: #FFFFFF;
+  background: #ffffff;
   border-bottom: 1px solid #cccccc;
   align-items: center;
   justify-content: center;
@@ -67,106 +67,108 @@ const UserDisplayWrapper = styled.div`
 `;
 
 //TODO: Use a globally defined font variable for tooltips
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   tooltip: {
     fontSize: "16px",
     maxWidth: "none"
-  },
-}));
-
+  }
+});
 
 //Load the program into redux
 //Fetch the applications for the program and put it into redux
 //Then redirect
-async function updateProgram(program, loadProgram, loadApplications, currentUser) {
-  loadProgram(program)
-
-  const applications = await GET.getAllApplicationsAPI();
-  let reviewCount = 0
-  if (currentUser != null){
-    reviewCount = await GET.getReviewCountAPI(currentUser.uid);
-  }
-
-  //Load the application data into redux
-  loadApplications(applications, reviewCount);
-}
-
 //programs is a list of programs that the user has access to
-function Header({ loadProgram, loadApplications, programFromRedux, programs, ...props }) {
-
-  const { currentUser } = useContext(AuthContext);
+function Header({ program, loadProgram, history, admin }) {
+  const { currentUser, appUser } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [program, setProgram] = useState(null)
+  const [allPrograms] = usePromise(getAllProgramsAPI);
+
+  const programsMap = useMemo(() => {
+    if (allPrograms.isPending) return {};
+    const programMap = {};
+    allPrograms.value.forEach((p) => {
+      programMap[p._id] = p;
+    });
+    return programMap;
+  }, [allPrograms]);
+
+  const myProgramsMap = useMemo(() => {
+    const programMap = {};
+    appUser.programs.forEach((p) => (programMap[p.id] = p));
+    return programMap;
+  }, [appUser.programs]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleSelect = (program) => {
+  const handleSelect = async (newProgram) => {
+    console.log(newProgram);
     setAnchorEl(null);
-    updateProgram(program, loadProgram, loadApplications, currentUser)
-    setProgram(program)
-    history.push("/"+program._id+"/applications")
+    await updateUserProgramAPI({
+      userId: currentUser.uid,
+      programId: newProgram._id
+    });
+    loadProgram(newProgram._id);
+    if (!admin) {
+      history.push("/applications");
+    }
+    //Load the application data into redux
   };
 
+  const classes = useStyles();
+  const validPrograms = allPrograms.isPending
+    ? []
+    : allPrograms.value.filter((p) => !!myProgramsMap[p._id]);
 
-  //On first header load for each refresh
-  if (program == null && programs != null && programs.length > 0) {
-
-    //Does the url contain a program? Load that into the header
-    //Private Route (caller of header) handles access permissions
-    let curProgram = programs.indexOf(programs.find((program, index) =>
-      program._id === window.location.pathname.split("/")[1]
-    ));
-
-    //If curProgram is -1 then choose the first program in the list to load
-    //Temporary: If it is an admin page don't load the program (waiting on designs)
-    if (curProgram < 0) {
-      if (!window.location.pathname.includes("admin")){
-        updateProgram(programs[0], loadProgram, loadApplications, currentUser)
-        setProgram(programs[0])
-        history.push("/"+programs[0]._id+"/applications")
-    }}
-    else {
-      updateProgram(programs[curProgram], loadProgram, loadApplications, currentUser)
-      setProgram(programs[curProgram])
-    }
-  }
-
-  const classes = useStyles()
   return (
     <Container>
       <BodyWrapper>
         <AppName>
           <Tooltip title="Arbitrium" classes={{ tooltip: classes.tooltip }}>
             <div>
-              <AppIcon/>
+              <AppIcon />
             </div>
           </Tooltip>
         </AppName>
 
-        <p> {program ? program.displayName : "Select a program to view applications "} </p>
+        <p>
+          {" "}
+          {program && programsMap[program]
+            ? programsMap[program].displayName
+            : "Select a program to view applications "}{" "}
+        </p>
         <div>
-          <ArrowDropDownCircleOutlinedIcon style={{marginLeft: "4px", margin: "12px"}} onClick={handleClick}>
-          </ArrowDropDownCircleOutlinedIcon>
+          <ArrowDropDownCircleOutlinedIcon
+            style={{ marginLeft: "4px", margin: "12px" }}
+            onClick={handleClick}
+          ></ArrowDropDownCircleOutlinedIcon>
           <Menu
+            elevation={0}
             id="simple-menu"
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
-            onClose={() => {setAnchorEl(null)}}
-            style={{ marginTop: HEADER_HEIGHT/2}}
+            onClose={() => {
+              setAnchorEl(null);
+            }}
+            style={{ marginTop: HEADER_HEIGHT / 2 }}
           >
-            {programs ? (
-              <div style={{border: '1px solid #ccc'}}>
-                { programs.map((program, index) => (
-                  <MenuItem key={index} onClick={() => handleSelect(program)}> {program.displayName}</MenuItem>
+            {validPrograms ? (
+              <div style={{ border: "1px solid #ccc" }}>
+                {validPrograms.map((p, index) => (
+                  <MenuItem key={index} onClick={() => handleSelect(p)}>
+                    {" "}
+                    {p.displayName}
+                  </MenuItem>
                 ))}
-                { programs.length === 0 ? (
-                  <MenuItem key={"None"} >You don't have access to any programs</MenuItem>
-                ): null}
+                {validPrograms.length === 0 ? (
+                  <MenuItem key={"None"}>
+                    You don't have access to any programs
+                  </MenuItem>
+                ) : null}
               </div>
-            ) : null }
+            ) : null}
           </Menu>
         </div>
         <UserDisplayWrapper>
@@ -175,17 +177,14 @@ function Header({ loadProgram, loadApplications, programFromRedux, programs, ...
       </BodyWrapper>
     </Container>
   );
-
 }
-
 
 const mapStateToProps = (state) => ({
   program: state.program
 });
 
 const mapDispatchToProps = {
-  loadProgram,
-  loadApplications
+  loadProgram
 };
 
 const connectedAuth = connect(mapStateToProps, mapDispatchToProps)(Header);

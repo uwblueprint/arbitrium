@@ -36,13 +36,10 @@ function convertToTableData(fetched, programs) {
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
-    programAccess: (user.programs || []).map((p) => {
-      let found = programs.find(program => program._id == p.id)
-      if (found){
-        return found.displayName
-      }
-    }),
-    role: (user.admin ? "Admin" : "Reviewer"),
+    programAccess: (user.programs || [])
+      .filter((p) => programs.find((prog) => prog._id === p.id))
+      .map((p) => p.displayName),
+    role: user.admin ? "Admin" : "Reviewer",
     userLink: (
       <div className="button-container">
         <DialogTriggerButton
@@ -63,7 +60,11 @@ function UserManagement() {
   const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
 
   const users = useMemo(
-    () => convertToTableData(loadUsers.value.filter((u) => !u.deleted), programs.value),
+    () =>
+      convertToTableData(
+        loadUsers.value.filter((u) => !u.deleted),
+        programs.value
+      ),
     [loadUsers, programs]
   );
 

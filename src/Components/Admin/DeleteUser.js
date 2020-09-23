@@ -38,7 +38,6 @@ function DeleteUser({ close, userId, setShowSaveFailure, setIsSubmitting }) {
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
         setIsSubmitting(false);
         setShowDeleteConfirmation(false);
         setShowSaveFailure(true);

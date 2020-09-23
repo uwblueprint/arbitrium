@@ -2,16 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import { Route, Switch, Redirect } from "react-router";
 import { AuthProvider } from "./Authentication/Auth";
-import Container from "./Components/Container/Container";
-import { loadApplications } from "./Actions";
 import Login from "./Authentication/Login.js";
 import { ConnectedRouter } from "connected-react-router";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { connect } from "react-redux";
 import theme from "./theme";
 import { history } from "./Store";
 import PrivateRoute from "./Authentication/PrivateRoute";
 import routes from "./appRoutes";
+import ProgramContextProvider from "./Contexts/ProgramContext";
 
 const AppWrapper = styled.div`
   background-color: #ffffff;
@@ -33,9 +31,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <AppWrapper>
         <AuthProvider>
-          <ConnectedRouter history={history}>
-            <>
-              
+          <ProgramContextProvider>
+            <ConnectedRouter history={history}>
+              <>
                 <Switch>
                   <Route exact={true} path="/login" component={Login}></Route>
                   <Route
@@ -48,6 +46,7 @@ function App() {
                   {routes.map((route, i) => {
                     return (
                       <PrivateRoute
+                        history={history}
                         exact={true}
                         key={i}
                         route={route}
@@ -58,17 +57,13 @@ function App() {
                   })}
                   <Redirect to={"/applications"} />
                 </Switch>
-
-            </>
-          </ConnectedRouter>
+              </>
+            </ConnectedRouter>
+          </ProgramContextProvider>
         </AuthProvider>
       </AppWrapper>
     </ThemeProvider>
   );
 }
 
-//connecting applications to redux
-
-const mapDispatchToProps = { loadApplications };
-
-export default connect(null, mapDispatchToProps)(App);
+export default App;

@@ -75,7 +75,9 @@ function EditUserForm({ dispatch, formState }) {
         />
       </QuestionWrapper>
       <QuestionWrapper>
-        <StyledLabel htmlFor="preferred-name-input">Preferred Name (optional)</StyledLabel>
+        <StyledLabel htmlFor="preferred-name-input">
+          Preferred Name (optional)
+        </StyledLabel>
         <OutlinedInput
           fullWidth
           id="preferred-name-input"

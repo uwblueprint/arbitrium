@@ -38,7 +38,7 @@ router.get("/app/:appId", function(req, res) {
 });
 
 router.get("/", function(req, res) {
-  db[req.headers.database].reviews
+  db[req.headers.database].ratings
     .aggregate([
       {
         $lookup: {

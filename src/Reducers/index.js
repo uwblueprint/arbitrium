@@ -18,10 +18,10 @@ function applications(state = [], action) {
   }
 }
 
-function program(state = [], action) {
+function program(state = null, action) {
   switch (action.type) {
     case LOAD_PROGRAM:
-      return action.program || [];
+      return action.program || null;
     default:
       return state;
   }

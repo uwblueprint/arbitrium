@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { push } from "connected-react-router";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { MAX_NAVBAR_HEIGHT } from "../Navigation/Navigation";
+import { MAX_NAVBAR_WIDTH } from "../Navigation/Navigation";
 
 const Container = styled.div`
   position: fixed;
@@ -15,7 +15,7 @@ const Container = styled.div`
   right: 0px;
   top: 0px;
   margin-top: ${HEADER_HEIGHT}px;
-  margin-left: ${MAX_NAVBAR_HEIGHT}px;
+  margin-left: ${MAX_NAVBAR_WIDTH}px;
 
   background: #ffffff;
   border: 1px solid #cccccc;

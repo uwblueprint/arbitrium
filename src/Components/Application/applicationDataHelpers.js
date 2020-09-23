@@ -59,19 +59,19 @@ export function transpileCategoryData(application, program) {
     funding: {},
     mission: {}
   };
-  if (program === "UnitedWay") {
+  if (program === "5f54b04d9971a3dd4f741a9e") {
     adminCategories = UnitedWay.adminCategories;
   }
-  if (program === "UnitedWay2") {
+  if (program === "5f54af1b9971a3dd4f73e451") {
     adminCategories = UnitedWay2.adminCategories;
   }
-  if (program === "SVPFullProposal") {
+  if (program === "5f54b07f9971a3dd4f742328") {
     adminCategories = SVPFullProposal.adminCategories;
   }
-  if (program === "GOS"){
+  if (program === "5f5a508ef10bedc78cb87ddf") {
     adminCategories = Gos.adminCategories;
   }
-  if (program === "ProgramProject"){
+  if (program === "5f5a528ff10bedc78cb8e02b") {
     adminCategories = ProgramProject.adminCategories;
   }
 
@@ -105,19 +105,19 @@ export function transpileCategoryData(application, program) {
 
 export function transpileFileData(application, program) {
   let fileCategories = {};
-  if (program === "UnitedWay") {
+  if (program === "5f54b04d9971a3dd4f741a9e") {
     fileCategories = UnitedWay.fileCategories;
   }
-  if (program === "UnitedWay2") {
+  if (program === "5f54af1b9971a3dd4f73e451") {
     fileCategories = UnitedWay2.fileCategories;
   }
-  if (program === "SVPFullProposal") {
+  if (program === "5f54b07f9971a3dd4f742328") {
     fileCategories = SVPFullProposal.fileCategories;
   }
-  if (program === "GOS"){
+  if (program === "5f5a508ef10bedc78cb87ddf") {
     fileCategories = Gos.fileCategories;
   }
-  if (program === "ProgramProject"){
+  if (program === "5f5a528ff10bedc78cb8e02b") {
     fileCategories = ProgramProject.fileCategories;
   }
 
@@ -128,7 +128,7 @@ export function transpileFileData(application, program) {
   }));
   const fileLinks = [];
   files.forEach((file) => {
-    console.log(file)
+    console.log(file);
     if (file.link == null) return;
     file.link.split(",").forEach((link, index) => {
       let append = "";
@@ -147,36 +147,36 @@ export function transpileFileData(application, program) {
 
 export function transpileLongAnswerData(application, program) {
   let longAnswerCategories = {};
-  if (program === "UnitedWay") {
+  if (program === "5f54b04d9971a3dd4f741a9e") {
     longAnswerCategories = UnitedWay.longAnswerCategories;
   }
-  if (program === "UnitedWay2") {
+  if (program === "5f54af1b9971a3dd4f73e451") {
     longAnswerCategories = UnitedWay2.longAnswerCategories;
   }
-  if (program === "SVPFullProposal") {
+  if (program === "5f54b07f9971a3dd4f742328") {
     longAnswerCategories = SVPFullProposal.longAnswerCategories;
   }
-  if (program === "GOS"){
+  if (program === "5f5a508ef10bedc78cb87ddf") {
     longAnswerCategories = Gos.longAnswerCategories;
   }
-  if (program === "ProgramProject"){
+  if (program === "5f5a528ff10bedc78cb8e02b") {
     longAnswerCategories = ProgramProject.longAnswerCategories;
   }
 
   let canvasData = [];
-  if (program === "UnitedWay") {
+  if (program === "5f54b04d9971a3dd4f741a9e") {
     canvasData = UnitedWay.canvasData;
   }
-  if (program === "UnitedWay2") {
+  if (program === "5f54af1b9971a3dd4f73e451") {
     canvasData = UnitedWay2.canvasData;
   }
-  if (program === "SVPFullProposal") {
+  if (program === "5f54b07f9971a3dd4f742328") {
     canvasData = SVPFullProposal.canvasData;
   }
-  if (program === "GOS"){
+  if (program === "5f5a508ef10bedc78cb87ddf") {
     canvasData = Gos.canvasData;
   }
-  if (program === "ProgramProject"){
+  if (program === "5f5a528ff10bedc78cb8e02b") {
     canvasData = ProgramProject.canvasData;
   }
 
@@ -216,36 +216,36 @@ export function transpileLongAnswerData(application, program) {
 }
 export function transpileCheckBoxData(application, program) {
   let checkBoxCategories = {};
-  if (program === "UnitedWay") {
+  if (program === "5f54b04d9971a3dd4f741a9e") {
     checkBoxCategories = UnitedWay.checkBoxCategories;
   }
-  if (program === "UnitedWay2") {
+  if (program === "5f54af1b9971a3dd4f73e451") {
     checkBoxCategories = UnitedWay2.checkBoxCategories;
   }
-  if (program === "SVPFullProposal") {
+  if (program === "5f54b07f9971a3dd4f742328") {
     checkBoxCategories = SVPFullProposal.checkBoxCategories;
   }
-  if (program === "GOS"){
+  if (program === "5f5a508ef10bedc78cb87ddf") {
     checkBoxCategories = Gos.checkBoxCategories;
   }
-  if (program === "ProgramProject"){
+  if (program === "5f5a528ff10bedc78cb8e02b") {
     checkBoxCategories = ProgramProject.checkBoxCategories;
   }
 
   let canvasData = [];
-  if (program === "UnitedWay") {
+  if (program === "5f54b04d9971a3dd4f741a9e") {
     canvasData = UnitedWay.canvasData;
   }
-  if (program === "UnitedWay2") {
+  if (program === "5f54af1b9971a3dd4f73e451") {
     canvasData = UnitedWay2.canvasData;
   }
-  if (program === "SVPFullProposal") {
+  if (program === "5f54b07f9971a3dd4f742328") {
     canvasData = SVPFullProposal.canvasData;
   }
-  if (program === "GOS"){
+  if (program === "5f5a508ef10bedc78cb87ddf") {
     canvasData = Gos.canvasData;
   }
-  if (program === "ProgramProject"){
+  if (program === "5f5a528ff10bedc78cb8e02b") {
     canvasData = ProgramProject.canvasData;
   }
 

@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import firebaseApp from "./firebase.js";
-import { getUserAPI } from "../requests/get";
-import { authenticatedUser } from "../Actions";
+import { getUserAPI, getAllProgramsAPI } from "../requests/get";
+import { loadProgram } from "../Actions/index.js";
+import {
+  updateUserProgramAPI,
+  updateUserProgramMembershipAPI
+} from "../requests/update";
 
 export const AuthContext = React.createContext();
 
@@ -20,7 +24,7 @@ const AUTH_STATES = {
   AUTHENTICATED: "AUTHENTICATED"
 };
 
-function AuthProvider({ initialAppLoad, children }) {
+function AuthProvider({ loadProgram, children }) {
   const [authState, setAuthState] = useState({
     state: AUTH_STATES.LOADING,
     user: null
@@ -53,6 +57,30 @@ function AuthProvider({ initialAppLoad, children }) {
       }
 
       // differentiate between the firebase user and the user retrieved from mongo (firebaseUser and appUser)
+      const allPrograms = await getAllProgramsAPI();
+      const programsSet = new Set();
+      allPrograms.forEach((p) => programsSet.add(p._id));
+      const validPrograms = appUser.programs
+        ? appUser.programs.filter((p) => programsSet.has(p.id))
+        : [];
+      if (
+        appUser.programs &&
+        validPrograms.length !== appUser.programs.length
+      ) {
+        await updateUserProgramMembershipAPI({
+          userId: user.uid,
+          programs: validPrograms
+        });
+      }
+      let program = appUser.currentProgram;
+      if (!program && validPrograms.length > 0) {
+        program = validPrograms[0].id;
+        await updateUserProgramAPI({
+          userId: user.uid,
+          programId: program
+        });
+      }
+      loadProgram(program);
       setAuthState({
         state: AUTH_STATES.AUTHENTICATED,
         user: { firebaseUser: user, appUser }
@@ -64,7 +92,7 @@ function AuthProvider({ initialAppLoad, children }) {
     return () => {
       unsubscribe();
     };
-  }, [initialAppLoad]);
+  }, [loadProgram]);
 
   return (
     <AuthContext.Provider
@@ -80,7 +108,7 @@ function AuthProvider({ initialAppLoad, children }) {
 }
 
 const mapDispatchToProps = {
-  authenticatedUser
+  loadProgram
 };
 
 const connectedAuth = connect(null, mapDispatchToProps)(AuthProvider);

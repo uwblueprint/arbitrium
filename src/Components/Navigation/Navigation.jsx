@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
 import NavButton from "./NavButton";
@@ -6,6 +6,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Button from "@material-ui/core/Button";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { ProgramContext } from "../../Contexts/ProgramContext";
 
 export const MAX_NAVBAR_WIDTH = 300;
 
@@ -86,7 +87,10 @@ function getNavId(pathname) {
   }
 }
 
-function Navigation({ applications, pathname, push, showStackedRankings, program }) {
+function Navigation({ pathname, push }) {
+  const { reviewCount, applications } = useContext(ProgramContext);
+  const showStackedRankings =
+    reviewCount != null && reviewCount >= applications.length;
   const classes = useStyles();
   const isApplicationReview = pathname.includes("/submissions/");
   const [selected, setSelected] = useState(getNavId(pathname));
@@ -97,7 +101,7 @@ function Navigation({ applications, pathname, push, showStackedRankings, program
 
   const scrollToSection = (title) => {
     window.requestAnimationFrame(() => {
-      let element = document.getElementById("canvas_" + title)
+      const element = document.getElementById("canvas_" + title);
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
@@ -118,7 +122,7 @@ function Navigation({ applications, pathname, push, showStackedRankings, program
           id="all_applications"
           isSelected={selected === "all_applications"}
           onClick={onNavClick}
-          path={"/"+program._id+"/applications"}
+          path={"/applications"}
         >
           All Applicants
         </NavButton>
@@ -126,25 +130,25 @@ function Navigation({ applications, pathname, push, showStackedRankings, program
           id="application_submission"
           isSelected={selected === "application_submission"}
           onClick={onNavClick}
-          path={"/"+program._id+`/submissions/${nextApp}`}
+          path={`/submissions/${nextApp}`}
         >
           Application Submission
         </NavButton>
         {isApplicationReview &&
-          ["1","2","3","4","5"].map((section) => (
+          ["1", "2", "3", "4", "5"].map((section) => (
             <Button
-              key={"section"+section}
+              key={"section" + section}
               className="nested"
               onClick={() => scrollToSection(section)}
             >
-              {"Section "+section}
+              {"Section " + section}
             </Button>
           ))}
         <NavButton
           disabled={!showStackedRankings}
           id="stacked_rankings"
           onClick={onNavClick}
-          path={"/"+program._id+"/rankings"}
+          path={"/rankings"}
         >
           Stacked Rankings
         </NavButton>
@@ -155,10 +159,6 @@ function Navigation({ applications, pathname, push, showStackedRankings, program
 
 export default connect(
   (state) => ({
-    applications: state.applications,
-    showStackedRankings:
-      state.reviewCount != null &&
-      state.reviewCount >= state.applications.length,
     pathname: state.router.location.pathname,
     program: state.program
   }),

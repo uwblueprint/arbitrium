@@ -39,6 +39,7 @@ const userSchema = new mongoose.Schema(
     programs: {
       type: [program]
     },
+    currentProgram: String, // program id
     deleted: {
       type: Boolean
     },

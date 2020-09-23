@@ -31,25 +31,22 @@ const SaveWrapper = styled.div`
 
 // onAddNewUser: callback for when a new user is added
 function EditUserDialog({ close, data }) {
-
-
-  const programs = []
-  data.programs.map((p) => {
-    if (p.id !== undefined){
-      programs.push(p.id)
-    }
-    else {
+  const programs = [];
+  data.programs.forEach((p) => {
+    if (p.id !== undefined) {
+      programs.push(p.id);
+    } else {
       //Migrate
-      if (p.name == "SVP Investee Grant"){
-        programs.push("5f54b0779971a3dd4f7421f1")
-        programs.push("5f54b07f9971a3dd4f742328")
+      if (p.name === "SVP Investee Grant") {
+        programs.push("5f54b0779971a3dd4f7421f1");
+        programs.push("5f54b07f9971a3dd4f742328");
       }
-      if (p.name == "Emergency Fund"){
+      if (p.name === "Emergency Fund") {
         //null
       }
-      if (p.name == "UnitedWay"){
-        programs.push("5f54b04d9971a3dd4f741a9e")
-        programs.push("5f54af1b9971a3dd4f73e451")
+      if (p.name === "UnitedWay") {
+        programs.push("5f54b04d9971a3dd4f741a9e");
+        programs.push("5f54af1b9971a3dd4f73e451");
       }
     }
   });
@@ -58,11 +55,9 @@ function EditUserDialog({ close, data }) {
     name: data.name,
     preferredName: data.preferredName,
     email: data.email,
-    role: (data.admin ? "Admin" : "Reviewer"),
+    role: data.admin ? "Admin" : "Reviewer",
     programs: new Set(programs)
   };
-
-  console.log(initialFormState)
 
   const [formState, dispatchUpdateFormState] = useReducer(
     userFormStateReducer,
@@ -79,7 +74,7 @@ function EditUserDialog({ close, data }) {
       name: formState.name,
       preferredName: formState.preferredName,
       email: formState.email,
-      admin: (formState.role == "Admin"),
+      admin: formState.role === "Admin",
       organization: [],
       programs: Array.from(formState.programs).map((program) => ({
         id: program,
@@ -88,12 +83,10 @@ function EditUserDialog({ close, data }) {
     };
     UPDATE.updateUserAPI(requestBody)
       .then((response) => {
-        console.log(response);
         close();
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
         setIsSubmitting(false);
         setShowSaveFailure(true);
       });

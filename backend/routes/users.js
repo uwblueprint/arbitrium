@@ -34,13 +34,42 @@ router.get("/:userid", function(req, res) {
 });
 
 //Update a user (Not sued for creating a new user)
-router.post("/", function(req, res) {
+router.put("/set-program", function(req, res) {
   db["Authentication"].users
     .updateOne(
-        { userId: req.body.userId},
-        req.body,
-        { upsert: false}
-      )
+      { userId: req.body.userId },
+      { $set: { currentProgram: req.body.programId } },
+      { upsert: false }
+    )
+    // status code 201 means created
+    .then(function(result) {
+      res.status(201).json(result);
+    })
+    .catch(function(err) {
+      res.send(err);
+    });
+});
+
+router.put("/set-program-memberships", function(req, res) {
+  db["Authentication"].users
+    .updateOne(
+      { userId: req.body.userId },
+      { $set: { programs: req.body.programs } },
+      { upsert: false }
+    )
+    // status code 201 means created
+    .then(function(result) {
+      res.status(201).json(result);
+    })
+    .catch(function(err) {
+      res.send(err);
+    });
+});
+
+//Update a user (Not sued for creating a new user)
+router.post("/", function(req, res) {
+  db["Authentication"].users
+    .updateOne({ userId: req.body.userId }, req.body, { upsert: false })
     // status code 201 means created
     .then(function(newSchedule) {
       res.status(201).json(newSchedule);
@@ -90,9 +119,13 @@ router.post("/create-user", async function(req, res) {
       deleted: false
     };
     try {
-      await db["Authentication"].users.updateOne({ email: userRecord.email }, mongoUserRecord, {
-        upsert: true
-      });
+      await db["Authentication"].users.updateOne(
+        { email: userRecord.email },
+        mongoUserRecord,
+        {
+          upsert: true
+        }
+      );
     } catch (e) {
       console.error("Error posting Mongo user.");
       console.error(e);
