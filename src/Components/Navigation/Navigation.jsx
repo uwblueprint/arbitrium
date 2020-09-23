@@ -117,7 +117,6 @@ function Navigation({ pathname, push }) {
   return (
     <nav>
       <Drawer variant="permanent" className={classes.root}>
-        <h2> {" SVP Full Application"} </h2>
         <hr />
         <NavButton
           id="all_applications"
