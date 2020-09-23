@@ -188,9 +188,7 @@ function AllCandidates({ history, program }) {
         (user) =>
           Array.isArray(user.programs) &&
           program &&
-          user.programs.some((p) => {
-            return p.id == program;
-          }) &&
+          user.programs.some((p) => p.id == program) &&
           (process.env.REACT_APP_NODE_ENV === "development" ||
             (!user.email.endsWith("uwblueprint.org") &&
               !user.email.endsWith("test.com")))

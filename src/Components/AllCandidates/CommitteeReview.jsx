@@ -1,6 +1,7 @@
 import React from "react";
 import CommitteeReviewTable from "./CommitteeReviewTable";
 import styled from "styled-components";
+import { connect } from "react-redux";
 // TODO: Uncomment when send email feature is complete
 //import Checkbox from '@material-ui/core/Checkbox';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -99,15 +100,14 @@ function convertToTableData(fetched) {
   }));
 }
 
-async function fetchCommitteeData() {
+async function fetchCommitteeData(program) {
+  console.log(program);
   const users = await getAllUsersAPI();
   // TODO: Filter the users based on their committee, schema might change
   const appUsers = users.filter(
     (user) =>
       Array.isArray(user.programs) &&
-      user.programs.some(
-        (program) => program.name === process.env.REACT_APP_PROGRAM
-      ) &&
+      user.programs.some((p) => p.id == program) &&
       (process.env.REACT_APP_NODE_ENV === "development" ||
         (user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
           user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"))
@@ -125,9 +125,9 @@ async function fetchCommitteeData() {
   };
 }
 
-function CommitteeReview({ history }) {
+function CommitteeReview({ history, program }) {
   const [appCount] = usePromise(getApplicationCount, {}, -1);
-  const [committeeState] = usePromise(fetchCommitteeData, {});
+  const [committeeState] = usePromise(fetchCommitteeData, { program });
 
   const goBack = () => {
     history.push("/admin/allcandidates");
@@ -172,4 +172,8 @@ function CommitteeReview({ history }) {
   );
 }
 
-export default CommitteeReview;
+const mapStateToProps = (state) => ({
+  program: state.program
+});
+
+export default connect(mapStateToProps)(CommitteeReview);
