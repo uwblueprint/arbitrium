@@ -28,7 +28,7 @@
     "jspdf": "^2.1.1",
     "material-table": "^1.57.2",
     "material-ui": "^0.20.2",
-    "moment": "^2.27.0",
+    "moment": "^2.29.0",
     "mongodb": "^3.6.2",
     "mongoose": "^5.10.6",
     "navbar": "^2.1.0",
