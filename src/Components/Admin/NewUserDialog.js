@@ -8,7 +8,7 @@ import DialogHeader from "../Common/Dialogs/DialogHeader";
 import { userFormStateReducer } from "../../Reducers/UserFormStateReducer";
 import { createUserAPI } from "../../requests/update";
 
-const SaveFailure = styled.div`
+const Wrapper = styled.div`
   .invitationButton {
     text-transform: none;
   }
@@ -54,27 +54,32 @@ function NewUserDialog({ onSubmit, close }) {
   }
 
   return (
-    <Dialog width="400px" paddingHorizontal={28} paddingVertical={28}>
-      <DialogHeader onClose={close} title="Create a new user" />
-      <LoadingOverlay
-        show={isSubmitting}
-        spinnerProps={{
-          radius: 120,
-          stroke: 2
-        }}
-      />
-      <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
-      <Button
-        className="invitationButton"
-        onClick={addNewUser}
-        fullWidth
-        variant="contained"
-        color="primary"
-        disabled={isSubmitting}
-      >
-        Send invitation
-      </Button>
-    </Dialog>
+    <Wrapper>
+      <Dialog width="400px" paddingHorizontal={28} paddingVertical={28}>
+        <DialogHeader onClose={close} title="Create a new user" />
+        <LoadingOverlay
+          show={isSubmitting}
+          spinnerProps={{
+            radius: 120,
+            stroke: 2
+          }}
+        />
+        <EditUserForm
+          formState={formState}
+          dispatch={dispatchUpdateFormState}
+        />
+        <Button
+          className="invitationButton"
+          onClick={addNewUser}
+          fullWidth
+          variant="contained"
+          color="primary"
+          disabled={isSubmitting}
+        >
+          Send invitation
+        </Button>
+      </Dialog>
+    </Wrapper>
   );
 }
 

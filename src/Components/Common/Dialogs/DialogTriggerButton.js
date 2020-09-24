@@ -10,9 +10,6 @@ const DialogOverlay = styled.div`
   width: 100vw;
   z-index: 110;
   background: rgba(0, 0, 0, 0.5);
-`;
-
-const DialogTrigger = styled.div`
   .dialogButton {
     text-transform: none;
   }
