@@ -3,20 +3,24 @@
 export const canvasData = [
   {
     title: "Organizational Profile",
-    description: "Does the organization’s primary activities/services align with the mission and mandate? Are they operating within United Way WRC’s service areas and focus areas?"
+    description:
+      "Does the organization’s primary activities/services align with the mission and mandate? Are they operating within United Way WRC’s service areas and focus areas?"
   },
   {
     title: "Strategic Planning",
-    description: "Does the organization have a strategic plan that guides the organization’s activities or are they working toward a plan? Are they addressing equity?"
+    description:
+      "Does the organization have a strategic plan that guides the organization’s activities or are they working toward a plan? Are they addressing equity?"
   },
   {
     title: "Financial Profile",
-    description: "Is the organization fiscally sound? Are the sources of revenue diverse? Are there reserve funds in place to support the organization long-term?"
+    description:
+      "Is the organization fiscally sound? Are the sources of revenue diverse? Are there reserve funds in place to support the organization long-term?"
   },
   {
     title: "Case For Support",
-    description: "Does the organization seem to have a culture of learning (i.e. they are aware of areas for improvement and have strategies to address, etc.)? Do they have a way to measure effectiveness? (Q3 and Q4) Is the organization collaborative? (Q5,Q6,Q7) "
-  },
+    description:
+      "Does the organization seem to have a culture of learning (i.e. they are aware of areas for improvement and have strategies to address, etc.)? Do they have a way to measure effectiveness? (Q3 and Q4) Is the organization collaborative? (Q5,Q6,Q7) "
+  }
 ];
 
 //the format for adminCategories is properyName: displayOrder
@@ -38,10 +42,10 @@ export const adminCategories = {
     "Street Address or P-O- Box": 13,
     "Community/Region Name": 14,
     "Province or Territory": 15,
-    "Postal Code": 16,
+    "Postal Code": 16
   },
   grant: {
-    "How much funding are you requesting (ex 5000)": 1,
+    "How much funding are you requesting (ex 5000)": 1
   },
   funding: {},
   mission: {}
@@ -49,7 +53,7 @@ export const adminCategories = {
 
 export const fileCategories = {
   "Authorization and Confirmation": 1,
-  "3-6-f - Audited Financials": 2,
+  "3-6-f - Audited Financials": 2
 };
 
 export const longAnswerCategories = {
@@ -83,7 +87,7 @@ export const longAnswerCategories = {
 
   "4-2-a - What collaboratives/networks are you actively involved in Why (max- 250 words)": 4,
   "4-2-b - Who do you consider to be your most important partners (max- 250 words)": 4,
-  "4-2-c - What work, if any, are you involved in that reaches beyond the scope of your individual organization (e-g- field-building work, advocacy, systems change, etc-) Please describe- (max- 250 words)": 4,
+  "4-2-c - What work, if any, are you involved in that reaches beyond the scope of your individual organization (e-g- field-building work, advocacy, systems change, etc-) Please describe- (max- 250 words)": 4
 };
 
 export const checkBoxCategories = {};

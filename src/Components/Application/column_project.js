@@ -3,23 +3,28 @@
 export const canvasData = [
   {
     title: "Service Description (Brief) &amp; Vulnerable Populations Served",
-    description: "Do the vulnerable populations selected align with the project/program described?"
+    description:
+      "Do the vulnerable populations selected align with the project/program described?"
   },
   {
     title: "Service Description (Long Answer)",
-    description: "Do response provided present a clear picture of what the agency is trying to do, for whom, and why? Is an evaluation strategy provided?"
+    description:
+      "Do response provided present a clear picture of what the agency is trying to do, for whom, and why? Is an evaluation strategy provided?"
   },
   {
     title: "Output Tracking",
-    description: "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
+    description:
+      "Will the selected outputs provide sufficient information to evaluate the success/impact of services provided?"
   },
   {
     title: "Service Area",
-    description: "Does the service area, geographic area, and timelines make sense for the program? Are they aligned with the program or project described?"
+    description:
+      "Does the service area, geographic area, and timelines make sense for the program? Are they aligned with the program or project described?"
   },
   {
     title: "Additional Service Information",
-    description: "Has additional service information been provided? Are the responses reasonable within the context of the program or project described?"
+    description:
+      "Has additional service information been provided? Are the responses reasonable within the context of the program or project described?"
   }
 ];
 
@@ -42,7 +47,7 @@ export const adminCategories = {
     "Street Address or P-O- Box": 13,
     "Community/Region Name": 14,
     "Province or Territory": 15,
-    "Postal Code": 16,
+    "Postal Code": 16
   },
   grant: {
     "4-1-a - What is the total grant request from United Way Waterloo Region Communities": 1,
@@ -55,7 +60,7 @@ export const adminCategories = {
 };
 
 export const fileCategories = {
-  "Budget": 1,
+  Budget: 1,
   "Audited Financials": 2,
   "Authorization and Confirmation": 3
 };
@@ -77,7 +82,6 @@ export const longAnswerCategories = {
   "3-3 - Service Start Date": 4,
   "3-3 - Service End Date": 4,
 
-  "3-6-a - Is this program/project being delivered by a coalition of agencies or through a partnership table in your community": 5,
   "3-6-a - Is this program/project being delivered by a coalition of agencies or through a partnership table in your community": 5,
   "3-6-b - If yes, please provide details about the coalition (e-g- lead agency, member agencies, roles)- (max- 200 words)": 5
 };
