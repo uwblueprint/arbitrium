@@ -32,12 +32,14 @@ const Header = styled.div`
 
 // convert fetched users to table format
 // fetched: array
-function convertToTableData(fetched) {
+function convertToTableData(fetched, programs) {
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
-    programAccess: (user.programs || []).map((p) => p.name),
-    role: user.role,
+    programAccess: (user.programs || [])
+      .filter((p) => programs.find((prog) => prog._id === p.id))
+      .map((p) => p.displayName),
+    role: user.admin ? "Admin" : "Reviewer",
     userLink: (
       <div className="button-container">
         <DialogTriggerButton
@@ -55,10 +57,15 @@ function convertToTableData(fetched) {
 
 function UserManagement() {
   const [loadUsers] = usePromise(GET.getAllUsersAPI, {}, []);
+  const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
 
   const users = useMemo(
-    () => convertToTableData(loadUsers.value.filter((u) => !u.deleted)),
-    [loadUsers]
+    () =>
+      convertToTableData(
+        loadUsers.value.filter((u) => !u.deleted),
+        programs.value
+      ),
+    [loadUsers, programs]
   );
 
   return (

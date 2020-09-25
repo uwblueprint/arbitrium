@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef, useContext } from "react";
 import { Redirect } from "react-router-dom";
-import { connect } from "react-redux";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
@@ -9,6 +8,8 @@ import usePromise from "../../Hooks/usePromise";
 import { getAllStackingsAPI } from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 import { reorder } from "../../Utils/dragAndDropUtils";
+import { ProgramContext } from "../../Contexts/ProgramContext";
+import { AuthContext } from "../../Authentication/Auth";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -104,52 +105,58 @@ function compare(a, b) {
   return 0;
 }
 
-function StackedRankings({ applications, reviewCount, user }) {
-  const [fetchedRankings, refetch] = usePromise(
-    getAllStackingsAPI,
-    { user },
-    []
-  );
-  const [rankings, setRankings] = useState(fetchedRankings.value);
+function StackedRankings() {
+  const { appUser: user } = useContext(AuthContext);
+  const { applications, reviewCount } = useContext(ProgramContext);
+
+  const [fetchedRankings, refetch] = usePromise(getAllStackingsAPI, { user });
+
+  const applicationIdSet = useMemo(() => {
+    const ids = new Set();
+    applications.forEach((app) => ids.add(app._id));
+    return ids;
+  }, [applications]);
+
+  const [rankings, setRankings] = useState([]);
   const shouldTranslate = useRef(false);
-  const shouldSort = useRef(false);
   const classes = useStyles();
 
-  const shouldRedirect =
-    reviewCount == null || reviewCount < applications.length;
-
   useEffect(() => {
-    async function createRankings() {
+    async function fillInRankings(numExistingReviews) {
       // we should initialize the user's rankings
       const initApps = applications.map((app) => ({ appId: app._id }));
       await UPDATE.updateStackedAPI({
         userId: user.userId,
         rankings: initApps
       });
+      const sortedNewRankings = await getAllStackingsAPI({ user });
+      if (numExistingReviews === 0) {
+        sortedNewRankings.sort(compare);
+      }
+      await UPDATE.updateStackedAPI({
+        userId: user.userId,
+        rankings: sortedNewRankings.map((app) => ({ appId: app._id }))
+      });
       refetch({ user });
-      shouldSort.current = true;
     }
 
-    if (
-      !fetchedRankings.isPending &&
-      fetchedRankings.value.length !== applications.length
-    ) {
-      createRankings();
-    } else {
-      let updatedRankings = fetchedRankings.value;
-      if (shouldSort.current) {
-        updatedRankings = [...fetchedRankings.value].sort(compare);
-        shouldSort.current = false;
-      }
-      setRankings(
-        updatedRankings.map((rank) => ({
-          ...rank,
-          name:
-            rank["Organization Name (legal name)"] || rank["Organization Name"]
-        }))
-      );
+    if (fetchedRankings.isPending) return;
+
+    const updatedRankings = fetchedRankings.value.filter((rank) =>
+      applicationIdSet.has(rank._id)
+    );
+    if (updatedRankings.length !== applications.length) {
+      fillInRankings(updatedRankings.length);
+      return;
     }
-  }, [fetchedRankings, applications, user, refetch]);
+    setRankings(
+      updatedRankings.map((rank) => ({
+        ...rank,
+        name:
+          rank["Organization Name (legal name)"] || rank["Organization Name"]
+      }))
+    );
+  }, [fetchedRankings, applications, user, refetch, applicationIdSet]);
 
   const numOrgs = rankings.length;
   const column = useMemo(() => {
@@ -158,16 +165,14 @@ function StackedRankings({ applications, reviewCount, user }) {
       numbers.push(
         <React.Fragment key={i}>
           <RankNumber>{i + 1}</RankNumber>
-          {/*i === 4 && (
-            <div className={classes.cutoff}>
-              <div>Cutoff</div>
-            </div>
-          )*/}
         </React.Fragment>
       );
     }
     return <NumbersColumn>{numbers}</NumbersColumn>;
   }, [numOrgs]);
+
+  const shouldRedirect =
+    reviewCount == null || reviewCount < applications.length;
 
   if (shouldRedirect) {
     return <Redirect to="/" />;
@@ -186,11 +191,11 @@ function StackedRankings({ applications, reviewCount, user }) {
       result.destination.index
     );
     try {
+      setRankings(reorderedList);
       UPDATE.updateStackedAPI({
-        userId: user.uid,
+        userId: user.userId,
         rankings: reorderedList.map((app) => ({ appId: app._id }))
       });
-      setRankings(reorderedList);
     } catch (e) {
       setRankings(before);
       console.error(e);
@@ -238,24 +243,16 @@ function StackedRankings({ applications, reviewCount, user }) {
                         >
                           <RankingCard
                             appId={item._id}
-                            companyName={item.name}
+                            companyName={
+                              item["Organization Name (legal name)"] ||
+                              item["Organization Name"]
+                            }
                             rating={item.rating}
                             suggested={item.suggested}
                           />
                         </div>
                       )}
                     </Draggable>
-                    {/*}
-                    {index === 4 && (
-                      <div className={classes.divider}>
-                        <div
-                          className={classNames([
-                            shouldTranslate.current && classes.translateDivider
-                          ])}
-                        />
-                      </div>
-                    )}
-                    */}
                   </React.Fragment>
                 ))}
                 {provided.placeholder}
@@ -268,11 +265,4 @@ function StackedRankings({ applications, reviewCount, user }) {
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    applications: state.applications,
-    reviewCount: state.reviewCount
-  };
-};
-
-export default connect(mapStateToProps)(StackedRankings);
+export default StackedRankings;

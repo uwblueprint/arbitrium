@@ -67,7 +67,7 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
         history.push("/applications");
       } catch (error) {
         alert("Wrong user name or password!");
-        console.log(error);
+        console.error(error); //We should really get a logging system going
       }
     },
     [history]

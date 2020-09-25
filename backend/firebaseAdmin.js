@@ -1,7 +1,7 @@
 const admin = require("firebase-admin");
 const serviceAccount = require("./firebaseAdmin.json");
 
-console.log("Attempting to Connect Firebase service account...");
+console.info("Attempting to Connect Firebase service account...");
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -9,7 +9,7 @@ const firebaseAdmin = admin.initializeApp({
 });
 
 if (firebaseAdmin) {
-  console.log("Firebase service account connection successful");
+  console.info("Firebase service account connection successful");
 }
 
 module.exports = firebaseAdmin;

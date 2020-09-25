@@ -14,14 +14,14 @@ router.post("/", function(req, res) {
 
   feedback
     .save()
-    .then((result) => {
+    .then(() => {
       res.status(201).json({
         message: "POST request to /feedback",
         createdFeedback: feedback
       });
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
       res.send(err);
     });
 });

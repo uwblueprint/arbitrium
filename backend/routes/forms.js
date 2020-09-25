@@ -13,7 +13,7 @@ const db = require("../mongo.js");
 router.post("/", (req, res) => {
   db.forms.create(req.body, (error, result) => {
     if (error) {
-      console.log("Error inserting new form into MongoDB");
+      console.error("Error inserting new form into MongoDB");
       res.status(500).send(error);
     } else {
       res.status(201).json(result);
@@ -25,7 +25,7 @@ router.post("/", (req, res) => {
 router.delete("/:formId", (req, res) => {
   db.forms.deleteOne({ _id: req.params.formId }, (error, result) => {
     if (error || !result || (result && result.n !== 1)) {
-      console.log(`Error deleting form with ID = ${req.params.formId}`);
+      console.error(`Error deleting form with ID = ${req.params.formId}`);
       res.status(500).send(error);
     } else {
       res.status(204).send();
@@ -37,7 +37,7 @@ router.delete("/:formId", (req, res) => {
 router.get("/:formId", (req, res) => {
   db.forms.findById(req.params.formId, (error, result) => {
     if (error) {
-      console.log(`Error getting form with ID = ${req.params.formId}`);
+      console.error(`Error getting form with ID = ${req.params.formId}`);
       res.status(500).send(error);
     } else {
       res.status(200).json(result);
@@ -57,7 +57,7 @@ router.post("/:formId/sections", (req, res) => {
     { useFindAndModify: false, runValidators: true, returnOriginal: false },
     (error, result) => {
       if (error) {
-        console.log(
+        console.error(
           `Error adding section to form with ID = ${req.params.formId}`
         );
         res.status(500).send(error);
@@ -76,7 +76,7 @@ router.delete("/:formId/sections/:sectionId", (req, res) => {
     { useFindAndModify: false, returnOriginal: false },
     (error, result) => {
       if (error) {
-        console.log(
+        console.error(
           `Error deleting section with ID = ${req.params.sectionId} from form with ID = ${req.params.formId}`
         );
         res.status(500).send(error);
@@ -97,7 +97,7 @@ router.patch("/:formId/sections", (req, res) => {
     { useFindAndModify: false, returnOriginal: false, runValidators: true },
     (error, result) => {
       if (error) {
-        console.log(
+        console.error(
           `Error updating sections of form with ID = ${req.params.formId}`
         );
         res.status(500).send(error);
@@ -120,7 +120,7 @@ router.post("/:formId/sections/:sectionId/questions", (req, res) => {
     { useFindAndModify: false, runValidators: true, returnOriginal: false },
     (error, result) => {
       if (error) {
-        console.log(
+        console.error(
           `Error adding question to section with ID = ${req.params.sectionId} in form with ID = ${req.params.formId}`
         );
         res.status(500).send(error);
@@ -141,7 +141,7 @@ router.delete(
       { useFindAndModify: false, returnOriginal: false },
       (error, result) => {
         if (error) {
-          console.log(
+          console.error(
             `Error deleting question with ID = ${req.params.questionId} from section with ID = ${req.params.sectionId} from form with ID = ${req.params.formId}`
           );
           res.status(500).send(error);
@@ -163,7 +163,7 @@ router.patch("/:formId/sections/:sectionId/questions", (req, res) => {
     { useFindAndModify: false, returnOriginal: false, runValidators: true },
     (error, result) => {
       if (error) {
-        console.log(
+        console.error(
           `Error updating questions in section with ID = ${req.params.sectionId} in form with ID = ${req.params.formId}`
         );
         res.status(500).send(error);

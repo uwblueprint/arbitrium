@@ -28,10 +28,11 @@ function NewUserDialog({ onSubmit, close }) {
     setIsSubmitting(true);
     try {
       const data = { ...formState };
-      data.programs = Array.from(formState.programs).map((p) => ({
-        name: p,
-        access: "regular user" // TODO: shouldn't this be a field in the user drawer UI
+      data.programs = Array.from(formState.programs).map((program) => ({
+        id: program,
+        role: "reviewer"
       }));
+
       const user = await createUserAPI(data);
       close();
       onSubmit && onSubmit(user);
