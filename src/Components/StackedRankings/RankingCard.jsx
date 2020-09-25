@@ -49,6 +49,9 @@ const useStyles = makeStyles({
       fontWeight: "normal",
       lineHeight: "inherit"
     }
+  },
+  button: {
+    textTransform: "none"
   }
 });
 
@@ -80,6 +83,7 @@ function RankingCard({ companyName, rating, appId, push, suggested }) {
             </div>
           )}
           <Button
+            className={classes.button}
             variant="contained"
             color="primary"
             target="_blank"
@@ -87,7 +91,7 @@ function RankingCard({ companyName, rating, appId, push, suggested }) {
               push(`/submissions/${appId}`);
             }}
           >
-            Open Application
+            Open application
           </Button>
         </div>
       </CardContent>

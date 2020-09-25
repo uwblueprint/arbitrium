@@ -7,11 +7,13 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles({
   selected: {
     backgroundColor: "#005EB826",
-    color: "#005EB8"
+    color: "#005EB8",
+    textTransform: "none"
   },
   unselected: {
     backgroundColor: "white",
-    color: "black"
+    color: "black",
+    textTransform: "none"
   }
 });
 

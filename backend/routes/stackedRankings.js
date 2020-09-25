@@ -89,7 +89,6 @@ router.get("/:userid", function(req, res) {
       }
     ])
     .then(function(found) {
-      console.log(found);
       res.json(found);
     })
     .catch(function(err) {

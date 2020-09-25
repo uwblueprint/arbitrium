@@ -25,6 +25,7 @@ const CommentForm = styled.form`
   button {
     margin-left: 18px;
     border-radius: 0px;
+    text-transform: none;
   }
 `;
 

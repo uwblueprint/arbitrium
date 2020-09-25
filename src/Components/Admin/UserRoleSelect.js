@@ -6,8 +6,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 // TODO: fetch from mongo
 const userRoles = [
   { name: "Admin", id: "Admin" },
-  { name: "Committee Member", id: "User" },
-  { name: "Guest (view only)", id: "Guest" }
+  { name: "Reviewer", id: "User" }
 ];
 
 const StyledSelect = styled(Select)`

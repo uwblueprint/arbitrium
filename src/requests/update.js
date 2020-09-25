@@ -1,4 +1,4 @@
-import { POST } from "./Helper.js";
+import { POST, PUT } from "./Helper.js";
 
 async function createReviewAPI(data) {
   const response = await fetch(proxy + "/api/feedback", {
@@ -29,8 +29,23 @@ async function updateUserAPI(databody) {
   return POST("/api/users", databody);
 }
 
+async function updateUserProgramMembershipAPI(databody) {
+  return PUT("/api/users/set-program-memberships", databody);
+}
+
+async function updateUserProgramAPI(databody) {
+  return PUT("/api/users/set-program", databody);
+}
+
 async function createUserAPI(databody) {
   return POST("/api/users/create-user", databody);
 }
 
-export { updateReviewAPI, updateStackedAPI, updateUserAPI, createUserAPI };
+export {
+  updateReviewAPI,
+  updateStackedAPI,
+  updateUserAPI,
+  createUserAPI,
+  updateUserProgramAPI,
+  updateUserProgramMembershipAPI
+};

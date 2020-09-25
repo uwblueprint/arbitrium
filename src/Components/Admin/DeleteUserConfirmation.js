@@ -13,6 +13,9 @@ const WarningMessage = styled.div`
 
 const ButtonWrapper = styled.div`
   float: right;
+  button {
+    text-transform: none;
+  }
 `;
 
 function DeleteUserConfirmation({ close, confirm }) {

@@ -10,6 +10,9 @@ const DialogOverlay = styled.div`
   width: 100vw;
   z-index: 110;
   background: rgba(0, 0, 0, 0.5);
+  .dialogButton {
+    text-transform: none;
+  }
 `;
 
 function DialogTriggerButton({
@@ -48,6 +51,7 @@ function DialogTriggerButton({
   return (
     <div className="button-container" ref={dialogRef}>
       <Button
+        className="dialogButton"
         onClick={onClick}
         color={color || "primary"}
         variant={variant || "contained"}

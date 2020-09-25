@@ -27,16 +27,39 @@ const SaveFailure = styled.div`
 
 const SaveWrapper = styled.div`
   position: relative;
+  button {
+    text-transform: none;
+  }
 `;
 
 // onAddNewUser: callback for when a new user is added
 function EditUserDialog({ close, data }) {
+  const programs = [];
+  data.programs.forEach((p) => {
+    if (p.id !== undefined) {
+      programs.push(p.id);
+    } else {
+      //Migrate
+      if (p.name === "SVP Investee Grant") {
+        programs.push("5f54b0779971a3dd4f7421f1");
+        programs.push("5f54b07f9971a3dd4f742328");
+      }
+      if (p.name === "Emergency Fund") {
+        //null
+      }
+      if (p.name === "UnitedWay") {
+        programs.push("5f54b04d9971a3dd4f741a9e");
+        programs.push("5f54af1b9971a3dd4f73e451");
+      }
+    }
+  });
+
   const initialFormState = {
     name: data.name,
     preferredName: data.preferredName,
     email: data.email,
-    role: data.role,
-    programs: new Set(data.programs.map((p) => p.name))
+    role: data.admin ? "Admin" : "Reviewer",
+    programs: new Set(programs)
   };
 
   const [formState, dispatchUpdateFormState] = useReducer(
@@ -54,20 +77,19 @@ function EditUserDialog({ close, data }) {
       name: formState.name,
       preferredName: formState.preferredName,
       email: formState.email,
-      role: formState.role,
-      programs: Array.from(formState.programs).map((p) => ({
-        name: p,
-        access: "regular user"
+      admin: formState.role === "Admin",
+      organization: [],
+      programs: Array.from(formState.programs).map((program) => ({
+        id: program,
+        role: "reviewer"
       }))
     };
     UPDATE.updateUserAPI(requestBody)
-      .then((response) => {
-        console.log(response);
+      .then(() => {
         close();
         window.location.reload();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         setIsSubmitting(false);
         setShowSaveFailure(true);
       });

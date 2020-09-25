@@ -4,12 +4,6 @@ const START_FETCH = "START_FETCH";
 const FETCH_SUCCESS = "FETCH_SUCCESS";
 const FETCH_FAILED = "FETCH_FAILED";
 
-export interface ResultObject<T> {
-  value: T;
-  error: unknown;
-  isPending: boolean;
-}
-
 type Action<T> =
   | {
       type: "START_FETCH";
@@ -22,6 +16,14 @@ type Action<T> =
       type: "FETCH_FAILED";
       error: unknown;
     };
+
+export interface ResultObject<T> {
+  value: T;
+  error: unknown;
+  isPending: boolean;
+}
+
+type RefetchFunc = (params?: Record<string, unknown>) => void;
 
 type ReducerFunction<T> = (
   state: ResultObject<T>,
@@ -47,8 +49,9 @@ function asyncFetchReducer<T>(
 export default function usePromise<ResultType>(
   queryFunc: (params?: Record<string, unknown> | null) => Promise<ResultType>,
   params?: Record<string, unknown> | null,
-  defaultValue?: ResultType
-): [ResultObject<ResultType>, (params?: Record<string, unknown>) => void] {
+  defaultValue?: ResultType,
+  deps = []
+): [ResultObject<ResultType>, RefetchFunc] {
   const subscribed = useRef<boolean>(true);
   const [result, dispatch] = useReducer<ReducerFunction<ResultType>>(
     asyncFetchReducer,
@@ -88,7 +91,7 @@ export default function usePromise<ResultType>(
   );
 
   const refetch = useCallback(
-    (refetchParams?: Record<string, unknown> | null): void => {
+    (refetchParams): void => {
       fetchData(refetchParams);
     },
     [fetchData]
@@ -97,7 +100,7 @@ export default function usePromise<ResultType>(
   useEffect(() => {
     fetchData(params);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchData, ...Object.values(params || {})]);
+  }, [fetchData, ...Object.values(params || {}), ...deps]);
 
   return [result, refetch];
 }

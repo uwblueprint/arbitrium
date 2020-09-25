@@ -12,7 +12,7 @@ const Signout = styled.div`
   padding-right: 32px;
 
   button {
-    text-transform: uppercase;
+    text-transform: none;
     margin-left: 12px;
     height: 32px;
     width: 32px;
