@@ -10,6 +10,8 @@ import * as UPDATE from "../../requests/update";
 import { reorder } from "../../Utils/dragAndDropUtils";
 import { ProgramContext } from "../../Contexts/ProgramContext";
 import { AuthContext } from "../../Authentication/Auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -105,7 +107,7 @@ function compare(a, b) {
   return 0;
 }
 
-function StackedRankings() {
+function StackedRankings({ history }) {
   const { appUser: user } = useContext(AuthContext);
   const { applications, reviewCount } = useContext(ProgramContext);
 
@@ -210,8 +212,28 @@ function StackedRankings() {
     }
   };
 
+  const routeAllCandidates = () => {
+    history.push("/applications");
+  };
+
   return (
     <div className={classes.root}>
+      <div className={classes.allCandidatesRef}>
+        <p align="left" onClick={routeAllCandidates}>
+          <span style={{ cursor: "pointer", color: "#2261AD" }}>
+            <FontAwesomeIcon
+              style={{
+                height: "25px",
+                width: "25px",
+                verticalAlign: "-0.5em",
+                color: "#2261AD"
+              }}
+              icon={faAngleLeft}
+            />
+            Back to All Candidates
+          </span>
+        </p>
+      </div>
       <h1>Stacked Rankings</h1>
       <p>
         Stacked Rankings are based on your overall ratings. You can move
