@@ -86,7 +86,7 @@ const Header2 = ({ pathname, push }) => {
             onNavClick(APPLICATION_STAGE.interest);
           }}
         >
-          1. Letter of Interest
+          1. Letter of interest
         </button>
         <button
           id={APPLICATION_STAGE.full}
@@ -99,7 +99,7 @@ const Header2 = ({ pathname, push }) => {
             onNavClick(APPLICATION_STAGE.full);
           }}
         >
-          2. Full Application
+          2. Full application
         </button>
       </FlowSelector>
     </Container>
