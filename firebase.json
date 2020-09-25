@@ -61,6 +61,28 @@
               "destination": "/index.html"
            }
       ]
+    },
+    {
+      "target": "svp",
+      "public": "build",
+      "rewrites": [
+           {
+              "source": "**",
+              "function": "api",
+              "destination": "/index.html"
+           }
+      ]
+    },
+    {
+      "target": "arbitrium",
+      "public": "build",
+      "rewrites": [
+           {
+              "source": "**",
+              "function": "api",
+              "destination": "/index.html"
+           }
+      ]
     }
   ],
   "functions": {
