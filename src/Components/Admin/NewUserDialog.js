@@ -43,6 +43,7 @@ function NewUserDialog({ onSubmit, close }) {
       const user = await createUserAPI(data);
       close();
       onSubmit && onSubmit(user);
+      window.location.reload();
     } catch (e) {
       console.error(e);
       if (e.code === "auth/email-already-exists") {
