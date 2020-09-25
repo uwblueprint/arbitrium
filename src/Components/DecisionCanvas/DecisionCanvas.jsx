@@ -40,7 +40,7 @@ const CanvasHeader = styled.div`
   button {
     height: fit-content;
     padding: 10px 16px;
-    text-transform: uppercase;
+    text-transform: none;
   }
   h2 {
     margin-right: auto;
@@ -71,7 +71,6 @@ function expandArrayReducer(expandedArr, { type, index }) {
 }
 
 function DecisionCanvas({ update, review, categoryData }) {
-
   const [expandArray, dispatch] = useReducer(
     expandArrayReducer,
     categoryData.map(() => false)

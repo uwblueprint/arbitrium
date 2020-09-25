@@ -50,6 +50,9 @@ const BodyWrapper = styled.div`
     border-bottom-width: 1px;
     margin: 20px 0;
   }
+  button {
+    text-transform: none;
+  }
 `;
 
 const ApplicationSelector = styled.div`
@@ -192,7 +195,7 @@ function Application({
             className="all-applicants"
             onClick={() => history.push("/applications")}
           >
-            &lt; All Applicants
+            &lt; All applicants
           </Button>
           <br />
           {application ? (
@@ -238,7 +241,7 @@ function Application({
                 : console.log("Previous Application doesn't exist");
             }}
           >
-            Previous Applicant
+            Previous applicant
           </Button>
           <Button
             variant="contained"
@@ -250,7 +253,7 @@ function Application({
                 : console.log("Previous Application doesn't exist");
             }}
           >
-            Next Applicant
+            Next applicant
           </Button>
         </ApplicationSelector>
       </BodyWrapper>

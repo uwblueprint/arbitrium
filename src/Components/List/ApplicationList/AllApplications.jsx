@@ -25,8 +25,8 @@ const Wrapper = styled.div`
   button {
     max-width: 200px;
     padding: 5px 5px;
-    text-transform: uppercase;
     font-size: 15px;
+    text-transform: none;
   }
 `;
 

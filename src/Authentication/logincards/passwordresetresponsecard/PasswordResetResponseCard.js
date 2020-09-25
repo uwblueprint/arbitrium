@@ -19,6 +19,7 @@ const CommentForm = styled.form`
     right: 0px;
     top: 210px;
     margin-left: 10px;
+    text-transform: none;
   }
 
   .emailSentTitle {

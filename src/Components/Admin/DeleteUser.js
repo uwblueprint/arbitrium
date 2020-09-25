@@ -25,6 +25,9 @@ const QuestionWrapper = styled.div`
   p {
     font-size: 12px;
   }
+  button {
+    text-transform: none;
+  }
 `;
 
 function DeleteUser({ close, userId, setShowSaveFailure, setIsSubmitting }) {
