@@ -189,18 +189,6 @@ function AllCandidates({ history, program }) {
     [allUsers, program]
   );
 
-  // if (!allUsers.isPending) {
-  //   allUsers.value.forEach((user) => {
-  //     const exist = user.programs.some((p) => {
-  //       if (p.id == program) {
-  //         console.log(p.id);
-  //         return true;
-  //       }
-  //     });
-  //     console.log(exist);
-  //   });
-  // }
-
   function exportAllData() {
     commentsDownloadLink.current.link.click();
     appsDownloadLink.current.link.click();
