@@ -215,7 +215,7 @@ function StackedRankings({ history }) {
   };
 
   const routeAllCandidates = () => {
-    history.push("/admin/allcandidates");
+    history.push("/applications");
   };
 
   return (

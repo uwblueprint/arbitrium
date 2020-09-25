@@ -7,7 +7,7 @@ import usePromise from "../Hooks/usePromise";
 export const ProgramContext = React.createContext();
 
 async function fetchProgramData({ userId, program }) {
-  if (!userId || !program) return { applications: [], reviewCount: 0 };
+  if (!userId || !program) return { applications: apps, reviewCount };
   const apps = await getAllApplicationsAPI();
   const reviewCount = await getReviewCountAPI(userId);
   return { applications: apps, reviewCount };
