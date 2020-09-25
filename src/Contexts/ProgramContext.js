@@ -7,7 +7,7 @@ import usePromise from "../Hooks/usePromise";
 export const ProgramContext = React.createContext();
 
 async function fetchProgramData({ userId, program }) {
-  if (!userId || !program) return { applications: apps, reviewCount };
+  if (!userId || !program) return { applications: [], reviewCount: 0 };
   const apps = await getAllApplicationsAPI();
   const reviewCount = await getReviewCountAPI(userId);
   return { applications: apps, reviewCount };
@@ -26,7 +26,6 @@ function ProgramContextProvider({ program, children }) {
 
   const context = { isLoading: programData.isPending, ...programData.value };
 
-  console.log(context.applications);
   return (
     <ProgramContext.Provider value={context}>
       {children}
