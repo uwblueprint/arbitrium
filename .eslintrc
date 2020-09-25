@@ -31,7 +31,8 @@
     "react-hooks/exhaustive-deps": "warn",
     "no-useless-rename": "warn",
     "prefer-const": "warn",
-    "no-var": "warn"
+    "no-var": "warn",
+    "no-console": ["warn", { "allow": ["error", "info"] }]
   },
   "settings": {
     "react": {

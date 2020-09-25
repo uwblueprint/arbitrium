@@ -1,5 +1,6 @@
 import React, { useMemo, useRef } from "react";
 import styled from "styled-components";
+import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
 import AllCandidatesTable from "./AllCandidatesTable";
@@ -57,7 +58,7 @@ const Wrapper = styled.div`
   button {
     max-width: 200px;
     padding: 5px 5px;
-    text-transform: uppercase;
+    text-transform: none;
     font-size: 15px;
   }
 `;
@@ -66,7 +67,7 @@ function convertToTableData(applications) {
   if (applications == null) return [];
   return applications.map((application) => ({
     avgRanking: application.avgRanking,
-    candidateName: application.candidateName,
+    candidateName: application.candidateName || application.candidateName2,
     avgRating: application.avgRating || 0,
     numReviews: application.numReviews,
     candidateLink: (
@@ -103,18 +104,23 @@ async function getComments({ applications }) {
     review.questionList.forEach((question) => comments.concat(question.notes));
     // Push application name
     commentsSortedByApp.push({
-      Name: `${
-        appsMap[review.applicationId].candidateName
-      } (Total Commenters: ${comments.length})`,
+      Name: `${appsMap[review.applicationId].candidateName ||
+        appsMap[review.applicationId].candidateName2} (Total Commenters: ${
+        comments.length
+      })`,
       Comments: ""
     });
     // Push application comments
     commentsSortedByApp = commentsSortedByApp.concat(
       comments.map((c) => ({
         Name: "",
-        Comments: c.value + " (" + review.email + ")"
+        Comments: c.value
       }))
     );
+    commentsSortedByApp.push({
+      Name: "",
+      Comment: ""
+    });
   });
   return commentsSortedByApp;
 }
@@ -122,6 +128,7 @@ async function getComments({ applications }) {
 async function getCandidateSubmissionInfo() {
   const rankings = await getAllRankingsAPI();
   const applications = await getCandidateSubmissions();
+
   const appIdToAverageRanking = {};
   applications.forEach((app) => (appIdToAverageRanking[app._id] = []));
   rankings.forEach((rank) => {
@@ -148,16 +155,16 @@ async function getCandidateSubmissionInfo() {
     const avgRanking =
       numRankings > 0
         ? parseFloat((rankingsSum / numRankings).toFixed(2))
-        : "No Reviewers";
+        : "No Rankings";
     return {
       ...app,
       avgRanking,
-      numReviews: appIdToAverageRanking[app._id].length
+      numReviews: app.numReviews
     };
   });
 }
 
-function AllCandidates({ history }) {
+function AllCandidates({ history, program }) {
   const [applications] = usePromise(getCandidateSubmissionInfo, {}, []);
   const [allUsers] = usePromise(getAllUsersAPI, {}, []);
   const [comments] = usePromise(
@@ -169,18 +176,17 @@ function AllCandidates({ history }) {
   const appsDownloadLink = useRef();
 
   const totalReviewers = useMemo(
-    () =>
+    (progam) =>
       allUsers.value.filter(
         (user) =>
           Array.isArray(user.programs) &&
-          user.programs.some(
-            (program) => program.name === process.env.REACT_APP_PROGRAM
-          ) &&
+          program &&
+          user.programs.some((p) => p.id === program) &&
           (process.env.REACT_APP_NODE_ENV === "development" ||
             (!user.email.endsWith("uwblueprint.org") &&
               !user.email.endsWith("test.com")))
       ).length,
-    [allUsers]
+    [allUsers, program]
   );
 
   function exportAllData() {
@@ -213,7 +219,7 @@ function AllCandidates({ history }) {
                   history.push("/admin/committeereview");
                 }}
               >
-                View Committee Review
+                View committee review
               </Button>
             </div>
             <div className="button-container">
@@ -241,7 +247,7 @@ function AllCandidates({ history }) {
                 }}
                 onClick={exportAllData}
               >
-                Export Data
+                Export data
               </Button>
             </div>
           </Header>
@@ -261,4 +267,8 @@ function AllCandidates({ history }) {
   );
 }
 
-export default AllCandidates;
+const mapStateToProps = (state) => ({
+  program: state.program
+});
+
+export default connect(mapStateToProps)(AllCandidates);

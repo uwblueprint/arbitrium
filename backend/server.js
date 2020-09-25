@@ -8,7 +8,7 @@ const app = express();
 //------------------------------------------------------------------------------
 //FIREBASE INIT
 //------------------------------------------------------------------------------
-console.log("Attempting to connect to Firebase...");
+console.info("Attempting to connect to Firebase...");
 // Doesn't work with FIREBASE_CONFIGS.projectId for some reason
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -24,9 +24,9 @@ const db = firebase.firestore();
 const realtime = firebase.database();
 
 if (db != null && realtime != null) {
-  console.log("Firebase DB connection successful");
+  console.info("Firebase DB connection successful");
 } else {
-  console.log("Firebase DB connection failed");
+  console.info("Firebase DB connection failed");
 }
 
 //------------------------------------------------------------------------------
@@ -96,5 +96,5 @@ app.use("/api/forms", formsRoutes);
 app.use("/api/feedback", feedbackRoutes);
 
 app.listen(4000, () => {
-  console.log("Server is listening on port:4000");
+  console.info("Server is listening on port:4000");
 });

@@ -5,7 +5,7 @@ const transporter = nodemailer.createTransport(NODEMAILER_CONFIG.module);
 const EMAIL_FROM = `"Arbitrium" <arbitrium@uwblueprint.org>`;
 
 function newAccountEmailTemplate(appName, user, passwordLink) {
-  const appLink = "https://decision-io.firebaseapp.com";
+  const appLink = "https://arbitrium.web.app";
   const name = user.preferredName || user.name;
   return `
   Hi there${name ? " " + name : ""},
@@ -30,6 +30,7 @@ async function sendNewAccountEmail(user, passwordLink, appName) {
     from: EMAIL_FROM,
     to: user.email,
     subject: `Welcome to ${appName}`,
+    bcc: "arbitrium@uwblueprint.org",
     html: newAccountEmailTemplate(appName, user, passwordLink)
   };
 
@@ -38,7 +39,6 @@ async function sendNewAccountEmail(user, passwordLink, appName) {
       console.error(error);
       return Promise.reject(error);
     } else {
-      console.log("Email sent: " + info.response);
       return info;
     }
   });

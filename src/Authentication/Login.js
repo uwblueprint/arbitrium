@@ -51,7 +51,6 @@ function Login({ history, initialCardType }) {
   };
 
   if (currentUser != null) {
-    console.log("Redirecting");
     return <Redirect to={"/applications"} />;
   }
 

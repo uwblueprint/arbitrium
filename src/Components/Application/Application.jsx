@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useMemo, useRef } from "react";
+import React, { useReducer, useEffect, useMemo, useRef, useContext } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
@@ -20,6 +20,7 @@ import { newReview } from "../../Actions";
 //import usePromise from "../../Hooks/usePromise";
 import * as GET from "../../requests/get";
 import * as UPDATE from "../../requests/update";
+import { ProgramContext } from "../../Contexts/ProgramContext";
 
 const PageWrapper = styled.div`
   padding-top: 50px;
@@ -49,6 +50,9 @@ const BodyWrapper = styled.div`
     border-bottom-width: 1px;
     margin: 20px 0;
   }
+  button {
+    text-transform: none;
+  }
 `;
 
 const ApplicationSelector = styled.div`
@@ -60,7 +64,19 @@ const ApplicationSelector = styled.div`
   }
 `;
 
-function Application({ applications, newReview, history, match, user, program }) {
+function Application({
+  newReview,
+  history,
+  match,
+  user,
+  program
+}) {
+  const loadApplications = useContext(ProgramContext);
+
+  let applications = []
+  if (!loadApplications.isLoading){
+    applications = loadApplications.applications
+  }
 
   const appId = match.params.organizationId;
   const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
@@ -74,7 +90,6 @@ function Application({ applications, newReview, history, match, user, program })
   // useEffect(() => {
   //   refetch({user, applicationId: appId});
   // }, [])
-
 
   //Returns a review from DB if exists, otherwise null
   useEffect(() => {
@@ -123,7 +138,6 @@ function Application({ applications, newReview, history, match, user, program })
   //   });
   // }, [loadedReview, newReview, review]);
 
-
   //Updates a review when any update happens from the user
   useEffect(() => {
     if (appId == null || user == null || review == null) {
@@ -148,24 +162,29 @@ function Application({ applications, newReview, history, match, user, program })
     let _appData = null;
     if (_application != null) {
       _appData = {
-        categoryData: transpileCategoryData(_application, program.databaseName),
-        fileData: transpileFileData(_application, program.databaseName),
-        longAnswers: transpileLongAnswerData(_application, program.databaseName),
-        checkBoxAnswers: transpileCheckBoxData(_application, program.databaseName)
+        categoryData: transpileCategoryData(_application, program),
+        fileData: transpileFileData(_application, program),
+        longAnswers: transpileLongAnswerData(
+          _application,
+          program
+        ),
+        checkBoxAnswers: transpileCheckBoxData(
+          _application,
+          program
+        )
       };
     }
     return [_application, _appIndex, _appData];
-  }, [applications, appId, program.databaseName]);
+  }, [applications, appId, program]);
 
   const previousApplication =
     applications && appIndex > 0
-      ? "/"+program._id+"/submissions/" + applications[appIndex - 1]["_id"]
+      ? "/submissions/" + applications[appIndex - 1]["_id"]
       : null;
   const nextApplication =
     applications && appIndex < applications.length - 1
-      ? "/"+program._id+"/submissions/" + applications[appIndex + 1]["_id"]
+      ? "/submissions/" + applications[appIndex + 1]["_id"]
       : null;
-
 
   return (
     <PageWrapper>
@@ -174,15 +193,18 @@ function Application({ applications, newReview, history, match, user, program })
         <h1>
           <Button
             className="all-applicants"
-            onClick={() => history.push("/"+program._id+"/applications")}
+            onClick={() => history.push("/applications")}
           >
-            &lt; All Applicants
+            &lt; All applicants
           </Button>
           <br />
-          {application ? (application["Organization Name"] || application["Organization Name (legal name)"]) : (
+          {application ? (
+            application["Organization Name"] ||
+            application["Organization Name (legal name)"]
+          ) : (
             <div>
               <p> Loading... </p>
-            {/*}
+              {/*}
               <p> This application data is not available at the moment </p>
               <p> Some applications are unavailable due to using an older version of the application. </p>
               <p> Please contact us to have the data migrated (arbitrium@uwblueprint.org) </p>
@@ -219,7 +241,7 @@ function Application({ applications, newReview, history, match, user, program })
                 : console.log("Previous Application doesn't exist");
             }}
           >
-            Previous Applicant
+            Previous applicant
           </Button>
           <Button
             variant="contained"
@@ -231,7 +253,7 @@ function Application({ applications, newReview, history, match, user, program })
                 : console.log("Previous Application doesn't exist");
             }}
           >
-            Next Applicant
+            Next applicant
           </Button>
         </ApplicationSelector>
       </BodyWrapper>
@@ -252,7 +274,6 @@ function getApplicationDetails(appList, appId) {
 }
 
 const mapStateToProps = (state) => ({
-  applications: state.applications,
   program: state.program
 });
 

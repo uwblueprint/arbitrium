@@ -26,12 +26,13 @@ const CommentForm = styled.form`
     display: inline-block;
     width: 120px;
     height: 36px;
+    text-transform: none;
   }
   .forgotPassword {
     display: inline-block;
     width: 160px;
     height: 36px;
-
+    text-transform: none;
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
@@ -67,7 +68,7 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
         history.push("/applications");
       } catch (error) {
         alert("Wrong user name or password!");
-        console.log(error);
+        console.error(error); //We should really get a logging system going
       }
     },
     [history]
@@ -115,7 +116,7 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
           className="forgotPassword"
           onClick={() => setLoginFlowState("passwordResetEmail")}
         >
-          Forgot Password?
+          Forgot password?
         </Button>
         <Button
           className="loginButton"

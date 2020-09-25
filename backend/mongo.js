@@ -9,7 +9,7 @@ const ratingSchema = require("./models/ratings");
 const programSchema = require("./models/programs.js");
 const organizationSchema = require("./models/organizations");
 
-console.log("Attempting to connect to Mongo...");
+console.info("Attempting to connect to Mongo...");
 const USERNAME = MONGO_CONFIGS.module.mongoUsername;
 const PASS = MONGO_CONFIGS.module.mongoPassword;
 
@@ -56,8 +56,8 @@ connections["Authentication"].programs
     });
   })
   .catch(function(err) {
-    console.log("ERROR fetching programs");
-    console.log(err);
+    console.error("ERROR fetching programs");
+    console.error(err);
   });
 
 //Helper
@@ -67,10 +67,10 @@ function connect(database) {
     { useNewUrlParser: true, useUnifiedTopology: true },
     function(err) {
       if (err) {
-        console.log("Mongo DB connection failed: " + database);
-        console.log(err);
+        console.info("Mongo DB connection failed: " + database);
+        console.error(err);
       } else {
-        console.log("Mongo DB connection successful: " + database);
+        console.info("Mongo DB connection successful: " + database);
       }
     }
   );
@@ -95,7 +95,7 @@ function addConnection(database) {
   }
 }
 
-console.log("Number of connections: " + mongoose.connections.length);
+console.info("Number of connections: " + mongoose.connections.length);
 // need this for promises
 mongoose.Promise = Promise;
 

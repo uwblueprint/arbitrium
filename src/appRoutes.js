@@ -5,7 +5,6 @@ import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
 import CreateEditForm from "./Components/FormCreation/CreateEditForm";
-import Footer from "./Components/Footer/Footer";
 
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
@@ -18,24 +17,18 @@ groups: []          =>A list of groups Ex. ["admin", "user"].
 const routes = [
   {
     path: "/applications",
-    component: Footer,
-    title: "Landing page after login",
-    groups: []
-  },
-  {
-    path: "/:programId/applications",
     component: AllApplications,
     title: "List of Applications",
     groups: []
   },
   {
-    path: "/:programId/submissions/:organizationId",
+    path: "/submissions/:organizationId",
     component: Application,
     title: "A single Application",
     groups: []
   },
   {
-    path: "/:programId/rankings",
+    path: "/rankings",
     component: StackedRankings,
     title: "View all Stacked Rankings",
     groups: []

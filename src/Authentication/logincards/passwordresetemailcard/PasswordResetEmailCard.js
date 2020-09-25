@@ -23,6 +23,7 @@ const CommentForm = styled.form`
   .sendResetLinkButton {
     height: 36px;
     margin-left: auto;
+    text-transform: none;
   }
 
   .backToLogin {
@@ -30,6 +31,7 @@ const CommentForm = styled.form`
     letter-spacing: 0.25px;
     text-decoration-line: underline;
     color: #1976d2;
+    text-transform: none;
   }
 
   .action-container {
@@ -69,7 +71,7 @@ function PasswordResetEmailCard({ onSubmit, backToLogin }) {
       await firebaseApp.auth().sendPasswordResetEmail(values.email);
       onSubmit();
     } catch (e) {
-      console.log(e);
+      //console.error(e);
     }
     setValues({ ...values, resetCallInProgress: false });
   };
@@ -84,8 +86,6 @@ function PasswordResetEmailCard({ onSubmit, backToLogin }) {
   const validateForm = () => {
     return values.email.length > 0;
   };
-
-  console.log(backToLogin);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
@@ -113,7 +113,7 @@ function PasswordResetEmailCard({ onSubmit, backToLogin }) {
       </FormControl>
       <div className="action-container">
         <Button className="backToLogin" onClick={backToLogin}>
-          Back to Login
+          Back to login
         </Button>
         <Button
           className="sendResetLinkButton"
@@ -122,7 +122,7 @@ function PasswordResetEmailCard({ onSubmit, backToLogin }) {
           variant="contained"
           color="primary"
         >
-          Send Reset Link
+          Send reset link
         </Button>
       </div>
     </CommentForm>

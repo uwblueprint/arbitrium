@@ -25,6 +25,9 @@ const QuestionWrapper = styled.div`
   p {
     font-size: 12px;
   }
+  button {
+    text-transform: none;
+  }
 `;
 
 function DeleteUser({ close, userId, setShowSaveFailure, setIsSubmitting }) {
@@ -37,8 +40,7 @@ function DeleteUser({ close, userId, setShowSaveFailure, setIsSubmitting }) {
         close();
         window.location.reload();
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         setIsSubmitting(false);
         setShowDeleteConfirmation(false);
         setShowSaveFailure(true);

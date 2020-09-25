@@ -11,7 +11,7 @@ async function deleteUserAPI(userId) {
     method: "DELETE"
   });
   if (response.status !== 204) {
-    console.log(`Error with deleting user with userid = ${userId}`);
+    //console.error(`Error with deleting user with userid = ${userId}`);
     throw Error(response.json());
   }
 }

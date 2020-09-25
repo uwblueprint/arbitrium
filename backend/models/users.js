@@ -33,12 +33,13 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String
     },
-    Organizations: {
+    organizations: {
       type: [String]
     },
-    Programs: {
+    programs: {
       type: [program]
     },
+    currentProgram: String, // program id
     deleted: {
       type: Boolean
     },
