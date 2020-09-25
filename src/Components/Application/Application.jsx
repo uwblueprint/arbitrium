@@ -1,4 +1,10 @@
-import React, { useReducer, useEffect, useMemo, useRef, useContext } from "react";
+import React, {
+  useReducer,
+  useEffect,
+  useMemo,
+  useRef,
+  useContext
+} from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
@@ -61,18 +67,12 @@ const ApplicationSelector = styled.div`
   }
 `;
 
-function Application({
-  newReview,
-  history,
-  match,
-  user,
-  program
-}) {
+function Application({ newReview, history, match, user, program }) {
   const loadApplications = useContext(ProgramContext);
 
-  let applications = []
-  if (!loadApplications.isLoading){
-    applications = loadApplications.applications
+  let applications = [];
+  if (!loadApplications.isLoading) {
+    applications = loadApplications.applications;
   }
 
   const appId = match.params.organizationId;
@@ -161,14 +161,8 @@ function Application({
       _appData = {
         categoryData: transpileCategoryData(_application, program),
         fileData: transpileFileData(_application, program),
-        longAnswers: transpileLongAnswerData(
-          _application,
-          program
-        ),
-        checkBoxAnswers: transpileCheckBoxData(
-          _application,
-          program
-        )
+        longAnswers: transpileLongAnswerData(_application, program),
+        checkBoxAnswers: transpileCheckBoxData(_application, program)
       };
     }
     return [_application, _appIndex, _appData];

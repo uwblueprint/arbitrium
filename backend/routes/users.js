@@ -124,24 +124,44 @@ router.post("/create-user", async function(req, res) {
         });
       } catch (e) {
         await firebaseAdmin.auth().deleteUser(userRecord.uid);
-        throw { type: "Database", code: "mongo-db", message: "Error posting Mongo user.", error: e };
+        throw {
+          type: "Database",
+          code: "mongo-db",
+          message: "Error posting Mongo user.",
+          error: e
+        };
       }
       try {
         const link = await firebaseAdmin
           .auth()
           .generatePasswordResetLink(userRecord.email);
-          try {
-            await sendWelcomeEmail(mongoUserRecord, link);
-          } catch (e) {
-            throw { type: "Mailer", code: "nodemailer", message: "Error sending welcome email.", error: e };
-          }
+        try {
+          await sendWelcomeEmail(mongoUserRecord, link);
+        } catch (e) {
+          throw {
+            type: "Mailer",
+            code: "nodemailer",
+            message: "Error sending welcome email.",
+            error: e
+          };
+        }
       } catch (e) {
-        throw { type: "Auth", code: e.code, message: "Error. " + e.message, error: e };
+        throw {
+          type: "Auth",
+          code: e.code,
+          message: "Error. " + e.message,
+          error: e
+        };
       }
       // return user record
       res.json(userRecord);
     } catch (e) {
-      throw { type: "Auth", code: e.code, message: "Error. " + e.message, error: e };
+      throw {
+        type: "Auth",
+        code: e.code,
+        message: "Error. " + e.message,
+        error: e
+      };
     }
   } catch (e) {
     console.error(e);

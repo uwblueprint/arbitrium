@@ -67,7 +67,6 @@ export function transpileCategoryData(application, program) {
     adminCategories = SVPFullProposal.adminCategories;
   }
 
-
   return {
     admin: Object.keys(adminCategories.contact).map((adminCategory) => ({
       title: adminCategory,

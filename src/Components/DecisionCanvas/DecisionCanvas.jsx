@@ -71,7 +71,6 @@ function expandArrayReducer(expandedArr, { type, index }) {
 }
 
 function DecisionCanvas({ update, review, categoryData }) {
-
   const [expandArray, dispatch] = useReducer(
     expandArrayReducer,
     categoryData.map(() => false)
