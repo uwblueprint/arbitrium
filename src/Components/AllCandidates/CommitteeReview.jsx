@@ -107,7 +107,7 @@ async function fetchCommitteeData(program) {
   const appUsers = users.filter(
     (user) =>
       Array.isArray(user.programs) &&
-      user.programs.some((p) => p.id == program.program) &&
+      user.programs.some((p) => p.id === program.program) &&
       !user.email.includes("uwblueprint.org") &&
       (process.env.REACT_APP_NODE_ENV === "development" ||
         (user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
