@@ -128,7 +128,6 @@ export function transpileFileData(application, program) {
   }));
   const fileLinks = [];
   files.forEach((file) => {
-    console.log(file);
     if (file.link == null) return;
     file.link.split(",").forEach((link, index) => {
       let append = "";

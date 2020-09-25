@@ -34,7 +34,7 @@ function deleteFirebaseUser(userId) {
         resolve();
       })
       .catch((error) => {
-        console.log(`
+        console.error(`
           Error occurred deleting user with UID ${userId}: ${error}`);
         reject(error);
       });

@@ -66,7 +66,7 @@ router.get("/", function(req, res) {
         }
       })
       .catch(function(error) {
-        console.log("Error listing users:", error);
+        console.error("Error listing users:", error);
       });
   }
   listAllUsers();

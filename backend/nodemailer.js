@@ -39,7 +39,6 @@ async function sendNewAccountEmail(user, passwordLink, appName) {
       console.error(error);
       return Promise.reject(error);
     } else {
-      console.log("Email sent: " + info.response);
       return info;
     }
   });

@@ -92,7 +92,7 @@ router.delete("/:userId", function(req, res) {
             res.status(204).send();
           })
           .catch((err) => {
-            console.log(`User with UID = ${req.params.userId}
+            console.error(`User with UID = ${req.params.userId}
               was marked deleted in MongoDB but not removed from Firebase, failed due to: ${err}`);
             // using status code 202 (accepted) to represent partial success
             res.status(202).send();

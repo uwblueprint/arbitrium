@@ -69,7 +69,7 @@ function PasswordResetEmailCard({ onSubmit, backToLogin }) {
       await firebaseApp.auth().sendPasswordResetEmail(values.email);
       onSubmit();
     } catch (e) {
-      console.log(e);
+      //console.error(e);
     }
     setValues({ ...values, resetCallInProgress: false });
   };
@@ -84,8 +84,6 @@ function PasswordResetEmailCard({ onSubmit, backToLogin }) {
   const validateForm = () => {
     return values.email.length > 0;
   };
-
-  console.log(backToLogin);
 
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });

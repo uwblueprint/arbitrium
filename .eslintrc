@@ -32,7 +32,7 @@
     "no-useless-rename": "warn",
     "prefer-const": "warn",
     "no-var": "warn",
-    "no-console": "warn"
+    "no-console": ["warn", { "allow": ["error", "info"] }]
   },
   "settings": {
     "react": {

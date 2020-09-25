@@ -82,11 +82,11 @@ function EditUserDialog({ close, data }) {
       }))
     };
     UPDATE.updateUserAPI(requestBody)
-      .then((response) => {
+      .then(() => {
         close();
         window.location.reload();
       })
-      .catch((err) => {
+      .catch(() => {
         setIsSubmitting(false);
         setShowSaveFailure(true);
       });
