@@ -49,7 +49,8 @@ async function POST(url, databody) {
 
   const body = response.json();
   if (!response.ok) {
-    throw Error(body.message);
+    const err = await body;
+    throw Error(err.message);
   }
   return body;
 }
