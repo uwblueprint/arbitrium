@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
 import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@material-ui/icons/SentimentSatisfiedAlt";
+import * as UPDATE from "../../requests/update";
 
 const UPDATE = require("../../requests/update");
 
@@ -54,7 +55,42 @@ const useStyles = makeStyles({
 });
 
 export default function Feedback(user) {
+  const [experience, setExperience] = useState("");
+  const [feedbackPar, setFeedbackPar] = useState("");
+  const [comment, setComment] = useState("");
+
   const classes = useStyles();
+
+  const updateComment = () => (event) => {
+    console.log(event.target.value);
+    setComment(event.target.value);
+    console.log(comment);
+    console.log("----");
+    console.log(experience);
+    console.log("----");
+  };
+
+  const updateFeedbackPar = () => (event) => {
+    console.log(event.target.value);
+    setFeedbackPar(event.target.value);
+    console.log(feedbackPar);
+  };
+
+  const sendFeedback = () => (event) => {
+    let obj = {
+      userId: "",
+      experience: experience,
+      feedbackPar: feedbackPar,
+      comment: comment
+    };
+    console.log(obj);
+    // UPDATE.createReviewAPI({
+    //   userId: "",
+    //   experience: experience,
+    //   feedbackPar: feedbackPar,
+    //   comment: comment
+    // })
+  };
 
   return (
     <Card className={classes.root}>
@@ -71,13 +107,13 @@ export default function Feedback(user) {
           How is your experience?
         </Typography>
         <div>
-          <IconButton onClick={console.log("test")}>
+          <IconButton onClick={setExperience("bad")}>
             <SentimentVeryDissatisfiedIcon className={classes.icons} />
           </IconButton>
-          <IconButton onClick={console.log("test")}>
+          <IconButton onClick={setExperience("okay")}>
             <SentimentSatisfiedIcon className={classes.icons} />
           </IconButton>
-          <IconButton onClick={console.log("test")}>
+          <IconButton onClick={setExperience("good")}>
             <SentimentSatisfiedAltIcon className={classes.icons} />
           </IconButton>
         </div>
@@ -86,7 +122,12 @@ export default function Feedback(user) {
         </Typography>
         <div>
           <FormControl component="fieldset">
-            <RadioGroup row aria-label="position " name="position">
+            <RadioGroup
+              row
+              aria-label="position"
+              name="position"
+              onChange={updateFeedbackPar()}
+            >
               <FormControlLabel
                 value="Bug"
                 control={<Radio color="primary" />}
@@ -116,9 +157,15 @@ export default function Feedback(user) {
             rows={7}
             placeholder="Your comment"
             variant="outlined"
+            onChange={updateComment()}
           />
         </div>
-        <Button className={classes.button} variant="contained" color="primary">
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          onClick={sendFeedback()}
+        >
           Send Feedback
         </Button>
       </CardContent>
