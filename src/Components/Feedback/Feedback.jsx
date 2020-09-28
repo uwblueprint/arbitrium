@@ -1,9 +1,10 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
+import styled from "styled-components";
+import Popover from "@material-ui/core/Popover";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -13,162 +14,210 @@ import IconButton from "@material-ui/core/IconButton";
 import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
 import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@material-ui/icons/SentimentSatisfiedAlt";
+import CloseIcon from "@material-ui/icons/Close";
+import FeedbackIcon from "@material-ui/icons/Feedback";
 import * as UPDATE from "../../requests/update";
 
-const UPDATE = require("../../requests/update");
-
-const useStyles = makeStyles({
-  root: {
-    maxWidth: 340,
-    maxHeight: 571,
-    borderRadius: 0,
-    boxShadow: "0 2px 2px 2px #cccccc"
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 500,
-    paddingTop: 10,
-    paddingBottom: 16
-  },
-  subtitle: {
-    fontSize: 16,
-    fontWeight: 500
-  },
-  comment: {
-    fontSize: 14
-  },
-  commentBox: {
-    fontSize: 14,
-    minWidth: 308,
-    paddingTop: 12,
-    paddingBottom: 16
-  },
-  button: {
-    minWidth: 308,
-    fontSize: 14,
-    alignItems: "right"
-  },
-  icons: {
-    fontSize: 40,
-    color: "grey"
+const StyledCard = styled(Card)`
+  max-width: 340px;
+  max-height: 571px;
+  box-shadow: 2px 2px 4px 2px #cccccc;
+  border-radius: 0px;
+  .close: {
+    margin-left: 290px;
+    font-size: 20px;
   }
-});
+  .title {
+    font-size: 20px;
+    font-weight: 500;
+    padding-bottom: 16px;
+  }
+  .comment {
+    font-size: 14px;
+  }
+  .subtitle {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .comment-box: {
+    font-size: 14px;
+    min-width: 308px;
+    padding-top: 12px;
+    padding-bottom: 16px;
+  }
+  .button: {
+    min-width: 308px;
+    font-size: 14px;
+  }
+`;
 
 export default function Feedback(user) {
   const [experience, setExperience] = useState("");
   const [feedbackPar, setFeedbackPar] = useState("");
   const [comment, setComment] = useState("");
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+  const enabled = experience && feedbackPar && comment;
 
-  const classes = useStyles();
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  const updateComment = () => (event) => {
-    console.log(event.target.value);
-    setComment(event.target.value);
-    console.log(comment);
-    console.log("----");
-    console.log(experience);
-    console.log("----");
+  const handleClose = () => {
+    setExperience("");
+    setAnchorEl(null);
+  };
+
+  const updateExperience = (experience) => () => {
+    setExperience(experience);
   };
 
   const updateFeedbackPar = () => (event) => {
-    console.log(event.target.value);
     setFeedbackPar(event.target.value);
-    console.log(feedbackPar);
+  };
+
+  const updateComment = () => (event) => {
+    setComment(event.target.value);
   };
 
   const sendFeedback = () => (event) => {
-    let obj = {
+    UPDATE.createFeedbackAPI({
       userId: "",
       experience: experience,
       feedbackPar: feedbackPar,
       comment: comment
-    };
-    console.log(obj);
-    // UPDATE.createReviewAPI({
-    //   userId: "",
-    //   experience: experience,
-    //   feedbackPar: feedbackPar,
-    //   comment: comment
-    // })
+    });
   };
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        <Typography className={classes.title}>
-          Send us your feedback!
-        </Typography>
-        <Typography className={classes.comment}>
-          Do you have a suggestion or found some bug? <br></br>
-          Let us know in the field below
-        </Typography>
-        <hr></hr>
-        <Typography className={classes.subtitle}>
-          How is your experience?
-        </Typography>
-        <div>
-          <IconButton onClick={setExperience("bad")}>
-            <SentimentVeryDissatisfiedIcon className={classes.icons} />
-          </IconButton>
-          <IconButton onClick={setExperience("okay")}>
-            <SentimentSatisfiedIcon className={classes.icons} />
-          </IconButton>
-          <IconButton onClick={setExperience("good")}>
-            <SentimentSatisfiedAltIcon className={classes.icons} />
-          </IconButton>
-        </div>
-        <Typography className={classes.subtitle}>
-          Do you have anything to tell us?
-        </Typography>
-        <div>
-          <FormControl component="fieldset">
-            <RadioGroup
-              row
-              aria-label="position"
-              name="position"
-              onChange={updateFeedbackPar()}
+    <div>
+      <FeedbackIcon
+        cursor="pointer"
+        color="white"
+        onClick={handleClick}
+      ></FeedbackIcon>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right"
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right"
+        }}
+      >
+        <StyledCard>
+          <CardContent>
+            <div>
+              <CloseIcon
+                className="close"
+                cursor="pointer"
+                onClick={handleClose}
+              ></CloseIcon>
+            </div>
+            <Typography className="title">Send us your feedback!</Typography>
+            <Typography className="comment">
+              Do you have a suggestion or found some bug? <br></br>
+              Let us know in the field below
+            </Typography>
+            <hr></hr>
+            <Typography className="subtitle">
+              How is your experience?
+            </Typography>
+            <div>
+              <IconButton onClick={updateExperience("bad")}>
+                <SentimentVeryDissatisfiedIcon
+                  className="icons"
+                  fontSize="large"
+                  style={
+                    experience === "bad"
+                      ? { color: "#ED6362" }
+                      : { color: "gray" }
+                  }
+                />
+              </IconButton>
+              <IconButton onClick={updateExperience("okay")}>
+                <SentimentSatisfiedIcon
+                  className="icons"
+                  fontSize="large"
+                  style={
+                    experience === "okay"
+                      ? { color: "#FDBC4B" }
+                      : { color: "gray" }
+                  }
+                />
+              </IconButton>
+              <IconButton onClick={updateExperience("good")}>
+                <SentimentSatisfiedAltIcon
+                  className="icons"
+                  fontSize="large"
+                  style={
+                    experience === "good"
+                      ? { color: "#55A94E" }
+                      : { color: "gray" }
+                  }
+                />
+              </IconButton>
+            </div>
+            <Typography className="subtitle">
+              Do you have anything to tell us?
+            </Typography>
+            <div>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  row
+                  aria-label="position"
+                  name="position"
+                  onChange={updateFeedbackPar()}
+                >
+                  <FormControlLabel
+                    value="Bug"
+                    control={<Radio color="primary" />}
+                    label="Bug"
+                    labelPlacement="end"
+                  />
+                  <FormControlLabel
+                    value="Suggestion"
+                    control={<Radio color="primary" />}
+                    label="Suggestion"
+                    labelPlacement="end"
+                  />
+                  <FormControlLabel
+                    value="Other"
+                    control={<Radio color="primary" />}
+                    label="Other"
+                    labelPlacement="end"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            <div>
+              <TextField
+                className="comment-box"
+                id="outlined-multiline-static"
+                multiline
+                rows={7}
+                placeholder="Your comment"
+                variant="outlined"
+                onChange={updateComment()}
+              />
+            </div>
+            <Button
+              className="button"
+              variant="contained"
+              color="primary"
+              onClick={sendFeedback()}
+              disabled={!enabled}
             >
-              <FormControlLabel
-                value="Bug"
-                control={<Radio color="primary" />}
-                label="Bug"
-                labelPlacement="end"
-              />
-              <FormControlLabel
-                value="Suggestion"
-                control={<Radio color="primary" />}
-                label="Suggestion"
-                labelPlacement="end"
-              />
-              <FormControlLabel
-                value="Other"
-                control={<Radio color="primary" />}
-                label="Other"
-                labelPlacement="end"
-              />
-            </RadioGroup>
-          </FormControl>
-        </div>
-        <div>
-          <TextField
-            className={classes.commentBox}
-            id="outlined-multiline-static"
-            multiline
-            rows={7}
-            placeholder="Your comment"
-            variant="outlined"
-            onChange={updateComment()}
-          />
-        </div>
-        <Button
-          className={classes.button}
-          variant="contained"
-          color="primary"
-          onClick={sendFeedback()}
-        >
-          Send Feedback
-        </Button>
-      </CardContent>
-    </Card>
+              Send Feedback
+            </Button>
+          </CardContent>
+        </StyledCard>
+      </Popover>
+    </div>
   );
 }

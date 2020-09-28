@@ -1,20 +1,7 @@
 import { POST, PUT } from "./Helper.js";
 
-async function createReviewAPI(data) {
-  const response = await fetch(proxy + "/api/feedback", {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    }
-  });
-
-  const body = await response.json();
-  if (response.status !== 201) {
-    console.log("Error with sending review");
-  }
-  return body;
+async function createFeedbackAPI(databody) {
+  return POST("/api/feedback", databody);
 }
 
 async function updateReviewAPI(databody) {
@@ -42,6 +29,7 @@ async function createUserAPI(databody) {
 }
 
 export {
+  createFeedbackAPI,
   updateReviewAPI,
   updateStackedAPI,
   updateUserAPI,
