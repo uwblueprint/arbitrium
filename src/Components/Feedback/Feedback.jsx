@@ -23,7 +23,7 @@ const StyledCard = styled(Card)`
   max-height: 571px;
   box-shadow: 2px 2px 4px 2px #cccccc;
   border-radius: 0px;
-  .close: {
+  .close {
     margin-left: 290px;
     font-size: 20px;
   }
@@ -39,13 +39,13 @@ const StyledCard = styled(Card)`
     font-size: 16px;
     font-weight: 500;
   }
-  .comment-box: {
+  .comment-box {
     font-size: 14px;
     min-width: 308px;
     padding-top: 12px;
     padding-bottom: 16px;
   }
-  .button: {
+  .button {
     min-width: 308px;
     font-size: 14px;
   }
