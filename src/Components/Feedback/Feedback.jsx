@@ -88,6 +88,7 @@ export default function Feedback(user) {
       feedbackPar: feedbackPar,
       comment: comment
     });
+    handleClose();
   };
 
   return (
