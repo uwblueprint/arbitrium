@@ -93,33 +93,63 @@ router.delete("/:userId", function(req, res) {
 // Sends welcome email to user on creation
 router.post("/create-user", async function(req, res) {
   try {
-    const userRecord = await createFirebaseUser(req.body);
-    // Insert record into mongodb
-    const mongoUserRecord = {
-      userId: userRecord.uid,
-      name: req.body.name,
-      preferredName: req.body.preferredName,
-      email: userRecord.email,
-      role: "User",
-      programs: req.body.programs,
-      deleted: false
-    };
     try {
-      await db.users.updateOne({ email: userRecord.email }, mongoUserRecord, {
-        upsert: true
-      });
+      const userRecord = await createFirebaseUser(req.body);
+      // Insert record into mongodb
+      const mongoUserRecord = {
+        userId: userRecord.uid,
+        name: req.body.name,
+        preferredName: req.body.preferredName,
+        email: userRecord.email,
+        role: "User",
+        programs: req.body.programs,
+        deleted: false
+      };
+      try {
+        await db.users.updateOne({ email: userRecord.email }, mongoUserRecord, {
+          upsert: true
+        });
+      } catch (e) {
+        await firebaseAdmin.auth().deleteUser(userRecord.uid);
+        throw {
+          type: "Database",
+          code: "mongo-db",
+          message: "Error posting Mongo user.",
+          error: e
+        };
+      }
+      try {
+        const link = await firebaseAdmin
+          .auth()
+          .generatePasswordResetLink(userRecord.email);
+        try {
+          await sendWelcomeEmail(mongoUserRecord, link);
+        } catch (e) {
+          throw {
+            type: "Mailer",
+            code: "nodemailer",
+            message: "Error sending welcome email.",
+            error: e
+          };
+        }
+      } catch (e) {
+        throw {
+          type: "Auth",
+          code: e.code,
+          message: "Error. " + e.message,
+          error: e
+        };
+      }
+      // return user record
+      res.json(userRecord);
     } catch (e) {
-      console.error("Error posting Mongo user.");
-      console.error(e);
-      await firebaseAdmin.auth().deleteUser(userRecord.uid);
-      throw e;
+      throw {
+        type: "Auth",
+        code: e.code,
+        message: "Error. " + e.message,
+        error: e
+      };
     }
-    const link = await firebaseAdmin
-      .auth()
-      .generatePasswordResetLink(userRecord.email);
-    await sendWelcomeEmail(mongoUserRecord, link);
-    // return user record
-    res.json(userRecord);
   } catch (e) {
     console.error(e);
     res.status(400).send(e);
