@@ -113,16 +113,11 @@ function StackedRankings({ history }) {
 
   const [fetchedRankings, refetch] = usePromise(getAllStackingsAPI, { user });
 
-  const applicationIdSet = useMemo(() => {
-    const ids = new Set();
-    applications.forEach((app) => ids.add(app._id));
-    return ids;
-  }, [applications]);
-
   const [rankings, setRankings] = useState([]);
   const shouldTranslate = useRef(false);
   const classes = useStyles();
 
+  // Load applications
   useEffect(() => {
     async function fillInRankings(numExistingReviews) {
       // we should initialize the user's rankings
@@ -144,6 +139,9 @@ function StackedRankings({ history }) {
 
     if (fetchedRankings.isPending) return;
 
+    const applicationIdSet = new Set();
+    applications.forEach((app) => applicationIdSet.add(app._id));
+
     const updatedRankings = fetchedRankings.value.filter((rank) =>
       applicationIdSet.has(rank._id)
     );
@@ -158,7 +156,7 @@ function StackedRankings({ history }) {
           rank["Organization Name (legal name)"] || rank["Organization Name"]
       }))
     );
-  }, [fetchedRankings, applications, user, refetch, applicationIdSet]);
+  }, [fetchedRankings, applications, user, refetch]);
 
   const numOrgs = rankings.length;
   const column = useMemo(() => {
