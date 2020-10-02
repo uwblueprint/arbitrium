@@ -89,7 +89,7 @@ function DecisionCanvas({ update, review, categoryData }) {
       <CanvasHeader>
         <h2>Decision Canvas</h2>
         <Button onClick={() => dispatch({ type: "COLLAPSE_ALL" })}>
-          Collapse All
+          Collapse all
         </Button>
         <Spacer />
         <Button
@@ -97,7 +97,7 @@ function DecisionCanvas({ update, review, categoryData }) {
           onClick={() => dispatch({ type: "EXPAND_ALL" })}
           variant="contained"
         >
-          Expand All
+          Expand all
         </Button>
       </CanvasHeader>
       {categoryData

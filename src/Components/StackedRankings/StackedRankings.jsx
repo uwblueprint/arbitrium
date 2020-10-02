@@ -10,6 +10,8 @@ import * as UPDATE from "../../requests/update";
 import { reorder } from "../../Utils/dragAndDropUtils";
 import { ProgramContext } from "../../Contexts/ProgramContext";
 import { AuthContext } from "../../Authentication/Auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 
 const CARD_HEIGHT = 56;
 const CARD_SPACING = 12;
@@ -105,22 +107,17 @@ function compare(a, b) {
   return 0;
 }
 
-function StackedRankings() {
+function StackedRankings({ history }) {
   const { appUser: user } = useContext(AuthContext);
   const { applications, reviewCount } = useContext(ProgramContext);
 
   const [fetchedRankings, refetch] = usePromise(getAllStackingsAPI, { user });
 
-  const applicationIdSet = useMemo(() => {
-    const ids = new Set();
-    applications.forEach((app) => ids.add(app._id));
-    return ids;
-  }, [applications]);
-
   const [rankings, setRankings] = useState([]);
   const shouldTranslate = useRef(false);
   const classes = useStyles();
 
+  // Load applications
   useEffect(() => {
     async function fillInRankings(numExistingReviews) {
       // we should initialize the user's rankings
@@ -142,6 +139,9 @@ function StackedRankings() {
 
     if (fetchedRankings.isPending) return;
 
+    const applicationIdSet = new Set();
+    applications.forEach((app) => applicationIdSet.add(app._id));
+
     const updatedRankings = fetchedRankings.value.filter((rank) =>
       applicationIdSet.has(rank._id)
     );
@@ -156,7 +156,7 @@ function StackedRankings() {
           rank["Organization Name (legal name)"] || rank["Organization Name"]
       }))
     );
-  }, [fetchedRankings, applications, user, refetch, applicationIdSet]);
+  }, [fetchedRankings, applications, user, refetch]);
 
   const numOrgs = rankings.length;
   const column = useMemo(() => {
@@ -210,8 +210,28 @@ function StackedRankings() {
     }
   };
 
+  const routeAllCandidates = () => {
+    history.push("/applications");
+  };
+
   return (
     <div className={classes.root}>
+      <div className={classes.allCandidatesRef}>
+        <p align="left" onClick={routeAllCandidates}>
+          <span style={{ cursor: "pointer", color: "#2261AD" }}>
+            <FontAwesomeIcon
+              style={{
+                height: "25px",
+                width: "25px",
+                verticalAlign: "-0.5em",
+                color: "#2261AD"
+              }}
+              icon={faAngleLeft}
+            />
+            Back to All Candidates
+          </span>
+        </p>
+      </div>
       <h1>Stacked Rankings</h1>
       <p>
         Stacked Rankings are based on your overall ratings. You can move

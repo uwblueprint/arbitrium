@@ -30,7 +30,7 @@ const Wrapper = styled.div`
   }
 `;
 
-function convertToTableData(fetched, program) {
+function convertToTableData(fetched) {
   const applicantsList = [];
   if (fetched !== null) {
     fetched.forEach((application) => {
@@ -62,7 +62,6 @@ function convertToTableData(fetched, program) {
 }
 
 function AllApplications({ user, program }) {
-
   // Applications, with reviews attached
   const [applications] = usePromise(
     getApplicationTableData,

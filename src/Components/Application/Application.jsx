@@ -1,4 +1,11 @@
-import React, { useReducer, useEffect, useMemo, useRef, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useContext,
+  useCallback
+} from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../Categories/Categories";
@@ -14,11 +21,11 @@ import {
   transpileLongAnswerData,
   transpileCheckBoxData
 } from "./applicationDataHelpers";
-import { LOAD_REVIEW, reviewReducer } from "./reviewReducer";
+import { reviewReducer } from "./reviewReducer";
 import { connect } from "react-redux";
 import { newReview } from "../../Actions";
-//import usePromise from "../../Hooks/usePromise";
-import * as GET from "../../requests/get";
+import usePromise from "../../Hooks/usePromise";
+import { getReviewAPI } from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 import { ProgramContext } from "../../Contexts/ProgramContext";
 
@@ -64,95 +71,51 @@ const ApplicationSelector = styled.div`
   }
 `;
 
-function Application({
-  newReview,
-  history,
-  match,
-  user,
-  program
-}) {
-  const loadApplications = useContext(ProgramContext);
-
-  let applications = []
-  if (!loadApplications.isLoading){
-    applications = loadApplications.applications
-  }
-
+function Application({ newReview, history, match, user, program }) {
   const appId = match.params.organizationId;
-  const [review, dispatchReviewUpdate] = useReducer(reviewReducer, null);
   const isRated = useRef(false);
+  const [review, setReview] = useState(null);
 
-  // const [loadedReview, refetch] = usePromise(GET.getReviewAPI, {
-  //   user,
-  //   applicationId: appId
-  // });
-  //
-  // useEffect(() => {
-  //   refetch({user, applicationId: appId});
-  // }, [])
+  const loadedApplications = useContext(ProgramContext);
+  const blankReview = useMemo(() => createReview(user, appId), [appId, user]);
+  const [loadedReview] = usePromise(
+    getReviewAPI,
+    { user, applicationId: appId },
+    null,
+    [program]
+  );
 
-  //Returns a review from DB if exists, otherwise null
+  const applications = loadedApplications.applications;
+
   useEffect(() => {
-    GET.getReviewAPI(user, appId).then((res) => {
-      const reviewExists = res != null;
-      if (reviewExists) {
-        isRated.current = res.rating > -1;
-      }
-      dispatchReviewUpdate({
-        type: LOAD_REVIEW,
-        review: reviewExists ? res : createReview(user, appId)
-      });
-    });
-  }, [appId, user, program]);
-
-  // // Load the fetched review
-  // useEffect(() => {
-  //   if (loadedReview.isPending) return;
-  //   isRated.current = loadedReview.value.rating > -1;
-  //   dispatchReviewUpdate({
-  //     type: LOAD_REVIEW,
-  //     review: loadedReview.value
-  //   });
-  // }, [loadedReview]);
-  //
-  // //Updates a review when the review is changed
-  // useEffect(() => {
-  //   if (
-  //     review == null ||
-  //     loadedReview.isPending ||
-  //     review === loadedReview.value ||
-  //     review.applicationId !== loadedReview.value.applicationId
-  //   ) {
-  //     // Do not update the review if we are still fetching the review or
-  //     // if it has not been modified
-  //     return;
-  //   }
-  //   UPDATE.updateReviewAPI(review).then((res) => {
-  //     if (!isRated.current && review.rating > -1) {
-  //       isRated.current = true;
-  //       newReview();
-  //     }
-  //     if (res.ok !== 1) {
-  //       alert("Error in saving your review!");
-  //     }
-  //   });
-  // }, [loadedReview, newReview, review]);
-
-  //Updates a review when any update happens from the user
-  useEffect(() => {
-    if (appId == null || user == null || review == null) {
-      return;
+    if (loadedReview.isPending) return;
+    const rev = loadedReview.value;
+    const reviewExists = rev != null;
+    if (reviewExists) {
+      isRated.current = rev.rating > -1;
     }
-    UPDATE.updateReviewAPI(review).then((res) => {
-      if (!isRated.current && review.rating > -1) {
-        isRated.current = true;
-        newReview();
-      }
-      if (res.ok !== 1) {
+    setReview(reviewExists ? rev : blankReview);
+  }, [loadedReview, blankReview]);
+
+  const dispatchReviewUpdate = useCallback(
+    async (action) => {
+      try {
+        const updatedReview = reviewReducer(review, action);
+        if (!isRated.current && updatedReview.rating > -1) {
+          isRated.current = true;
+          newReview();
+        }
+        const res = await UPDATE.updateReviewAPI(updatedReview);
+        if (res.ok !== 1) {
+          throw res;
+        }
+        setReview(updatedReview);
+      } catch (e) {
         alert("Error in saving your review!");
       }
-    });
-  }, [appId, newReview, review, user]);
+    },
+    [newReview, review]
+  );
 
   const [application, appIndex, appData] = useMemo(() => {
     const [_application, _appIndex] = getApplicationDetails(
@@ -164,14 +127,8 @@ function Application({
       _appData = {
         categoryData: transpileCategoryData(_application, program),
         fileData: transpileFileData(_application, program),
-        longAnswers: transpileLongAnswerData(
-          _application,
-          program
-        ),
-        checkBoxAnswers: transpileCheckBoxData(
-          _application,
-          program
-        )
+        longAnswers: transpileLongAnswerData(_application, program),
+        checkBoxAnswers: transpileCheckBoxData(_application, program)
       };
     }
     return [_application, _appIndex, _appData];
@@ -204,11 +161,6 @@ function Application({
           ) : (
             <div>
               <p> Loading... </p>
-              {/*}
-              <p> This application data is not available at the moment </p>
-              <p> Some applications are unavailable due to using an older version of the application. </p>
-              <p> Please contact us to have the data migrated (arbitrium@uwblueprint.org) </p>
-              */}
             </div>
           )}
         </h1>
@@ -236,9 +188,7 @@ function Application({
             color="primary"
             disabled={!previousApplication}
             onClick={() => {
-              previousApplication
-                ? history.push(previousApplication)
-                : console.log("Previous Application doesn't exist");
+              previousApplication && history.push(previousApplication);
             }}
           >
             Previous applicant
@@ -248,9 +198,7 @@ function Application({
             color="primary"
             disabled={!nextApplication}
             onClick={() => {
-              nextApplication
-                ? history.push(nextApplication)
-                : console.log("Previous Application doesn't exist");
+              nextApplication && history.push(nextApplication);
             }}
           >
             Next applicant

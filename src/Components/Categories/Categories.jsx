@@ -85,8 +85,6 @@ const useStyles = makeStyles({
 });
 
 const Categories = ({ categoryData }) => {
-
-  console.log(categoryData)
   const classes = useStyles();
 
   return (
@@ -141,7 +139,8 @@ const Categories = ({ categoryData }) => {
               <CategoryWrapper>
                 {categoryData.grant.map(({ title, value }, index) => (
                   <div className="category" key={index}>
-                    {title !== "Agency Website" && title !== "Other Social Media" ? (
+                    {title !== "Agency Website" &&
+                    title !== "Other Social Media" ? (
                       <>
                         <span className="title">{title}</span>
                         <span className="value">{value}</span>
