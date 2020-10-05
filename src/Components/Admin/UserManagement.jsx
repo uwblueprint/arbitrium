@@ -56,7 +56,7 @@ function convertToTableData(fetched, programs) {
 }
 
 function UserManagement() {
-  const [loadUsers] = usePromise(GET.getAllUsersAPI, {}, []);
+  const [loadUsers, reloadUsers] = usePromise(GET.getAllUsersAPI, {}, []);
   const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
 
   const users = useMemo(
@@ -68,6 +68,10 @@ function UserManagement() {
     [loadUsers, programs]
   );
 
+  const updateUsers = () => {
+    reloadUsers();
+  };
+
   return (
     <Wrapper>
       {!loadUsers.isPending ? (
@@ -75,12 +79,16 @@ function UserManagement() {
           <Header>
             <h1 style={{ color: "black" }}>User Management</h1>
             <div className="button-container">
-              <DialogTriggerButton Dialog={NewUserDialog} closeOnEsc={true}>
+              <DialogTriggerButton
+                Dialog={NewUserDialog}
+                closeOnEsc={true}
+                alertParent={updateUsers}
+              >
                 Create New User
               </DialogTriggerButton>
             </div>
           </Header>
-          <UserManagementTable data={users} />
+          <UserManagementTable data={users} alertParent={updateUsers} />
         </>
       ) : (
         <>
