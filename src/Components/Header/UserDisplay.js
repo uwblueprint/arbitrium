@@ -23,7 +23,6 @@ const Signout = styled.div`
 
 const UserDisplay = () => {
   const { currentUser, appUser } = useContext(AuthContext);
-  console.log(appUser);
 
   if (currentUser != null) {
     return (
