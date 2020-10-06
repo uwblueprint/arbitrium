@@ -11,6 +11,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
+import Dialog from "@material-ui/core/Dialog";
 import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
 import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@material-ui/icons/SentimentSatisfiedAlt";
@@ -21,8 +22,13 @@ import * as UPDATE from "../../requests/update";
 const StyledCard = styled(Card)`
   max-width: 340px;
   max-height: 571px;
-  box-shadow: 2px 2px 4px 2px #cccccc;
-  border-radius: 0px;
+  & .MuiPopover-paper {
+    background-color: #6772e5;
+    padding: 7px 14px;
+  }
+  & .MuiPaper-elevation0 {
+    box-shadow: 2px 2px 4px 2px #cccccc;
+  }
   .close {
     margin-left: 290px;
     font-size: 20px;
@@ -94,21 +100,14 @@ export default function Feedback(user) {
     <div>
       <FeedbackIcon
         cursor="pointer"
-        color="white"
+        color="black"
         onClick={handleClick}
       ></FeedbackIcon>
-      <Popover
+      <Dialog
+        style={{ boxShadow: "20px 20px red;" }}
         id={id}
         open={open}
         anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right"
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right"
-        }}
       >
         <StyledCard>
           <CardContent>
@@ -217,7 +216,7 @@ export default function Feedback(user) {
             </Button>
           </CardContent>
         </StyledCard>
-      </Popover>
+      </Dialog>
     </div>
   );
 }
