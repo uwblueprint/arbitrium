@@ -9,6 +9,9 @@ import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
 
+import CreateEditMultipleChoice from "./CreateEditMultipleChoice";
+import CreateEditShortAnswer from "./CreateEditShortAnswer";
+
 const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;
 `;
