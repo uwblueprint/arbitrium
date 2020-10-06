@@ -101,7 +101,6 @@ function Header({ program, loadProgram, history, admin }) {
   };
 
   const handleSelect = async (newProgram) => {
-    console.log(newProgram);
     setAnchorEl(null);
     await updateUserProgramAPI({
       userId: currentUser.uid,
@@ -162,7 +161,7 @@ function Header({ program, loadProgram, history, admin }) {
                 ))}
                 {validPrograms.length === 0 ? (
                   <MenuItem key={"None"}>
-                    You don't have access to any programs
+                    You don&apos;t have access to any programs
                   </MenuItem>
                 ) : null}
               </div>

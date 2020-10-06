@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../Authentication/Auth.js";
 import styled from "styled-components";
 import Popover from "@material-ui/core/Popover";
 import Card from "@material-ui/core/Card";
@@ -57,7 +58,8 @@ const StyledCard = styled(Card)`
   }
 `;
 
-export default function Feedback(user) {
+export default function Feedback() {
+  const { currentUser } = useContext(AuthContext);
   const [experience, setExperience] = useState("");
   const [feedbackPar, setFeedbackPar] = useState("");
   const [comment, setComment] = useState("");
@@ -89,11 +91,12 @@ export default function Feedback(user) {
 
   const sendFeedback = () => (event) => {
     UPDATE.createFeedbackAPI({
-      userId: "",
+      userId: currentUser.uid,
       experience: experience,
       feedbackPar: feedbackPar,
       comment: comment
     });
+    handleClose();
   };
 
   return (

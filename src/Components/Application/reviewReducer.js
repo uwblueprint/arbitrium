@@ -22,14 +22,10 @@ import { produce } from "immer";
  */
 export const INSERT_COMMENT = "INSERT_COMMENT";
 export const UPDATE_RATING = "UPDATE_RATING";
-export const LOAD_REVIEW = "LOAD_REVIEW";
 
 const MASTER_ID = "master";
 
 export function reviewReducer(review, action) {
-  if (action.type === LOAD_REVIEW) {
-    return action.review;
-  }
   return produce(review, (draftReview) => {
     switch (action.type) {
       case INSERT_COMMENT:
