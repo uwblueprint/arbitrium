@@ -1,4 +1,6 @@
-import { produce } from "immer";
+import { produce, enableMapSet } from "immer";
+
+enableMapSet();
 
 export const EDIT_NAME = "EDIT_NAME";
 export const EDIT_PREFERRED_NAME = "EDIT_PREFERRED_NAME";
