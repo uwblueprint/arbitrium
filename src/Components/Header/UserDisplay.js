@@ -22,13 +22,13 @@ const Signout = styled.div`
 `;
 
 const UserDisplay = () => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, appUser } = useContext(AuthContext);
 
   if (currentUser != null) {
     return (
       <div>
         <Signout>
-          {currentUser.email}
+          {"Hi " + appUser.name + "!"}
           <button color="primary" onClick={() => firebaseApp.auth().signOut()}>
             <FontAwesomeIcon icon={faSignOutAlt} />
           </button>

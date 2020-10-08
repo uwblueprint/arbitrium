@@ -9,6 +9,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ArrowDropDownCircleOutlinedIcon from "@material-ui/icons/ArrowDropDownCircleOutlined";
 import { updateUserProgramAPI } from "../../requests/update";
 import { AuthContext } from "../../Authentication/Auth.js";
+import Feedback from "../Feedback/Feedback.jsx";
 import { connect } from "react-redux";
 import { getAllProgramsAPI } from "../../requests/get";
 import usePromise from "../../Hooks/usePromise";
@@ -24,7 +25,6 @@ const Container = styled.div`
   width: 100vw;
   z-index: 100;
 
-  background: #ffffff;
   border-bottom: 1px solid #cccccc;
   align-items: center;
   justify-content: center;
@@ -62,8 +62,6 @@ const UserDisplayWrapper = styled.div`
   font-weight: normal;
   font-size: 24px;
   line-height: 28px;
-
-  color: #ffffff;
 `;
 
 //TODO: Use a globally defined font variable for tooltips
@@ -170,6 +168,7 @@ function Header({ program, loadProgram, history, admin }) {
             ) : null}
           </Menu>
         </div>
+        <Feedback user={currentUser} />
         <UserDisplayWrapper>
           <UserDisplay />
         </UserDisplayWrapper>

@@ -1,5 +1,9 @@
 import { POST, PUT } from "./Helper.js";
 
+async function createFeedbackAPI(databody) {
+  return POST("/api/feedback", databody);
+}
+
 async function updateReviewAPI(databody) {
   return POST("/api/ratings", databody);
 }
@@ -25,6 +29,7 @@ async function createUserAPI(databody) {
 }
 
 export {
+  createFeedbackAPI,
   updateReviewAPI,
   updateStackedAPI,
   updateUserAPI,
