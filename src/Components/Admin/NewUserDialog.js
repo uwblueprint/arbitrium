@@ -46,7 +46,8 @@ function NewUserDialog({ onSubmit, close, confirm }) {
       confirm();
     } catch (e) {
       console.error(e);
-      if (e.code === "auth/email-already-exists") {
+      if (e.message) {
+        // error message set on new user creation in backend
         alert(e.message);
       } else {
         alert("Something went wrong. User created unsuccessfully.");

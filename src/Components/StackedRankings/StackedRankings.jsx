@@ -6,7 +6,7 @@ import { makeStyles } from "@material-ui/core";
 import RankingCard from "./RankingCard";
 import usePromise from "../../Hooks/usePromise";
 import { getAllStackingsAPI } from "../../requests/get";
-import * as UPDATE from "../../requests/update";
+import { updateStackedAPI } from "../../requests/update";
 import { reorder } from "../../Utils/dragAndDropUtils";
 import { ProgramContext } from "../../Contexts/ProgramContext";
 import { AuthContext } from "../../Authentication/Auth";
@@ -107,6 +107,42 @@ function compare(a, b) {
   return 0;
 }
 
+function getValidRankings(fetchedRankings, applications) {
+  const applicationIdSet = new Set(applications.map((app) => app._id));
+  return fetchedRankings.filter((rank) => applicationIdSet.has(rank._id));
+}
+
+async function createUpdateMissingRankings(
+  existingRankings,
+  user,
+  applications
+) {
+  const existingReviewsIds = new Set(existingRankings.map((app) => app._id));
+  const missingApps = applications.reduce(
+    (arr, app) =>
+      !existingReviewsIds.has(app._id) && arr.push({ appId: app._id }),
+    []
+  );
+  const updatedApps = [...existingRankings, ...missingApps];
+  try {
+    await updateStackedAPI({
+      userId: user.userId,
+      rankings: updatedApps
+    });
+    const sortedNewRankings = await getAllStackingsAPI({ user });
+    if (existingRankings.length === 0) {
+      // Should sort on initial creation.
+      sortedNewRankings.sort(compare);
+    }
+    await updateStackedAPI({
+      userId: user.userId,
+      rankings: sortedNewRankings.map((app) => ({ appId: app._id }))
+    });
+  } catch (e) {
+    console.error("Unable to initialize stacked rankings: " + e);
+  }
+}
+
 function StackedRankings({ history }) {
   const { appUser: user } = useContext(AuthContext);
   const { applications, reviewCount } = useContext(ProgramContext);
@@ -117,36 +153,19 @@ function StackedRankings({ history }) {
   const shouldTranslate = useRef(false);
   const classes = useStyles();
 
-  // Load applications
   useEffect(() => {
-    async function fillInRankings(numExistingReviews) {
-      // we should initialize the user's rankings
-      const initApps = applications.map((app) => ({ appId: app._id }));
-      await UPDATE.updateStackedAPI({
-        userId: user.userId,
-        rankings: initApps
-      });
-      const sortedNewRankings = await getAllStackingsAPI({ user });
-      if (numExistingReviews === 0) {
-        sortedNewRankings.sort(compare);
-      }
-      await UPDATE.updateStackedAPI({
-        userId: user.userId,
-        rankings: sortedNewRankings.map((app) => ({ appId: app._id }))
-      });
+    async function fillInRankings(existingRankings) {
+      await createUpdateMissingRankings(existingRankings, user, applications);
       refetch({ user });
     }
-
+    // Load rankings
     if (fetchedRankings.isPending) return;
-
-    const applicationIdSet = new Set();
-    applications.forEach((app) => applicationIdSet.add(app._id));
-
-    const updatedRankings = fetchedRankings.value.filter((rank) =>
-      applicationIdSet.has(rank._id)
+    const updatedRankings = getValidRankings(
+      fetchedRankings.value,
+      applications
     );
     if (updatedRankings.length !== applications.length) {
-      fillInRankings(updatedRankings.length);
+      fillInRankings(updatedRankings);
       return;
     }
     setRankings(
@@ -192,7 +211,7 @@ function StackedRankings({ history }) {
     );
     try {
       setRankings(reorderedList);
-      UPDATE.updateStackedAPI({
+      updateStackedAPI({
         userId: user.userId,
         rankings: reorderedList.map((app) => ({ appId: app._id }))
       });
