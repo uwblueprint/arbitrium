@@ -4,6 +4,7 @@ import { AuthContext } from "./Auth";
 import Navigation from "../Components/Navigation/Navigation";
 import LoadingOverlay from "../Components/Common/LoadingOverlay";
 import { Header } from "../Components/Header/Header";
+import { NavigationHeader } from "../Components/Header/NavigationHeader";
 import { ProgramContext } from "../Contexts/ProgramContext";
 import createContainer from "../Components/Container/Container";
 import { connect } from "react-redux";
@@ -36,7 +37,8 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
     <>
       <Container>
         <Header history={history} admin={adminRoute} />
-        {!route.path.includes("admin") ? <Navigation /> : null}
+        <NavigationHeader history={history} admin={adminRoute} />
+        {/*!route.path.includes("admin") ? <Navigation /> : null*/}
         {RouteComponent ? (
           <Route
             {...rest}
