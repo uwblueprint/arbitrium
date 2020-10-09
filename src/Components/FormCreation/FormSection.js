@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import IconButton from "@material-ui/core/IconButton";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles({
   collapse: {
@@ -36,11 +40,23 @@ const useStyles = makeStyles({
     paddingRight: "10px",
     paddingTop: "5px",
     paddingBottom: "5px"
+  },
+  paper: {
+    boxShadow: "0 2px 3px 1px #cccccc"
   }
 });
 
 function FormSection({ numSections, section, title, description }) {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleAnchorClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleAnchorClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div>
@@ -52,11 +68,36 @@ function FormSection({ numSections, section, title, description }) {
           classes={{ title: classes.title }}
           title={title}
           id={section}
+          action={
+            <IconButton
+              aria-label="actions"
+              aria-controls="actions-menu"
+              onClick={handleAnchorClick}
+            >
+              <MoreVertIcon />
+            </IconButton>
+          }
         />
         <CardContent classes={{ root: classes.content }}>
           {description}
         </CardContent>
       </Card>
+      <Menu
+        id="actions-menu"
+        classes={classes}
+        anchorEl={anchorEl}
+        getContentAnchorEl={null}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleAnchorClose}
+      >
+        <MenuItem onClick={console.log("a")}>Duplicate section</MenuItem>
+        <MenuItem onClick={console.log("b")}>Move section</MenuItem>
+        <MenuItem onClick={console.log("c")}>Delete section</MenuItem>
+        <MenuItem onClick={console.log("c")}>Merge with above</MenuItem>
+      </Menu>
     </div>
   );
 }
