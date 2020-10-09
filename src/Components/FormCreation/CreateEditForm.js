@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 
 const FormWrapper = styled.div`
   margin-top: 50px;
-  padding-left: 10%;
+  padding-left: 15%;
 `;
 
 function CreateEditForm() {
