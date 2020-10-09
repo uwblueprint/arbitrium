@@ -77,4 +77,25 @@ async function PUT(url, databody) {
   return body;
 }
 
-export { PUT, GET, POST, setProgram };
+async function DELETE(url) {
+  //Get the program from the url - we will pass this in the url and the
+  //backend will query the corresponding database
+  //let program = window.location.pathname.split("/")[0]
+
+  const response = await fetch(proxy + url, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      database: program
+    }
+  });
+
+  const body = response.json();
+  if (!response.ok) {
+    throw Error(body.message);
+  }
+  return body;
+}
+
+export { PUT, GET, POST, DELETE, setProgram };
