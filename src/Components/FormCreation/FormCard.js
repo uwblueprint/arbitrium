@@ -43,7 +43,7 @@ function FormCard({ card, question, active }) {
   const classes = useStyles();
 
   return (
-    <div>
+    <div style={{ display: "flex" }}>
       <Card className={active ? classes.active : classes.root}>
         <CardHeader
           classes={{ title: classes.title }}
