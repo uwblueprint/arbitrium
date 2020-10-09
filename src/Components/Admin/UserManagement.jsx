@@ -68,10 +68,6 @@ function UserManagement() {
     [loadUsers, programs]
   );
 
-  const updateUsers = () => {
-    reloadUsers();
-  };
-
   return (
     <Wrapper>
       {!loadUsers.isPending ? (
@@ -82,13 +78,13 @@ function UserManagement() {
               <DialogTriggerButton
                 Dialog={NewUserDialog}
                 closeOnEsc={true}
-                alertParent={updateUsers}
+                alertParent={reloadUsers}
               >
                 Create New User
               </DialogTriggerButton>
             </div>
           </Header>
-          <UserManagementTable data={users} alertParent={updateUsers} />
+          <UserManagementTable data={users} alertParent={reloadUsers} />
         </>
       ) : (
         <>
