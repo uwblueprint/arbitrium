@@ -69,13 +69,13 @@ function CreateEditForm() {
       {sections.map((section, key) => (
         <FormWrapper key={key}>
           <FormSection
-            key={key}
+            key={key + "_section"}
             numSections={sections.length}
             section={key + 1}
             title={section.title}
             description={section.desc}
           />
-          <FormCard key={key} active={true} />
+          <FormCard key={key + "_card"} active={true} />
         </FormWrapper>
       ))}
     </Wrapper>

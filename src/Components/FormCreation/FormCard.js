@@ -15,25 +15,28 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: () => ({
+  root: {
     fontSize: 14,
     borderRadius: 0,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
     width: 816
-  }),
-  active: () => ({
+  },
+  active: {
     fontSize: 14,
     borderRadius: 0,
-    borderLeft: `4px solid #2261AD`,
+    borderLeft: "4px solid #2261AD",
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
     width: 816
-  }),
+  },
   title: {
     color: "#000",
     fontSize: "20px",
     fontWeight: "500"
+  },
+  container: {
+    display: "flex"
   }
 });
 
@@ -43,14 +46,10 @@ function FormCard({ card, question, active }) {
   const classes = useStyles();
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className={classes.container}>
       <Card className={active ? classes.active : classes.root}>
-        <CardHeader
-          classes={{ title: classes.title }}
-          title={question}
-          id={card}
-        />
-        <CardContent classes={{ root: classes.content }}>todo</CardContent>
+        <CardHeader className={classes.title} title={question} id={card} />
+        <CardContent className={classes.content}>todo</CardContent>
       </Card>
       {active ? <AddCardComponent /> : null}
     </div>

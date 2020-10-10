@@ -12,14 +12,14 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: () => ({
+  root: {
     fontSize: 14,
     borderRadius: 0,
-    borderTop: `8px solid #2261AD`,
+    borderTop: "8px solid #2261AD",
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
     width: 816
-  }),
+  },
   title: {
     color: "#000",
     fontSize: "20px",
@@ -49,14 +49,8 @@ function FormSection({ numSections, section, title, description }) {
         Section {section} of {numSections}
       </span>
       <Card className={classes.root}>
-        <CardHeader
-          classes={{ title: classes.title }}
-          title={title}
-          id={section}
-        />
-        <CardContent classes={{ root: classes.content }}>
-          {description}
-        </CardContent>
+        <CardHeader className={classes.title} title={title} id={section} />
+        <CardContent className={classes.content}>{description}</CardContent>
       </Card>
     </div>
   );

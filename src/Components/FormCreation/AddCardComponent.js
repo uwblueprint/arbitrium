@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: () => ({
+  root: {
     fontSize: 14,
     borderRadius: 0,
     boxShadow: "0 2px 3px 1px #cccccc",
@@ -25,7 +25,7 @@ const useStyles = makeStyles({
     width: 150,
     height: 55,
     display: "flex"
-  }),
+  },
   text: {
     color: "#2261AD",
     fontSize: 14,
@@ -33,6 +33,17 @@ const useStyles = makeStyles({
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal"
+  },
+  icon: {
+    height: "15px",
+    width: "15px",
+    marginRight: 10,
+    marginBottom: 5,
+    verticalAlign: "-0.5em"
+  },
+  icon_container: {
+    cursor: "pointer",
+    color: "#2261AD"
   }
 });
 
@@ -42,36 +53,16 @@ function AddCardComponent() {
   return (
     <div>
       <Card className={classes.root}>
-        <CardContent classes={{ root: classes.content }}>
+        <CardContent className={classes.content}>
           <p className={classes.text}>
-            <span style={{ cursor: "pointer", color: "#2261AD" }}>
-              <FontAwesomeIcon
-                style={{
-                  height: "15px",
-                  width: "15px",
-                  marginRight: 10,
-                  marginBottom: 5,
-                  verticalAlign: "-0.5em",
-                  color: "#2261AD"
-                }}
-                icon={faPlus}
-              />
+            <span className={classes.icon_container}>
+              <FontAwesomeIcon className={classes.icon} icon={faPlus} />
               Add Question
             </span>
           </p>
           <p className={classes.text}>
-            <span style={{ cursor: "pointer", color: "#2261AD" }}>
-              <FontAwesomeIcon
-                style={{
-                  height: "15px",
-                  width: "15px",
-                  marginRight: 10,
-                  marginBottom: 5,
-                  verticalAlign: "-0.5em",
-                  color: "#2261AD"
-                }}
-                icon={faLayerGroup}
-              />
+            <span className={classes.icon_container}>
+              <FontAwesomeIcon className={classes.icon} icon={faLayerGroup} />
               Add Section
             </span>
           </p>
