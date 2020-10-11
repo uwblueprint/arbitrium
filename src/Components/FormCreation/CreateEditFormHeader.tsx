@@ -1,7 +1,6 @@
-import React, { useCallback } from "react";
+import React from "react";
 import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
-import { useFormDispatch, useFormState } from "./CreateEditFormStateManagement";
 
 const Header = styled.div`
   padding: 48px 100px;
@@ -36,23 +35,35 @@ const DescriptionInput = styled(InputBase)`
   }
 `;
 
-function CreateEditFormHeader(): React.ReactElement<typeof Header> {
-  const dispatch = useFormDispatch();
-  const { title, description } = useFormState();
+type HeaderData = {
+  title: string;
+  description: string;
+};
 
-  const onTitleChange = useCallback(
-    (e) => {
-      dispatch({ type: "EDIT_TITLE", title: e.target.value });
-    },
-    [dispatch]
-  );
+type Props = {
+  title: string;
+  description: string;
+  onChange: (data: HeaderData) => void;
+};
 
-  const onDescriptionChange = useCallback(
-    (e) => {
-      dispatch({ type: "EDIT_DESCRIPTION", description: e.target.value });
-    },
-    [dispatch]
-  );
+function CreateEditFormHeader({
+  title,
+  description,
+  onChange
+}: Props): React.ReactElement<typeof Header> {
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange({
+      title: e.target.value,
+      description
+    });
+  };
+
+  const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange({
+      title,
+      description: e.target.value
+    });
+  };
 
   return (
     <Header>

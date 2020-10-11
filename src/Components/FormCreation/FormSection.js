@@ -3,6 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import IconButton from "@material-ui/core/IconButton";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles({
   collapse: {
@@ -40,17 +42,28 @@ const useStyles = makeStyles({
   }
 });
 
-function FormSection({ numSections, section, title, description }) {
+function FormSection({ numSections, sectionNum, sectionData }) {
   const classes = useStyles();
 
   return (
     <div>
       <span className={classes.section_title}>
-        Section {section} of {numSections}
+        Section {sectionNum} of {numSections}
       </span>
       <Card className={classes.root}>
-        <CardHeader className={classes.title} title={title} id={section} />
-        <CardContent className={classes.content}>{description}</CardContent>
+        <CardHeader
+          className={classes.title}
+          title={sectionData.title}
+          id={sectionNum}
+          action={
+            <IconButton aria-label="settings">
+              <MoreVertIcon />
+            </IconButton>
+          }
+        />
+        <CardContent className={classes.content}>
+          {sectionData.description}
+        </CardContent>
       </Card>
     </div>
   );

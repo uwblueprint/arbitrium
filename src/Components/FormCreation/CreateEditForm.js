@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { HEADER_HEIGHT } from "../Header/Header";
 import styled from "styled-components";
 import FormCard from "./FormCard";
@@ -8,12 +8,7 @@ import * as FORM from "../../requests/forms.js";
 import usePromise from "../../Hooks/usePromise";
 
 import CreateEditFormHeader from "./CreateEditFormHeader";
-import {
-  CreateEditFormDispatchContext,
-  CreateEditFormStateContext,
-  defaultFormState
-} from "./CreateEditFormStateManagement";
-import customFormStateReducer from "../../Reducers/CustomFormStateReducer";
+import { defaultFormState } from "./CreateEditFormStateManagement";
 
 const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;
@@ -25,17 +20,16 @@ const FormWrapper = styled.div`
 `;
 
 function CreateEditForm() {
-  // eslint-disable-next-line no-unused-vars
-  const { currentUser, appUser } = useContext(AuthContext);
+  const { appUser } = useContext(AuthContext);
   const [form, setForm] = useState({});
   const [activeSection, setActiveSection] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
-  const [formState, dispatch] = useReducer(
-    customFormStateReducer,
-    defaultFormState
-  );
   const [loadForm, refetch] = usePromise(FORM.getForm, {
     formId: appUser.currentProgram
+  });
+  const [headerData, setHeaderData] = useState({
+    title: defaultFormState.title,
+    description: defaultFormState.description
   });
 
   useEffect(() => {
@@ -51,13 +45,13 @@ function CreateEditForm() {
             name: "Test",
             type: "short_answer",
             question: "What is the name of your charity?",
-            required: ""
+            required: false
           },
           {
             name: "Test 2",
             type: "short_answer",
             question: "What is the name of your charity?",
-            required: ""
+            required: false
           }
         ]
       },
@@ -125,36 +119,29 @@ function CreateEditForm() {
   }
 
   return (
-    <CreateEditFormStateContext.Provider value={formState}>
-      <CreateEditFormDispatchContext.Provider value={dispatch}>
-        <Wrapper>
-          <CreateEditFormHeader />
-          {form.sections &&
-            form.sections.map((section, key) => (
-              <FormWrapper key={key}>
-                <FormSection
-                  key={key + "_section"}
-                  numSections={form.sections.length}
-                  section={key + 1}
-                  title={section.title}
-                  description={section.desc}
-                />
-                {section.questions.map((_question, questionKey) => (
-                  <FormCard
-                    key={questionKey + "_question"}
-                    active={
-                      activeSection === key && activeQuestion === questionKey
-                    }
-                    handleActive={updateActive}
-                    sectionKey={key}
-                    questionKey={questionKey}
-                  />
-                ))}
-              </FormWrapper>
+    <Wrapper>
+      <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
+      {form.sections &&
+        form.sections.map((section, key) => (
+          <FormWrapper key={key}>
+            <FormSection
+              key={key + "_section"}
+              numSections={form.sections.length}
+              sectionNum={key + 1}
+              sectionData={section}
+            />
+            {section.questions.map((_question, questionKey) => (
+              <FormCard
+                key={questionKey + "_question"}
+                active={activeSection === key && activeQuestion === questionKey}
+                handleActive={updateActive}
+                sectionKey={key}
+                questionKey={questionKey}
+              />
             ))}
-        </Wrapper>
-      </CreateEditFormDispatchContext.Provider>
-    </CreateEditFormStateContext.Provider>
+          </FormWrapper>
+        ))}
+    </Wrapper>
   );
 }
 
