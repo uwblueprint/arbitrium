@@ -59,26 +59,25 @@ function CreateEditForm() {
   }, []);
 
   return (
-    <Wrapper>
-      <CreateEditFormStateContext.Provider value={formState}>
-        <CreateEditFormDispatchContext.Provider value={dispatch}>
+    <CreateEditFormStateContext.Provider value={formState}>
+      <CreateEditFormDispatchContext.Provider value={dispatch}>
+        <Wrapper>
           <CreateEditFormHeader />
-        </CreateEditFormDispatchContext.Provider>
-      </CreateEditFormStateContext.Provider>
-
-      {sections.map((section, key) => (
-        <FormWrapper key={key}>
-          <FormSection
-            key={key + "_section"}
-            numSections={sections.length}
-            section={key + 1}
-            title={section.title}
-            description={section.desc}
-          />
-          <FormCard key={key + "_card"} active={true} />
-        </FormWrapper>
-      ))}
-    </Wrapper>
+          {sections.map((section, key) => (
+            <FormWrapper key={key}>
+              <FormSection
+                key={key + "_section"}
+                numSections={sections.length}
+                section={key + 1}
+                title={section.title}
+                description={section.desc}
+              />
+              <FormCard key={key + "_card"} active={true} />
+            </FormWrapper>
+          ))}
+        </Wrapper>
+      </CreateEditFormDispatchContext.Provider>
+    </CreateEditFormStateContext.Provider>
   );
 }
 
