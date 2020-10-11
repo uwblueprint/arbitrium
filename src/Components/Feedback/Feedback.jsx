@@ -55,6 +55,9 @@ const StyledCard = styled(Card)`
     min-width: 308px;
     font-size: 14px;
   }
+  .container {
+    box-shadow: 20px 20px red;
+  }
 `;
 
 export default function Feedback() {
@@ -100,17 +103,8 @@ export default function Feedback() {
 
   return (
     <div>
-      <FeedbackIcon
-        cursor="pointer"
-        color="black"
-        onClick={handleClick}
-      ></FeedbackIcon>
-      <Dialog
-        style={{ boxShadow: "20px 20px red;" }}
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-      >
+      <FeedbackIcon cursor="pointer" onClick={handleClick} />
+      <Dialog className="container" id={id} open={open}>
         <StyledCard>
           <CardContent>
             <div>
@@ -118,14 +112,14 @@ export default function Feedback() {
                 className="close"
                 cursor="pointer"
                 onClick={handleClose}
-              ></CloseIcon>
+              />
             </div>
             <Typography className="title">Send us your feedback!</Typography>
             <Typography className="comment">
-              Do you have a suggestion or found some bug? <br></br>
+              Do you have a suggestion or found some bug? <br />
               Let us know in the field below
             </Typography>
-            <hr></hr>
+            <hr />
             <Typography className="subtitle">
               How is your experience?
             </Typography>
