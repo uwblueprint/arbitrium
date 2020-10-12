@@ -23,16 +23,9 @@ const Container = styled.div`
   width: 100vw;
   z-index: 100;
 
-  background: #ffffff;
   border-bottom: 1px solid #cccccc;
   align-items: center;
   justify-content: center;
-`;
-
-const ButtonWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  align-items: center;
 `;
 
 const AppName = styled.div`
@@ -68,6 +61,55 @@ const useStyles = makeStyles({
   tooltip: {
     fontSize: "16px",
     maxWidth: "none"
+  },
+  button: {
+    height: "100%"
+  },
+  root: {
+    background: "#2261AD",
+    color: "white",
+    borderRadius: 0,
+    height: HEADER_HEIGHT,
+    padding: "0px 0px 0px 20px",
+    "&::after": {
+      borderLeft: "28px solid #2261AD",
+      borderTop: "28px solid white",
+      borderBottom: "28px solid white",
+      content: '" "'
+    }
+  },
+  root2: {
+    background: "white",
+    color: "black",
+    borderRadius: 0,
+    padding: "0px 0px 0px 50px",
+    height: HEADER_HEIGHT,
+    "&::after": {
+      borderLeft: "25px solid white",
+      borderTop: "28px solid white",
+      borderBottom: "28px solid white",
+      content: '" "'
+    }
+  },
+  root3: {
+    background: "#2261AD",
+    color: "white",
+    borderRadius: 0,
+    padding: "0px 20px",
+    height: HEADER_HEIGHT
+  },
+  root4: {
+    background: "#2261AD",
+    color: "white",
+    borderRadius: 0,
+    padding: "0px 20px",
+    height: HEADER_HEIGHT,
+    borderLeft: "28px solid #2261AD",
+    borderTop: "28px solid lightblue",
+    borderBottom: "28px solid lightblue"
+  },
+  label: {
+    textTransform: "capitalize"
   }
 });
 
@@ -82,12 +124,26 @@ function NavigationHeader({ program, loadProgram, history, admin }) {
 
   return (
     <Container>
-      <ButtonWrapper>
-        <Button onClick={() => console.log("Clicked")}>
-          {" "}
-          All Applications
-        </Button>
-      </ButtonWrapper>
+      <Button
+        classes={{
+          root: classes.root3, // class name, e.g. `classes-nesting-root-x`
+          label: classes.label // class name, e.g. `classes-nesting-label-x`
+        }}
+        onClick={() => console.log("Clicked")}
+      >
+        {" "}
+        1. Rate Candidates
+      </Button>
+      <Button
+        classes={{
+          root: classes.root4, // class name, e.g. `classes-nesting-root-x`
+          label: classes.label // class name, e.g. `classes-nesting-label-x`
+        }}
+        onClick={() => console.log("Clicked")}
+      >
+        {" "}
+        2. Stacked Rankings
+      </Button>
     </Container>
   );
 }
