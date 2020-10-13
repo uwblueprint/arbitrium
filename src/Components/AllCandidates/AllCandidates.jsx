@@ -213,8 +213,26 @@ function AllCandidates({ history, program }) {
                 variant="contained"
                 color="primary"
                 target="_blank"
-                value="OpenCommittee"
+                value="CreateForm"
                 style={{ width: "250px", maxWidth: "250px" }}
+                onClick={() => {
+                  history.push("/admin/create-form");
+                }}
+              >
+                Create form
+              </Button>
+            </div>
+            <div className="button-container">
+              <Button
+                variant="contained"
+                color="primary"
+                target="_blank"
+                value="OpenCommittee"
+                style={{
+                  width: "250px",
+                  maxWidth: "250px",
+                  marginLeft: "10px"
+                }}
                 onClick={() => {
                   history.push("/admin/committeereview");
                 }}
