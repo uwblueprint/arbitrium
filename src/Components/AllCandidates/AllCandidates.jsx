@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useContext } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
@@ -7,6 +7,8 @@ import AllCandidatesTable from "./AllCandidatesTable";
 import { CSVLink } from "react-csv";
 import moment from "moment";
 import usePromise from "../../Hooks/usePromise";
+import { createForm } from "../../requests/forms";
+import { AuthContext } from "../../Authentication/Auth.js";
 
 import {
   getCandidateSubmissions,
@@ -165,6 +167,7 @@ async function getCandidateSubmissionInfo() {
 }
 
 function AllCandidates({ history, program }) {
+  const { currentUser, appUser } = useContext(AuthContext);
   const [applications] = usePromise(getCandidateSubmissionInfo, {}, []);
   const [allUsers] = usePromise(getAllUsersAPI, {}, []);
   const [comments] = usePromise(
@@ -194,6 +197,20 @@ function AllCandidates({ history, program }) {
     appsDownloadLink.current.link.click();
   }
 
+  async function initiateForm() {
+    const data = {
+      formId: program,
+      name: "Name of Form",
+      createdBy: appUser.userId,
+      draft: true,
+      sections: []
+    };
+    const res = await createForm(data);
+    if (res) {
+      history.push("/admin/form/" + program);
+    }
+  }
+
   const dataReady = !(applications.isPending || allUsers.isPending);
   const applicationsCSVFilename = `Ratings and Rankings - ${moment().format(
     "DD-MM-YYYY hh-mm-ss"
@@ -215,9 +232,7 @@ function AllCandidates({ history, program }) {
                 target="_blank"
                 value="CreateForm"
                 style={{ width: "250px", maxWidth: "250px" }}
-                onClick={() => {
-                  history.push("/admin/create-form");
-                }}
+                onClick={initiateForm}
               >
                 Create form
               </Button>
