@@ -176,17 +176,18 @@ function AllCandidates({ history, program }) {
   const appsDownloadLink = useRef();
 
   const totalReviewers = useMemo(
-    (program) =>
+    () =>
       allUsers.value.filter(
         (user) =>
           Array.isArray(user.programs) &&
           program &&
           user.programs.some((p) => p.id === program) &&
+          !user.email.includes("uwblueprint.org") &&
           (process.env.REACT_APP_NODE_ENV === "development" ||
-            (!user.email.endsWith("uwblueprint.org") &&
-              !user.email.endsWith("test.com")))
+            (user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
+              user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"))
       ).length,
-    [allUsers]
+    [allUsers, program]
   );
 
   function exportAllData() {
