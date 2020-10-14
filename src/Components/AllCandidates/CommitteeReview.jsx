@@ -109,9 +109,7 @@ async function fetchCommitteeData(program) {
       Array.isArray(user.programs) &&
       user.programs.some((p) => p.id === program.program) &&
       !user.email.includes("uwblueprint.org") &&
-      (process.env.REACT_APP_NODE_ENV === "development" ||
-        (user.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-          user.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"))
+      !user.email.includes("test.com")
   );
 
   const requests = appUsers.map((user) => getReviewCountAPI(user.userId));

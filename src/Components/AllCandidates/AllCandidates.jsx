@@ -132,13 +132,6 @@ async function getCandidateSubmissionInfo() {
   const appIdToAverageRanking = {};
   applications.forEach((app) => (appIdToAverageRanking[app._id] = []));
   rankings.forEach((rank) => {
-    if (
-      process.env.REACT_APP_NODE_ENV !== "development" &&
-      rank.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-      rank.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
-    ) {
-      return;
-    }
     rank.applications.forEach(
       (app, ind) =>
         appIdToAverageRanking[app.appId] &&
@@ -176,15 +169,14 @@ function AllCandidates({ history, program }) {
   const appsDownloadLink = useRef();
 
   const totalReviewers = useMemo(
-    (progam) =>
+    () =>
       allUsers.value.filter(
         (user) =>
           Array.isArray(user.programs) &&
           program &&
           user.programs.some((p) => p.id === program) &&
-          (process.env.REACT_APP_NODE_ENV === "development" ||
-            (!user.email.endsWith("uwblueprint.org") &&
-              !user.email.endsWith("test.com")))
+          !user.email.includes("uwblueprint.org") &&
+          !user.email.includes("test.com")
       ).length,
     [allUsers, program]
   );
