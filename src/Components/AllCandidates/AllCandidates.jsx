@@ -176,7 +176,7 @@ function AllCandidates({ history, program }) {
   const appsDownloadLink = useRef();
 
   const totalReviewers = useMemo(
-    (progam) =>
+    (program) =>
       allUsers.value.filter(
         (user) =>
           Array.isArray(user.programs) &&
@@ -186,7 +186,7 @@ function AllCandidates({ history, program }) {
             (!user.email.endsWith("uwblueprint.org") &&
               !user.email.endsWith("test.com")))
       ).length,
-    [allUsers, program]
+    [allUsers]
   );
 
   function exportAllData() {
