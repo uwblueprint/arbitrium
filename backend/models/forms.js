@@ -99,10 +99,12 @@ const formsSchema = new mongoose.Schema(
     },
     sections: {
       type: [section]
+    },
+    formId: {
+      type: String
     }
   },
   { collection: "Forms" }
 );
 
-const Forms = mongoose.model("Forms", formsSchema);
-module.exports = Forms;
+module.exports = formsSchema;
