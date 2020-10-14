@@ -167,6 +167,7 @@ async function getCandidateSubmissionInfo() {
 }
 
 function AllCandidates({ history, program }) {
+  // eslint-disable-next-line no-unused-vars
   const { currentUser, appUser } = useContext(AuthContext);
   const [applications] = usePromise(getCandidateSubmissionInfo, {}, []);
   const [allUsers] = usePromise(getAllUsersAPI, {}, []);
