@@ -1,2 +1,2 @@
 npm run-script build
-firebase deploy --only hosting:production
+firebase deploy --only hosting:arbitrium
