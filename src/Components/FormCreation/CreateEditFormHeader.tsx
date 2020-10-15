@@ -5,6 +5,7 @@ import { useFormDispatch, useFormState } from "./CreateEditFormStateManagement";
 
 const Header = styled.div`
   padding: 48px 100px;
+  padding-left: 15%;
   box-sizing: border-box;
   height: 176px;
   box-shadow: 0 2px 3px 1px #cccccc;
@@ -15,6 +16,7 @@ const TitleInput = styled(InputBase)`
     font-size: 24px;
   }
   && {
+    width: 846px;
     margin-bottom: 16px;
     line-height: 36px;
   }
@@ -22,7 +24,7 @@ const TitleInput = styled(InputBase)`
 
 const DescriptionInput = styled(InputBase)`
   && {
-    width: 646px
+    width: 846px;
     display: block;
     line-height: 21px;
     overflow-y: auto;
