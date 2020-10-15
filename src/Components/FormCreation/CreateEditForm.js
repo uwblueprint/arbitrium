@@ -18,6 +18,17 @@ const FormWrapper = styled.div`
   padding-left: 15%;
 `;
 
+function duplicate_card(card_props) {
+  const new_card = {
+    type: card_props.type,
+    question: card_props.question,
+    required: ""
+  };
+  console.log("Duplicated");
+  // setSections(sections[0].cards.push(new_card));
+  return null;
+}
+
 function CreateEditForm() {
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
