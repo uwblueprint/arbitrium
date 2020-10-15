@@ -85,7 +85,7 @@ function CreateEditForm() {
     if (activeSection !== key) {
       // update database with new section (and questions) information
       setActiveSection(key);
-      setActiveQuestion(0);
+      setActiveQuestion(questionKey);
     } else if (activeQuestion !== questionKey) {
       // update database with new question information
       setActiveQuestion(questionKey);
@@ -148,7 +148,9 @@ function CreateEditForm() {
                     active={
                       activeSection === key && activeQuestion === questionKey
                     }
-                    onClick={() => updateActive(key, questionKey)}
+                    handleActive={updateActive}
+                    sectionKey={key}
+                    questionKey={questionKey}
                   />
                 ))}
               </FormWrapper>
