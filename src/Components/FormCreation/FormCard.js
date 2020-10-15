@@ -42,12 +42,22 @@ const useStyles = makeStyles({
 
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function FormCard({ card, question, active }) {
+function FormCard({
+  card,
+  question,
+  active,
+  handleActive,
+  sectionKey,
+  questionKey
+}) {
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
-      <Card className={active ? classes.active : classes.root}>
+      <Card
+        onClick={() => handleActive(sectionKey, questionKey)}
+        className={active ? classes.active : classes.root}
+      >
         <CardHeader className={classes.title} title={question} id={card} />
         <CardContent className={classes.content}>todo</CardContent>
       </Card>
