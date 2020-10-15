@@ -82,8 +82,6 @@ function CreateEditForm() {
   }, []);
 
   function updateActive(key, questionKey) {
-    console.log(key);
-    console.log(questionKey);
     if (activeSection !== key) {
       // update database with new section (and questions) information
       setActiveSection(key);
