@@ -47,9 +47,13 @@ const regularExpressions = new mongoose.Schema({
 const question = new mongoose.Schema({
   name: {
     type: String
-  },
+   },
+   required: {
+       type: Boolean,
+       default: true
+   },
   description: {
-    type: String
+      type: String
   },
   type: {
     type: String,

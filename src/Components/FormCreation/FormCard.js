@@ -5,10 +5,18 @@ import { Button, Divider } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+<<<<<<< HEAD
 import AddCardComponent from "./AddCardComponent";
+<<<<<<< HEAD
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
+=======
+=======
+import Switch from "react-switch";
+import { updateQuestion } from "../../requests/forms.js";
+>>>>>>> Initial commit
+>>>>>>> Initial commit
 
 const useStyles = makeStyles({
   collapse: {
