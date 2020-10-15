@@ -85,7 +85,6 @@ function FormSection({ numSections, section, title, description }) {
           {description}
         </CardContent>
       </Card>
-
       <Menu
         id="actions-menu"
         classes={classes}
