@@ -47,6 +47,7 @@ const useStyles = makeStyles({
 });
 
 function FormSection({ numSections, section, title, description }) {
+  console.log(section);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -57,6 +58,8 @@ function FormSection({ numSections, section, title, description }) {
   const handleAnchorClose = () => {
     setAnchorEl(null);
   };
+
+  const deleteSection = () => {};
 
   return (
     <div>
@@ -82,6 +85,7 @@ function FormSection({ numSections, section, title, description }) {
           {description}
         </CardContent>
       </Card>
+
       <Menu
         id="actions-menu"
         classes={classes}
@@ -95,7 +99,7 @@ function FormSection({ numSections, section, title, description }) {
       >
         <MenuItem onClick={console.log("a")}>Duplicate section</MenuItem>
         <MenuItem onClick={console.log("b")}>Move section</MenuItem>
-        <MenuItem onClick={console.log("c")}>Delete section</MenuItem>
+        <MenuItem onClick={deleteSection}>Delete section</MenuItem>
         <MenuItem onClick={console.log("c")}>Merge with above</MenuItem>
       </Menu>
     </div>
