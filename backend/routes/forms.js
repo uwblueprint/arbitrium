@@ -38,17 +38,15 @@ router.delete("/:formId", (req, res) => {
 
 // Get form with formId
 router.get("/:formId", (req, res) => {
-  db[req.headers.database].forms.findById(
-    req.params.formId,
-    (error, result) => {
-      if (error) {
-        console.error(`Error getting form with ID = ${req.params.formId}`);
-        res.status(500).send(error);
-      } else {
-        res.status(200).json(result);
-      }
-    }
-  );
+  db[req.headers.database].forms
+    .findOne({ formId: req.params.formId })
+    .then(function(found) {
+      res.status(200).json(found);
+    })
+    .catch(function(err) {
+      console.error(`Error getting form with ID = ${req.params.formId}`);
+      res.status(500).send(err);
+    });
 });
 
 //------------------------------------------------------------------------------

@@ -1,12 +1,11 @@
-import React, { useReducer, useEffect, useState } from "react";
+import React, { useReducer, useEffect, useState, useContext } from "react";
 import { HEADER_HEIGHT } from "../Header/Header";
 import styled from "styled-components";
 import FormCard from "./FormCard";
 import FormSection from "./FormSection";
-// uncomment when beginning work on this
-// import { AuthContext } from "./Auth.js";
-// import * as FORM from "../../requests/forms.js";
-// import usePromise from "../../Hooks/usePromise";
+import { AuthContext } from "../../Authentication/Auth.js";
+import * as FORM from "../../requests/forms.js";
+import usePromise from "../../Hooks/usePromise";
 
 import CreateEditFormHeader from "./CreateEditFormHeader";
 import {
@@ -26,6 +25,8 @@ const FormWrapper = styled.div`
 `;
 
 function CreateEditForm() {
+  // eslint-disable-next-line no-unused-vars
+  const { currentUser, appUser } = useContext(AuthContext);
   const [form, setForm] = useState({});
   const [activeSection, setActiveSection] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -33,53 +34,49 @@ function CreateEditForm() {
     customFormStateReducer,
     defaultFormState
   );
-  // TODO: Grab the programID from the currentProgram field for the user. (AuthContext)
-  // (contact greg for help with AuthContext)
-  // TODO: load form information and then use in useEffect to initialize form
-  // const [loadProgram, refetch] = usePromise(FORM.getForm, { formId: //programID})
+  const [loadForm, refetch] = usePromise(FORM.getForm, {
+    formId: appUser.currentProgram
+  });
 
   useEffect(() => {
-    // Test data
-    const form = {
-      name: "Untitled Form",
-      desc: "Form description", // Might need to add to schema
-      created_by: "",
-      sections: [
-        {
-          title: "About Your Charity",
-          desc: "Section Type: Admin Info",
-          questions: [
-            {
-              name: "Test",
-              type: "short_answer",
-              question: "What is the name of your charity?",
-              required: ""
-            },
-            {
-              name: "Test 2",
-              type: "short_answer",
-              question: "What is the name of your charity?",
-              required: ""
-            }
-          ]
-        },
-        {
-          title: "Untitled Section",
-          desc: "Section Type: Decision Criteria",
-          questions: [
-            {
-              type: "untitled",
-              question: "Untitled Question",
-              options: ["Option 1"],
-              required: ""
-            }
-          ]
-        }
-      ]
-    };
+    // Get form from databse using programID
+    if (loadForm.isPending) return;
+    const initialForm = loadForm.value;
+    initialForm.sections = [
+      {
+        title: "About Your Charity",
+        desc: "Section Type: Admin Info",
+        questions: [
+          {
+            name: "Test",
+            type: "short_answer",
+            question: "What is the name of your charity?",
+            required: ""
+          },
+          {
+            name: "Test 2",
+            type: "short_answer",
+            question: "What is the name of your charity?",
+            required: ""
+          }
+        ]
+      },
+      {
+        title: "Untitled Section",
+        desc: "Section Type: Decision Criteria",
+        questions: [
+          {
+            type: "untitled",
+            question: "Untitled Question",
+            options: ["Option 1"],
+            required: ""
+          }
+        ]
+      }
+    ];
 
-    setForm(form);
-  }, []);
+    setForm(initialForm);
+  }, [loadForm, appUser, refetch]);
 
   function updateActive(key, questionKey) {
     if (activeSection !== key) {
