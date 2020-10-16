@@ -66,13 +66,29 @@ function CreateEditForm() {
 
   // eslint-disable-next-line no-unused-vars
   function handleAddSection() {
-    console.log("handle add section");
     // TODO: add section to sections object
     // TODO: call handleSave to update all sections
     // TODO: call updateActive
   }
 
   // eslint-disable-next-line no-unused-vars
+<<<<<<< HEAD
+=======
+  function handleAddQuestion() {
+    // TODO: add question to section within sections object
+    // TODO: call the update section API endpoint
+    // TODO: call updateActive
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  function handleMoveQuestion() {
+    // TODO: update question location in section within sections object
+    // TODO: call the update section API endpoint
+    // TODO: call updateActive
+  }
+
+  // eslint-disable-next-line no-unused-vars
+>>>>>>> Remove console logs.
   function handleMoveSection() {
     // TODO: update section location in sections object
     // TODO: call handleSave to update all sections
