@@ -16,7 +16,6 @@ const useStyles = makeStyles({
     "& .MuiDrawer-paper": {
       marginTop: "56px",
       maxWidth: `${MAX_NAVBAR_WIDTH}px`,
-      padding: "4px 0",
       position: "fixed",
       marginBottom: "50px",
       zIndex: 100
