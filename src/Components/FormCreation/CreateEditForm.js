@@ -5,6 +5,7 @@ import FormSection from "./FormSection";
 import { AuthContext } from "../../Authentication/Auth.js";
 import * as FORM from "../../requests/forms.js";
 import usePromise from "../../Hooks/usePromise";
+import AddCardComponent from "./AddCardComponent";
 import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
@@ -16,6 +17,10 @@ const Wrapper = styled.div`
 const FormWrapper = styled.div`
   margin-top: 50px;
   padding-left: 15%;
+`;
+
+const CardWrapper = styled.div`
+  display: flex;
 `;
 
 function CreateEditForm() {
