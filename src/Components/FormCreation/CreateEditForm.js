@@ -66,6 +66,7 @@ function CreateEditForm() {
 
   // eslint-disable-next-line no-unused-vars
   function handleAddSection() {
+    console.log("handle add section");
     // TODO: add section to sections object
     // TODO: call handleSave to update all sections
     // TODO: call updateActive
