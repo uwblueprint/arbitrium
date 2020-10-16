@@ -5,8 +5,8 @@ import { Button, Divider } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-<<<<<<< HEAD
 import AddCardComponent from "./AddCardComponent";
+<<<<<<< HEAD
 <<<<<<< HEAD
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
@@ -17,6 +17,10 @@ import Switch from "react-switch";
 import { updateQuestion } from "../../requests/forms.js";
 >>>>>>> Initial commit
 >>>>>>> Initial commit
+=======
+import Switch from "react-switch";
+import { updateQuestion } from "../../requests/forms.js";
+>>>>>>> Button style fixed
 
 const useStyles = makeStyles({
   collapse: {
@@ -93,6 +97,7 @@ function FormCard({
         className={active ? classes.active : classes.root}
       >
         <CardHeader className={classes.title} title={question} id={card} />
+<<<<<<< HEAD
         <CardContent className={classes.content}>
           todo
           <Divider />
@@ -122,6 +127,24 @@ function FormCard({
             </div>
           </div>
         </CardContent>
+=======
+        <CardContent className={classes.content}>todo</CardContent>
+        <div>
+          <Switch
+            onColor="#4a86e8"
+            checkedIcon={false}
+            uncheckedIcon={false}
+            height={20}
+            width={40}
+            //checked={required}
+            /*onChange={updateQuestion("1", "1", JSON.stringify({
+                                required: required
+                            }))}*/
+            //id={key}
+          />
+          <span>Required</span>
+        </div>
+>>>>>>> Button style fixed
       </Card>
     </div>
   );
