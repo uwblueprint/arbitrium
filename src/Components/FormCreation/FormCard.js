@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import AddCardComponent from "./AddCardComponent";
 
 const useStyles = makeStyles({
   collapse: {
@@ -34,9 +33,6 @@ const useStyles = makeStyles({
     color: "#000",
     fontSize: "20px",
     fontWeight: "500"
-  },
-  container: {
-    display: "flex"
   }
 });
 
@@ -53,16 +49,13 @@ function FormCard({
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
-      <Card
-        onClick={() => handleActive(sectionKey, questionKey)}
-        className={active ? classes.active : classes.root}
-      >
-        <CardHeader className={classes.title} title={question} id={card} />
-        <CardContent className={classes.content}>todo</CardContent>
-      </Card>
-      {active ? <AddCardComponent /> : null}
-    </div>
+    <Card
+      onClick={() => handleActive(sectionKey, questionKey)}
+      className={active ? classes.active : classes.root}
+    >
+      <CardHeader className={classes.title} title={question} id={card} />
+      <CardContent className={classes.content}>todo</CardContent>
+    </Card>
   );
 }
 
