@@ -19,12 +19,12 @@ const FormWrapper = styled.div`
 `;
 
 function duplicate_card(card_props) {
-  const new_card = {
-    type: card_props.type,
-    question: card_props.question,
-    required: ""
-  };
-  console.log("Duplicated");
+  // const new_card = {
+  //   name: card_props.card,
+  //   question: card_props.question,
+  //   required: ""
+  // };
+  console.log("duplicated");
   // setSections(sections[0].cards.push(new_card));
   return null;
 }
