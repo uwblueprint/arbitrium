@@ -1,13 +1,11 @@
 import React from "react";
-import { Divider } from "@material-ui/core";
+import { Button, Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Divider } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import AddCardComponent from "./AddCardComponent";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClone } from "@fortawesome/free-regular-svg-icons";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
@@ -51,6 +49,7 @@ const useStyles = makeStyles({
     justifyContent: "flex-end",
     marginTop: 8
   },
+<<<<<<< HEAD
   buttonContainer: {
     marginRight: 5,
     marginLeft: 5
@@ -64,6 +63,10 @@ const useStyles = makeStyles({
     fontWeight: "normal",
     fontSize: 12,
     letterSpacing: 0.4
+=======
+  button: {
+    textTransform: "none"
+>>>>>>> changed styles to FormCard buttons and removed unused function in CreateEditForm
   }
 });
 
@@ -90,23 +93,20 @@ function FormCard({
           todo
           <Divider />
           <div className={classes.buttonRow}>
-            <div className={classes.buttonContainer}>
+            <div className="button-container">
               <Button size="small" className={classes.button}>
-                <DeleteOutlineIcon style={{ marginRight: 5 }} />{" "}
-                <span className={classes.buttonLabel}>Delete</span>
+                <DeleteOutlineIcon style={{ marginRight: 5 }} /> Delete
               </Button>
             </div>
-            <div className={classes.buttonContainer}>
+            <div className="button-container">
               <Button size="small" className={classes.button}>
-                <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
-                <span className={classes.buttonLabel}>Duplicate</span>
+                <FileCopyOutlinedIcon style={{ marginRight: 5 }} /> Duplicate
               </Button>
             </div>
             <Divider orientation="vertical" flexItem />
-            <div className={classes.buttonContainer}>
+            <div className="button-container">
               <Button size="small" className={classes.button}>
-                <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
-                <span className={classes.buttonLabel}>Validation</span>
+                <SettingsOutlinedIcon style={{ marginRight: 5 }} /> Validation
               </Button>
             </div>
           </div>
