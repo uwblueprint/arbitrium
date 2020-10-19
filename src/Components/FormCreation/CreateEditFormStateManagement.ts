@@ -5,8 +5,15 @@ export const sectionsStarter = [
   {
     title: "About Your Charity",
     description: "Section Type: Admin Info",
-    cards: [
+    questions: [
       {
+        name: "Test",
+        type: "SHORT_ANSWER" as QuestionType,
+        question: "What is the name of your charity?",
+        required: false
+      },
+      {
+        name: "Test 2",
         type: "SHORT_ANSWER" as QuestionType,
         question: "What is the name of your charity?",
         required: false
@@ -16,7 +23,7 @@ export const sectionsStarter = [
   {
     title: "Untitled Section",
     description: "Section Type: Decision Criteria",
-    cards: [
+    questions: [
       {
         type: "SHORT_ANSWER" as QuestionType,
         question: "Untitled Question",
