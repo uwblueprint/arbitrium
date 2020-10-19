@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext } from "react";
-import { HEADER_HEIGHT } from "../Header/Header";
+import React, { useEffect, useState, useContext, useReducer } from "react";
 import styled from "styled-components";
+import { HEADER_HEIGHT } from "../Header/Header";
 import FormCard from "./FormCard";
 import FormSection from "./FormSection";
 import { AuthContext } from "../../Authentication/Auth.js";
@@ -9,6 +9,7 @@ import usePromise from "../../Hooks/usePromise";
 
 import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
+import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
 
 const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;
@@ -21,7 +22,10 @@ const FormWrapper = styled.div`
 
 function CreateEditForm() {
   const { appUser } = useContext(AuthContext);
-  const [form, setForm] = useState({});
+  const [sections, dispatchSectionsUpdate] = useReducer(
+    customFormSectionsReducer,
+    []
+  );
   const [activeSection, setActiveSection] = useState(0);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [loadForm, refetch] = usePromise(FORM.getForm, {
@@ -35,41 +39,10 @@ function CreateEditForm() {
   useEffect(() => {
     // Get form from databse using programID
     if (loadForm.isPending) return;
-    const initialForm = loadForm.value;
-    initialForm.sections = [
-      {
-        title: "About Your Charity",
-        desc: "Section Type: Admin Info",
-        questions: [
-          {
-            name: "Test",
-            type: "short_answer",
-            question: "What is the name of your charity?",
-            required: false
-          },
-          {
-            name: "Test 2",
-            type: "short_answer",
-            question: "What is the name of your charity?",
-            required: false
-          }
-        ]
-      },
-      {
-        title: "Untitled Section",
-        desc: "Section Type: Decision Criteria",
-        questions: [
-          {
-            type: "untitled",
-            question: "Untitled Question",
-            options: ["Option 1"],
-            required: ""
-          }
-        ]
-      }
-    ];
-
-    setForm(initialForm);
+    dispatchSectionsUpdate({
+      type: "LOAD",
+      sections: defaultFormState.sections
+    });
   }, [loadForm, appUser, refetch]);
 
   function updateActive(key, questionKey) {
@@ -121,12 +94,12 @@ function CreateEditForm() {
   return (
     <Wrapper>
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
-      {form.sections &&
-        form.sections.map((section, key) => (
+      {sections &&
+        sections.map((section, key) => (
           <FormWrapper key={key}>
             <FormSection
               key={key + "_section"}
-              numSections={form.sections.length}
+              numSections={sections.length}
               sectionNum={key + 1}
               sectionData={section}
             />

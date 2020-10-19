@@ -7,6 +7,8 @@ function customFormSectionsReducer(
 ): FormSection[] {
   return produce(state, (draftState: FormSection[]) => {
     switch (action.type) {
+      case "LOAD":
+        return action.sections;
       case "ADD_SECTION":
         // TODO
         break;

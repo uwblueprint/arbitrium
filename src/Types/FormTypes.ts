@@ -1,5 +1,9 @@
 export type EditSectionsAction =
   | {
+      type: "LOAD";
+      sections: FormSection[];
+    }
+  | {
       type: "ADD_SECTION";
       index: number;
     }
@@ -24,7 +28,7 @@ export type QuestionCard = {
 export type FormSection = {
   title: string;
   description: string;
-  cards: Array<QuestionCard>;
+  questions: Array<QuestionCard>;
 };
 
 export interface FormState {
