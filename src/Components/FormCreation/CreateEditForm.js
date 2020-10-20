@@ -25,7 +25,6 @@ function CreateEditForm() {
     []
   );
   const [activeSection, setActiveSection] = useState(0);
-  const [activeQuestion, setActiveQuestion] = useState(0);
   const [loadForm, refetch] = usePromise(FORM.getForm, {
     formId: appUser.currentProgram
   });
@@ -43,14 +42,9 @@ function CreateEditForm() {
     });
   }, [loadForm, appUser, refetch]);
 
-  function updateActive(key, questionKey) {
-    if (activeSection !== key) {
-      // update database with new section (and questions) information
-      setActiveSection(key);
-      setActiveQuestion(questionKey);
-    } else if (activeQuestion !== questionKey) {
-      // update database with new question information
-      setActiveQuestion(questionKey);
+  function updateActiveSection(sectionKey) {
+    if (activeSection !== sectionKey) {
+      setActiveSection(sectionKey);
     }
   }
 
@@ -65,20 +59,6 @@ function CreateEditForm() {
   function handleAddSection() {
     // TODO: add section to sections object
     // TODO: call handleSave to update all sections
-    // TODO: call updateActive
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  function handleAddQuestion() {
-    // TODO: add question to section within sections object
-    // TODO: call the update section API endpoint
-    // TODO: call updateActive
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  function handleMoveQuestion() {
-    // TODO: update question location in section within sections object
-    // TODO: call the update section API endpoint
     // TODO: call updateActive
   }
 
@@ -101,9 +81,8 @@ function CreateEditForm() {
               sectionNum={key + 1}
               sectionData={section}
               questions={section.questions}
-              updateActive={updateActive}
+              updateActiveSection={updateActiveSection}
               active={activeSection === key}
-              activeQuestion={activeQuestion}
             />
           </FormWrapper>
         ))}
