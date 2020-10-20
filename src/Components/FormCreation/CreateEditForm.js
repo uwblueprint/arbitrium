@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useContext, useReducer } from "react";
 import styled from "styled-components";
 import { HEADER_HEIGHT } from "../Header/Header";
-import FormCard from "./FormCard";
 import FormSection from "./FormSection";
 import { AuthContext } from "../../Authentication/Auth.js";
 import * as FORM from "../../requests/forms.js";
 import usePromise from "../../Hooks/usePromise";
-
 import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
@@ -102,16 +100,11 @@ function CreateEditForm() {
               numSections={sections.length}
               sectionNum={key + 1}
               sectionData={section}
+              questions={section.questions}
+              updateActive={updateActive}
+              active={activeSection === key}
+              activeQuestion={activeQuestion}
             />
-            {section.questions.map((_question, questionKey) => (
-              <FormCard
-                key={questionKey + "_question"}
-                active={activeSection === key && activeQuestion === questionKey}
-                handleActive={updateActive}
-                sectionKey={key}
-                questionKey={questionKey}
-              />
-            ))}
           </FormWrapper>
         ))}
     </Wrapper>

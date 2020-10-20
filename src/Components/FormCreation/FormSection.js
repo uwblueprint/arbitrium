@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import FormCard from "./FormCard";
 
 const useStyles = makeStyles({
   collapse: {
@@ -42,7 +43,15 @@ const useStyles = makeStyles({
   }
 });
 
-function FormSection({ numSections, sectionNum, sectionData }) {
+function FormSection({
+  numSections,
+  sectionNum,
+  sectionData,
+  questions,
+  updateActive,
+  active,
+  activeQuestion
+}) {
   const classes = useStyles();
 
   return (
@@ -65,6 +74,15 @@ function FormSection({ numSections, sectionNum, sectionData }) {
           {sectionData.description}
         </CardContent>
       </Card>
+      {questions.map((_question, questionKey) => (
+        <FormCard
+          key={questionKey + "_question"}
+          active={active && activeQuestion === questionKey}
+          handleActive={updateActive}
+          sectionKey={sectionNum - 1}
+          questionKey={questionKey}
+        />
+      ))}
     </div>
   );
 }
