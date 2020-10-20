@@ -42,7 +42,7 @@ async function deleteQuestion(formId, sectionId, questionId) {
 
 async function updateQuestion(formId, sectionId, databody) {
   return PATCH(
-    `/api/forms/${formId.formId}/sections/${sectionId}/questions`,
+    `/api/forms/${formId}/sections/${sectionId}/questions`,
     databody
   );
 }

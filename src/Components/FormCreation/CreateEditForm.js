@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 import React, { useEffect, useState, useContext, useReducer } from "react";
+=======
+import React, { useReducer, useEffect, useState, useContext } from "react";
+import { updateQuestion } from "./../../requests/forms";
+import { HEADER_HEIGHT } from "../Header/Header";
+>>>>>>> 597261e... added backend functionality
 import styled from "styled-components";
 import { HEADER_HEIGHT } from "../Header/Header";
 import FormSection from "./FormSection";
@@ -8,9 +14,6 @@ import usePromise from "../../Hooks/usePromise";
 import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
-
-import CreateEditMultipleChoice from "./CreateEditMultipleChoice";
-import CreateEditShortAnswer from "./CreateEditShortAnswer";
 
 const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;

@@ -75,6 +75,20 @@ function FormSection({
     // TODO: call updateActive
   }
 
+  async function handleUpdateQuestion(prevSection, prevQuestion) {
+    // update recently de-selected question
+    const response = await updateQuestion(
+      appUser.currentProgram,
+      prevSection,
+      form.sections[prevSection].questions[prevQuestion]
+    );
+
+    // check status of update
+    if (response.status !== 200) {
+      console.error(`ERROR: Status - ${response.status}`);
+    }
+  }
+
   return (
     <div>
       <span className={classes.section_title}>
