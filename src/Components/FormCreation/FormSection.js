@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -48,11 +48,32 @@ function FormSection({
   sectionNum,
   sectionData,
   questions,
-  updateActive,
-  active,
-  activeQuestion
+  updateActiveSection,
+  active
 }) {
   const classes = useStyles();
+  const [activeQuestion, setActiveQuestion] = useState(0);
+
+  function updateActiveQuestion(sectionKey, questionKey) {
+    updateActiveSection(sectionKey);
+    if (activeQuestion !== questionKey) {
+      setActiveQuestion(questionKey);
+    }
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  function handleAddQuestion() {
+    // TODO: add question to section within sections object
+    // TODO: call the update section API endpoint
+    // TODO: call updateActive
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  function handleMoveQuestion() {
+    // TODO: update question location in section within sections object
+    // TODO: call the update section API endpoint
+    // TODO: call updateActive
+  }
 
   return (
     <div>
@@ -78,7 +99,7 @@ function FormSection({
         <FormCard
           key={questionKey + "_question"}
           active={active && activeQuestion === questionKey}
-          handleActive={updateActive}
+          handleActive={updateActiveQuestion}
           sectionKey={sectionNum - 1}
           questionKey={questionKey}
         />
