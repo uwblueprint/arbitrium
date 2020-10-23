@@ -91,7 +91,7 @@ async function PATCH(url, databody) {
       database: program
     }
   });
-
+  console.log(response);
   const body = response.json();
   if (!response.ok) {
     throw Error(body.message);

@@ -1,12 +1,13 @@
-<<<<<<< HEAD
-import React, { useEffect, useState, useContext, useReducer } from "react";
-=======
-import React, { useReducer, useEffect, useState, useContext } from "react";
+import React, {
+  useReducer,
+  useEffect,
+  useState,
+  useContext,
+  useCallback
+} from "react";
 import { updateQuestion } from "./../../requests/forms";
 import { HEADER_HEIGHT } from "../Header/Header";
->>>>>>> 597261e... added backend functionality
 import styled from "styled-components";
-import { HEADER_HEIGHT } from "../Header/Header";
 import FormSection from "./FormSection";
 import { AuthContext } from "../../Authentication/Auth.js";
 import * as FORM from "../../requests/forms.js";

@@ -15,7 +15,7 @@ async function deleteForm(formId) {
 
 // SECTIONS
 async function createSection(formId, databody) {
-  return POST(`/api/forms/${formId.formId}/sections`, databody);
+  return POST(`/api/forms/${formId}/sections`, databody);
 }
 
 async function deleteSection(formId, sectionId) {
