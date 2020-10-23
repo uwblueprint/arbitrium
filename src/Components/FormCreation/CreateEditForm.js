@@ -1,11 +1,4 @@
-import React, {
-  useReducer,
-  useEffect,
-  useState,
-  useContext,
-  useCallback
-} from "react";
-import { updateQuestion } from "./../../requests/forms";
+import React, { useReducer, useEffect, useState, useContext } from "react";
 import { HEADER_HEIGHT } from "../Header/Header";
 import styled from "styled-components";
 import FormSection from "./FormSection";
@@ -42,7 +35,6 @@ function CreateEditForm() {
 
   useEffect(() => {
     if (loadForm.isPending) return;
-    console.log(loadForm.value);
     // Get form from database using programID
     dispatchSectionsUpdate({
       type: "LOAD",

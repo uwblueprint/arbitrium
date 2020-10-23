@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 
@@ -9,9 +9,6 @@ const Wrapper = styled.div`
 `;
 
 function CreateEditShortAnswer() {
-  // Text is a string
-  const [text, setText] = useState("");
-
   return (
     <Wrapper>
       <TextField
@@ -20,7 +17,6 @@ function CreateEditShortAnswer() {
         size="medium"
         multiline="true"
         fullWidth="true"
-        inputProps={{ maxLength: 250 }}
       ></TextField>
     </Wrapper>
   );

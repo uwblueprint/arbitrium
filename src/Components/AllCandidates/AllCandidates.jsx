@@ -9,7 +9,7 @@ import moment from "moment";
 import usePromise from "../../Hooks/usePromise";
 import { createForm } from "../../requests/forms";
 import { AuthContext } from "../../Authentication/Auth.js";
-import { defaultFormState }  from "../FormCreation/CreateEditFormStateManagement";
+import { defaultFormState } from "../FormCreation/CreateEditFormStateManagement";
 
 import {
   getCandidateSubmissions,
