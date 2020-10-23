@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext, useReducer } from "react";
-import styled from "styled-components";
+import React, { useReducer, useEffect, useState, useContext } from "react";
 import { HEADER_HEIGHT } from "../Header/Header";
+import styled from "styled-components";
 import FormSection from "./FormSection";
 import { AuthContext } from "../../Authentication/Auth.js";
 import * as FORM from "../../requests/forms.js";
@@ -29,16 +29,20 @@ function CreateEditForm() {
     formId: appUser.currentProgram
   });
   const [headerData, setHeaderData] = useState({
-    title: defaultFormState.title,
+    name: defaultFormState.name,
     description: defaultFormState.description
   });
 
   useEffect(() => {
-    // Get form from databse using programID
     if (loadForm.isPending) return;
+    // Get form from database using programID
     dispatchSectionsUpdate({
       type: "LOAD",
-      sections: defaultFormState.sections
+      sections: loadForm.value.sections
+    });
+    setHeaderData({
+      name: loadForm.value.name,
+      description: loadForm.value.description
     });
   }, [loadForm, appUser, refetch]);
 

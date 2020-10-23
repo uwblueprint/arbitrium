@@ -3,7 +3,7 @@ import { FormState, QuestionType, FormContext } from "../../Types/FormTypes";
 
 export const sectionsStarter = [
   {
-    title: "About Your Charity",
+    name: "About Your Charity",
     description: "Section Type: Admin Info",
     questions: [
       {
@@ -21,7 +21,7 @@ export const sectionsStarter = [
     ]
   },
   {
-    title: "Untitled Section",
+    name: "Untitled Section",
     description: "Section Type: Decision Criteria",
     questions: [
       {
@@ -35,7 +35,7 @@ export const sectionsStarter = [
 ];
 
 export const defaultFormState: FormState = {
-  title: "Untitled Form",
+  name: "Untitled Form",
   description: "",
   sections: sectionsStarter
 };

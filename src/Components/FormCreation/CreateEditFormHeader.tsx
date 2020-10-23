@@ -10,7 +10,7 @@ const Header = styled.div`
   box-shadow: 0 2px 3px 1px #cccccc;
 `;
 
-const TitleInput = styled(InputBase)`
+const NameInput = styled(InputBase)`
   input {
     font-size: 24px;
   }
@@ -36,42 +36,38 @@ const DescriptionInput = styled(InputBase)`
 `;
 
 type HeaderData = {
-  title: string;
+  name: string;
   description: string;
 };
 
 type Props = {
-  title: string;
+  name: string;
   description: string;
   onChange: (data: HeaderData) => void;
 };
 
 function CreateEditFormHeader({
-  title,
+  name,
   description,
   onChange
 }: Props): React.ReactElement<typeof Header> {
-  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
-      title: e.target.value,
+      name: e.target.value,
       description
     });
   };
 
   const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
-      title,
+      name,
       description: e.target.value
     });
   };
 
   return (
     <Header>
-      <TitleInput
-        placeholder="Form Title"
-        value={title}
-        onChange={onTitleChange}
-      />
+      <NameInput placeholder="Form name" value={name} onChange={onNameChange} />
       <DescriptionInput
         multiline
         placeholder="Form description..."
