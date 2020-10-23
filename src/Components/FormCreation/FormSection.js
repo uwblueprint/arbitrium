@@ -55,6 +55,7 @@ function FormSection({
   const [activeQuestion, setActiveQuestion] = useState(0);
 
   function updateActiveQuestion(sectionKey, questionKey) {
+    // handleUpdateQuestion(sectionKey, questionKey);
     updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
       setActiveQuestion(questionKey);
@@ -75,6 +76,20 @@ function FormSection({
     // TODO: call updateActive
   }
 
+  // async function handleUpdateQuestion(prevSection, prevQuestion) {
+  //   // update recently de-selected question
+  //   const response = await FORM.updateQuestion(
+  //     appUser.currentProgram,
+  //     prevSection,
+  //     sectionData.questions[prevQuestion]
+  //   );
+
+  //   // check status of update
+  //   if (response.status !== 200) {
+  //     console.error(`ERROR: Status - ${response.status}`);
+  //   }
+  // }
+
   return (
     <div>
       <span className={classes.section_title}>
@@ -83,7 +98,7 @@ function FormSection({
       <Card className={classes.root}>
         <CardHeader
           className={classes.title}
-          title={sectionData.title}
+          title={sectionData.name}
           id={sectionNum}
           action={
             <IconButton aria-label="settings">

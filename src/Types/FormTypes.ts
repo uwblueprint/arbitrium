@@ -12,7 +12,13 @@ export type EditSectionsAction =
       index: number;
     };
 
-export type QuestionType = "SHORT_ANSWER" | "MULTIPLE_CHOICE";
+export type QuestionType =
+  | "SHORT_ANSWER"
+  | "MULTIPLE_CHOICE"
+  | "PARAGRAPHS"
+  | "CHECKBOXES"
+  | "FILE_UPLOAD"
+  | "CHECKBOX_GRID";
 
 export type FormContext = {
   formId: string;
@@ -26,13 +32,13 @@ export type QuestionCard = {
 };
 
 export type FormSection = {
-  title: string;
+  name: string;
   description: string;
   questions: Array<QuestionCard>;
 };
 
 export interface FormState {
-  title: string;
+  name: string;
   description: string;
   sections: Array<FormSection>;
 }

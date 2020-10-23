@@ -9,16 +9,23 @@ const db = require("../mongo.js");
 // Form
 //------------------------------------------------------------------------------
 
-// Create a new form
+// Create a new form (use upsert to avoid duplication)
 router.post("/", (req, res) => {
-  db[req.headers.database].forms.create(req.body, (error, result) => {
-    if (error) {
-      console.error("Error inserting new form into MongoDB");
-      res.status(500).send(error);
-    } else {
-      res.status(201).json(result);
+  db[req.headers.database].forms.updateOne(
+    {
+      formId: req.body.formId
+    },
+    req.body,
+    { upsert: true },
+    (error, result) => {
+      if (error) {
+        console.error("Error inserting new form into MongoDB");
+        res.status(500).send(error);
+      } else {
+        res.status(201).json(result);
+      }
     }
-  });
+  );
 });
 
 // Delete a form
