@@ -3,10 +3,6 @@ language: node_js
 node_js:
   - "10"
 
-branches:
-  only:
-    - master
-
 before_script:
   - npm install -g create-react-app
   - npm install
