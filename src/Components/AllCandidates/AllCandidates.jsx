@@ -9,6 +9,7 @@ import moment from "moment";
 import usePromise from "../../Hooks/usePromise";
 import { createForm } from "../../requests/forms";
 import { AuthContext } from "../../Authentication/Auth.js";
+import { defaultFormState }  from "../FormCreation/CreateEditFormStateManagement";
 
 import {
   getCandidateSubmissions,
@@ -193,10 +194,11 @@ function AllCandidates({ history, program }) {
   async function initiateForm() {
     const data = {
       formId: program,
-      name: "Name of Form",
+      name: defaultFormState.name,
+      description: defaultFormState.description,
       createdBy: appUser.userId,
       draft: true,
-      sections: []
+      sections: defaultFormState.sections
     };
     const res = await createForm(data);
     if (res) {

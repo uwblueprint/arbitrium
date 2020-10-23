@@ -54,12 +54,12 @@ const question = new mongoose.Schema({
   type: {
     type: String,
     enum: [
-      "ShortAnswer",
-      "Paragraphs",
-      "MultipleChoice",
-      "Checkboxes",
-      "FileUpload",
-      "CheckboxGrid"
+      "SHORT_ANSWER",
+      "PARAGRAPHS",
+      "MULTIPLE_CHOICE",
+      "CHECKBOXES",
+      "FILE_UPLOAD",
+      "CHECKBOX_GRID"
     ]
   },
   validations: {
@@ -89,6 +89,9 @@ const section = new mongoose.Schema({
 const formsSchema = new mongoose.Schema(
   {
     name: {
+      type: String
+    },
+    description: {
       type: String
     },
     createdBy: {

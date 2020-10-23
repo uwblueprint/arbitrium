@@ -36,16 +36,21 @@ function CreateEditForm() {
     formId: appUser.currentProgram
   });
   const [headerData, setHeaderData] = useState({
-    title: defaultFormState.title,
+    name: defaultFormState.name,
     description: defaultFormState.description
   });
 
   useEffect(() => {
-    // Get form from databse using programID
     if (loadForm.isPending) return;
+    console.log(loadForm.value);
+    // Get form from database using programID
     dispatchSectionsUpdate({
       type: "LOAD",
-      sections: defaultFormState.sections
+      sections: loadForm.value.sections
+    });
+    setHeaderData({
+      name: loadForm.value.name,
+      description: loadForm.value.description
     });
   }, [loadForm, appUser, refetch]);
 

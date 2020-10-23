@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import { AuthContext } from "../../Authentication/Auth.js";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import * as FORM from "../../requests/forms.js";
 import FormCard from "./FormCard";
 
 const useStyles = makeStyles({
@@ -51,10 +53,12 @@ function FormSection({
   updateActiveSection,
   active
 }) {
+  const { appUser } = useContext(AuthContext);
   const classes = useStyles();
   const [activeQuestion, setActiveQuestion] = useState(0);
 
   function updateActiveQuestion(sectionKey, questionKey) {
+    // handleUpdateQuestion(sectionKey, questionKey);
     updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
       setActiveQuestion(questionKey);
@@ -75,19 +79,19 @@ function FormSection({
     // TODO: call updateActive
   }
 
-  async function handleUpdateQuestion(prevSection, prevQuestion) {
-    // update recently de-selected question
-    const response = await updateQuestion(
-      appUser.currentProgram,
-      prevSection,
-      form.sections[prevSection].questions[prevQuestion]
-    );
+  // async function handleUpdateQuestion(prevSection, prevQuestion) {
+  //   // update recently de-selected question
+  //   const response = await FORM.updateQuestion(
+  //     appUser.currentProgram,
+  //     prevSection,
+  //     sectionData.questions[prevQuestion]
+  //   );
 
-    // check status of update
-    if (response.status !== 200) {
-      console.error(`ERROR: Status - ${response.status}`);
-    }
-  }
+  //   // check status of update
+  //   if (response.status !== 200) {
+  //     console.error(`ERROR: Status - ${response.status}`);
+  //   }
+  // }
 
   return (
     <div>
@@ -97,7 +101,7 @@ function FormSection({
       <Card className={classes.root}>
         <CardHeader
           className={classes.title}
-          title={sectionData.title}
+          title={sectionData.name}
           id={sectionNum}
           action={
             <IconButton aria-label="settings">
