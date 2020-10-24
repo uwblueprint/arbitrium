@@ -49,7 +49,6 @@ const useStyles = makeStyles({
     justifyContent: "flex-end",
     marginTop: 8
   },
-<<<<<<< HEAD
   buttonContainer: {
     marginRight: 5,
     marginLeft: 5
@@ -63,10 +62,6 @@ const useStyles = makeStyles({
     fontWeight: "normal",
     fontSize: 12,
     letterSpacing: 0.4
-=======
-  button: {
-    textTransform: "none"
->>>>>>> changed styles to FormCard buttons and removed unused function in CreateEditForm
   }
 });
 
@@ -78,7 +73,8 @@ function FormCard({
   active,
   handleActive,
   sectionKey,
-  questionKey
+  questionKey,
+  handleDuplicate
 }) {
   const classes = useStyles();
 
@@ -93,20 +89,27 @@ function FormCard({
           todo
           <Divider />
           <div className={classes.buttonRow}>
-            <div className="button-container">
+            <div className={classes.buttonContainer}>
               <Button size="small" className={classes.button}>
-                <DeleteOutlineIcon style={{ marginRight: 5 }} /> Delete
+                <DeleteOutlineIcon style={{ marginRight: 5 }} />{" "}
+                <span className={classes.buttonLabel}>Delete</span>
               </Button>
             </div>
-            <div className="button-container">
-              <Button size="small" className={classes.button}>
-                <FileCopyOutlinedIcon style={{ marginRight: 5 }} /> Duplicate
+            <div className={classes.buttonContainer}>
+              <Button
+                size="small"
+                className={classes.button}
+                onClick={handleDuplicate({ sectionKey, questionKey, question })}
+              >
+                <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
+                <span className={classes.buttonLabel}>Duplicate</span>
               </Button>
             </div>
             <Divider orientation="vertical" flexItem />
-            <div className="button-container">
+            <div className={classes.buttonContainer}>
               <Button size="small" className={classes.button}>
-                <SettingsOutlinedIcon style={{ marginRight: 5 }} /> Validation
+                <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
+                <span className={classes.buttonLabel}>Validation</span>
               </Button>
             </div>
           </div>
