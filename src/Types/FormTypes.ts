@@ -4,6 +4,10 @@ export type EditSectionsAction =
       sections: FormSection[];
     }
   | {
+      type: "REORDER";
+      sections: FormSection[];
+    }
+  | {
       type: "ADD_SECTION";
       index: number;
     }
@@ -45,20 +49,32 @@ export type FormContext = {
 };
 
 export type QuestionCard = {
+  _id?: string;
+  name: string;
   type: QuestionType;
   question: string;
   options?: Array<string>;
   required: boolean;
 };
 
-export type FormSection = {
+export interface FormSectionBase {
   name: string;
   description: string;
   questions: Array<QuestionCard>;
-};
+}
 
-export interface FormState {
+export interface FormSection extends FormSectionBase {
+  _id: string;
+}
+
+export interface FormStateBase {
   name: string;
   description: string;
+}
+export interface DefaultFormState extends FormStateBase {
+  sections: Array<FormSectionBase>;
+}
+
+export interface FormState extends FormStateBase {
   sections: Array<FormSection>;
 }

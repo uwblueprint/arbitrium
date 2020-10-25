@@ -3,21 +3,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import CardHeader from "@material-ui/core/CardHeader";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FormCard from "./FormCard";
 import AddCardComponent from "./AddCardComponent";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import { deleteQuestion } from "../../requests/forms";
 import { AuthContext } from "../../Authentication/Auth.js";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 
 const useStyles = makeStyles({
-  content: {
-    marginTop: -16
-  },
+  content: { marginTop: -16 },
   root: {
     fontSize: 14,
     borderRadius: 0,
@@ -83,8 +81,10 @@ function FormSection({
   active,
   handleAddSection,
   handleMoveSection,
-  handleDeleteSection
+  handleDeleteSection,
+  setShowMoveSectionsDialog
 }) {
+  const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -92,9 +92,6 @@ function FormSection({
     customFormQuestionsReducer,
     sectionData.questions
   );
-
-  // For actions menu for each form section
-  const [anchorEl, setAnchorEl] = useState(null);
   const handleAnchorClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -170,19 +167,13 @@ function FormSection({
     }
   }
 
-  // async function handleUpdateQuestion(prevSection, prevQuestion) {
-  //   // update recently de-selected question
-  //   const response = await FORM.updateQuestion(
-  //     appUser.currentProgram,
-  //     prevSection,
-  //     sectionData.questions[prevQuestion]
-  //   );
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
 
-  //   // check status of update
-  //   if (response.status !== 200) {
-  //     console.error(`ERROR: Status - ${response.status}`);
-  //   }
-  // }
+  const handleClickMove = () => {
+    setShowMoveSectionsDialog(true);
+  };
 
   return (
     <div>
@@ -210,6 +201,18 @@ function FormSection({
               </IconButton>
             }
           />
+          <Menu
+            anchorEl={anchorEl}
+            getContentAnchorEl={null}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "center" }}
+            keepMounted
+            open={anchorEl != null}
+            onClose={handleCloseMenu}
+          >
+            <MenuItem onClick={handleClickMove}>Move section</MenuItem>
+            <MenuItem>Delete section</MenuItem>
+          </Menu>
           <CardContent className={classes.content}>
             {sectionData.description}
           </CardContent>

@@ -5,11 +5,14 @@ import { AuthContext } from "../../Authentication/Auth.js";
 import * as FORM from "../../requests/forms.js";
 import usePromise from "../../Hooks/usePromise";
 import CreateEditFormHeader from "./CreateEditFormHeader";
-import { defaultFormState } from "./CreateEditFormStateManagement";
+import {
+  defaultFormState,
+  defaultNewSection
+} from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
 import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
-//import Button from "@material-ui/core/Button";
-//import Snackbar from "@material-ui/core/Snackbar";
+import CreateEditFormMoveSectionDialog from "./CreateEditFormMoveSectionDialog";
+import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
 
 const FormWrapper = styled.div`
   padding-top: 70px;
@@ -35,7 +38,9 @@ function CreateEditForm() {
     customFormSectionsReducer,
     []
   );
+  const [showMoveSectionsDialog, setShowMoveSectionsDialog] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
+  const formId = appUser.currentProgram;
   const [loadForm, refetch] = usePromise(FORM.getForm, {
     formId: appUser.currentProgram
   });
@@ -52,6 +57,7 @@ function CreateEditForm() {
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
     // Get form from database using programID
+    if (loadForm.value == null) return;
     dispatchSectionsUpdate({
       type: "LOAD",
       sections: loadForm.value.sections
@@ -84,18 +90,29 @@ function CreateEditForm() {
     // (don't use in place of updateActive())
   }
 
-  function handleAddSection() {
+  async function handleAddSection() {
+    const newForm = await FORM.createSection(formId, {
+      section: defaultNewSection,
+      index: activeSection + 1
+    });
     dispatchSectionsUpdate({
-      type: "ADD_SECTION",
-      index: activeSection
+      type: "LOAD",
+      sections: newForm.sections
     });
     updateActiveSection(activeSection + 1);
   }
 
-  function handleMoveSection() {
-    // TODO: update section location in sections object
-    // TODO: call handleSave to update all sections
-    // TODO: call updateActive
+  async function handleMoveSection(reorderedSections) {
+    const newForm = await FORM.updateSection(formId, reorderedSections);
+    if (newForm == null) return;
+    dispatchSectionsUpdate({
+      type: "LOAD",
+      sections: newForm.sections
+    });
+  }
+
+  function closeMoveSectionDialog() {
+    setShowMoveSectionsDialog(false);
   }
 
   async function deleteSection() {
@@ -133,19 +150,28 @@ function CreateEditForm() {
   return (
     <div>
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
+      <ControlledDialogTrigger
+        showDialog={showMoveSectionsDialog}
+        Dialog={CreateEditFormMoveSectionDialog}
+        dialogProps={{
+          onClose: closeMoveSectionDialog,
+          onSubmit: handleMoveSection,
+          initSections: sections
+        }}
+      />
       {sections &&
-        sections.map((section, key) => (
-          <FormWrapper key={key} id={"section_" + key}>
+        sections.map((section, index) => (
+          <FormWrapper key={section._id}>
             <FormSection
-              key={key + "_section"}
               numSections={sections.length}
-              sectionNum={key + 1}
+              sectionNum={index + 1}
               sectionData={section}
               updateActiveSection={updateActiveSection}
-              active={activeSection === key}
+              active={activeSection === index}
               handleAddSection={handleAddSection}
               handleMoveSection={handleMoveSection}
               handleDeleteSection={handleDeleteSection}
+              setShowMoveSectionsDialog={setShowMoveSectionsDialog}
             />
           </FormWrapper>
         ))}
@@ -162,24 +188,6 @@ function CreateEditForm() {
           />
         </>
       )}
-      {/* deletedSection && (
-        <Snackbar
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          open={deletedSection}
-          onClose={setDeletedSection(null)}
-          message={deletedSection ? '"' + deletedSection.name + '" deleted' : ""}
-          action={
-            <React.Fragment>
-              <Button color="secondary" size="small" onClick={undoDeleteSection}>
-                UNDO
-              </Button>
-            </React.Fragment>
-          }
-        />
-        ) */}
     </div>
   );
 }
