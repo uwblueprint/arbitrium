@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Route, Redirect } from "react-router";
 import { AuthContext } from "./Auth";
-import Navigation from "../Components/Navigation/Navigation";
 import LoadingOverlay from "../Components/Common/LoadingOverlay";
 import { Header } from "../Components/Header/Header";
 import { NavigationHeader } from "../Components/Header/NavigationHeader";
@@ -25,6 +24,7 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   const adminRoute = route.path.includes("admin");
   const Container = createContainer(adminRoute);
 
+  //Filter the list of appRoutes for routes that should NOT be displayed in the header
   const headerRoutes = routes.filter((route) => {
     if (
       route.header &&

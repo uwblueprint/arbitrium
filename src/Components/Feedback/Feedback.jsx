@@ -103,6 +103,7 @@ export default function Feedback() {
       <FeedbackIcon
         cursor="pointer"
         color="black"
+        style={{ marginTop: 5 }}
         onClick={handleClick}
       ></FeedbackIcon>
       <Dialog

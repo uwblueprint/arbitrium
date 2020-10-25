@@ -132,7 +132,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
   let hasAdminAccessForCurrentProgram = false;
   if (programsMap[program]) {
     const userProgram = appUser.programs.find((prog) => {
-      return programsMap[program]._id == prog.id;
+      return programsMap[program]._id === prog.id;
     });
     if (userProgram && userProgram.role === "admin") {
       hasAdminAccessForCurrentProgram = true;
@@ -189,7 +189,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
           </Menu>
         </div>
         <RightWrapper>
-          {appUser.role == "Admin" || hasAdminAccessForCurrentProgram ? (
+          {appUser.role === "Admin" || hasAdminAccessForCurrentProgram ? (
             <RightWrapper>
               <p> {curRoute.title} </p>
               <ArrowDropDownCircleOutlinedIcon

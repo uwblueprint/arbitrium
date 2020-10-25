@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { MAX_NAVBAR_WIDTH } from "../Navigation/Navigation";
 
 const ApplicationContainer = styled.div`
   margin-bottom: 50px;
