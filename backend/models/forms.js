@@ -86,6 +86,8 @@ const section = new mongoose.Schema({
   }
 });
 
+//link - string link, expires on, numUsed
+
 const formsSchema = new mongoose.Schema(
   {
     name: {
@@ -105,6 +107,9 @@ const formsSchema = new mongoose.Schema(
     },
     formId: {
       type: String
+    },
+    formLinks: {
+      type: [link]
     }
   },
   { collection: "Forms" }
