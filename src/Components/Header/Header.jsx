@@ -31,7 +31,6 @@ const Container = styled.div`
 `;
 
 const BodyWrapper = styled.div`
-  position: relative;
   display: flex;
   width: 100%;
   height: 100%;
@@ -52,9 +51,11 @@ const AppName = styled.div`
   line-height: 28px;
 `;
 
-const UserDisplayWrapper = styled.div`
+const RightWrapper = styled.div`
+  float: right;
+  align-items: center;
   margin-left: auto;
-  height: 28px;
+  display: flex;
 
   /* H5/ Roboto Regular 24 */
   font-family: Roboto;
@@ -62,6 +63,10 @@ const UserDisplayWrapper = styled.div`
   font-weight: normal;
   font-size: 24px;
   line-height: 28px;
+
+  p {
+    font-size: 14px;
+  }
 `;
 
 //TODO: Use a globally defined font variable for tooltips
@@ -76,9 +81,12 @@ const useStyles = makeStyles({
 //Fetch the applications for the program and put it into redux
 //Then redirect
 //programs is a list of programs that the user has access to
-function Header({ program, loadProgram, history, admin }) {
+//curRoute is the current route object from appRoutes
+//routes is a list of routes that should be displayed in the header
+function Header({ program, loadProgram, history, admin, curRoute, routes }) {
   const { currentUser, appUser } = useContext(AuthContext);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [programMenuAnchor, setprogramMenuAnchor] = useState(null);
+  const [adminMenuAnchor, setAdminMenuAnchor] = useState(null);
   const [allPrograms] = usePromise(getAllProgramsAPI);
 
   const programsMap = useMemo(() => {
@@ -96,12 +104,15 @@ function Header({ program, loadProgram, history, admin }) {
     return programMap;
   }, [appUser.programs]);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleClickProgramMenu = (event) => {
+    setprogramMenuAnchor(event.currentTarget);
+  };
+  const handleClickAdminMenu = (event) => {
+    setAdminMenuAnchor(event.currentTarget);
   };
 
   const handleSelect = async (newProgram) => {
-    setAnchorEl(null);
+    setprogramMenuAnchor(null);
     await updateUserProgramAPI({
       userId: currentUser.uid,
       programId: newProgram._id
@@ -112,12 +123,21 @@ function Header({ program, loadProgram, history, admin }) {
     }
     //Load the application data into redux
   };
-
   const classes = useStyles();
   const validPrograms = allPrograms.isPending
     ? []
     : allPrograms.value.filter((p) => !!myProgramsMap[p._id]);
 
+  console.log(appUser);
+  let hasAdminAccessForCurrentProgram = false;
+  if (programsMap[program]) {
+    const userProgram = appUser.programs.find((prog) => {
+      return programsMap[program]._id == prog.id;
+    });
+    if (userProgram && userProgram.role === "admin") {
+      hasAdminAccessForCurrentProgram = true;
+    }
+  }
   return (
     <Container>
       <BodyWrapper>
@@ -138,16 +158,16 @@ function Header({ program, loadProgram, history, admin }) {
         <div>
           <ArrowDropDownCircleOutlinedIcon
             style={{ marginLeft: "4px", margin: "12px" }}
-            onClick={handleClick}
+            onClick={handleClickProgramMenu}
           ></ArrowDropDownCircleOutlinedIcon>
           <Menu
             elevation={0}
             id="simple-menu"
-            anchorEl={anchorEl}
+            anchorEl={programMenuAnchor}
             keepMounted
-            open={Boolean(anchorEl)}
+            open={Boolean(programMenuAnchor)}
             onClose={() => {
-              setAnchorEl(null);
+              setprogramMenuAnchor(null);
             }}
             style={{ marginTop: HEADER_HEIGHT / 2 }}
           >
@@ -161,17 +181,55 @@ function Header({ program, loadProgram, history, admin }) {
                 ))}
                 {validPrograms.length === 0 ? (
                   <MenuItem key={"None"}>
-                    You don&apos;t have access to any programs
+                    You don't have access to any programs
                   </MenuItem>
                 ) : null}
               </div>
             ) : null}
           </Menu>
         </div>
-        <Feedback user={currentUser} />
-        <UserDisplayWrapper>
+        <RightWrapper>
+          {appUser.role == "Admin" || hasAdminAccessForCurrentProgram ? (
+            <RightWrapper>
+              <p> {curRoute.title} </p>
+              <ArrowDropDownCircleOutlinedIcon
+                style={{ marginLeft: "4px", margin: "12px" }}
+                onClick={handleClickAdminMenu}
+              ></ArrowDropDownCircleOutlinedIcon>
+              <Menu
+                elevation={0}
+                id="simple-menu"
+                anchorEl={adminMenuAnchor}
+                keepMounted
+                open={Boolean(adminMenuAnchor)}
+                onClose={() => {
+                  setAdminMenuAnchor(null);
+                }}
+                style={{ marginTop: HEADER_HEIGHT / 2 }}
+              >
+                {routes != null ? (
+                  <div style={{ border: "1px solid #ccc" }}>
+                    {routes.map((route, index) => (
+                      <MenuItem
+                        key={index}
+                        onClick={() => history.push(route.path)}
+                      >
+                        {route.title}
+                      </MenuItem>
+                    ))}
+                    {validPrograms.length === 0 ? (
+                      <MenuItem key={"None"}>
+                        You don't have access to other pages
+                      </MenuItem>
+                    ) : null}
+                  </div>
+                ) : null}
+              </Menu>
+            </RightWrapper>
+          ) : null}
+          <Feedback user={currentUser} />
           <UserDisplay />
-        </UserDisplayWrapper>
+        </RightWrapper>
       </BodyWrapper>
     </Container>
   );

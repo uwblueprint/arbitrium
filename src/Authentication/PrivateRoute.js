@@ -8,6 +8,7 @@ import { NavigationHeader } from "../Components/Header/NavigationHeader";
 import { ProgramContext } from "../Contexts/ProgramContext";
 import createContainer from "../Components/Container/Container";
 import { connect } from "react-redux";
+import routes from "../appRoutes";
 
 function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   const { isLoading, currentUser: user, appUser } = useContext(AuthContext);
@@ -24,6 +25,18 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   const adminRoute = route.path.includes("admin");
   const Container = createContainer(adminRoute);
 
+  const headerRoutes = routes.filter((route) => {
+    if (
+      route.header &&
+      user != null &&
+      (route.groups.length === 0 ||
+        (appUser && route.groups.includes(appUser.role)))
+    ) {
+      return true;
+    }
+    return false;
+  });
+
   //Access to programs and organizations should also be decided here
   return isLoading || programDataIsLoading ? (
     <LoadingOverlay
@@ -36,7 +49,12 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   ) : roleAccess ? (
     <>
       <Container>
-        <Header history={history} admin={adminRoute} />
+        <Header
+          history={history}
+          admin={adminRoute}
+          curRoute={route}
+          routes={headerRoutes}
+        />
         <NavigationHeader history={history} admin={adminRoute} />
         {/*!route.path.includes("admin") ? <Navigation /> : null*/}
         {RouteComponent ? (

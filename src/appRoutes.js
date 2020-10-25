@@ -10,6 +10,7 @@ import CreateEditForm from "./Components/FormCreation/CreateEditForm";
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
 component: Home,    =>The component to be loaded at the path specified
 title: "Home",      =>The title of the path, more for documentation
+header: "true",     =>This route is to be displayed in the drop down in the header when the user is Admin
 groups: []          =>A list of groups Ex. ["admin", "user"].
                       =>If [] then the user only has to be authenticated
                       =>If non-empty then the user must be apart of at LEAST ONE group and authenticated
@@ -18,43 +19,50 @@ const routes = [
   {
     path: "/applications",
     component: AllApplications,
-    title: "List of Applications",
+    title: "Candiate Submissions",
+    header: true,
     groups: []
   },
   {
     path: "/submissions/:organizationId",
     component: Application,
-    title: "A single Application",
+    title: "A single Application view",
+    header: false,
     groups: []
   },
   {
     path: "/rankings",
     component: StackedRankings,
     title: "View all Stacked Rankings",
+    header: false,
     groups: []
   },
   {
     path: "/admin/allcandidates",
     component: AllCandidates,
-    title: "Admin view to view all candidates",
+    title: "Candiate Statistics",
+    header: true,
     groups: ["Admin"]
   },
   {
     path: "/admin/committeereview",
     component: CommitteeReview,
-    title: "Admin view to review the status of committee members",
+    title: "Reviewer Statistics",
+    header: true,
     groups: ["Admin"]
   },
   {
     path: "/admin/user-management",
     component: UserManagement,
-    title: "Admin view to view all users",
+    title: "User Management",
+    header: true,
     groups: ["Admin"]
   },
   {
     path: "/admin/create-form",
     component: CreateEditForm,
-    title: "Create or edit custom form",
+    title: "Create Form",
+    header: true,
     groups: ["Admin"]
   }
 ];

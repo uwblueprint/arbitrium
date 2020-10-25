@@ -18,6 +18,10 @@ const Signout = styled.div`
     width: 32px;
     border-radius: 100%;
     cursor: pointer;
+    background-color: #eb9546;
+    text-color: white;
+    border: 0px;
+    font-size: 16;
   }
 `;
 
@@ -28,9 +32,8 @@ const UserDisplay = () => {
     return (
       <div>
         <Signout>
-          {"Hi " + appUser.name + "!"}
           <button color="primary" onClick={() => firebaseApp.auth().signOut()}>
-            <FontAwesomeIcon icon={faSignOutAlt} />
+            <h> G </h>
           </button>
         </Signout>
       </div>
