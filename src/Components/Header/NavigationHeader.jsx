@@ -70,7 +70,36 @@ const useStyles = makeStyles({
     color: "white",
     borderRadius: 0,
     height: HEADER_HEIGHT,
-    padding: "0px 0px 0px 20px",
+    width: "200px",
+    padding: "0px 0px 0px 0px",
+    "&::after": {
+      borderLeft: "28px solid #2261AD",
+      borderTop: "28px solid lightgrey",
+      borderBottom: "28px solid lightgrey",
+      content: '" "'
+    }
+  },
+  root2: {
+    background: "lightgrey",
+    color: "black",
+    borderRadius: 0,
+    width: "200px",
+    height: HEADER_HEIGHT,
+    padding: "0px 0px 0px 0px",
+    "&::after": {
+      borderLeft: "28px solid lightgrey",
+      borderTop: "28px solid white",
+      borderBottom: "28px solid white",
+      content: '" "'
+    }
+  },
+  root5: {
+    background: "#2261AD",
+    color: "white",
+    borderRadius: 0,
+    height: HEADER_HEIGHT,
+    width: "200px",
+    padding: "0px 0px 0px 0px",
     "&::after": {
       borderLeft: "28px solid #2261AD",
       borderTop: "28px solid white",
@@ -78,16 +107,17 @@ const useStyles = makeStyles({
       content: '" "'
     }
   },
-  root2: {
-    background: "white",
+  root6: {
+    background: "lightgrey",
     color: "black",
     borderRadius: 0,
-    padding: "0px 0px 0px 50px",
+    width: "200px",
     height: HEADER_HEIGHT,
+    padding: "0px 0px 0px 0px",
     "&::after": {
-      borderLeft: "25px solid white",
-      borderTop: "28px solid white",
-      borderBottom: "28px solid white",
+      borderLeft: "28px solid lightgrey",
+      borderTop: "28px solid #2261AD",
+      borderBottom: "28px solid #2261AD",
       content: '" "'
     }
   },
@@ -104,6 +134,7 @@ const useStyles = makeStyles({
     borderRadius: 0,
     padding: "0px 20px",
     height: HEADER_HEIGHT,
+    transform: "rotateY(180deg)",
     borderLeft: "28px solid #2261AD",
     borderTop: "28px solid lightblue",
     borderBottom: "28px solid lightblue"
@@ -119,6 +150,11 @@ const useStyles = makeStyles({
 //programs is a list of programs that the user has access to
 function NavigationHeader({ program, loadProgram, history, admin }) {
   const { currentUser, appUser } = useContext(AuthContext);
+  const [stage, setStage] = useState(false);
+
+  const handleStageChange = () => {
+    setStage(!stage);
+  };
 
   const classes = useStyles();
 
@@ -126,20 +162,20 @@ function NavigationHeader({ program, loadProgram, history, admin }) {
     <Container>
       <Button
         classes={{
-          root: classes.root3, // class name, e.g. `classes-nesting-root-x`
+          root: stage ? classes.root : classes.root6, // class name, e.g. `classes-nesting-root-x`
           label: classes.label // class name, e.g. `classes-nesting-label-x`
         }}
-        onClick={() => console.log("Clicked")}
+        onClick={() => handleStageChange()}
       >
         {" "}
         1. Rate Candidates
       </Button>
       <Button
         classes={{
-          root: classes.root4, // class name, e.g. `classes-nesting-root-x`
+          root: stage ? classes.root2 : classes.root5, // class name, e.g. `classes-nesting-root-x`
           label: classes.label // class name, e.g. `classes-nesting-label-x`
         }}
-        onClick={() => console.log("Clicked")}
+        onClick={() => handleStageChange()}
       >
         {" "}
         2. Stacked Rankings
