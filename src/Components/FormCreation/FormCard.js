@@ -8,6 +8,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import AddCardComponent from "./AddCardComponent";
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
@@ -21,6 +22,15 @@ import { updateQuestion } from "../../requests/forms.js";
 import Switch from "react-switch";
 import { updateQuestion } from "../../requests/forms.js";
 >>>>>>> Button style fixed
+=======
+import { Switch } from "@material-ui/core";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { updateQuestion } from "../../requests/forms.js";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
+import { body } from "../../index.css";
+>>>>>>> Rebasing
 
 const useStyles = makeStyles({
   collapse: {
@@ -68,12 +78,19 @@ const useStyles = makeStyles({
   button: {
     textTransform: "none"
   },
+<<<<<<< HEAD
   buttonLabel: {
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal",
     fontSize: 12,
     letterSpacing: 0.4
+=======
+  switch: {
+    textTransform: "none",
+    paddingTop: 3,
+    paddingLeft: 10
+>>>>>>> Rebasing
   }
 });
 
@@ -86,7 +103,12 @@ function FormCard({
   handleActive,
   sectionKey,
   questionKey,
+<<<<<<< HEAD
   handleDuplicate
+=======
+  required,
+  formId
+>>>>>>> Rebasing
 }) {
   const classes = useStyles();
 
@@ -125,6 +147,21 @@ function FormCard({
                 <span className={classes.buttonLabel}>Validation</span>
               </Button>
             </div>
+<<<<<<< HEAD
+=======
+            <div className={classes.switch}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    size="small"
+                    checked={required}
+                    /*onChange={updateQuestion(formId, sectionKey, required)}*/ color="primary"
+                  />
+                }
+                label="Required"
+              />
+            </div>
+>>>>>>> Rebasing
           </div>
         </CardContent>
 =======
