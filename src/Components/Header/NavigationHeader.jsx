@@ -1,17 +1,9 @@
-import React, { useState, useContext, useMemo } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import UserDisplay from "./UserDisplay";
-import AppIcon from "./svgIcon.tsx";
-import Tooltip from "@material-ui/core/Tooltip";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import ArrowDropDownCircleOutlinedIcon from "@material-ui/icons/ArrowDropDownCircleOutlined";
-import { updateUserProgramAPI } from "../../requests/update";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { connect } from "react-redux";
-import { getAllProgramsAPI } from "../../requests/get";
 import usePromise from "../../Hooks/usePromise";
 import { loadProgram } from "../../Actions/index.js";
 import { HEADER_HEIGHT } from "./Header";
