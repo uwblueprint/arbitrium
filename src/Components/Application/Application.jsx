@@ -147,13 +147,35 @@ function Application({ newReview, history, match, user, program }) {
     <PageWrapper>
       <LoadingOverlay show={!review} />
       <BodyWrapper>
-        <h1>
+        <Button
+          className="all-applicants"
+          onClick={() => history.push("/applications")}
+        >
+          &lt; Back to list of applications
+        </Button>
+        <ApplicationSelector>
           <Button
-            className="all-applicants"
-            onClick={() => history.push("/applications")}
+            variant="outlined"
+            color="primary"
+            disabled={!previousApplication}
+            onClick={() => {
+              previousApplication && history.push(previousApplication);
+            }}
           >
-            &lt; All applicants
+            Previous applicant
           </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            disabled={!nextApplication}
+            onClick={() => {
+              nextApplication && history.push(nextApplication);
+            }}
+          >
+            Next applicant
+          </Button>
+        </ApplicationSelector>
+        <h1>
           <br />
           {application ? (
             application["Organization Name"] ||
@@ -184,7 +206,7 @@ function Application({ newReview, history, match, user, program }) {
         ) : null}
         <ApplicationSelector>
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
             disabled={!previousApplication}
             onClick={() => {
@@ -194,7 +216,7 @@ function Application({ newReview, history, match, user, program }) {
             Previous applicant
           </Button>
           <Button
-            variant="contained"
+            variant="outlined"
             color="primary"
             disabled={!nextApplication}
             onClick={() => {
