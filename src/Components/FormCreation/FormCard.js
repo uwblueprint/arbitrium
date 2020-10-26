@@ -1,36 +1,19 @@
 import React from "react";
-import { Button, Divider } from "@material-ui/core";
+import { Button, Divider, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Divider } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import AddCardComponent from "./AddCardComponent";
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
-=======
-=======
-import Switch from "react-switch";
-import { updateQuestion } from "../../requests/forms.js";
->>>>>>> Initial commit
->>>>>>> Initial commit
-=======
-import Switch from "react-switch";
-import { updateQuestion } from "../../requests/forms.js";
->>>>>>> Button style fixed
-=======
 import { Switch } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { shadows } from "@material-ui/system";
 import { updateQuestion } from "../../requests/forms.js";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
-import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import { body } from "../../index.css";
->>>>>>> Rebasing
 
 const useStyles = makeStyles({
   collapse: {
@@ -78,19 +61,17 @@ const useStyles = makeStyles({
   button: {
     textTransform: "none"
   },
-<<<<<<< HEAD
   buttonLabel: {
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal",
     fontSize: 12,
     letterSpacing: 0.4
-=======
+  },
   switch: {
     textTransform: "none",
-    paddingTop: 3,
+    paddingTop: 4,
     paddingLeft: 10
->>>>>>> Rebasing
   }
 });
 
@@ -103,12 +84,9 @@ function FormCard({
   handleActive,
   sectionKey,
   questionKey,
-<<<<<<< HEAD
-  handleDuplicate
-=======
+  handleDuplicate,
   required,
   formId
->>>>>>> Rebasing
 }) {
   const classes = useStyles();
 
@@ -119,7 +97,6 @@ function FormCard({
         className={active ? classes.active : classes.root}
       >
         <CardHeader className={classes.title} title={question} id={card} />
-<<<<<<< HEAD
         <CardContent className={classes.content}>
           todo
           <Divider />
@@ -134,7 +111,7 @@ function FormCard({
               <Button
                 size="small"
                 className={classes.button}
-                onClick={handleDuplicate({ sectionKey, questionKey, question })}
+                //onClick={handleDuplicate({ sectionKey, questionKey, question })}
               >
                 <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
                 <span className={classes.buttonLabel}>Duplicate</span>
@@ -147,41 +124,25 @@ function FormCard({
                 <span className={classes.buttonLabel}>Validation</span>
               </Button>
             </div>
-<<<<<<< HEAD
-=======
             <div className={classes.switch}>
               <FormControlLabel
                 control={
                   <Switch
                     size="small"
                     checked={required}
+                    //boxShadow={2}
                     /*onChange={updateQuestion(formId, sectionKey, required)}*/ color="primary"
                   />
                 }
-                label="Required"
+                label={
+                  <Typography className={classes.buttonLabel}>
+                    Required
+                  </Typography>
+                }
               />
             </div>
->>>>>>> Rebasing
           </div>
         </CardContent>
-=======
-        <CardContent className={classes.content}>todo</CardContent>
-        <div>
-          <Switch
-            onColor="#4a86e8"
-            checkedIcon={false}
-            uncheckedIcon={false}
-            height={20}
-            width={40}
-            //checked={required}
-            /*onChange={updateQuestion("1", "1", JSON.stringify({
-                                required: required
-                            }))}*/
-            //id={key}
-          />
-          <span>Required</span>
-        </div>
->>>>>>> Button style fixed
       </Card>
     </div>
   );
