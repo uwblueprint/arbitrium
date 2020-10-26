@@ -7,6 +7,8 @@ import { connect } from "react-redux";
 import usePromise from "../../Hooks/usePromise";
 import { loadProgram } from "../../Actions/index.js";
 import { HEADER_HEIGHT } from "./Header";
+import { getApplicationTableData, getReviewCountAPI } from "../../requests/get";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const Container = styled.div`
   height: ${HEADER_HEIGHT}px;
@@ -50,12 +52,9 @@ const UserDisplayWrapper = styled.div`
 
 //TODO: Use a globally defined font variable for tooltips
 const useStyles = makeStyles({
-  tooltip: {
-    fontSize: "16px",
-    maxWidth: "none"
-  },
   button: {
-    height: "100%"
+    height: "100%",
+    width: "800px"
   },
   root: {
     background: "#2261AD",
@@ -69,6 +68,9 @@ const useStyles = makeStyles({
       borderTop: "28px solid lightgrey",
       borderBottom: "28px solid lightgrey",
       content: '" "'
+    },
+    "&::hover": {
+      color: "#2261AD"
     }
   },
   root2: {
@@ -78,6 +80,7 @@ const useStyles = makeStyles({
     width: "200px",
     height: HEADER_HEIGHT,
     padding: "0px 0px 0px 0px",
+    "pointer-events": "none",
     "&::after": {
       borderLeft: "28px solid lightgrey",
       borderTop: "28px solid white",
@@ -92,6 +95,7 @@ const useStyles = makeStyles({
     height: HEADER_HEIGHT,
     width: "200px",
     padding: "0px 0px 0px 0px",
+    "pointer-events": "none",
     "&::after": {
       borderLeft: "28px solid #2261AD",
       borderTop: "28px solid white",
@@ -111,6 +115,9 @@ const useStyles = makeStyles({
       borderTop: "28px solid #2261AD",
       borderBottom: "28px solid #2261AD",
       content: '" "'
+    },
+    "&::hover": {
+      backgroundColor: "none"
     }
   },
   root3: {
@@ -140,9 +147,27 @@ const useStyles = makeStyles({
 //Fetch the applications for the program and put it into redux
 //Then redirect
 //programs is a list of programs that the user has access to
-function NavigationHeader({ program, loadProgram, history, admin }) {
+function NavigationHeader({ program, loadProgram, history, admin, curRoute }) {
   const { currentUser, appUser } = useContext(AuthContext);
-  const [stage, setStage] = useState(false);
+  const [stage, setStage] = useState(
+    curRoute.path == "applications" ? true : false
+  );
+
+  const [applications] = usePromise(
+    getApplicationTableData,
+    { user: appUser },
+    [],
+    [program]
+  );
+
+  const [reviewCount] = usePromise(
+    getReviewCountAPI,
+    appUser.userId,
+    [],
+    [program]
+  );
+  console.log(reviewCount);
+  console.log(applications);
 
   const handleStageChange = () => {
     setStage(!stage);
@@ -151,28 +176,53 @@ function NavigationHeader({ program, loadProgram, history, admin }) {
   const classes = useStyles();
 
   return (
-    <Container>
-      <Button
-        classes={{
-          root: stage ? classes.root : classes.root6, // class name, e.g. `classes-nesting-root-x`
-          label: classes.label // class name, e.g. `classes-nesting-label-x`
-        }}
-        onClick={() => handleStageChange()}
-      >
-        {" "}
-        1. Rate Candidates
-      </Button>
-      <Button
-        classes={{
-          root: stage ? classes.root2 : classes.root5, // class name, e.g. `classes-nesting-root-x`
-          label: classes.label // class name, e.g. `classes-nesting-label-x`
-        }}
-        onClick={() => handleStageChange()}
-      >
-        {" "}
-        2. Stacked Rankings
-      </Button>
-    </Container>
+    <div>
+      <Container>
+        <Button
+          classes={{
+            root: stage ? classes.root : classes.root6, // class name, e.g. `classes-nesting-root-x`
+            label: classes.label // class name, e.g. `classes-nesting-label-x`
+          }}
+          onClick={() => handleStageChange()}
+        >
+          {" "}
+          1. Rate Candidates
+        </Button>
+        <Button
+          classes={{
+            root: stage ? classes.root2 : classes.root5, // class name, e.g. `classes-nesting-root-x`
+            label: classes.label // class name, e.g. `classes-nesting-label-x`
+          }}
+          onClick={() => handleStageChange()}
+        >
+          {" "}
+          2. Stacked Rankings
+        </Button>
+        <Button
+          style={{ float: "right", margin: "10px", marginRight: "30px" }}
+          variant="contained"
+          color="primary"
+          disabled={
+            reviewCount.value < applications.value.length ||
+            curRoute.path != "applications"
+          }
+          onClick={() => {
+            history.push("/rankings");
+          }}
+        >
+          Next Stage &gt;
+        </Button>
+      </Container>
+      {!reviewCount.isPending || !applications.isPending ? (
+        <LinearProgress
+          variant="determinate"
+          value={Math.min(
+            100,
+            (reviewCount.value / applications.value.length) * 100
+          )}
+        />
+      ) : null}
+    </div>
   );
 }
 

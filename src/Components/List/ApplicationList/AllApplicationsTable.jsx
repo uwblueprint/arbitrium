@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import MaterialTable from "material-table";
 import { Paper } from "@material-ui/core";
@@ -11,11 +11,20 @@ const Container = styled(Paper)`
   }
 `;
 
+const Wrapper = styled.div`
+  position: "flex";
+  .MuiToolbar-gutters {
+    padding-left: 0px;
+  }
+`;
+
 const rowStyle = {
   border: "1px solid #cccccc"
 };
 
-function AllApplicationsTable(props) {
+function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
+  const [page, setpage] = useState(10);
+
   const columns = [
     { title: "Applicant Name", field: "applicantName" },
     { title: "Rating (/5)", field: "rating" },
@@ -39,8 +48,15 @@ function AllApplicationsTable(props) {
       export: false
     }
   ];
+
+  const options = {
+    pageSize: applicationCount > 0 ? Math.min(10, applicationCount) : 10,
+    rowStyle: rowStyle,
+    search: true,
+    showTitle: true
+  };
   return (
-    <div>
+    <Wrapper>
       <MaterialTable
         icons={TableIcons}
         components={{
@@ -48,14 +64,10 @@ function AllApplicationsTable(props) {
         }}
         columns={columns}
         {...props}
-        options={{
-          pageSize: 10,
-          rowStyle: rowStyle,
-          search: true,
-          showTitle: false
-        }}
-      />
-    </div>
+        title={reviewCount + "/" + applicationCount + " candidates rated"}
+        options={options}
+      ></MaterialTable>
+    </Wrapper>
   );
 }
 

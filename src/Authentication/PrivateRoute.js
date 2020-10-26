@@ -55,7 +55,11 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
           curRoute={route}
           routes={headerRoutes}
         />
-        <NavigationHeader history={history} admin={adminRoute} />
+        <NavigationHeader
+          history={history}
+          admin={adminRoute}
+          curRoute={route}
+        />
         {/*!route.path.includes("admin") ? <Navigation /> : null*/}
         {RouteComponent ? (
           <Route
