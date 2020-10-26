@@ -130,8 +130,8 @@ function FormCard({
                   <Switch
                     size="small"
                     checked={required}
-                    //boxShadow={2}
-                    /*onChange={updateQuestion(formId, sectionKey, required)}*/ color="primary"
+                    /*onChange={updateQuestion(formId, sectionKey, required)}*/
+                    color="primary"
                   />
                 }
                 label={
