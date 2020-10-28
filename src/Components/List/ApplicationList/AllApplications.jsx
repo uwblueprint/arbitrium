@@ -66,8 +66,6 @@ function convertToTableData(fetched) {
 
 function AllApplications({ user, program }) {
   // Applications, with reviews attached
-
-  console.log(user);
   const [applications] = usePromise(
     getApplicationTableData,
     { user },
@@ -81,9 +79,7 @@ function AllApplications({ user, program }) {
     [],
     [program]
   );
-  console.log(reviewCount.value);
-  console.log(applications.value.length);
-  console.log(program);
+
   return (
     <div>
       <Wrapper>

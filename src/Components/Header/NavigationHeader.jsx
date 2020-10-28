@@ -5,7 +5,6 @@ import Button from "@material-ui/core/Button";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { connect } from "react-redux";
 import usePromise from "../../Hooks/usePromise";
-import { loadProgram } from "../../Actions/index.js";
 import { HEADER_HEIGHT } from "./Header";
 import { getApplicationTableData, getReviewCountAPI } from "../../requests/get";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -23,13 +22,11 @@ const Container = styled.div`
 
   .MuiButton-root:hover {
     background: transparent;
-    font-size: 14px;
     font-weight: bold;
     background-color: lightgrey;
   }
 `;
 
-//TODO: Use a globally defined font variable for tooltips
 const useStyles = makeStyles({
   button: {
     height: "100%",
@@ -101,11 +98,9 @@ const useStyles = makeStyles({
   }
 });
 
-//Load the program into redux
-//Fetch the applications for the program and put it into redux
-//Then redirect
-//programs is a list of programs that the user has access to
-function NavigationHeader({ program, loadProgram, history, admin, curRoute }) {
+//The navigation header is loaded dynamically based on the url.
+//It does NOT contain a state.
+function NavigationHeader({ program, history, admin, curRoute }) {
   //AuthContext returns two values {currentUser, appUser}. We are only using appUser
   const { appUser } = useContext(AuthContext);
 
@@ -189,13 +184,6 @@ const mapStateToProps = (state) => ({
   program: state.program
 });
 
-const mapDispatchToProps = {
-  loadProgram
-};
-
-const connectedAuth = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NavigationHeader);
+const connectedAuth = connect(mapStateToProps)(NavigationHeader);
 
 export { connectedAuth as NavigationHeader };

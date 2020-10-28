@@ -51,7 +51,7 @@ const AppName = styled.div`
   line-height: 28px;
 `;
 
-const RightWrapper = styled.div`
+const RightSideHeaderWrapper = styled.div`
   float: right;
   align-items: center;
   margin-left: auto;
@@ -128,7 +128,6 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
     ? []
     : allPrograms.value.filter((p) => !!myProgramsMap[p._id]);
 
-  console.log(appUser);
   let hasAdminAccessForCurrentProgram = false;
   if (programsMap[program]) {
     const userProgram = appUser.programs.find((prog) => {
@@ -188,9 +187,9 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             ) : null}
           </Menu>
         </div>
-        <RightWrapper>
+        <RightSideHeaderWrapper>
           {appUser.role === "Admin" || hasAdminAccessForCurrentProgram ? (
-            <RightWrapper>
+            <RightSideHeaderWrapper>
               <p> {curRoute.title} </p>
               <ArrowDropDownCircleOutlinedIcon
                 style={{ marginLeft: "4px", margin: "12px" }}
@@ -225,11 +224,11 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                   </div>
                 ) : null}
               </Menu>
-            </RightWrapper>
+            </RightSideHeaderWrapper>
           ) : null}
           <Feedback user={currentUser} />
           <UserDisplay />
-        </RightWrapper>
+        </RightSideHeaderWrapper>
       </BodyWrapper>
     </Container>
   );
