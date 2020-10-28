@@ -26,14 +26,14 @@ const routes = [
   {
     path: "/submissions/:organizationId",
     component: Application,
-    title: "A single Application view",
+    title: "Applications View",
     header: false,
     groups: []
   },
   {
     path: "/rankings",
     component: StackedRankings,
-    title: "View all Stacked Rankings",
+    title: "Stacked Rankings",
     header: false,
     groups: []
   },

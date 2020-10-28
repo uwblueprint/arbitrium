@@ -20,34 +20,13 @@ const Container = styled.div`
   border-bottom: 1px solid #cccccc;
   align-items: center;
   justify-content: center;
-`;
 
-const AppName = styled.div`
-  display: inline-block;
-  margin-left: 16px;
-  margin-right: 16px;
-
-  /* H5/ Roboto Regular 24 */
-  font-family: Roboto;
-  letter-spacing: 2px;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 30px;
-  line-height: 28px;
-`;
-
-const UserDisplayWrapper = styled.div`
-  margin-left: auto;
-  height: 28px;
-
-  /* H5/ Roboto Regular 24 */
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 28px;
-
-  color: #ffffff;
+  .MuiButton-root:hover {
+    background: transparent;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: lightgrey;
+  }
 `;
 
 //TODO: Use a globally defined font variable for tooltips
@@ -56,31 +35,28 @@ const useStyles = makeStyles({
     height: "100%",
     width: "800px"
   },
-  root: {
+  ratingsSelected: {
     background: "#2261AD",
     color: "white",
     borderRadius: 0,
     height: HEADER_HEIGHT,
     width: "200px",
     padding: "0px 0px 0px 0px",
+    "pointer-events": "none",
     "&::after": {
       borderLeft: "28px solid #2261AD",
       borderTop: "28px solid lightgrey",
       borderBottom: "28px solid lightgrey",
       content: '" "'
-    },
-    "&::hover": {
-      color: "#2261AD"
     }
   },
-  root2: {
+  rankingsNotSelected: {
     background: "lightgrey",
     color: "black",
     borderRadius: 0,
     width: "200px",
     height: HEADER_HEIGHT,
     padding: "0px 0px 0px 0px",
-    "pointer-events": "none",
     "&::after": {
       borderLeft: "28px solid lightgrey",
       borderTop: "28px solid white",
@@ -88,7 +64,7 @@ const useStyles = makeStyles({
       content: '" "'
     }
   },
-  root5: {
+  rankingsSelected: {
     background: "#2261AD",
     color: "white",
     borderRadius: 0,
@@ -103,7 +79,7 @@ const useStyles = makeStyles({
       content: '" "'
     }
   },
-  root6: {
+  ratingsNotSelected: {
     background: "lightgrey",
     color: "black",
     borderRadius: 0,
@@ -120,24 +96,6 @@ const useStyles = makeStyles({
       backgroundColor: "none"
     }
   },
-  root3: {
-    background: "#2261AD",
-    color: "white",
-    borderRadius: 0,
-    padding: "0px 20px",
-    height: HEADER_HEIGHT
-  },
-  root4: {
-    background: "#2261AD",
-    color: "white",
-    borderRadius: 0,
-    padding: "0px 20px",
-    height: HEADER_HEIGHT,
-    transform: "rotateY(180deg)",
-    borderLeft: "28px solid #2261AD",
-    borderTop: "28px solid lightblue",
-    borderBottom: "28px solid lightblue"
-  },
   label: {
     textTransform: "capitalize"
   }
@@ -150,7 +108,7 @@ const useStyles = makeStyles({
 function NavigationHeader({ program, loadProgram, history, admin, curRoute }) {
   const { currentUser, appUser } = useContext(AuthContext);
   const [stage, setStage] = useState(
-    curRoute.path == "applications" ? true : false
+    curRoute.path == "/applications" ? true : false
   );
 
   const [applications] = usePromise(
@@ -170,48 +128,60 @@ function NavigationHeader({ program, loadProgram, history, admin, curRoute }) {
   console.log(applications);
 
   const handleStageChange = () => {
-    setStage(!stage);
+    if (stage) {
+      history.push("/rankins");
+    } else {
+      history.push("/applications");
+    }
   };
 
   const classes = useStyles();
-
+  console.log(curRoute);
   return (
     <div>
       <Container>
         <Button
           classes={{
-            root: stage ? classes.root : classes.root6, // class name, e.g. `classes-nesting-root-x`
+            root: stage ? classes.ratingsSelected : classes.ratingsNotSelected, // class name, e.g. `classes-nesting-root-x`
             label: classes.label // class name, e.g. `classes-nesting-label-x`
           }}
-          onClick={() => handleStageChange()}
+          onClick={() => {
+            history.push("/applications");
+          }}
         >
           {" "}
           1. Rate Candidates
         </Button>
         <Button
           classes={{
-            root: stage ? classes.root2 : classes.root5, // class name, e.g. `classes-nesting-root-x`
+            root: stage
+              ? classes.rankingsNotSelected
+              : classes.rankingsSelected, // class name, e.g. `classes-nesting-root-x`
             label: classes.label // class name, e.g. `classes-nesting-label-x`
           }}
-          onClick={() => handleStageChange()}
-        >
-          {" "}
-          2. Stacked Rankings
-        </Button>
-        <Button
-          style={{ float: "right", margin: "10px", marginRight: "30px" }}
-          variant="contained"
-          color="primary"
-          disabled={
-            reviewCount.value < applications.value.length ||
-            curRoute.path != "applications"
-          }
+          disabled={reviewCount.value < applications.value.length}
           onClick={() => {
             history.push("/rankings");
           }}
         >
-          Next Stage &gt;
+          2. Stacked Rankings
         </Button>
+        {curRoute.path == "/applications" ? (
+          <Button
+            style={{ float: "right", margin: "10px", marginRight: "30px" }}
+            variant="contained"
+            color="primary"
+            disabled={
+              reviewCount.value < applications.value.length ||
+              curRoute.path != "/applications"
+            }
+            onClick={() => {
+              history.push("/rankings");
+            }}
+          >
+            Next Stage &gt;
+          </Button>
+        ) : null}
       </Container>
       {!reviewCount.isPending || !applications.isPending ? (
         <LinearProgress
