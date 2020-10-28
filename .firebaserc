@@ -6,23 +6,8 @@
   "targets": {
     "decision-io": {
       "hosting": {
-        "production": [
-          "decision-io"
-        ],
         "qa": [
           "qa-blueprint"
-        ],
-        "production2": [
-          "emergencyfund"
-        ],
-        "seniors": [
-          "seniorsfund"
-        ],
-        "unitedway": [
-          "unitedway"
-        ],
-        "svp": [
-          "svpfullproposal"
         ],
         "arbitrium": [
           "arbitrium"

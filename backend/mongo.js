@@ -8,6 +8,7 @@ const rankingSchema = require("./models/stackedRankings");
 const ratingSchema = require("./models/ratings");
 const programSchema = require("./models/programs.js");
 const organizationSchema = require("./models/organizations");
+const formsSchema = require("./models/forms");
 
 console.info("Attempting to connect to Mongo...");
 const USERNAME = MONGO_CONFIGS.module.mongoUsername;
@@ -84,12 +85,15 @@ function addConnection(database) {
     const applicationModel = mongo.model("applicationModel", applicationSchema);
     const rankingModel = mongo.model("rankingModel", rankingSchema);
     const ratingModel = mongo.model("ratingModel", ratingSchema);
+    const formsModel = mongo.model("formsModel", formsSchema);
+
     const newConnection = {
       mongo: mongo,
       users: userModel,
       applications: applicationModel,
       rankings: rankingModel,
-      ratings: ratingModel
+      ratings: ratingModel,
+      forms: formsModel
     };
     connections[database._id] = newConnection;
   }

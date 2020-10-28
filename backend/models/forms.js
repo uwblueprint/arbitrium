@@ -54,12 +54,12 @@ const question = new mongoose.Schema({
   type: {
     type: String,
     enum: [
-      "ShortAnswer",
-      "Paragraphs",
-      "MultipleChoice",
-      "Checkboxes",
-      "FileUpload",
-      "CheckboxGrid"
+      "SHORT_ANSWER",
+      "PARAGRAPHS",
+      "MULTIPLE_CHOICE",
+      "CHECKBOXES",
+      "FILE_UPLOAD",
+      "CHECKBOX_GRID"
     ]
   },
   validations: {
@@ -91,6 +91,9 @@ const formsSchema = new mongoose.Schema(
     name: {
       type: String
     },
+    description: {
+      type: String
+    },
     createdBy: {
       type: String
     },
@@ -99,10 +102,12 @@ const formsSchema = new mongoose.Schema(
     },
     sections: {
       type: [section]
+    },
+    formId: {
+      type: String
     }
   },
   { collection: "Forms" }
 );
 
-const Forms = mongoose.model("Forms", formsSchema);
-module.exports = Forms;
+module.exports = formsSchema;

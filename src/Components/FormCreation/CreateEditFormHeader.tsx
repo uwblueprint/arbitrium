@@ -1,20 +1,21 @@
-import React, { useCallback } from "react";
+import React from "react";
 import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
-import { useFormDispatch, useFormState } from "./CreateEditFormStateManagement";
 
 const Header = styled.div`
   padding: 48px 100px;
+  padding-left: 15%;
   box-sizing: border-box;
   height: 176px;
   box-shadow: 0 2px 3px 1px #cccccc;
 `;
 
-const TitleInput = styled(InputBase)`
+const NameInput = styled(InputBase)`
   input {
     font-size: 24px;
   }
   && {
+    width: 846px;
     margin-bottom: 16px;
     line-height: 36px;
   }
@@ -22,7 +23,7 @@ const TitleInput = styled(InputBase)`
 
 const DescriptionInput = styled(InputBase)`
   && {
-    width: 646px
+    width: 846px;
     display: block;
     line-height: 21px;
     overflow-y: auto;
@@ -34,31 +35,39 @@ const DescriptionInput = styled(InputBase)`
   }
 `;
 
-function CreateEditFormHeader(): React.ReactElement<typeof Header> {
-  const dispatch = useFormDispatch();
-  const { title, description } = useFormState();
+type HeaderData = {
+  name: string;
+  description: string;
+};
 
-  const onTitleChange = useCallback(
-    (e) => {
-      dispatch({ type: "EDIT_TITLE", title: e.target.value });
-    },
-    [dispatch]
-  );
+type Props = {
+  name: string;
+  description: string;
+  onChange: (data: HeaderData) => void;
+};
 
-  const onDescriptionChange = useCallback(
-    (e) => {
-      dispatch({ type: "EDIT_DESCRIPTION", description: e.target.value });
-    },
-    [dispatch]
-  );
+function CreateEditFormHeader({
+  name,
+  description,
+  onChange
+}: Props): React.ReactElement<typeof Header> {
+  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange({
+      name: e.target.value,
+      description
+    });
+  };
+
+  const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange({
+      name,
+      description: e.target.value
+    });
+  };
 
   return (
     <Header>
-      <TitleInput
-        placeholder="Form Title"
-        value={title}
-        onChange={onTitleChange}
-      />
+      <NameInput placeholder="Form name" value={name} onChange={onNameChange} />
       <DescriptionInput
         multiline
         placeholder="Form description..."

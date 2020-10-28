@@ -59,11 +59,17 @@ const routes = [
     groups: ["Admin"]
   },
   {
-    path: "/admin/create-form",
+    path: "/admin/form/:formId",
     component: CreateEditForm,
     title: "Create Form",
     header: true,
     groups: ["Admin"]
+  },
+  {
+    path: "/form/:formId",
+    component: null,
+    title: "Users Submission Page",
+    groups: []
   }
 ];
 

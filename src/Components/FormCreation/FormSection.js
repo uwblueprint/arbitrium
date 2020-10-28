@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import IconButton from "@material-ui/core/IconButton";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import FormCard from "./FormCard";
 
 const useStyles = makeStyles({
   collapse: {
@@ -12,13 +15,14 @@ const useStyles = makeStyles({
   expandOpen: {
     transform: "rotate(180deg)"
   },
-  root: () => ({
+  root: {
     fontSize: 14,
     borderRadius: 0,
-    borderTop: `8px solid #2261AD`,
+    borderTop: "8px solid #2261AD",
     boxShadow: "0 2px 3px 1px #cccccc",
-    marginBottom: 20
-  }),
+    marginBottom: 20,
+    width: 816
+  },
   title: {
     color: "#000",
     fontSize: "20px",
@@ -39,24 +43,82 @@ const useStyles = makeStyles({
   }
 });
 
-function FormSection({ numSections, section, title, description }) {
+function FormSection({
+  numSections,
+  sectionNum,
+  sectionData,
+  questions,
+  updateActiveSection,
+  active
+}) {
   const classes = useStyles();
+  const [activeQuestion, setActiveQuestion] = useState(0);
+
+  function updateActiveQuestion(sectionKey, questionKey) {
+    // handleUpdateQuestion(sectionKey, questionKey);
+    updateActiveSection(sectionKey);
+    if (activeQuestion !== questionKey) {
+      setActiveQuestion(questionKey);
+    }
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  function handleAddQuestion() {
+    // TODO: add question to section within sections object
+    // TODO: call the update section API endpoint
+    // TODO: call updateActive
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  function handleMoveQuestion() {
+    // TODO: update question location in section within sections object
+    // TODO: call the update section API endpoint
+    // TODO: call updateActive
+  }
+
+  // async function handleUpdateQuestion(prevSection, prevQuestion) {
+  //   // update recently de-selected question
+  //   const response = await FORM.updateQuestion(
+  //     appUser.currentProgram,
+  //     prevSection,
+  //     sectionData.questions[prevQuestion]
+  //   );
+
+  //   // check status of update
+  //   if (response.status !== 200) {
+  //     console.error(`ERROR: Status - ${response.status}`);
+  //   }
+  // }
 
   return (
     <div>
       <span className={classes.section_title}>
-        Section {section} of {numSections}
+        Section {sectionNum} of {numSections}
       </span>
       <Card className={classes.root}>
         <CardHeader
-          classes={{ title: classes.title }}
-          title={title}
-          id={section}
+          className={classes.title}
+          title={sectionData.name}
+          id={sectionNum}
+          action={
+            <IconButton aria-label="settings">
+              <MoreVertIcon />
+            </IconButton>
+          }
         />
-        <CardContent classes={{ root: classes.content }}>
-          {description}
+        <CardContent className={classes.content}>
+          {sectionData.description}
         </CardContent>
       </Card>
+      {questions.map((_question, questionKey) => (
+        <FormCard
+          key={questionKey + "_question"}
+          active={active && activeQuestion === questionKey}
+          handleActive={updateActiveQuestion}
+          sectionKey={sectionNum - 1}
+          questionKey={questionKey}
+        />
+      ))}
     </div>
   );
 }

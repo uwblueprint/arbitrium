@@ -23,7 +23,7 @@ const initialFormState = {
 };
 
 // onAddNewUser: callback for when a new user is added
-function NewUserDialog({ onSubmit, close }) {
+function NewUserDialog({ onSubmit, close, confirm }) {
   const [formState, dispatchUpdateFormState] = useReducer(
     userFormStateReducer,
     initialFormState
@@ -43,6 +43,7 @@ function NewUserDialog({ onSubmit, close }) {
       const user = await createUserAPI(data);
       close();
       onSubmit && onSubmit(user);
+      confirm();
     } catch (e) {
       console.error(e);
       if (e.message) {

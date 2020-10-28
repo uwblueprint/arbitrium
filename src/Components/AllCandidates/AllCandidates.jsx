@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useContext } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
@@ -7,6 +7,9 @@ import AllCandidatesTable from "./AllCandidatesTable";
 import { CSVLink } from "react-csv";
 import moment from "moment";
 import usePromise from "../../Hooks/usePromise";
+import { createForm } from "../../requests/forms";
+import { AuthContext } from "../../Authentication/Auth.js";
+import { defaultFormState } from "../FormCreation/CreateEditFormStateManagement";
 
 import {
   getCandidateSubmissions,
@@ -132,13 +135,6 @@ async function getCandidateSubmissionInfo() {
   const appIdToAverageRanking = {};
   applications.forEach((app) => (appIdToAverageRanking[app._id] = []));
   rankings.forEach((rank) => {
-    if (
-      process.env.REACT_APP_NODE_ENV !== "development" &&
-      rank.userId !== "vBUgTex5MeNd57fdB8u4wv7kXZ52" &&
-      rank.userId !== "hM9QRmlybTdaQkLX25FupXqjiuF2"
-    ) {
-      return;
-    }
     rank.applications.forEach(
       (app, ind) =>
         appIdToAverageRanking[app.appId] &&
@@ -165,6 +161,8 @@ async function getCandidateSubmissionInfo() {
 }
 
 function AllCandidates({ history, program }) {
+  // eslint-disable-next-line no-unused-vars
+  const { currentUser, appUser } = useContext(AuthContext);
   const [applications] = usePromise(getCandidateSubmissionInfo, {}, []);
   const [allUsers] = usePromise(getAllUsersAPI, {}, []);
   const [comments] = usePromise(
@@ -176,15 +174,14 @@ function AllCandidates({ history, program }) {
   const appsDownloadLink = useRef();
 
   const totalReviewers = useMemo(
-    (progam) =>
+    () =>
       allUsers.value.filter(
         (user) =>
           Array.isArray(user.programs) &&
           program &&
           user.programs.some((p) => p.id === program) &&
-          (process.env.REACT_APP_NODE_ENV === "development" ||
-            (!user.email.endsWith("uwblueprint.org") &&
-              !user.email.endsWith("test.com")))
+          !user.email.includes("uwblueprint.org") &&
+          !user.email.includes("test.com")
       ).length,
     [allUsers, program]
   );
@@ -192,6 +189,21 @@ function AllCandidates({ history, program }) {
   function exportAllData() {
     commentsDownloadLink.current.link.click();
     appsDownloadLink.current.link.click();
+  }
+
+  async function initiateForm() {
+    const data = {
+      formId: program,
+      name: defaultFormState.name,
+      description: defaultFormState.description,
+      createdBy: appUser.userId,
+      draft: true,
+      sections: defaultFormState.sections
+    };
+    const res = await createForm(data);
+    if (res) {
+      history.push("/admin/form/" + program);
+    }
   }
 
   const dataReady = !(applications.isPending || allUsers.isPending);
@@ -213,8 +225,24 @@ function AllCandidates({ history, program }) {
                 variant="contained"
                 color="primary"
                 target="_blank"
-                value="OpenCommittee"
+                value="CreateForm"
                 style={{ width: "250px", maxWidth: "250px" }}
+                onClick={initiateForm}
+              >
+                Create form
+              </Button>
+            </div>
+            <div className="button-container">
+              <Button
+                variant="contained"
+                color="primary"
+                target="_blank"
+                value="OpenCommittee"
+                style={{
+                  width: "250px",
+                  maxWidth: "250px",
+                  marginLeft: "10px"
+                }}
                 onClick={() => {
                   history.push("/admin/committeereview");
                 }}
