@@ -61,7 +61,7 @@ const StyledCard = styled(Card)`
 `;
 
 export default function Feedback() {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, appUser } = useContext(AuthContext);
   const [experience, setExperience] = useState("");
   const [feedbackPar, setFeedbackPar] = useState("");
   const [comment, setComment] = useState("");
@@ -92,10 +92,11 @@ export default function Feedback() {
   };
 
   const sendFeedback = () => (event) => {
-    UPDATE.createFeedbackAPI({
+    UPDATE.sendFeedbackEmail({
       userId: currentUser.uid,
+      user: appUser,
       experience: experience,
-      feedbackPar: feedbackPar,
+      feedbackType: feedbackPar,
       comment: comment
     });
     handleClose();
