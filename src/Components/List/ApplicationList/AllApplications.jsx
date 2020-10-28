@@ -5,7 +5,6 @@ import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
 import AllApplicationsTable from "./AllApplicationsTable";
 import { connect } from "react-redux";
-import LinearProgress from "@material-ui/core/LinearProgress";
 
 import usePromise from "../../../Hooks/usePromise";
 

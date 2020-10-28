@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import MaterialTable from "material-table";
 import { Paper } from "@material-ui/core";
@@ -23,8 +23,6 @@ const rowStyle = {
 };
 
 function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
-  const [page, setpage] = useState(10);
-
   const columns = [
     { title: "Applicant Name", field: "applicantName" },
     { title: "Rating (/5)", field: "rating" },

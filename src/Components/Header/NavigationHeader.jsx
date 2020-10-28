@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -106,10 +106,10 @@ const useStyles = makeStyles({
 //Then redirect
 //programs is a list of programs that the user has access to
 function NavigationHeader({ program, loadProgram, history, admin, curRoute }) {
-  const { currentUser, appUser } = useContext(AuthContext);
-  const [stage, setStage] = useState(
-    curRoute.path == "/applications" ? true : false
-  );
+  //AuthContext returns two values {currentUser, appUser}. We are only using appUser
+  const { appUser } = useContext(AuthContext);
+
+  const stage = curRoute.path === "/applications" ? true : false;
 
   const [applications] = usePromise(
     getApplicationTableData,
@@ -124,19 +124,8 @@ function NavigationHeader({ program, loadProgram, history, admin, curRoute }) {
     [],
     [program]
   );
-  console.log(reviewCount);
-  console.log(applications);
-
-  const handleStageChange = () => {
-    if (stage) {
-      history.push("/rankins");
-    } else {
-      history.push("/applications");
-    }
-  };
 
   const classes = useStyles();
-  console.log(curRoute);
   return (
     <div>
       <Container>
@@ -166,14 +155,14 @@ function NavigationHeader({ program, loadProgram, history, admin, curRoute }) {
         >
           2. Stacked Rankings
         </Button>
-        {curRoute.path == "/applications" ? (
+        {curRoute.path === "/applications" ? (
           <Button
             style={{ float: "right", margin: "10px", marginRight: "30px" }}
             variant="contained"
             color="primary"
             disabled={
               reviewCount.value < applications.value.length ||
-              curRoute.path != "/applications"
+              curRoute.path !== "/applications"
             }
             onClick={() => {
               history.push("/rankings");
