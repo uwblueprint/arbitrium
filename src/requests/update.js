@@ -4,6 +4,10 @@ async function createFeedbackAPI(databody) {
   return POST("/api/feedback", databody);
 }
 
+async function sendFeedbackEmail(databody) {
+  return POST("/api/email", databody);
+}
+
 async function updateReviewAPI(databody) {
   return POST("/api/ratings", databody);
 }
@@ -35,5 +39,6 @@ export {
   updateUserAPI,
   createUserAPI,
   updateUserProgramAPI,
-  updateUserProgramMembershipAPI
+  updateUserProgramMembershipAPI,
+  sendFeedbackEmail
 };

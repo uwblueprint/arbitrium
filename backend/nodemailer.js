@@ -44,6 +44,30 @@ async function sendNewAccountEmail(user, passwordLink, appName) {
   });
 }
 
+async function sendFeedbackEmail(feedback) {
+  const mailOptions = {
+    from: EMAIL_FROM,
+    to: "arbitrium@uwblueprint.org",
+    subject: `[${feedback.feedbackType}] Feedback from ${feedback.user.email}`,
+    html: `Experience: ${feedback.experience}
+    <br><br>
+    Feedback: ${feedback.comment}`
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error(error);
+      return Promise.reject(error);
+    } else {
+      return info;
+    }
+  });
+}
+
 module.exports.sendWelcomeEmail = (user, link) => {
   return sendNewAccountEmail(user, link, "Arbitrium");
+};
+
+module.exports.sendFeedbackEmail = (feedback) => {
+  return sendFeedbackEmail(feedback);
 };
