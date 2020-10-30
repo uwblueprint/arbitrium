@@ -1,8 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { Button, Divider } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
+import AddCardComponent from "./AddCardComponent";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 
 const useStyles = makeStyles({
   collapse: {
@@ -33,6 +38,29 @@ const useStyles = makeStyles({
     color: "#000",
     fontSize: "20px",
     fontWeight: "500"
+  },
+  container: {
+    display: "flex"
+  },
+  buttonRow: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 8
+  },
+  buttonContainer: {
+    marginRight: 5,
+    marginLeft: 5
+  },
+  button: {
+    textTransform: "none"
+  },
+  buttonLabel: {
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: "normal",
+    fontSize: 12,
+    letterSpacing: 0.4
   }
 });
 
@@ -49,13 +77,40 @@ function FormCard({
   const classes = useStyles();
 
   return (
-    <Card
-      onClick={() => handleActive(sectionKey, questionKey)}
-      className={active ? classes.active : classes.root}
-    >
-      <CardHeader className={classes.title} title={question} id={card} />
-      <CardContent className={classes.content}>todo</CardContent>
-    </Card>
+    <div className={classes.container}>
+      <Card
+        onClick={() => handleActive(sectionKey, questionKey)}
+        className={active ? classes.active : classes.root}
+      >
+        <CardHeader className={classes.title} title={question} id={card} />
+        <CardContent className={classes.content}>
+          todo
+          <Divider />
+          <div className={classes.buttonRow}>
+            <div className={classes.buttonContainer}>
+              <Button size="small" className={classes.button}>
+                <DeleteOutlineIcon style={{ marginRight: 5 }} />{" "}
+                <span className={classes.buttonLabel}>Delete</span>
+              </Button>
+            </div>
+            <div className={classes.buttonContainer}>
+              <Button size="small" className={classes.button}>
+                <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
+                <span className={classes.buttonLabel}>Duplicate</span>
+              </Button>
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.buttonContainer}>
+              <Button size="small" className={classes.button}>
+                <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
+                <span className={classes.buttonLabel}>Validation</span>
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      {active ? <AddCardComponent /> : null}
+    </div>
   );
 }
 

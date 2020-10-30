@@ -18,7 +18,7 @@ import { loadProgram } from "../../Actions/index.js";
 export const HEADER_HEIGHT = 56;
 
 const Container = styled.div`
-  position: fixed;
+  position: flexed;
   height: ${HEADER_HEIGHT}px;
   top: 0;
   left: 0;
