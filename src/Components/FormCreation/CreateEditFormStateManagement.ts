@@ -34,6 +34,26 @@ export const sectionsStarter = [
   }
 ];
 
+export const defaultNewSection = {
+  name: "Untitled Section",
+  description: "Section Type: Decision Criteria",
+  questions: [
+    {
+      type: "SHORT_ANSWER" as QuestionType,
+      question: "Untitled Question",
+      options: ["Option 1"],
+      required: false
+    }
+  ]
+};
+
+export const defaultNewQuestion = {
+  type: "SHORT_ANSWER" as QuestionType,
+  question: "Untitled Question",
+  options: ["Option 1"],
+  required: false
+};
+
 export const defaultFormState: FormState = {
   name: "Untitled Form",
   description: "",

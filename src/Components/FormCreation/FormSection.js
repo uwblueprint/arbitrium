@@ -64,7 +64,8 @@ function FormSection({
   sectionData,
   questions,
   updateActiveSection,
-  active
+  active,
+  handleAddSection
 }) {
   const classes = useStyles();
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -136,7 +137,12 @@ function FormSection({
             {sectionData.description}
           </CardContent>
         </Card>
-        {active && activeQuestion === -1 ? <AddCardComponent /> : null}
+        {active && activeQuestion === -1 ? (
+          <AddCardComponent
+            handleAddSection={handleAddSection}
+            handleAddQuestion={handleAddQuestion}
+          />
+        ) : null}
       </CardWrapper>
       {questions.map((_question, questionKey) => (
         <CardWrapper key={questionKey}>
@@ -148,7 +154,10 @@ function FormSection({
             questionKey={questionKey}
           />
           {active && activeQuestion === questionKey ? (
-            <AddCardComponent />
+            <AddCardComponent
+              handleAddSection={handleAddSection}
+              handleAddQuestion={handleAddQuestion}
+            />
           ) : null}
         </CardWrapper>
       ))}
