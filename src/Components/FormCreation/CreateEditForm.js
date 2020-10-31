@@ -1,5 +1,4 @@
 import React, { useReducer, useEffect, useState, useContext } from "react";
-import { HEADER_HEIGHT } from "../Header/Header";
 import styled from "styled-components";
 import FormSection from "./FormSection";
 import { AuthContext } from "../../Authentication/Auth.js";
