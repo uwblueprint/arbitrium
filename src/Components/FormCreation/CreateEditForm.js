@@ -59,11 +59,12 @@ function CreateEditForm() {
     // (don't use in place of updateActive())
   }
 
-  // eslint-disable-next-line no-unused-vars
   function handleAddSection() {
-    // TODO: add section to sections object
-    // TODO: call handleSave to update all sections
-    // TODO: call updateActive
+    dispatchSectionsUpdate({
+      type: "ADD_SECTION",
+      index: activeSection
+    });
+    updateActiveSection(activeSection + 1);
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -87,6 +88,7 @@ function CreateEditForm() {
               questions={section.questions}
               updateActiveSection={updateActiveSection}
               active={activeSection === key}
+              handleAddSection={handleAddSection}
             />
           </FormWrapper>
         ))}

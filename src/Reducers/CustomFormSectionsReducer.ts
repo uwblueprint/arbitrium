@@ -1,5 +1,6 @@
 import { produce } from "immer";
 import { FormSection, EditSectionsAction } from "../Types/FormTypes";
+import { defaultNewSection } from "../Components/FormCreation/CreateEditFormStateManagement";
 
 function customFormSectionsReducer(
   state: FormSection[],
@@ -10,10 +11,9 @@ function customFormSectionsReducer(
       case "LOAD":
         return action.sections;
       case "ADD_SECTION":
-        // TODO
+        draftState.splice(action.index + 1, 0, defaultNewSection);
         break;
       case "DELETE_SECTION":
-        // TODO
         draftState.splice(action.index, 1);
         break;
       default:
