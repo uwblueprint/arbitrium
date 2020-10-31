@@ -2,8 +2,6 @@ import React, { useContext } from "react";
 import { AuthContext } from "../../Authentication/Auth.js";
 import firebaseApp from "../../Authentication/firebase";
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Signout = styled.div`
   display: inline-block;
@@ -13,11 +11,16 @@ const Signout = styled.div`
 
   button {
     text-transform: none;
+    padding-top: 3px;
     margin-left: 12px;
     height: 32px;
     width: 32px;
     border-radius: 100%;
     cursor: pointer;
+    background-color: #eb9546;
+    text-color: white;
+    border: 0px;
+    font-size: 16;
   }
 `;
 
@@ -28,9 +31,8 @@ const UserDisplay = () => {
     return (
       <div>
         <Signout>
-          {"Hi " + appUser.name + "!"}
           <button color="primary" onClick={() => firebaseApp.auth().signOut()}>
-            <FontAwesomeIcon icon={faSignOutAlt} />
+            {appUser.name.substring(0, 1)}
           </button>
         </Signout>
       </div>

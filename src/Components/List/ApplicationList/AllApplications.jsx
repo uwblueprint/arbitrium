@@ -8,7 +8,10 @@ import { connect } from "react-redux";
 
 import usePromise from "../../../Hooks/usePromise";
 
-import { getApplicationTableData } from "../../../requests/get";
+import {
+  getApplicationTableData,
+  getReviewCountAPI
+} from "../../../requests/get";
 
 const Wrapper = styled.div`
   margin-top: 150px;
@@ -70,24 +73,41 @@ function AllApplications({ user, program }) {
     [program]
   );
 
+  const [reviewCount] = usePromise(
+    getReviewCountAPI,
+    user.userId,
+    [],
+    [program]
+  );
+
   return (
-    <Wrapper>
-      <Paper>
-        {!applications.isPending ? (
-          <div>
-            <h1>All Applicants</h1>
-            <AllApplicationsTable
-              data={convertToTableData(applications.value, program)}
-            />
-          </div>
-        ) : (
-          <div>
-            <h1>Loading Applications...</h1>
-            <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
-          </div>
-        )}
-      </Paper>
-    </Wrapper>
+    <div>
+      <Wrapper>
+        <Paper>
+          {!applications.isPending && !reviewCount.isPending ? (
+            <div>
+              <h1 style={{ fontSize: "24px" }}>Candidate Submissions</h1>
+              <p style={{ fontSize: "14px" }}>
+                {
+                  "These are all the candidate submissions. All candidates need to be rated in order to move on to the next step"
+                }
+              </p>
+              <hr />
+              <AllApplicationsTable
+                reviewCount={reviewCount.value}
+                applicationCount={applications.value.length}
+                data={convertToTableData(applications.value, program)}
+              />
+            </div>
+          ) : (
+            <div>
+              <h1>Loading Applications...</h1>
+              <Spinner radius={120} color={"#333"} stroke={2} visible={true} />
+            </div>
+          )}
+        </Paper>
+      </Wrapper>
+    </div>
   );
 }
 
