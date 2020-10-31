@@ -6,10 +6,7 @@ import { AuthContext } from "../../Authentication/Auth.js";
 import * as FORM from "../../requests/forms.js";
 import usePromise from "../../Hooks/usePromise";
 import CreateEditFormHeader from "./CreateEditFormHeader";
-import {
-  defaultFormState,
-  defaultNewSection
-} from "./CreateEditFormStateManagement";
+import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
 
 const Wrapper = styled.div`
@@ -62,17 +59,12 @@ function CreateEditForm() {
     // (don't use in place of updateActive())
   }
 
-  // eslint-disable-next-line no-unused-vars
   function handleAddSection() {
-    // TODO: add section to sections object
-    // TODO: call handleSave to update all sections
-    // TODO: call updateActive
-
-    // console.log(sections);
-    let currSections = sections;
-    currSections.splice(activeSection + 1, 0, defaultNewSection);
+    dispatchSectionsUpdate({
+      type: "ADD_SECTION",
+      index: activeSection
+    });
     updateActiveSection(activeSection + 1);
-    // console.log(currSections);
   }
 
   // eslint-disable-next-line no-unused-vars
