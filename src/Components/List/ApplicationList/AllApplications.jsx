@@ -15,7 +15,7 @@ import {
 
 const Wrapper = styled.div`
   margin-top: 50px;
-  padding: 0 50px;
+  padding: 0 136px;
   text-align: left;
   padding-bottom: 30px;
   h1 {

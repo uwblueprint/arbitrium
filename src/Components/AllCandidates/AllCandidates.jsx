@@ -40,7 +40,7 @@ const Header = styled.div`
 
 const Wrapper = styled.div`
   margin-top: 50px;
-  padding: 0 50px;
+  padding: 0 136px;
   h1 {
     font-family: Roboto;
     font-style: normal;
