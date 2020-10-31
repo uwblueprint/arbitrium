@@ -62,7 +62,6 @@ function FormSection({
   numSections,
   sectionNum,
   sectionData,
-  questions,
   updateActiveSection,
   active,
   handleAddSection
@@ -144,7 +143,7 @@ function FormSection({
           />
         ) : null}
       </CardWrapper>
-      {questions.map((_question, questionKey) => (
+      {sectionData.questions.map((_question, questionKey) => (
         <CardWrapper key={questionKey}>
           <FormCard
             key={questionKey + "_question"}
