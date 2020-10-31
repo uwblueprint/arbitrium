@@ -9,10 +9,6 @@ import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
 
-const Wrapper = styled.div`
-  margin-top: ${HEADER_HEIGHT}px;
-`;
-
 const FormWrapper = styled.div`
   margin-top: 50px;
   padding-left: 15%;
@@ -75,7 +71,7 @@ function CreateEditForm() {
   }
 
   return (
-    <Wrapper>
+    <div>
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
       {sections &&
         sections.map((section, key) => (
@@ -91,7 +87,7 @@ function CreateEditForm() {
             />
           </FormWrapper>
         ))}
-    </Wrapper>
+    </div>
   );
 }
 

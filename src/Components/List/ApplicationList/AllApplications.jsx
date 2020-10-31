@@ -14,8 +14,8 @@ import {
 } from "../../../requests/get";
 
 const Wrapper = styled.div`
-  margin-top: 150px;
-  padding: 0 136px;
+  margin-top: 50px;
+  padding: 0 50px;
   text-align: left;
   padding-bottom: 30px;
   h1 {
