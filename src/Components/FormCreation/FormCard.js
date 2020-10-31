@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Divider, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { Button, Divider } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -11,9 +10,6 @@ import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import { Switch } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { shadows } from "@material-ui/system";
-import { updateQuestion } from "../../requests/forms.js";
-import { body } from "../../index.css";
 
 const useStyles = makeStyles({
   collapse: {
@@ -83,12 +79,18 @@ function FormCard({
   active,
   handleActive,
   sectionKey,
-  questionKey,
-  handleDuplicate,
-  required,
-  formId
+  questionKey
 }) {
   const classes = useStyles();
+  const [required, setRequired] = useState(true);
+  const StyledSwitch = withStyles({
+    switchBase: {
+      color: "#48484a"
+    }
+  })(Switch);
+  const handleSwitch = () => {
+    setRequired((prev) => !prev);
+  };
 
   return (
     <div className={classes.container}>
@@ -127,10 +129,10 @@ function FormCard({
             <div className={classes.switch}>
               <FormControlLabel
                 control={
-                  <Switch
+                  <StyledSwitch
                     size="small"
                     checked={required}
-                    /*onChange={updateQuestion(formId, sectionKey, required)}*/
+                    onChange={handleSwitch}
                     color="primary"
                   />
                 }
