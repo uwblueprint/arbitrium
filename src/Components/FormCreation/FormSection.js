@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import styled from "styled-components";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FormCard from "./FormCard";
+import AddCardComponent from "./AddCardComponent";
 
 const useStyles = makeStyles({
   collapse: {
@@ -19,6 +21,15 @@ const useStyles = makeStyles({
     fontSize: 14,
     borderRadius: 0,
     borderTop: "8px solid #2261AD",
+    boxShadow: "0 2px 3px 1px #cccccc",
+    marginBottom: 20,
+    width: 816
+  },
+  active: {
+    fontSize: 14,
+    borderRadius: 0,
+    borderTop: "8px solid #2261AD",
+    borderLeft: "4px solid #2261AD",
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
     width: 816
@@ -43,6 +54,10 @@ const useStyles = makeStyles({
   }
 });
 
+const CardWrapper = styled.div`
+  display: flex;
+`;
+
 function FormSection({
   numSections,
   sectionNum,
@@ -60,6 +75,11 @@ function FormSection({
     if (activeQuestion !== questionKey) {
       setActiveQuestion(questionKey);
     }
+  }
+
+  function setSectionAsActive(sectionKey) {
+    setActiveQuestion(-1);
+    updateActiveSection(sectionKey);
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -95,29 +115,42 @@ function FormSection({
       <span className={classes.section_title}>
         Section {sectionNum} of {numSections}
       </span>
-      <Card className={classes.root}>
-        <CardHeader
-          className={classes.title}
-          title={sectionData.name}
-          id={sectionNum}
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
+      <CardWrapper key={sectionNum}>
+        <Card
+          className={
+            active && activeQuestion === -1 ? classes.active : classes.root
           }
-        />
-        <CardContent className={classes.content}>
-          {sectionData.description}
-        </CardContent>
-      </Card>
+          onClick={() => setSectionAsActive(sectionNum - 1)}
+        >
+          <CardHeader
+            className={classes.title}
+            title={sectionData.name}
+            id={sectionNum}
+            action={
+              <IconButton aria-label="settings">
+                <MoreVertIcon />
+              </IconButton>
+            }
+          />
+          <CardContent className={classes.content}>
+            {sectionData.description}
+          </CardContent>
+        </Card>
+        {active && activeQuestion === -1 ? <AddCardComponent /> : null}
+      </CardWrapper>
       {questions.map((_question, questionKey) => (
-        <FormCard
-          key={questionKey + "_question"}
-          active={active && activeQuestion === questionKey}
-          handleActive={updateActiveQuestion}
-          sectionKey={sectionNum - 1}
-          questionKey={questionKey}
-        />
+        <CardWrapper key={questionKey}>
+          <FormCard
+            key={questionKey + "_question"}
+            active={active && activeQuestion === questionKey}
+            handleActive={updateActiveQuestion}
+            sectionKey={sectionNum - 1}
+            questionKey={questionKey}
+          />
+          {active && activeQuestion === questionKey ? (
+            <AddCardComponent />
+          ) : null}
+        </CardWrapper>
       ))}
     </div>
   );

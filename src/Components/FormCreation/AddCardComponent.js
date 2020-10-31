@@ -47,7 +47,7 @@ const useStyles = makeStyles({
   }
 });
 
-function AddCardComponent() {
+function AddCardComponent({ handleAddSection, handleAddQuestion }) {
   const classes = useStyles();
 
   return (
@@ -55,13 +55,16 @@ function AddCardComponent() {
       <Card className={classes.root}>
         <CardContent className={classes.content}>
           <p className={classes.text}>
-            <span className={classes.icon_container}>
+            <span
+              className={classes.icon_container}
+              onClick={handleAddQuestion}
+            >
               <FontAwesomeIcon className={classes.icon} icon={faPlus} />
               Add Question
             </span>
           </p>
           <p className={classes.text}>
-            <span className={classes.icon_container}>
+            <span className={classes.icon_container} onClick={handleAddSection}>
               <FontAwesomeIcon className={classes.icon} icon={faLayerGroup} />
               Add Section
             </span>
