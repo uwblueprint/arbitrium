@@ -104,7 +104,11 @@ function NavigationHeader({ program, history, admin, curRoute }) {
   //AuthContext returns two values {currentUser, appUser}. We are only using appUser
   const { appUser } = useContext(AuthContext);
 
-  const stage = curRoute.path === "/applications" ? true : false;
+  const stage =
+    curRoute.path.includes("applications") ||
+    curRoute.path.includes("submissions")
+      ? true
+      : false;
 
   const [applications] = usePromise(
     getApplicationTableData,

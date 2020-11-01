@@ -83,7 +83,7 @@ function DecisionCanvas({ update, review, categoryData }) {
       return reviewMap;
     }, {});
   }, [review]);
-
+  console.log(categoryData);
   return (
     <SectionWrapper>
       <CanvasHeader>
@@ -133,24 +133,24 @@ function DecisionCanvas({ update, review, categoryData }) {
                             <li key={i + "Primary"}>
                               {"Primary (Select 3 Max):"}
                             </li>
-                            {Object.keys(item.response).forEach((key, j) => {
+                            {Object.keys(item.response).map((key, j) => {
                               if (
-                                item.response[key] === "Primary (Select 3 Max)"
+                                item.response[key].includes(
+                                  "Primary (Select 3 Max)"
+                                )
                               ) {
+                                console.log(key);
                                 return (
-                                  <ul
-                                    style={{ paddingLeft: "35px" }}
-                                    key={i + "." + j}
-                                  >
-                                    {key}
-                                  </ul>
+                                  <ul style={{ paddingLeft: "35px" }}>{key}</ul>
                                 );
                               }
                             })}
                             <li key={i + "All"}>
                               {"All Who Apply:"}
-                              {Object.keys(item.response).forEach((key, j) => {
-                                if (item.response[key] === "All Who Apply") {
+                              {Object.keys(item.response).map((key, j) => {
+                                if (
+                                  item.response[key].includes("All Who Apply")
+                                ) {
                                   return (
                                     <ul
                                       style={{ paddingLeft: "35px" }}
