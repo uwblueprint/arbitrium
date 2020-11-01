@@ -85,7 +85,6 @@ function CreateEditForm() {
               numSections={sections.length}
               sectionNum={key + 1}
               sectionData={section}
-              questions={section.questions}
               updateActiveSection={updateActiveSection}
               active={activeSection === key}
               handleAddSection={handleAddSection}
