@@ -83,7 +83,7 @@ function DecisionCanvas({ update, review, categoryData }) {
       return reviewMap;
     }, {});
   }, [review]);
-  console.log(categoryData);
+
   return (
     <SectionWrapper>
       <CanvasHeader>
@@ -139,7 +139,6 @@ function DecisionCanvas({ update, review, categoryData }) {
                                   "Primary (Select 3 Max)"
                                 )
                               ) {
-                                console.log(key);
                                 return (
                                   <ul style={{ paddingLeft: "35px" }}>{key}</ul>
                                 );
