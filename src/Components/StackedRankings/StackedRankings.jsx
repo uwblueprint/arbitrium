@@ -118,11 +118,10 @@ async function createUpdateMissingRankings(
   applications
 ) {
   const existingReviewsIds = new Set(existingRankings.map((app) => app._id));
-  const missingApps = applications.reduce(
-    (arr, app) =>
-      !existingReviewsIds.has(app._id) && arr.push({ appId: app._id }),
-    []
-  );
+  const missingApps = applications.reduce((arr, app) => {
+    !existingReviewsIds.has(app._id) && arr.push({ appId: app._id });
+    return arr;
+  }, []);
   const updatedApps = [...existingRankings, ...missingApps];
   try {
     await updateStackedAPI({
@@ -190,10 +189,9 @@ function StackedRankings({ history }) {
     return <NumbersColumn>{numbers}</NumbersColumn>;
   }, [numOrgs]);
 
-  const shouldRedirect =
-    reviewCount == null || reviewCount < applications.length;
+  const shouldRedirect = reviewCount < applications.length;
 
-  if (shouldRedirect) {
+  if (shouldRedirect && false) {
     return <Redirect to="/" />;
   }
 
@@ -222,7 +220,6 @@ function StackedRankings({ history }) {
       window.alert("Unable to update stacked rankings.");
     }
   };
-
   const onBeforeDragStart = (provided) => {
     if (provided.source.index <= 4) {
       shouldTranslate.current = true;

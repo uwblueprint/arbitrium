@@ -83,7 +83,7 @@ function DecisionCanvas({ update, review, categoryData }) {
       return reviewMap;
     }, {});
   }, [review]);
-  console.log(categoryData);
+
   return (
     <SectionWrapper>
       <CanvasHeader>
@@ -118,7 +118,12 @@ function DecisionCanvas({ update, review, categoryData }) {
                   <h3>Question(s):</h3>
                   <ol>
                     {section.answers.map((item, i) => (
-                      <li key={i}>{item.question}</li>
+                      <li key={i}>
+                        {item.question
+                          .replace(/-/g, ".")
+                          .replace("One.Line", "One-Line")
+                          .replace("COVID.19", "COVID-19")}
+                      </li>
                     ))}
                   </ol>
                 </div>
@@ -139,9 +144,11 @@ function DecisionCanvas({ update, review, categoryData }) {
                                   "Primary (Select 3 Max)"
                                 )
                               ) {
-                                console.log(key);
                                 return (
-                                  <ul style={{ paddingLeft: "35px" }}>{key}</ul>
+                                  <ul
+                                    style={{ paddingLeft: "35px" }}
+                                    key={j + i + key + "Primary"}
+                                  ></ul>
                                 );
                               }
                             })}
@@ -154,7 +161,7 @@ function DecisionCanvas({ update, review, categoryData }) {
                                   return (
                                     <ul
                                       style={{ paddingLeft: "35px" }}
-                                      key={i + "." + j}
+                                      key={j + i + key + "All"}
                                     >
                                       {key}
                                     </ul>

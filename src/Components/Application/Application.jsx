@@ -13,6 +13,7 @@ import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import Rating from "../Rating/Rating";
 import Files from "../Files/Files";
 import LoadingOverlay from "../Common/LoadingOverlay";
+import { HEADER_HEIGHT } from "../Header/Header";
 //column categories
 import {
   createReview,
@@ -29,8 +30,9 @@ import { getReviewAPI } from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 import { ProgramContext } from "../../Contexts/ProgramContext";
 
+//112 = 56*2 = HEADER_HEIGHT*2
 const PageWrapper = styled.div`
-  padding-top: 50px;
+  padding-top: 112px;
 `;
 
 const BodyWrapper = styled.div`
@@ -44,7 +46,7 @@ const BodyWrapper = styled.div`
     .all-applicants {
       display: block;
       color: #888888;
-      border-radius: 0;
+      border-radius: 4px;
       transform: translateX(-4px);
     }
   }
@@ -59,6 +61,7 @@ const BodyWrapper = styled.div`
   }
   button {
     text-transform: none;
+    margin-bottom: 16px;
   }
 `;
 
@@ -67,7 +70,7 @@ const ApplicationSelector = styled.div`
   justify-content: space-between;
   margin-bottom: 37px;
   button {
-    border-radius: 0px;
+    border-radius: 4px;
   }
 `;
 
@@ -99,11 +102,11 @@ function Application({ newReview, history, match, user, program }) {
 
   const dispatchReviewUpdate = useCallback(
     async (action) => {
+      newReview();
       try {
         const updatedReview = reviewReducer(review, action);
         if (!isRated.current && updatedReview.rating > -1) {
           isRated.current = true;
-          newReview();
         }
         const res = await UPDATE.updateReviewAPI(updatedReview);
         if (res.ok !== 1) {
@@ -176,7 +179,6 @@ function Application({ newReview, history, match, user, program }) {
           </Button>
         </ApplicationSelector>
         <h1>
-          <br />
           {application ? (
             application["Organization Name"] ||
             application["Organization Name (legal name)"]

@@ -1,7 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../Authentication/Auth.js";
 import firebaseApp from "../../Authentication/firebase";
 import styled from "styled-components";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import { HEADER_HEIGHT } from "./Header";
 
 const Signout = styled.div`
   display: inline-block;
@@ -26,15 +29,40 @@ const Signout = styled.div`
 
 const UserDisplay = () => {
   const { currentUser, appUser } = useContext(AuthContext);
+  const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
+
+  const handleClickProfileMenu = (event) => {
+    setProfileMenuAnchor(event.currentTarget);
+  };
+
+  const handleSelect = () => {
+    firebaseApp.auth().signOut();
+  };
 
   if (currentUser != null) {
     return (
       <div>
         <Signout>
-          <button color="primary" onClick={() => firebaseApp.auth().signOut()}>
+          <button color="primary" onClick={handleClickProfileMenu}>
             {appUser.name.substring(0, 1)}
           </button>
         </Signout>
+
+        <Menu
+          elevation={0}
+          id="simple-menu"
+          anchorEl={profileMenuAnchor}
+          keepMounted
+          open={Boolean(profileMenuAnchor)}
+          onClose={() => {
+            setProfileMenuAnchor(null);
+          }}
+          style={{ marginTop: HEADER_HEIGHT / 2 }}
+        >
+          <div style={{ border: "1px solid #ccc" }}>
+            <MenuItem onClick={() => handleSelect()}> {"Log out"}</MenuItem>
+          </div>
+        </Menu>
       </div>
     );
   } else {
