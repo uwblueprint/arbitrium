@@ -1,12 +1,14 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Button, Divider } from "@material-ui/core";
+import React, { useState } from "react";
+import { Button, Divider, Typography } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
+import { Switch } from "@material-ui/core";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const useStyles = makeStyles({
   collapse: {
@@ -60,6 +62,11 @@ const useStyles = makeStyles({
     fontWeight: "normal",
     fontSize: 12,
     letterSpacing: 0.4
+  },
+  switch: {
+    textTransform: "none",
+    paddingTop: 4,
+    paddingLeft: 10
   }
 });
 
@@ -74,6 +81,15 @@ function FormCard({
   questionKey
 }) {
   const classes = useStyles();
+  const [required, setRequired] = useState(true);
+  const StyledSwitch = withStyles({
+    switchBase: {
+      color: "#48484a"
+    }
+  })(Switch);
+  const handleSwitch = () => {
+    setRequired((prev) => !prev);
+  };
 
   return (
     <div className={classes.container}>
@@ -93,7 +109,11 @@ function FormCard({
               </Button>
             </div>
             <div className={classes.buttonContainer}>
-              <Button size="small" className={classes.button}>
+              <Button
+                size="small"
+                className={classes.button}
+                //onClick={handleDuplicate({ sectionKey, questionKey, question })}
+              >
                 <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
                 <span className={classes.buttonLabel}>Duplicate</span>
               </Button>
@@ -104,6 +124,23 @@ function FormCard({
                 <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
                 <span className={classes.buttonLabel}>Validation</span>
               </Button>
+            </div>
+            <div className={classes.switch}>
+              <FormControlLabel
+                control={
+                  <StyledSwitch
+                    size="small"
+                    checked={required}
+                    onChange={handleSwitch}
+                    color="primary"
+                  />
+                }
+                label={
+                  <Typography className={classes.buttonLabel}>
+                    Required
+                  </Typography>
+                }
+              />
             </div>
           </div>
         </CardContent>

@@ -48,6 +48,10 @@ const question = new mongoose.Schema({
   name: {
     type: String
   },
+  required: {
+    type: Boolean,
+    default: true
+  },
   description: {
     type: String
   },
