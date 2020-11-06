@@ -4,7 +4,8 @@ import {
   NEW_REVIEW,
   LOAD_APPLICATIONS,
   AUTHENTICATE_USER,
-  LOAD_PROGRAM
+  LOAD_PROGRAM,
+  UPDATE_NAVBAR
 } from "../Constants/ActionTypes";
 
 //Reducers take 2 params, a state and an action
@@ -47,13 +48,23 @@ function reviewCount(state = 0, action) {
   }
 }
 
+function updateNavbar(state = 10, action) {
+  switch (action.type) {
+    case UPDATE_NAVBAR:
+      return state + 1;
+    default:
+      return state;
+  }
+}
+
 function createRootReducer(history) {
   return combineReducers({
     reviewCount,
     router: connectRouter(history),
     applications,
     user,
-    program
+    program,
+    updateNavbar
   });
 }
 

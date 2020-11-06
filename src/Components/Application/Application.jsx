@@ -24,7 +24,7 @@ import {
 } from "./applicationDataHelpers";
 import { reviewReducer } from "./reviewReducer";
 import { connect } from "react-redux";
-import { newReview } from "../../Actions";
+import { newReview, updateNavbar } from "../../Actions";
 import usePromise from "../../Hooks/usePromise";
 import { getReviewAPI } from "../../requests/get";
 import * as UPDATE from "../../requests/update";
@@ -74,7 +74,14 @@ const ApplicationSelector = styled.div`
   }
 `;
 
-function Application({ newReview, history, match, user, program }) {
+function Application({
+  newReview,
+  updateNavbar,
+  history,
+  match,
+  user,
+  program
+}) {
   const appId = match.params.organizationId;
   const isRated = useRef(false);
   const [review, setReview] = useState(null);
@@ -102,11 +109,13 @@ function Application({ newReview, history, match, user, program }) {
 
   const dispatchReviewUpdate = useCallback(
     async (action) => {
-      newReview();
+      console.log("updating navbar");
       try {
+        updateNavbar();
         const updatedReview = reviewReducer(review, action);
         if (!isRated.current && updatedReview.rating > -1) {
           isRated.current = true;
+          newReview();
         }
         const res = await UPDATE.updateReviewAPI(updatedReview);
         if (res.ok !== 1) {
@@ -250,7 +259,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  newReview
+  newReview,
+  updateNavbar
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Application);

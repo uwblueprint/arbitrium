@@ -189,9 +189,10 @@ function StackedRankings({ history }) {
     return <NumbersColumn>{numbers}</NumbersColumn>;
   }, [numOrgs]);
 
-  const shouldRedirect = reviewCount < applications.length;
+  const shouldRedirect =
+    reviewCount == null || reviewCount < applications.length;
 
-  if (shouldRedirect && false) {
+  if (shouldRedirect) {
     return <Redirect to="/" />;
   }
 

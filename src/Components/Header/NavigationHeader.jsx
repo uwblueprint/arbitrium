@@ -101,7 +101,14 @@ const useStyles = makeStyles({
 
 //The navigation header is loaded dynamically based on the url.
 //It does NOT contain a state.
-function NavigationHeader({ program, history, admin, curRoute, reviewCount }) {
+function NavigationHeader({
+  program,
+  history,
+  admin,
+  curRoute,
+  reviewCount,
+  updateNavbar
+}) {
   //AuthContext returns two values {currentUser, appUser}. We are only using appUser
   const { appUser } = useContext(AuthContext);
 
@@ -122,7 +129,7 @@ function NavigationHeader({ program, history, admin, curRoute, reviewCount }) {
     getReviewCountAPI,
     appUser.userId,
     [],
-    [program, reviewCount]
+    [curRoute, updateNavbar]
   );
 
   const classes = useStyles();
@@ -187,7 +194,8 @@ function NavigationHeader({ program, history, admin, curRoute, reviewCount }) {
 
 const mapStateToProps = (state) => ({
   program: state.program,
-  reviewCount: state.reviewCount
+  reviewCount: state.reviewCount,
+  updateNavbar: state.updateNavbar
 });
 
 const connectedAuth = connect(mapStateToProps)(NavigationHeader);
