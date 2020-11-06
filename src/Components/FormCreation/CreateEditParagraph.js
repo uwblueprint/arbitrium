@@ -8,19 +8,19 @@ const Wrapper = styled.div`
   width: 816px;
 `;
 
-function CreateEditShortAnswer() {
+function CreateEditParagraph() {
   return (
     <Wrapper>
       <TextField
         disabled
-        placeholder="Short answer text"
+        placeholder="Long answer text"
         size="medium"
         multiline
-        rowsMax={2}
+        rowsMax={4}
         fullWidth="true"
       ></TextField>
     </Wrapper>
   );
 }
 
-export default CreateEditShortAnswer;
+export default CreateEditParagraph;
