@@ -30,9 +30,9 @@ import { getReviewAPI } from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 import { ProgramContext } from "../../Contexts/ProgramContext";
 
-//112 = 56*2 = HEADER_HEIGHT*2
+const padding = HEADER_HEIGHT * 2 + "px";
 const PageWrapper = styled.div`
-  padding-top: 112px;
+  padding-top: ${padding};
 `;
 
 const BodyWrapper = styled.div`
