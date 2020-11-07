@@ -142,7 +142,6 @@ function NavigationHeader({
             label: classes.label // class name, e.g. `classes-nesting-label-x`
           }}
           onClick={() => {
-            console.log("Applications");
             history.push("/applications");
           }}
         >
@@ -159,7 +158,6 @@ function NavigationHeader({
           disabled={reviewAmount.value < applications.value.length}
           onClick={() => {
             history.push("/rankings");
-            console.log("Can I see this?");
           }}
         >
           2. Stacked Rankings

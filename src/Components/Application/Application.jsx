@@ -109,7 +109,6 @@ function Application({
 
   const dispatchReviewUpdate = useCallback(
     async (action) => {
-      console.log("updating navbar");
       try {
         updateNavbar();
         const updatedReview = reviewReducer(review, action);
