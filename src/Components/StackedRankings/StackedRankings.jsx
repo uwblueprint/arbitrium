@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { makeStyles } from "@material-ui/core";
 import RankingCard from "./RankingCard";
 import usePromise from "../../Hooks/usePromise";
-import { getAllStackingsAPI } from "../../requests/get";
+import { getAllStackingsAPI, getReviewCountAPI } from "../../requests/get";
 import { updateStackedAPI } from "../../requests/update";
 import { reorder } from "../../Utils/dragAndDropUtils";
 import { ProgramContext } from "../../Contexts/ProgramContext";
@@ -144,10 +144,9 @@ async function createUpdateMissingRankings(
 
 function StackedRankings({ history }) {
   const { appUser: user } = useContext(AuthContext);
-  const { applications, reviewCount } = useContext(ProgramContext);
-
+  const { applications } = useContext(ProgramContext);
   const [fetchedRankings, refetch] = usePromise(getAllStackingsAPI, { user });
-
+  const [reviewCount] = usePromise(getReviewCountAPI, user.userId);
   const [rankings, setRankings] = useState([]);
   const shouldTranslate = useRef(false);
   const classes = useStyles();
@@ -190,9 +189,9 @@ function StackedRankings({ history }) {
   }, [numOrgs]);
 
   const shouldRedirect =
-    reviewCount == null || reviewCount < applications.length;
+    !reviewCount.value || reviewCount.value < applications.length;
 
-  if (shouldRedirect) {
+  if (shouldRedirect && !reviewCount.isPending) {
     return <Redirect to="/" />;
   }
 

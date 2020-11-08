@@ -75,8 +75,10 @@ const ApplicationSelector = styled.div`
 `;
 
 function Application({
-  newReview,
-  updateNavbar,
+  dispatchNavbarUpdate,
+  dispatchNewReview,
+  reviewCreated,
+  navbarUpdate,
   history,
   match,
   user,
@@ -110,22 +112,22 @@ function Application({
   const dispatchReviewUpdate = useCallback(
     async (action) => {
       try {
-        updateNavbar();
         const updatedReview = reviewReducer(review, action);
         if (!isRated.current && updatedReview.rating > -1) {
           isRated.current = true;
-          newReview();
+          dispatchNewReview();
         }
         const res = await UPDATE.updateReviewAPI(updatedReview);
         if (res.ok !== 1) {
           throw res;
         }
+        dispatchNavbarUpdate();
         setReview(updatedReview);
       } catch (e) {
         alert("Error in saving your review!");
       }
     },
-    [newReview, review]
+    [review, dispatchNavbarUpdate, dispatchNewReview]
   );
 
   const [application, appIndex, appData] = useMemo(() => {
@@ -258,8 +260,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  newReview,
-  updateNavbar
+  dispatchNewReview: newReview,
+  dispatchNavbarUpdate: updateNavbar
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Application);

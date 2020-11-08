@@ -151,6 +151,7 @@ function DecisionCanvas({ update, review, categoryData }) {
                                   ></ul>
                                 );
                               }
+                              return null;
                             })}
                             <li key={i + "All"}>
                               {"All Who Apply:"}
@@ -167,6 +168,7 @@ function DecisionCanvas({ update, review, categoryData }) {
                                     </ul>
                                   );
                                 }
+                                return null;
                               })}
                             </li>
                           </ul>

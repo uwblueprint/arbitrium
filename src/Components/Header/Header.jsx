@@ -213,17 +213,18 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                 {routes != null ? (
                   <div style={{ border: "1px solid #ccc" }}>
                     {routes.map((route, index) => {
-                      if (route.title != curRoute.title) {
+                      if (route.title !== curRoute.title) {
                         return (
                           <MenuItem
                             key={index}
                             onClick={() => history.push(route.path)}
-                            visible={route.title != curRoute.title}
+                            visible={route.title !== curRoute.title}
                           >
                             {route.title}
                           </MenuItem>
                         );
                       }
+                      return null;
                     })}
                     {validPrograms.length === 0 ? (
                       <MenuItem key={"None"}>

@@ -111,7 +111,7 @@ function NavigationHeader({
 }) {
   //AuthContext returns two values {currentUser, appUser}. We are only using appUser
   const { appUser } = useContext(AuthContext);
-
+  console.log("here");
   const stage =
     curRoute.path.includes("applications") ||
     curRoute.path.includes("submissions")
@@ -131,6 +131,8 @@ function NavigationHeader({
     [],
     [curRoute, updateNavbar]
   );
+
+  console.log(reviewAmount.value);
 
   const classes = useStyles();
   return (
