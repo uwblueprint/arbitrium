@@ -73,6 +73,7 @@ const organizationRoutes = require("./routes/organizations");
 const formsRoutes = require("./routes/forms");
 const feedbackRoutes = require("./routes/feedback");
 const emailRoutes = require("./routes/email");
+const filesRoutes = require("./routes/files");
 
 //Allows us to access request body in a post or put
 app.use(cors(corsOptions));
@@ -96,6 +97,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/forms", formsRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/email", emailRoutes);
+app.use("/api/files", filesRoutes);
 
 app.listen(4000, () => {
   console.info("Server is listening on port:4000");
