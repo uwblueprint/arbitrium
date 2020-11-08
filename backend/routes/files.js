@@ -4,15 +4,11 @@ const express = require("express");
 const AWS = require("aws-sdk");
 AWS.config.update({ region: "us-east-2" });
 AWS.config.loadFromPath("./AWScredentials.json");
-const fs = require("fs");
-const path = require("path");
 const multer = require("multer");
-const upload = multer();
-// allows routes to be sent out
 const router = express.Router();
 
 // Create S3 service object
-s3 = new AWS.S3({ apiVersion: "2006-03-01" });
+const s3 = new AWS.S3({ apiVersion: "2006-03-01" });
 
 router.get("/listBuckets", async function(req, res) {
   try {
