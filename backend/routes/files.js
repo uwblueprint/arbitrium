@@ -2,7 +2,6 @@ const express = require("express");
 
 //https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/s3-example-creating-buckets.html
 const AWS = require("aws-sdk");
-AWS.config.update({ region: "us-east-2" });
 AWS.config.loadFromPath("./AWScredentials.json");
 const multer = require("multer");
 const router = express.Router();
