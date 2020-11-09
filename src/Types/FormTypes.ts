@@ -12,6 +12,20 @@ export type EditSectionsAction =
       index: number;
     };
 
+export type EditQuestionsAction =
+  | {
+      type: "LOAD";
+      sections: QuestionCard[];
+    }
+  | {
+      type: "ADD_QUESTION";
+      index: number;
+    }
+  | {
+      type: "DELETE_QUESTION";
+      index: number;
+    };
+
 export type QuestionType =
   | "SHORT_ANSWER"
   | "MULTIPLE_CHOICE"
