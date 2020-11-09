@@ -88,9 +88,12 @@ function AllApplications({ user, program }) {
             <div>
               <h1 style={{ fontSize: "24px" }}>Candidate Submissions</h1>
               <p style={{ fontSize: "14px" }}>
-                {
-                  "These are all the candidate submissions. All candidates need to be rated in order to move on to the next step"
-                }
+                {"These are all the candidate submissions."}
+                <b>
+                  {
+                    " All candidates need to be rated in order to move on to the next step."
+                  }
+                </b>
               </p>
               <hr />
               <AllApplicationsTable

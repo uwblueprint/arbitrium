@@ -16,6 +16,10 @@ const Wrapper = styled.div`
   .MuiToolbar-gutters {
     padding-left: 0px;
   }
+  .MuiTypography-h6 {
+    font-size: 14px;
+    font-weight: 400;
+  }
 `;
 
 const rowStyle = {

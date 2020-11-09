@@ -20,6 +20,12 @@ export function loadProgram(programId) {
   };
 }
 
+export function updateNavbar() {
+  return {
+    type: ACTIONS.UPDATE_NAVBAR
+  };
+}
+
 export function newReview() {
   return {
     type: ACTIONS.NEW_REVIEW

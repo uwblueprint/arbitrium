@@ -40,7 +40,7 @@ const routes = [
   {
     path: "/admin/allcandidates",
     component: AllCandidates,
-    title: "Candiate Statistics",
+    title: "Candidate Statistics",
     header: true,
     groups: ["Admin"]
   },
@@ -55,19 +55,20 @@ const routes = [
     path: "/admin/user-management",
     component: UserManagement,
     title: "User Management",
-    header: true,
+    header: false,
     groups: ["Admin"]
   },
   {
     path: "/admin/form/:formId",
     component: CreateEditForm,
     title: "Create Form",
-    header: true,
+    header: false,
     groups: ["Admin"]
   },
   {
     path: "/form/:formId",
     component: null,
+    header: false,
     title: "Users Submission Page",
     groups: []
   }

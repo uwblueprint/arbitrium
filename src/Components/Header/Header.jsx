@@ -18,12 +18,14 @@ import { loadProgram } from "../../Actions/index.js";
 export const HEADER_HEIGHT = 56;
 
 const Container = styled.div`
-  position: flex;
+  position: sticky;
+  display: flex;
   height: ${HEADER_HEIGHT}px;
   top: 0;
   left: 0;
   width: 100vw;
   z-index: 100;
+  background-color: white;
 
   border-bottom: 1px solid #cccccc;
   align-items: center;
@@ -35,6 +37,8 @@ const BodyWrapper = styled.div`
   width: 100%;
   height: 100%;
   align-items: center;
+  font-size: 16px;
+  font-weight: 500;
 `;
 
 const AppName = styled.div`
@@ -208,14 +212,20 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
               >
                 {routes != null ? (
                   <div style={{ border: "1px solid #ccc" }}>
-                    {routes.map((route, index) => (
-                      <MenuItem
-                        key={index}
-                        onClick={() => history.push(route.path)}
-                      >
-                        {route.title}
-                      </MenuItem>
-                    ))}
+                    {routes.map((route, index) => {
+                      if (route.title !== curRoute.title) {
+                        return (
+                          <MenuItem
+                            key={index}
+                            onClick={() => history.push(route.path)}
+                            visible={route.title !== curRoute.title}
+                          >
+                            {route.title}
+                          </MenuItem>
+                        );
+                      }
+                      return null;
+                    })}
                     {validPrograms.length === 0 ? (
                       <MenuItem key={"None"}>
                         You don't have access to other pages

@@ -10,11 +10,12 @@ import { getApplicationTableData, getReviewCountAPI } from "../../requests/get";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 const Container = styled.div`
+  position: fixed;
   height: ${HEADER_HEIGHT}px;
-  margin-top: ${HEADER_HEIGHT};
   left: 0;
   width: 100vw;
   z-index: 100;
+  background-color: white;
 
   border-bottom: 1px solid #cccccc;
   align-items: center;
@@ -100,11 +101,21 @@ const useStyles = makeStyles({
 
 //The navigation header is loaded dynamically based on the url.
 //It does NOT contain a state.
-function NavigationHeader({ program, history, admin, curRoute }) {
+function NavigationHeader({
+  program,
+  history,
+  admin,
+  curRoute,
+  reviewCount,
+  updateNavbar
+}) {
   //AuthContext returns two values {currentUser, appUser}. We are only using appUser
   const { appUser } = useContext(AuthContext);
-
-  const stage = curRoute.path === "/applications" ? true : false;
+  const stage =
+    curRoute.path.includes("applications") ||
+    curRoute.path.includes("submissions")
+      ? true
+      : false;
 
   const [applications] = usePromise(
     getApplicationTableData,
@@ -113,11 +124,11 @@ function NavigationHeader({ program, history, admin, curRoute }) {
     [program]
   );
 
-  const [reviewCount] = usePromise(
+  const [reviewAmount] = usePromise(
     getReviewCountAPI,
     appUser.userId,
     [],
-    [program]
+    [curRoute, updateNavbar]
   );
 
   const classes = useStyles();
@@ -143,45 +154,45 @@ function NavigationHeader({ program, history, admin, curRoute }) {
               : classes.rankingsSelected, // class name, e.g. `classes-nesting-root-x`
             label: classes.label // class name, e.g. `classes-nesting-label-x`
           }}
-          disabled={reviewCount.value < applications.value.length}
+          disabled={reviewAmount.value < applications.value.length}
           onClick={() => {
             history.push("/rankings");
           }}
         >
           2. Stacked Rankings
         </Button>
-        {curRoute.path === "/applications" ? (
+        {curRoute.path.includes("applications") ||
+        curRoute.path.includes("submissions") ? (
           <Button
             style={{ float: "right", margin: "10px", marginRight: "30px" }}
             variant="contained"
             color="primary"
-            disabled={
-              reviewCount.value < applications.value.length ||
-              curRoute.path !== "/applications"
-            }
+            disabled={reviewAmount.value < applications.value.length}
             onClick={() => {
               history.push("/rankings");
             }}
           >
-            Next Stage &gt;
+            Next Step &gt;
           </Button>
         ) : null}
+        {!reviewAmount.isPending || !applications.isPending ? (
+          <LinearProgress
+            variant="determinate"
+            value={Math.min(
+              100,
+              (reviewAmount.value / applications.value.length) * 100
+            )}
+          />
+        ) : null}
       </Container>
-      {!reviewCount.isPending || !applications.isPending ? (
-        <LinearProgress
-          variant="determinate"
-          value={Math.min(
-            100,
-            (reviewCount.value / applications.value.length) * 100
-          )}
-        />
-      ) : null}
     </div>
   );
 }
 
 const mapStateToProps = (state) => ({
-  program: state.program
+  program: state.program,
+  reviewCount: state.reviewCount,
+  updateNavbar: state.updateNavbar
 });
 
 const connectedAuth = connect(mapStateToProps)(NavigationHeader);

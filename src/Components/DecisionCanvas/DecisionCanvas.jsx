@@ -118,7 +118,12 @@ function DecisionCanvas({ update, review, categoryData }) {
                   <h3>Question(s):</h3>
                   <ol>
                     {section.answers.map((item, i) => (
-                      <li key={i}>{item.question}</li>
+                      <li key={i}>
+                        {item.question
+                          .replace(/-/g, ".")
+                          .replace("One.Line", "One-Line")
+                          .replace("COVID.19", "COVID-19")}
+                      </li>
                     ))}
                   </ol>
                 </div>
@@ -133,33 +138,37 @@ function DecisionCanvas({ update, review, categoryData }) {
                             <li key={i + "Primary"}>
                               {"Primary (Select 3 Max):"}
                             </li>
-                            {Object.keys(item.response).forEach((key, j) => {
+                            {Object.keys(item.response).map((key, j) => {
                               if (
-                                item.response[key] === "Primary (Select 3 Max)"
+                                item.response[key].includes(
+                                  "Primary (Select 3 Max)"
+                                )
                               ) {
                                 return (
                                   <ul
                                     style={{ paddingLeft: "35px" }}
-                                    key={i + "." + j}
-                                  >
-                                    {key}
-                                  </ul>
+                                    key={j + i + key + "Primary"}
+                                  ></ul>
                                 );
                               }
+                              return null;
                             })}
                             <li key={i + "All"}>
                               {"All Who Apply:"}
-                              {Object.keys(item.response).forEach((key, j) => {
-                                if (item.response[key] === "All Who Apply") {
+                              {Object.keys(item.response).map((key, j) => {
+                                if (
+                                  item.response[key].includes("All Who Apply")
+                                ) {
                                   return (
                                     <ul
                                       style={{ paddingLeft: "35px" }}
-                                      key={i + "." + j}
+                                      key={j + i + key + "All"}
                                     >
                                       {key}
                                     </ul>
                                   );
                                 }
+                                return null;
                               })}
                             </li>
                           </ul>

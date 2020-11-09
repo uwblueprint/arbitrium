@@ -4,6 +4,7 @@ import moment from "moment";
 //Emergency Community Support Fund (ECSF) Round 1 and 2
 import * as UnitedWay from "./column_categories3";
 import * as UnitedWay2 from "./column_categories3";
+import * as UnitedWay3 from "./column_categories3";
 import * as SVPFullProposal from "./column_categories4";
 import * as Gos from "./column_gos";
 import * as ProgramProject from "./column_project.js";
@@ -65,6 +66,9 @@ export function transpileCategoryData(application, program) {
   if (program === "5f54af1b9971a3dd4f73e451") {
     adminCategories = UnitedWay2.adminCategories;
   }
+  if (program === "5f9efdb531ca305f14ab42a6") {
+    adminCategories = UnitedWay3.adminCategories;
+  }
   if (program === "5f54b07f9971a3dd4f742328") {
     adminCategories = SVPFullProposal.adminCategories;
   }
@@ -111,6 +115,9 @@ export function transpileFileData(application, program) {
   if (program === "5f54af1b9971a3dd4f73e451") {
     fileCategories = UnitedWay2.fileCategories;
   }
+  if (program === "5f9efdb531ca305f14ab42a6") {
+    fileCategories = UnitedWay3.fileCategories;
+  }
   if (program === "5f54b07f9971a3dd4f742328") {
     fileCategories = SVPFullProposal.fileCategories;
   }
@@ -152,6 +159,9 @@ export function transpileLongAnswerData(application, program) {
   if (program === "5f54af1b9971a3dd4f73e451") {
     longAnswerCategories = UnitedWay2.longAnswerCategories;
   }
+  if (program === "5f9efdb531ca305f14ab42a6") {
+    longAnswerCategories = UnitedWay3.longAnswerCategories;
+  }
   if (program === "5f54b07f9971a3dd4f742328") {
     longAnswerCategories = SVPFullProposal.longAnswerCategories;
   }
@@ -168,6 +178,9 @@ export function transpileLongAnswerData(application, program) {
   }
   if (program === "5f54af1b9971a3dd4f73e451") {
     canvasData = UnitedWay2.canvasData;
+  }
+  if (program === "5f9efdb531ca305f14ab42a6") {
+    canvasData = UnitedWay3.canvasData;
   }
   if (program === "5f54b07f9971a3dd4f742328") {
     canvasData = SVPFullProposal.canvasData;
@@ -221,6 +234,9 @@ export function transpileCheckBoxData(application, program) {
   if (program === "5f54af1b9971a3dd4f73e451") {
     checkBoxCategories = UnitedWay2.checkBoxCategories;
   }
+  if (program === "5f9efdb531ca305f14ab42a6") {
+    checkBoxCategories = UnitedWay3.checkBoxCategories;
+  }
   if (program === "5f54b07f9971a3dd4f742328") {
     checkBoxCategories = SVPFullProposal.checkBoxCategories;
   }
@@ -237,6 +253,9 @@ export function transpileCheckBoxData(application, program) {
   }
   if (program === "5f54af1b9971a3dd4f73e451") {
     canvasData = UnitedWay2.canvasData;
+  }
+  if (program === "5f9efdb531ca305f14ab42a6") {
+    canvasData = UnitedWay3.canvasData;
   }
   if (program === "5f54b07f9971a3dd4f742328") {
     canvasData = SVPFullProposal.canvasData;
