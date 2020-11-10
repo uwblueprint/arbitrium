@@ -108,9 +108,7 @@ function FormCard({
           {card && card.type === "SHORT_ANSWER" ? (
             <CreateEditShortAnswer />
           ) : null}
-          {card && card.type === "PARAGRAPHS" ? (
-            <CreateEditShortAnswer />
-          ) : null}
+          {card && card.type === "PARAGRAPHS" ? <CreateEditParagraph /> : null}
           {card && card.type === "CHECKBOXES" ? <div>todo</div> : null}
           {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
           {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
