@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     position: "relative"
   },
   root: {
-    marginTop: 50,
+    marginTop: 100,
     padding: "0 168px",
     textAlign: "left",
     "& h1": {
