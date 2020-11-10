@@ -9,6 +9,7 @@ import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import { Switch } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import CreateEditMultipleChoice from "./CreateEditMultipleChoice";
 
 const useStyles = makeStyles({
   collapse: {
@@ -99,7 +100,9 @@ function FormCard({
       >
         <CardHeader className={classes.title} title={question} id={card} />
         <CardContent className={classes.content}>
-          todo
+          {card && card.type === "MULTIPLE_CHOICE" ? (
+            <CreateEditMultipleChoice data={["option 1", "option 2"]} />
+          ) : null}
           <Divider />
           <div className={classes.buttonRow}>
             <div className={classes.buttonContainer}>
