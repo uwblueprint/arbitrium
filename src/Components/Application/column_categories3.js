@@ -103,9 +103,9 @@ export const longAnswerCategories = {
   "Is this program/project being delivered by a coalition of agencies or through a partnership table in your community ": 5,
   "If yes, please provide details about the coalition (e-g- lead agency, member agencies, roles-  Max 200 words)        ": 5,
   "3-9 Will this service engage the support/involvement of Canadians/Businesses": 5,
-  "If yes, How many volunteers": 5,
-  "If yes, How many businesses": 5,
-  "If yes, How many Donors": 5
+  "If yes, how many volunteers": 5,
+  "If yes, how many businesses": 5,
+  "If yes, how many Donors": 5
 };
 
 export const checkBoxCategories = {
