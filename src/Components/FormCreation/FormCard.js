@@ -101,7 +101,7 @@ function FormCard({
         <CardHeader className={classes.title} title={question} id={card} />
         <CardContent className={classes.content}>
           {card && card.type === "MULTIPLE_CHOICE" ? (
-            <CreateEditMultipleChoice data={["option 1", "option 2"]} />
+            <CreateEditMultipleChoice data={card.options} />
           ) : null}
           <Divider />
           <div className={classes.buttonRow}>
