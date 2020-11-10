@@ -8,6 +8,8 @@ import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FormCard from "./FormCard";
 import AddCardComponent from "./AddCardComponent";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles({
   collapse: {
@@ -51,6 +53,9 @@ const useStyles = makeStyles({
     paddingRight: "10px",
     paddingTop: "5px",
     paddingBottom: "5px"
+  },
+  paper: {
+    boxShadow: "0 2px 3px 1px #cccccc"
   }
 });
 
@@ -68,6 +73,15 @@ function FormSection({
 }) {
   const classes = useStyles();
   const [activeQuestion, setActiveQuestion] = useState(0);
+
+  // For actions menu for each form section
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleAnchorClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleAnchorClose = () => {
+    setAnchorEl(null);
+  };
 
   function updateActiveQuestion(sectionKey, questionKey) {
     // handleUpdateQuestion(sectionKey, questionKey);
@@ -127,7 +141,11 @@ function FormSection({
             title={sectionData.name}
             id={sectionNum}
             action={
-              <IconButton aria-label="settings">
+              <IconButton
+                aria-label="actions"
+                aria-controls="actions-menu"
+                onClick={handleAnchorClick}
+              >
                 <MoreVertIcon />
               </IconButton>
             }
@@ -160,6 +178,20 @@ function FormSection({
           ) : null}
         </CardWrapper>
       ))}
+      <Menu
+        id="actions-menu"
+        classes={classes}
+        anchorEl={anchorEl}
+        getContentAnchorEl={null}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleAnchorClose}
+      >
+        <MenuItem onClick={console.log("b")}>Move section</MenuItem>
+        <MenuItem onClick={console.log("a")}>Delete section</MenuItem>
+      </Menu>
     </div>
   );
 }
