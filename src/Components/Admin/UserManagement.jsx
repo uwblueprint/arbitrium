@@ -9,7 +9,7 @@ import NewUserDialog from "./NewUserDialog";
 import UserManagementTable from "./UserManagementTable";
 
 const Wrapper = styled.div`
-  margin-top: 148px;
+  margin-top: 50px;
   text-align: left;
   padding: 0 64px;
 `;
