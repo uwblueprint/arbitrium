@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   closeRoot: {
     display: "inline-block",
     position: "absolute",
-    left: "776px",
+    left: "734px",
     bottom: "2px"
   },
   droppableSection: {
