@@ -8,9 +8,9 @@ export const sectionsStarter = [
     questions: [
       {
         name: "Test",
-        type: "SHORT_ANSWER" as QuestionType,
+        type: "IDENTIFIER" as QuestionType,
         question: "What is the name of your charity?",
-        required: false
+        required: true
       },
       {
         name: "Test 2",

@@ -32,7 +32,8 @@ export type QuestionType =
   | "PARAGRAPHS"
   | "CHECKBOXES"
   | "FILE_UPLOAD"
-  | "CHECKBOX_GRID";
+  | "CHECKBOX_GRID"
+  | "IDENTIFIER";
 
 export type FormContext = {
   formId: string;
