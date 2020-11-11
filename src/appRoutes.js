@@ -1,6 +1,7 @@
 import Application from "./Components/Application/Application";
 import AllApplications from "./Components/List/ApplicationList/AllApplications";
 import UserManagement from "./Components/Admin/UserManagement";
+import FormPlayground from "./Components/Admin/formPlayground";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
@@ -62,6 +63,13 @@ const routes = [
     path: "/admin/form/:formId",
     component: CreateEditForm,
     title: "Create Form",
+    header: false,
+    groups: ["Admin"]
+  },
+  {
+    path: "/admin/forms",
+    component: FormPlayground,
+    title: "Form Operations and Testing",
     header: false,
     groups: ["Admin"]
   },

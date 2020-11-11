@@ -32,6 +32,10 @@ async function createUserAPI(databody) {
   return POST("/api/users/create-user", databody);
 }
 
+async function createProgram(databody) {
+  return POST(`/api/programs`, databody);
+}
+
 export {
   createFeedbackAPI,
   updateReviewAPI,
