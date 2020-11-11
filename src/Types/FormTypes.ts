@@ -15,7 +15,7 @@ export type EditSectionsAction =
 export type EditQuestionsAction =
   | {
       type: "LOAD";
-      sections: QuestionCard[];
+      questions: QuestionCard[];
     }
   | {
       type: "ADD_QUESTION";

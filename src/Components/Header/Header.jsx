@@ -218,7 +218,9 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                           <MenuItem
                             key={index}
                             onClick={() => history.push(route.path)}
-                            visible={route.title !== curRoute.title}
+                            visible={(
+                              route.title !== curRoute.title
+                            ).toString()}
                           >
                             {route.title}
                           </MenuItem>

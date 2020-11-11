@@ -19,14 +19,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import ShortTextIcon from "@material-ui/icons/ShortText";
 
 const useStyles = makeStyles({
-  collapse: {
-    marginBottom: 16
-  },
   content: {
     marginTop: -16
-  },
-  expandOpen: {
-    transform: "rotate(180deg)"
   },
   root: {
     fontSize: 14,
