@@ -9,6 +9,9 @@ import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import { Switch } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import CreateEditMultipleChoice from "./CreateEditMultipleChoice";
+import CreateEditShortAnswer from "./CreateEditShortAnswer";
+import CreateEditParagraph from "./CreateEditParagraph";
 
 const useStyles = makeStyles({
   collapse: {
@@ -99,7 +102,16 @@ function FormCard({
       >
         <CardHeader className={classes.title} title={question} id={card} />
         <CardContent className={classes.content}>
-          todo
+          {card && card.type === "MULTIPLE_CHOICE" ? (
+            <CreateEditMultipleChoice data={card.options} />
+          ) : null}
+          {card && card.type === "SHORT_ANSWER" ? (
+            <CreateEditShortAnswer />
+          ) : null}
+          {card && card.type === "PARAGRAPHS" ? <CreateEditParagraph /> : null}
+          {card && card.type === "CHECKBOXES" ? <div>todo</div> : null}
+          {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
+          {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
           <Divider />
           <div className={classes.buttonRow}>
             <div className={classes.buttonContainer}>

@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   closeRoot: {
     display: "inline-block",
     position: "absolute",
-    left: "776px",
+    left: "676px",
     bottom: "2px"
   },
   droppableSection: {
@@ -52,7 +52,7 @@ const OptionWrapper = styled.div`
 
 const OptionNameInput = styled(InputBase)`
   && {
-    width: 716px;
+    width: 616px;
     display: inline-block;
     line-height: 21px;
     overflow-y: auto;

@@ -1,5 +1,4 @@
 import React, { useReducer, useEffect, useState, useContext } from "react";
-import { HEADER_HEIGHT } from "../Header/Header";
 import styled from "styled-components";
 import FormSection from "./FormSection";
 import { AuthContext } from "../../Authentication/Auth.js";
@@ -8,10 +7,6 @@ import usePromise from "../../Hooks/usePromise";
 import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
-
-const Wrapper = styled.div`
-  margin-top: ${HEADER_HEIGHT}px;
-`;
 
 const FormWrapper = styled.div`
   margin-top: 50px;
@@ -75,7 +70,7 @@ function CreateEditForm() {
   }
 
   return (
-    <Wrapper>
+    <div>
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
       {sections &&
         sections.map((section, key) => (
@@ -91,7 +86,7 @@ function CreateEditForm() {
             />
           </FormWrapper>
         ))}
-    </Wrapper>
+    </div>
   );
 }
 

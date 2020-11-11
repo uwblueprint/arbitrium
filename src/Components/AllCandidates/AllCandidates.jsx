@@ -37,7 +37,7 @@ const Header = styled.div`
 `;
 
 const Wrapper = styled.div`
-  margin-top: 150px;
+  margin-top: 50px;
   padding: 0 136px;
   h1 {
     font-family: Roboto;
