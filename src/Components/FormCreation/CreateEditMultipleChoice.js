@@ -52,7 +52,7 @@ const OptionWrapper = styled.div`
 
 const OptionNameInput = styled(InputBase)`
   && {
-    width: 716px;
+    width: 616px;
     display: inline-block;
     line-height: 21px;
     overflow-y: auto;
