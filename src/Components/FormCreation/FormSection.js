@@ -164,6 +164,7 @@ function FormSection({
       {sectionData.questions.map((_question, questionKey) => (
         <CardWrapper key={questionKey}>
           <FormCard
+            card={sectionData.questions[questionKey]}
             key={questionKey + "_question"}
             active={active && activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
