@@ -36,6 +36,10 @@ async function updateUserProgramRoleAPI(programId, userId, databody) {
   return PATCH(`/api/programs/${programId}/user/${userId}`, databody);
 }
 
+async function createProgram(databody) {
+  return POST(`/api/programs`, databody);
+}
+
 export {
   createFeedbackAPI,
   updateReviewAPI,

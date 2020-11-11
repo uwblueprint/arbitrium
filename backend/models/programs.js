@@ -45,6 +45,9 @@ const programSchema = new mongoose.Schema(
     },
     appVersion: {
       type: Number
+    },
+    s3bucket: {
+      type: String
     }
   },
   { collection: "programs" }
