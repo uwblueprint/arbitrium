@@ -10,6 +10,7 @@ import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import { Switch } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import CreateEditMultipleChoice from "./CreateEditMultipleChoice";
+import CreateEditCheckbox from "./CreateEditCheckbox";
 import CreateEditShortAnswer from "./CreateEditShortAnswer";
 import CreateEditParagraph from "./CreateEditParagraph";
 
@@ -109,7 +110,9 @@ function FormCard({
             <CreateEditShortAnswer />
           ) : null}
           {card && card.type === "PARAGRAPHS" ? <CreateEditParagraph /> : null}
-          {card && card.type === "CHECKBOXES" ? <div>todo</div> : null}
+          {card && card.type === "CHECKBOXES" ? (
+            <CreateEditCheckbox data={card.options} />
+          ) : null}
           {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
           {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
           <Divider />
