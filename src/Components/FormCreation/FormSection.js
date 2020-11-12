@@ -10,7 +10,7 @@ import FormCard from "./FormCard";
 import AddCardComponent from "./AddCardComponent";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import customFormQuestionsReducer from "../../Reducers/CustomFormSectionsReducer";
+import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 
 const useStyles = makeStyles({
   content: {
@@ -85,7 +85,6 @@ function FormSection({
   };
 
   useEffect(() => {
-    console.log(questions);
     dispatchQuestionsUpdate({
       type: "LOAD",
       questions: questions
@@ -107,12 +106,10 @@ function FormSection({
 
   // eslint-disable-next-line no-unused-vars
   function handleAddQuestion() {
-    console.log("add question");
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
       index: activeQuestion
     });
-    console.log("after dispatch");
     updateActiveQuestion(sectionNum - 1, activeQuestion + 1);
   }
 
