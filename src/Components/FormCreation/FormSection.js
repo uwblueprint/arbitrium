@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
@@ -10,6 +10,8 @@ import FormCard from "./FormCard";
 import AddCardComponent from "./AddCardComponent";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { deleteQuestion } from "../../requests/forms";
+import { AuthContext } from "../../Authentication/Auth.js";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 
 const useStyles = makeStyles({
@@ -69,6 +71,7 @@ function FormSection({
   handleAddSection
 }) {
   const classes = useStyles();
+  const { appUser } = useContext(AuthContext);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
@@ -118,6 +121,17 @@ function FormSection({
     // TODO: update question location in section within sections object
     // TODO: call the update section API endpoint
     // TODO: call updateActive
+  }
+
+  function handleDeleteQuestion() {
+    dispatchQuestionsUpdate({ type: "DELETE_QUESTION", index: activeQuestion });
+
+    /* Calling delete endpoint to remove question in mongo */
+    deleteQuestion(
+      { formId: appUser.currentProgram },
+      sectionData._id,
+      questions[activeQuestion]._id
+    );
   }
 
   // async function handleUpdateQuestion(prevSection, prevQuestion) {
@@ -176,8 +190,10 @@ function FormSection({
           <FormCard
             card={questions[questionKey]}
             key={questionKey + "_question"}
+            card={questions[questionKey]}
             active={active && activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
+            handleDelete={handleDeleteQuestion}
             sectionKey={sectionNum - 1}
             questionKey={questionKey}
           />

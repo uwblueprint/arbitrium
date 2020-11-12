@@ -107,7 +107,15 @@ const StyledSwitch = withStyles({
 
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
+function FormCard({
+  card,
+  question,
+  active,
+  handleActive,
+  handleDelete,
+  sectionKey,
+  questionKey
+}) {
   const classes = useStyles();
   const [required, setRequired] = useState(card.required);
   const [title, setTitle] = useState(card.name);
@@ -183,7 +191,9 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
             <div className={classes.buttonContainer}>
               <Button size="small" className={classes.button}>
                 <DeleteOutlineIcon style={{ marginRight: 5 }} />{" "}
-                <span className={classes.buttonLabel}>Delete</span>
+                <span className={classes.buttonLabel} onClick={handleDelete}>
+                  Delete
+                </span>
               </Button>
             </div>
             <div className={classes.buttonContainer}>
