@@ -3,7 +3,6 @@ import { Button, Divider, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
@@ -12,6 +11,12 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import CreateEditMultipleChoice from "./CreateEditMultipleChoice";
 import CreateEditShortAnswer from "./CreateEditShortAnswer";
 import CreateEditParagraph from "./CreateEditParagraph";
+import TextField from "@material-ui/core/TextField";
+import InputBase from "@material-ui/core/InputBase";
+import styled from "styled-components";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import ShortTextIcon from "@material-ui/icons/ShortText";
 
 const useStyles = makeStyles({
   collapse: {
@@ -70,38 +75,102 @@ const useStyles = makeStyles({
     textTransform: "none",
     paddingTop: 4,
     paddingLeft: 10
+  },
+  questionTitle: {
+    borderRadius: 4,
+    border: "1px solid #ffffff",
+    background: "#f4f5f6",
+    height: 56,
+    width: 568,
+    paddingLeft: 16,
+    marginBottom: 16
+  },
+  questionTypeMenu: {
+    borderRadius: 4,
+    border: "1px solid rgba(0, 0, 0, 0.12)",
+    boxSizing: "border-box",
+    background: "#FFFFFF",
+    height: 40,
+    width: 192,
+    marginBottom: 16
   }
 });
 
+const TitleWrapper = styled.div`
+  margin-top: 24px;
+  margin-left: 8px;
+  margin-bottom: 16px;
+  margin-right: 16px;
+  position: "flex";
+`;
+
+const StyledSwitch = withStyles({
+  switchBase: {
+    color: "#48484a"
+  }
+})(Switch);
+
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function FormCard({
-  card,
-  question,
-  active,
-  handleActive,
-  sectionKey,
-  questionKey
-}) {
+function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
   const classes = useStyles();
-  const [required, setRequired] = useState(true);
-  const StyledSwitch = withStyles({
-    switchBase: {
-      color: "#48484a"
-    }
-  })(Switch);
+  const [required, setRequired] = useState(card.required);
+  const [title, setTitle] = useState(card.name);
+  const [description, setDescription] = useState(card.description);
+  const [questionMenuAnchor, setQuestionMenuAnchor] = useState(false);
+
   const handleSwitch = () => {
     setRequired((prev) => !prev);
   };
-
   return (
     <div className={classes.container}>
       <Card
         onClick={() => handleActive(sectionKey, questionKey)}
         className={active ? classes.active : classes.root}
       >
-        <CardHeader className={classes.title} title={question} id={card} />
         <CardContent className={classes.content}>
+          <TitleWrapper>
+            <InputBase
+              className={classes.questionTitle}
+              placeholder="Question"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              autoFocus={true}
+              rowsMax={1}
+              fullWidth="true"
+              type="string"
+            ></InputBase>
+            <Button
+              className={classes.questionTypeMenu}
+              variant="outlined"
+              onClick={() => setQuestionMenuAnchor(true)}
+            >
+              <ShortTextIcon />
+              Open Menu
+            </Button>
+            <Menu
+              elevation={0}
+              id="simple-menu"
+              anchorEl={questionMenuAnchor}
+              keepMounted
+              open={Boolean(questionMenuAnchor)}
+              onClose={() => setQuestionMenuAnchor(null)}
+            >
+              <MenuItem> {"Test"}</MenuItem>
+              <MenuItem> {"Test2"}</MenuItem>
+              <MenuItem> {"Test3"}</MenuItem>
+              <MenuItem> {"Test4"}</MenuItem>
+            </Menu>
+            <TextField
+              placeholder="New Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              multiline
+              rowsMax={10}
+              fullWidth="true"
+              type="string"
+            ></TextField>
+          </TitleWrapper>
           {card && card.type === "MULTIPLE_CHOICE" ? (
             <CreateEditMultipleChoice data={card.options} />
           ) : null}

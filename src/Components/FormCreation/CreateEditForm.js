@@ -29,7 +29,7 @@ function CreateEditForm() {
   });
 
   useEffect(() => {
-    if (loadForm.isPending) return;
+    if (loadForm.isPending || !loadForm.value) return;
     // Get form from database using programID
     dispatchSectionsUpdate({
       type: "LOAD",

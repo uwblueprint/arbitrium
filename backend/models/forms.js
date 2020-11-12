@@ -63,7 +63,8 @@ const question = new mongoose.Schema({
       "MULTIPLE_CHOICE",
       "CHECKBOXES",
       "FILE_UPLOAD",
-      "CHECKBOX_GRID"
+      "CHECKBOX_GRID",
+      "IDENTIFIER"
     ]
   },
   validations: {
