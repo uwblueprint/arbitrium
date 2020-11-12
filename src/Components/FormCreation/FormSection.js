@@ -111,6 +111,7 @@ function FormSection({
       index: activeQuestion
     });
     updateActiveQuestion(sectionNum - 1, activeQuestion + 1);
+    console.log("finish");
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -171,10 +172,10 @@ function FormSection({
           />
         ) : null}
       </CardWrapper>
-      {sectionData.questions.map((_question, questionKey) => (
+      {questions.map((_question, questionKey) => (
         <CardWrapper key={questionKey}>
           <FormCard
-            card={sectionData.questions[questionKey]}
+            card={questions[questionKey]}
             key={questionKey + "_question"}
             active={active && activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
