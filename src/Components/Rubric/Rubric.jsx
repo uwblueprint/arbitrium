@@ -81,7 +81,6 @@ export default function Rubric() {
 
   const handleClose = () => {
     setAnchorEl(false);
-    console.log(this);
     // this.forceUpdate();
   };
 
@@ -101,7 +100,6 @@ export default function Rubric() {
       <StyledPopover
         className={classes.popover}
         container={() => {
-          console.log(Boolean(anchorEl));
           return anchorEl ? anchorEl.parentNode : null;
         }}
         id={id}

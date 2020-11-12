@@ -6,15 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 
 const useStyles = makeStyles({
-  collapse: {
-    marginBottom: 16
-  },
   content: {
     marginLeft: 10,
     padding: 0
-  },
-  expandOpen: {
-    transform: "rotate(180deg)"
   },
   root: {
     fontSize: 14,
