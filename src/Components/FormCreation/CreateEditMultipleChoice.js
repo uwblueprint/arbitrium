@@ -132,53 +132,59 @@ function CreateEditMultipleChoice({ data }) {
         <Droppable droppableId="droppable">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
-              {options.map((data, index) => (
-                <Draggable draggableId={`${index}`} index={index} key={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      onMouseEnter={() => setHoveredOption(index)}
-                      onMouseLeave={() => setHoveredOption(-1)}
-                      className={styles.droppableSection}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
+              {options
+                ? options.map((data, index) => (
+                    <Draggable
+                      draggableId={`${index}`}
+                      index={index}
+                      key={index}
                     >
-                      <OptionWrapper key={index}>
-                        <DragIndicatorIcon
-                          className={`${styles.dragIndicator} 
-                            ${
-                              hoveredOption === index || snapshot.isDragging
-                                ? styles.dragIndicatorVisible
-                                : styles.dragIndicatorHidden
-                            }`}
-                        />
-                        <GreyRadio />
-                        <OptionNameInput
-                          className={
-                            hoveredOption === index || snapshot.isDragging
-                              ? styles.inputHovered
-                              : ""
-                          }
-                          classes={{ focused: styles.inputFocused }}
-                          autoFocus={true}
-                          placeholder="Option..."
-                          value={data}
-                          onChange={(event) =>
-                            onEditOption(index, event.target.value)
-                          }
-                        />
-                        <IconButton
-                          onClick={() => onDeleteOption(index)}
-                          classes={{ root: styles.closeRoot }}
-                          size="small"
+                      {(provided, snapshot) => (
+                        <div
+                          onMouseEnter={() => setHoveredOption(index)}
+                          onMouseLeave={() => setHoveredOption(-1)}
+                          className={styles.droppableSection}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
                         >
-                          <Close />
-                        </IconButton>
-                      </OptionWrapper>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+                          <OptionWrapper key={index}>
+                            <DragIndicatorIcon
+                              className={`${styles.dragIndicator}
+                              ${
+                                hoveredOption === index || snapshot.isDragging
+                                  ? styles.dragIndicatorVisible
+                                  : styles.dragIndicatorHidden
+                              }`}
+                            />
+                            <GreyRadio />
+                            <OptionNameInput
+                              className={
+                                hoveredOption === index || snapshot.isDragging
+                                  ? styles.inputHovered
+                                  : ""
+                              }
+                              classes={{ focused: styles.inputFocused }}
+                              autoFocus={true}
+                              placeholder="Option..."
+                              value={data}
+                              onChange={(event) =>
+                                onEditOption(index, event.target.value)
+                              }
+                            />
+                            <IconButton
+                              onClick={() => onDeleteOption(index)}
+                              classes={{ root: styles.closeRoot }}
+                              size="small"
+                            >
+                              <Close />
+                            </IconButton>
+                          </OptionWrapper>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                : null}
               {provided.placeholder}
             </div>
           )}

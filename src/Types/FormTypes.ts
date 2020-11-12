@@ -15,7 +15,7 @@ export type EditSectionsAction =
 export type EditQuestionsAction =
   | {
       type: "LOAD";
-      sections: QuestionCard[];
+      questions: QuestionCard[];
     }
   | {
       type: "ADD_QUESTION";
@@ -32,7 +32,8 @@ export type QuestionType =
   | "PARAGRAPHS"
   | "CHECKBOXES"
   | "FILE_UPLOAD"
-  | "CHECKBOX_GRID";
+  | "CHECKBOX_GRID"
+  | "IDENTIFIER";
 
 export type FormContext = {
   formId: string;

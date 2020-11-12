@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
@@ -10,14 +10,11 @@ import FormCard from "./FormCard";
 import AddCardComponent from "./AddCardComponent";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 
 const useStyles = makeStyles({
-  collapse: {
-    marginBottom: 16
-  },
-  content: { marginTop: -16 },
-  expandOpen: {
-    transform: "rotate(180deg)"
+  content: {
+    marginTop: -16
   },
   root: {
     fontSize: 14,
@@ -73,6 +70,10 @@ function FormSection({
 }) {
   const classes = useStyles();
   const [activeQuestion, setActiveQuestion] = useState(0);
+  const [questions, dispatchQuestionsUpdate] = useReducer(
+    customFormQuestionsReducer,
+    sectionData.questions
+  );
 
   // For actions menu for each form section
   const [anchorEl, setAnchorEl] = useState(null);
@@ -82,6 +83,13 @@ function FormSection({
   const handleAnchorClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    dispatchQuestionsUpdate({
+      type: "LOAD",
+      questions: questions
+    });
+  }, [questions, dispatchQuestionsUpdate]);
 
   function updateActiveQuestion(sectionKey, questionKey) {
     // handleUpdateQuestion(sectionKey, questionKey);
@@ -98,9 +106,11 @@ function FormSection({
 
   // eslint-disable-next-line no-unused-vars
   function handleAddQuestion() {
-    // TODO: add question to section within sections object
-    // TODO: call the update section API endpoint
-    // TODO: call updateActive
+    dispatchQuestionsUpdate({
+      type: "ADD_QUESTION",
+      index: activeQuestion
+    });
+    updateActiveQuestion(sectionNum - 1, activeQuestion + 1);
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -161,10 +171,10 @@ function FormSection({
           />
         ) : null}
       </CardWrapper>
-      {sectionData.questions.map((_question, questionKey) => (
+      {questions.map((_question, questionKey) => (
         <CardWrapper key={questionKey}>
           <FormCard
-            card={sectionData.questions[questionKey]}
+            card={questions[questionKey]}
             key={questionKey + "_question"}
             active={active && activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
@@ -190,8 +200,8 @@ function FormSection({
         open={Boolean(anchorEl)}
         onClose={handleAnchorClose}
       >
-        <MenuItem onClick={console.log("b")}>Move section</MenuItem>
-        <MenuItem onClick={console.log("a")}>Delete section</MenuItem>
+        <MenuItem onClick={() => console.info("b")}>Move section</MenuItem>
+        <MenuItem onClick={() => console.info("a")}>Delete section</MenuItem>
       </Menu>
     </div>
   );
