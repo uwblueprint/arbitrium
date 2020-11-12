@@ -27,7 +27,7 @@ export const sectionsStarter = [
       {
         type: "MULTIPLE_CHOICE" as QuestionType,
         question: "Untitled Question",
-        options: ["Option 1"],
+        Xoptions: ["Option 1"],
         required: false
       }
     ]

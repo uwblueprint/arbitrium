@@ -13,7 +13,7 @@ const FormWrapper = styled.div`
   padding-left: 15%;
 `;
 
-function CreateEditForm({ history }) {
+function CreateEditForm() {
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
     customFormSectionsReducer,

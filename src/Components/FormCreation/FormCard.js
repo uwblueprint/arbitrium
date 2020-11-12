@@ -112,14 +112,7 @@ const StyledSwitch = withStyles({
 
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function FormCard({
-  card,
-  question,
-  active,
-  handleActive,
-  sectionKey,
-  questionKey
-}) {
+function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
   const classes = useStyles();
   const [required, setRequired] = useState(card.required);
   const [title, setTitle] = useState(card.name);
@@ -129,8 +122,6 @@ function FormCard({
   const handleSwitch = () => {
     setRequired((prev) => !prev);
   };
-
-  console.log(card);
   return (
     <div className={classes.container}>
       <Card

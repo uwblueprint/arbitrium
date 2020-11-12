@@ -82,8 +82,6 @@ function CreateEditMultipleChoice({ data }) {
   const [options, setOptions] = useState(data);
   const [hoveredOption, setHoveredOption] = useState(-1);
 
-  console.log(options);
-
   const onAddOption = (event) => {
     setOptions(options.concat(""));
     event.target.blur();

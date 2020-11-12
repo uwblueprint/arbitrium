@@ -190,8 +190,8 @@ function FormSection({
         open={Boolean(anchorEl)}
         onClose={handleAnchorClose}
       >
-        <MenuItem onClick={console.log("b")}>Move section</MenuItem>
-        <MenuItem onClick={console.log("a")}>Delete section</MenuItem>
+        <MenuItem onClick={console.info("b")}>Move section</MenuItem>
+        <MenuItem onClick={console.info("a")}>Delete section</MenuItem>
       </Menu>
     </div>
   );
