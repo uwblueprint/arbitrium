@@ -13,7 +13,7 @@ const FormWrapper = styled.div`
   padding-left: 15%;
 `;
 
-function CreateEditForm() {
+function CreateEditForm({ history }) {
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
     customFormSectionsReducer,
@@ -29,7 +29,7 @@ function CreateEditForm() {
   });
 
   useEffect(() => {
-    if (loadForm.isPending) return;
+    if (loadForm.isPending || !loadForm.value) return;
     // Get form from database using programID
     dispatchSectionsUpdate({
       type: "LOAD",

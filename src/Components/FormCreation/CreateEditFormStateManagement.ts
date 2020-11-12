@@ -25,7 +25,7 @@ export const sectionsStarter = [
     description: "Section Type: Decision Criteria",
     questions: [
       {
-        type: "SHORT_ANSWER" as QuestionType,
+        type: "MULTIPLE_CHOICE" as QuestionType,
         question: "Untitled Question",
         options: ["Option 1"],
         required: false
