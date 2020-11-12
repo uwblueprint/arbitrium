@@ -5,7 +5,7 @@ import { defaultFormState } from "../FormCreation/CreateEditFormStateManagement"
 import { connect } from "react-redux";
 import { createProgram } from "../../requests/update";
 import Button from "@material-ui/core/Button";
-import PublishTwoToneIcon from "@material-ui/icons/PublishTwoTone";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 
 function FormPlayground({ program, history }) {
   const { currentUser, appUser } = useContext(AuthContext);
@@ -55,7 +55,8 @@ function FormPlayground({ program, history }) {
           Create form
         </Button>
         <Button variant="outlined" component="label" color="primary">
-          <PublishTwoToneIcon />
+          <CloudUploadIcon />
+          <div style={{ width: "15px" }}></div>
           Upload File
           <input type="file" style={{ display: "none" }} />
         </Button>
