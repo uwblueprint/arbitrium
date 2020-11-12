@@ -111,7 +111,6 @@ function FormSection({
       index: activeQuestion
     });
     updateActiveQuestion(sectionNum - 1, activeQuestion + 1);
-    console.log("finish");
   }
 
   // eslint-disable-next-line no-unused-vars
