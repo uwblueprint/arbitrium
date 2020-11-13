@@ -74,6 +74,23 @@ function CreateEditForm() {
     // TODO: call updateActive
   }
 
+  async function handleDeleteSection() {
+    // TODO: prompt user for confirmation
+
+    // call API to delete
+    const response = FORM.deleteSection(appUser.currentProgram, activeSection)
+      .then(() => {
+        dispatchSectionsUpdate({
+          type: "DELETE_SECTION",
+          index: activeSection
+        });
+        updateActiveSection(activeSection != 0 ? activeSection - 1 : 0);
+      })
+      .catch(() => {
+        console.error(`ERROR: Status - ${response}`);
+      });
+  }
+
   return (
     <Wrapper>
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
@@ -88,6 +105,8 @@ function CreateEditForm() {
               updateActiveSection={updateActiveSection}
               active={activeSection === key}
               handleAddSection={handleAddSection}
+              handleMoveSection={handleMoveSection}
+              handleDeleteSection={handleDeleteSection}
             />
           </FormWrapper>
         ))}

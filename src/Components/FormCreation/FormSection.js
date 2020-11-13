@@ -69,7 +69,9 @@ function FormSection({
   sectionData,
   updateActiveSection,
   active,
-  handleAddSection
+  handleAddSection,
+  handleMoveSection,
+  handleDeleteSection
 }) {
   const classes = useStyles();
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -189,8 +191,8 @@ function FormSection({
         open={Boolean(anchorEl)}
         onClose={handleAnchorClose}
       >
-        <MenuItem onClick={console.log("b")}>Move section</MenuItem>
-        <MenuItem onClick={console.log("a")}>Delete section</MenuItem>
+        <MenuItem onClick={handleMoveSection}>Move section</MenuItem>
+        <MenuItem onClick={handleDeleteSection}>Delete section</MenuItem>
       </Menu>
     </div>
   );
