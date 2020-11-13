@@ -8,6 +8,7 @@ import usePromise from "../../Hooks/usePromise";
 import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
+import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
 
 const Wrapper = styled.div`
   margin-top: ${HEADER_HEIGHT}px;
@@ -16,6 +17,19 @@ const Wrapper = styled.div`
 const FormWrapper = styled.div`
   margin-top: 50px;
   padding-left: 15%;
+`;
+
+const DialogOverlay = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 150%;
+  width: 100vw;
+  z-index: 110;
+  background: rgba(0, 0, 0, 0.5);
+  .dialogButton {
+    text-transform: none;
+  }
 `;
 
 function CreateEditForm() {
@@ -32,6 +46,10 @@ function CreateEditForm() {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+  const [
+    showDeleteSectionConfirmation,
+    setShowDeleteSectionConfirmation
+  ] = useState(false);
 
   useEffect(() => {
     if (loadForm.isPending) return;
@@ -74,21 +92,31 @@ function CreateEditForm() {
     // TODO: call updateActive
   }
 
-  async function handleDeleteSection() {
-    // TODO: prompt user for confirmation
-
+  async function deleteSection() {
     // call API to delete
-    const response = FORM.deleteSection(appUser.currentProgram, activeSection)
+    const response = FORM.deleteSection(
+      loadForm.value.formId,
+      loadForm.value.sections[activeSection]._id
+    )
       .then(() => {
         dispatchSectionsUpdate({
           type: "DELETE_SECTION",
           index: activeSection
         });
-        updateActiveSection(activeSection != 0 ? activeSection - 1 : 0);
+        updateActiveSection(activeSection !== 0 ? activeSection - 1 : 0);
       })
       .catch(() => {
         console.error(`ERROR: Status - ${response}`);
       });
+  }
+
+  function closeDeleteSectionConfirmation() {
+    setShowDeleteSectionConfirmation(false);
+  }
+
+  async function handleDeleteSection() {
+    // prompt user for confirmation
+    setShowDeleteSectionConfirmation(true);
   }
 
   return (
@@ -110,6 +138,17 @@ function CreateEditForm() {
             />
           </FormWrapper>
         ))}
+      {showDeleteSectionConfirmation && (
+        <>
+          <DialogOverlay />
+          <DeleteSectionConfirmation
+            confirm={deleteSection}
+            close={closeDeleteSectionConfirmation}
+            sectionName={0}
+            questionCount={0}
+          />
+        </>
+      )}
     </Wrapper>
   );
 }

@@ -19,7 +19,7 @@ async function createSection(formId, databody) {
 }
 
 async function deleteSection(formId, sectionId) {
-  return DELETE(`/api/forms/${formId.formId}/sections/${sectionId}`);
+  return DELETE(`/api/forms/${formId}/sections/${sectionId}`);
 }
 
 async function updateSection(formId, databody) {
