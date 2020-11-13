@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import GetPreviewLinkDialog from "./GetPreviewLinkDialog";
 import Snackbar from "@material-ui/core/Snackbar";
+import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 
 const Header = styled.div`
   box-sizing: border-box;
@@ -26,8 +27,7 @@ const NameInput = styled(InputBase)`
 
 const DescriptionInput = styled(InputBase)`
   && {
-    width: 526px;
-    display: block;
+    width: 846px;
     line-height: 21px;
     overflow-y: auto;
     max-height: 48px;
@@ -62,6 +62,10 @@ const DialogOverlay = styled.div`
   .dialogButton {
     text-transform: none;
   }
+`;
+
+const FormSettingsOutlineIcon = styled(SettingsOutlinedIcon)`
+  color: #2261ad;
 `;
 
 type HeaderData = {
@@ -201,6 +205,7 @@ function CreateEditFormHeader({
         }}
         message={"Copied to clipboard."}
       />
+      <Button startIcon={<FormSettingsOutlineIcon />}>Form Settngs</Button>
     </Header>
   );
 }
