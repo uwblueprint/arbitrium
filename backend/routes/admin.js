@@ -55,7 +55,6 @@ router.get("/", function(req, res) {
       .then((listUsersResult) => {
         listUsersResult.users.forEach(function(userRecord) {
           users.push(userRecord);
-          //console.log('user', userRecord);
         });
         res.json(listUsersResult.users);
         if (listUsersResult.pageToken) {
