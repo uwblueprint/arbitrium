@@ -189,11 +189,15 @@ function FormCard({
           <Divider />
           <div className={classes.buttonRow}>
             <div className={classes.buttonContainer}>
-              <Button size="small" className={classes.button}>
+              <Button
+                size="small"
+                className={classes.button}
+                onClick={() => {
+                  handleDelete(questionKey);
+                }}
+              >
                 <DeleteOutlineIcon style={{ marginRight: 5 }} />{" "}
-                <span className={classes.buttonLabel} onClick={handleDelete}>
-                  Delete
-                </span>
+                <span className={classes.buttonLabel}>Delete</span>
               </Button>
             </div>
             <div className={classes.buttonContainer}>

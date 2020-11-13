@@ -123,15 +123,17 @@ function FormSection({
     // TODO: call updateActive
   }
 
-  function handleDeleteQuestion() {
-    dispatchQuestionsUpdate({ type: "DELETE_QUESTION", index: activeQuestion });
-
+  function handleDeleteQuestion(questionKey) {
     /* Calling delete endpoint to remove question in mongo */
     deleteQuestion(
       { formId: appUser.currentProgram },
       sectionData._id,
-      questions[activeQuestion]._id
+      questions[questionKey]._id
     );
+    dispatchQuestionsUpdate({ type: "DELETE_QUESTION", index: questionKey });
+    if (questionKey !== 0) {
+      setActiveQuestion(questionKey - 1);
+    }
   }
 
   // async function handleUpdateQuestion(prevSection, prevQuestion) {
