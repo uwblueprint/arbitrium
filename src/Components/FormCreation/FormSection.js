@@ -190,7 +190,6 @@ function FormSection({
           <FormCard
             card={questions[questionKey]}
             key={questionKey + "_question"}
-            card={questions[questionKey]}
             active={active && activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
             handleDelete={handleDeleteQuestion}
