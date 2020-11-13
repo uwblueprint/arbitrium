@@ -202,8 +202,22 @@ function FormSection({
         open={Boolean(anchorEl)}
         onClose={handleAnchorClose}
       >
-        <MenuItem onClick={handleMoveSection}>Move section</MenuItem>
-        <MenuItem onClick={handleDeleteSection}>Delete section</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleMoveSection();
+            handleAnchorClose();
+          }}
+        >
+          Move section
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleDeleteSection();
+            handleAnchorClose();
+          }}
+        >
+          Delete section
+        </MenuItem>
       </Menu>
     </div>
   );

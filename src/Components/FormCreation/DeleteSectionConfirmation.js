@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import Dialog from "../Common/Dialogs/Dialog";
-import DialogHeader from "../Common/Dialogs/DialogHeader";
+
+const Header = styled.div`
+  display: flex;
+  padding-bottom: 14px;
+  color: black;
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
+  display: inline-block;
+`;
 
 const WarningMessage = styled.div`
   p {
-    font-size: 12px;
+    font-size: 14px;
   }
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -24,18 +33,40 @@ function DeleteSectionConfirmation({
   sectionName,
   questionCount
 }) {
+  const dialogRef = React.createRef();
+
+  useEffect(() => {
+    function detectEscape(event) {
+      if (event.keyCode === 27) {
+        close();
+      }
+    }
+
+    function detectOutsideClicks(event) {
+      if (dialogRef.current && !dialogRef.current.contains(event.target)) {
+        close();
+      }
+    }
+
+    if (dialogRef.current) {
+      window.addEventListener("keydown", detectEscape);
+      window.addEventListener("mousedown", detectOutsideClicks);
+    }
+  }, [close, dialogRef]);
+
   return (
-    <Dialog width="400px" paddingHorizontal={28} paddingVertical={28}>
-      <DialogHeader
-        onClose={close}
-        title={'Are you sure you want to delete "' + sectionName + '"?'}
-      />
-      <hr></hr>
+    <Dialog
+      ref={dialogRef}
+      width="600px"
+      paddingHorizontal={28}
+      paddingVertical={28}
+    >
+      <Header>Are you sure you want to delete "{sectionName}"?</Header>
       <WarningMessage>
         <p>
           "{sectionName}" has {questionCount}{" "}
-          {questionCount == 1 ? "question" : "questions"} in it, which will also
-          be deleted.
+          {questionCount === 1 ? "question" : "questions"} in it, which will
+          also be deleted.
         </p>
       </WarningMessage>
       <ButtonWrapper>

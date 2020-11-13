@@ -8,6 +8,8 @@ import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
 import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
+import Button from "@material-ui/core/Button";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const FormWrapper = styled.div`
   margin-top: 50px;
@@ -45,6 +47,7 @@ function CreateEditForm() {
     showDeleteSectionConfirmation,
     setShowDeleteSectionConfirmation
   ] = useState(false);
+  const [deletedSection, setDeletedSection] = useState(null);
 
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
@@ -94,6 +97,8 @@ function CreateEditForm() {
       loadForm.value.sections[activeSection]._id
     )
       .then(() => {
+        //setDeletedSection({...loadForm.value.sections[activeSection]});
+
         dispatchSectionsUpdate({
           type: "DELETE_SECTION",
           index: activeSection
@@ -101,6 +106,9 @@ function CreateEditForm() {
         updateActiveSection(activeSection !== 0 ? activeSection - 1 : 0);
       })
       .catch(() => {
+        //setDeletedSection(null);
+
+        alert("Something went wrong. Form section deleted unsuccessfully.");
         console.error(`ERROR: Status - ${response}`);
       });
   }
@@ -109,7 +117,7 @@ function CreateEditForm() {
     setShowDeleteSectionConfirmation(false);
   }
 
-  async function handleDeleteSection() {
+  function handleDeleteSection() {
     // prompt user for confirmation
     setShowDeleteSectionConfirmation(true);
   }
@@ -139,11 +147,31 @@ function CreateEditForm() {
           <DeleteSectionConfirmation
             confirm={deleteSection}
             close={closeDeleteSectionConfirmation}
-            sectionName={0}
-            questionCount={0}
+            sectionName={loadForm.value.sections[activeSection].name}
+            questionCount={
+              loadForm.value.sections[activeSection].questions.length
+            }
           />
         </>
       )}
+      {/* deletedSection && (
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={deletedSection}
+          onClose={setDeletedSection(null)}
+          message={deletedSection ? '"' + deletedSection.name + '" deleted' : ""}
+          action={
+            <React.Fragment>
+              <Button color="secondary" size="small" onClick={undoDeleteSection}>
+                UNDO
+              </Button>
+            </React.Fragment>
+          }
+        />
+        ) */}
     </div>
   );
 }
