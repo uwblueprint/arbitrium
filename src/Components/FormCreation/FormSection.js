@@ -104,13 +104,21 @@ function FormSection({
     updateActiveSection(sectionKey);
   }
 
-  // eslint-disable-next-line no-unused-vars
   function handleAddQuestion() {
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
       index: activeQuestion
     });
     updateActiveQuestion(sectionNum - 1, activeQuestion + 1);
+  }
+
+  function handleDuplicateQuestion(questionId) {
+    dispatchQuestionsUpdate({
+      type: "ADD_QUESTION",
+      index: questionId,
+      targetIndex: questionId + 1
+    });
+    updateActiveQuestion(sectionNum - 1, questionId + 1);
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -178,6 +186,7 @@ function FormSection({
             key={questionKey + "_question"}
             active={active && activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
+            handleDuplicate={handleDuplicateQuestion}
             sectionKey={sectionNum - 1}
             questionKey={questionKey}
           />

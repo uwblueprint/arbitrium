@@ -16,6 +16,10 @@ function customFormQuestionsReducer(
       case "DELETE_QUESTION":
         draftState.splice(action.index, 1);
         break;
+      case "DUPLICATE_QUESTION":
+        // todo
+        console.log("duplicate");
+        break;
       default:
         break;
     }
