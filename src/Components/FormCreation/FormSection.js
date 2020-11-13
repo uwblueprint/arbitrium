@@ -114,7 +114,7 @@ function FormSection({
 
   function handleDuplicateQuestion(questionId) {
     dispatchQuestionsUpdate({
-      type: "ADD_QUESTION",
+      type: "DUPLICATE_QUESTION",
       index: questionId,
       targetIndex: questionId + 1
     });

@@ -198,7 +198,7 @@ function FormCard({
               <Button
                 size="small"
                 className={classes.button}
-                onClick={handleDuplicate(questionKey)}
+                onClick={() => handleDuplicate(questionKey)}
               >
                 <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
                 <span className={classes.buttonLabel}>Duplicate</span>
