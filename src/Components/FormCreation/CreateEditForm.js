@@ -8,8 +8,8 @@ import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
 import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
-import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
+//import Button from "@material-ui/core/Button";
+//import Snackbar from "@material-ui/core/Snackbar";
 
 const FormWrapper = styled.div`
   margin-top: 50px;
@@ -47,7 +47,7 @@ function CreateEditForm() {
     showDeleteSectionConfirmation,
     setShowDeleteSectionConfirmation
   ] = useState(false);
-  const [deletedSection, setDeletedSection] = useState(null);
+  //const [deletedSection, setDeletedSection] = useState(null);
 
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;

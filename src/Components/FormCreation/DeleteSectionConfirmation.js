@@ -54,6 +54,7 @@ function DeleteSectionConfirmation({
     }
   }, [close, dialogRef]);
 
+  const header_text = 'Are you sure you want to delete "' + sectionName + '"?';
   return (
     <Dialog
       ref={dialogRef}
@@ -61,10 +62,10 @@ function DeleteSectionConfirmation({
       paddingHorizontal={28}
       paddingVertical={28}
     >
-      <Header>Are you sure you want to delete "{sectionName}"?</Header>
+      <Header>{header_text}</Header>
       <WarningMessage>
         <p>
-          "{sectionName}" has {questionCount}{" "}
+          {`"` + sectionName + `"`} has {questionCount}{" "}
           {questionCount === 1 ? "question" : "questions"} in it, which will
           also be deleted.
         </p>
