@@ -71,10 +71,10 @@ const question = new mongoose.Schema({
     type: [regularExpressions],
     default: null
   },
-  Yoptions: {
+  y_options: {
     type: [option]
   },
-  Xoptions: {
+  x_options: {
     type: [option]
   }
 });

@@ -10,6 +10,11 @@ export type EditSectionsAction =
   | {
       type: "DELETE_SECTION";
       index: number;
+    }
+  | {
+      type: "EDIT_TITLE";
+      index: number;
+      title: string;
     };
 
 export type EditQuestionsAction =

@@ -7,6 +7,7 @@ import CardHeader from "@material-ui/core/CardHeader";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FormCard from "./FormCard";
+import InputBase from "@material-ui/core/InputBase";
 import AddCardComponent from "./AddCardComponent";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -35,12 +36,7 @@ const useStyles = makeStyles({
     marginBottom: 20,
     width: 816
   },
-  title: {
-    color: "#000",
-    fontSize: "20px",
-    fontWeight: "500"
-  },
-  section_title: {
+  section_index: {
     borderTopLeftRadius: "4px",
     borderTopRightRadius: "4px",
     marginBottom: "0px",
@@ -53,10 +49,26 @@ const useStyles = makeStyles({
     paddingTop: "5px",
     paddingBottom: "5px"
   },
+  sectionTitle: {
+    height: 36,
+    width: 323,
+    paddingLeft: 16,
+    marginBottom: 16,
+    fontSize: 24,
+    fontWeight: 400
+  },
   paper: {
     boxShadow: "0 2px 3px 1px #cccccc"
   }
 });
+
+const HeaderWrapper = styled.div`
+  margin-top: 32px;
+  margin-left: 12px;
+  margin-bottom: 25px;
+  margin-right: 80px;
+  position: "flex";
+`;
 
 const CardWrapper = styled.div`
   display: flex;
@@ -68,7 +80,8 @@ function FormSection({
   sectionData,
   updateActiveSection,
   active,
-  handleAddSection
+  handleAddSection,
+  handleTitleUpdate
 }) {
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
@@ -77,6 +90,7 @@ function FormSection({
     customFormQuestionsReducer,
     sectionData.questions
   );
+  const [title, setTitle] = useState(sectionData.title);
 
   // For actions menu for each form section
   const [anchorEl, setAnchorEl] = useState(null);
@@ -88,6 +102,7 @@ function FormSection({
   };
 
   useEffect(() => {
+    //Loading Questions
     dispatchQuestionsUpdate({
       type: "LOAD",
       questions: questions
@@ -95,6 +110,9 @@ function FormSection({
   }, [questions, dispatchQuestionsUpdate]);
 
   function updateActiveQuestion(sectionKey, questionKey) {
+    //Saving is done on focus change and is handled at the section level
+    //Every question change updates the active section and saves the changes
+    console.log("Active Question Changed: " + questionKey);
     // handleUpdateQuestion(sectionKey, questionKey);
     updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
@@ -103,12 +121,14 @@ function FormSection({
   }
 
   function setSectionAsActive(sectionKey) {
+    //This is called when the header for the section is focused
+    //A question id of -1 means that we are editing the section itself
     setActiveQuestion(-1);
     updateActiveSection(sectionKey);
   }
 
-  // eslint-disable-next-line no-unused-vars
   function handleAddQuestion() {
+    //When a question is added we update the DB with the new question
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
       index: activeQuestion
@@ -124,7 +144,9 @@ function FormSection({
   }
 
   function handleDeleteQuestion(questionKey) {
-    /* Calling delete endpoint to remove question in mongo */
+    //We should be able to undo the deletion of a section
+    //To implement this we will do a soft delete
+
     deleteQuestion(
       { formId: appUser.currentProgram },
       sectionData._id,
@@ -152,7 +174,7 @@ function FormSection({
 
   return (
     <div>
-      <span className={classes.section_title}>
+      <span className={classes.section_index}>
         Section {sectionNum} of {numSections}
       </span>
       <CardWrapper key={sectionNum}>
@@ -162,23 +184,20 @@ function FormSection({
           }
           onClick={() => setSectionAsActive(sectionNum - 1)}
         >
-          <CardHeader
-            className={classes.title}
-            title={sectionData.name}
-            id={sectionNum}
-            action={
-              <IconButton
-                aria-label="actions"
-                aria-controls="actions-menu"
-                onClick={handleAnchorClick}
-              >
-                <MoreVertIcon />
-              </IconButton>
-            }
-          />
-          <CardContent className={classes.content}>
-            {sectionData.description}
-          </CardContent>
+          <HeaderWrapper>
+            <InputBase
+              className={classes.sectionTitle}
+              placeholder="Untitled Section"
+              value={sectionData.title}
+              onChange={(e) => handleTitleUpdate(e.target.value)}
+              autoFocus={true}
+              rowsMax={1}
+              type="string"
+            ></InputBase>
+            <CardContent className={classes.content}>
+              {sectionData.description}
+            </CardContent>
+          </HeaderWrapper>
         </Card>
         {active && activeQuestion === -1 ? (
           <AddCardComponent

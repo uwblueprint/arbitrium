@@ -1,4 +1,11 @@
-import React, { useReducer, useEffect, useState, useContext } from "react";
+import React, {
+  useReducer,
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useMemo
+} from "react";
 import styled from "styled-components";
 import FormSection from "./FormSection";
 import { AuthContext } from "../../Authentication/Auth.js";
@@ -42,10 +49,18 @@ function CreateEditForm() {
   }, [loadForm, appUser, refetch]);
 
   function updateActiveSection(sectionKey) {
+    console.log("Active Section Changed: " + sectionKey);
     if (activeSection !== sectionKey) {
       setActiveSection(sectionKey);
     }
   }
+
+  useMemo(() => {
+    if (sections != []) {
+      //Save sections
+      console.log(sections);
+    }
+  }, [sections]);
 
   // eslint-disable-next-line no-unused-vars
   function handleSaveAll() {
@@ -60,6 +75,15 @@ function CreateEditForm() {
       index: activeSection
     });
     updateActiveSection(activeSection + 1);
+  }
+
+  function handleTitleUpdate(title) {
+    console.log("Editing Title");
+    dispatchSectionsUpdate({
+      type: "EDIT_TITLE",
+      index: activeSection,
+      title: title
+    });
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -83,6 +107,7 @@ function CreateEditForm() {
               updateActiveSection={updateActiveSection}
               active={activeSection === key}
               handleAddSection={handleAddSection}
+              handleTitleUpdate={handleTitleUpdate}
             />
           </FormWrapper>
         ))}
