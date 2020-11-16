@@ -109,9 +109,9 @@ const StyledSwitch = withStyles({
 //commented due to lint error
 function FormCard({
   card,
-  question,
   active,
   handleActive,
+  handleDuplicate,
   handleDelete,
   sectionKey,
   questionKey
@@ -125,6 +125,7 @@ function FormCard({
   const handleSwitch = () => {
     setRequired((prev) => !prev);
   };
+
   return (
     <div className={classes.container}>
       <Card
@@ -204,7 +205,7 @@ function FormCard({
               <Button
                 size="small"
                 className={classes.button}
-                //onClick={handleDuplicate({ sectionKey, questionKey, question })}
+                onClick={() => handleDuplicate(questionKey)}
               >
                 <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
                 <span className={classes.buttonLabel}>Duplicate</span>
