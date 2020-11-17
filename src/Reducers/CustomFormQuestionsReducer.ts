@@ -16,6 +16,13 @@ function customFormQuestionsReducer(
       case "DELETE_QUESTION":
         draftState.splice(action.index, 1);
         break;
+      case "DUPLICATE_QUESTION": {
+        const newQuestion = JSON.parse(
+          JSON.stringify(draftState[action.index])
+        );
+        draftState.splice(action.index, 0, newQuestion);
+        break;
+      }
       default:
         break;
     }
