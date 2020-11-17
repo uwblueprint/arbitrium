@@ -86,6 +86,15 @@ function CreateEditForm() {
     });
   }
 
+  function handleDescriptionUpdate(description) {
+    console.log("Editing Description");
+    dispatchSectionsUpdate({
+      type: "EDIT_DESCRIPTION",
+      index: activeSection,
+      description: description
+    });
+  }
+
   // eslint-disable-next-line no-unused-vars
   function handleMoveSection() {
     // TODO: update section location in sections object
@@ -108,6 +117,7 @@ function CreateEditForm() {
               active={activeSection === key}
               handleAddSection={handleAddSection}
               handleTitleUpdate={handleTitleUpdate}
+              handleDescriptionUpdate={handleDescriptionUpdate}
             />
           </FormWrapper>
         ))}

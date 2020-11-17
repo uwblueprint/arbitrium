@@ -12,6 +12,7 @@ import AddCardComponent from "./AddCardComponent";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { deleteQuestion } from "../../requests/forms";
+import TextField from "@material-ui/core/TextField";
 import { AuthContext } from "../../Authentication/Auth.js";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 
@@ -36,6 +37,12 @@ const useStyles = makeStyles({
     marginBottom: 20,
     width: 816
   },
+  title: {
+    height: 36,
+    marginBottom: 16,
+    width: 816,
+    marginTop: 32
+  },
   section_index: {
     borderTopLeftRadius: "4px",
     borderTopRightRadius: "4px",
@@ -49,13 +56,18 @@ const useStyles = makeStyles({
     paddingTop: "5px",
     paddingBottom: "5px"
   },
-  sectionTitle: {
+  sectionTitleBox: {
     height: 36,
-    width: 323,
-    paddingLeft: 16,
+    width: 440,
+    marginLeft: 28,
+    marginRight: 279,
     marginBottom: 16,
     fontSize: 24,
     fontWeight: 400
+  },
+  sectionMenu: {
+    alignItems: "center",
+    margin: "auto"
   },
   paper: {
     boxShadow: "0 2px 3px 1px #cccccc"
@@ -66,8 +78,7 @@ const HeaderWrapper = styled.div`
   margin-top: 32px;
   margin-left: 12px;
   margin-bottom: 25px;
-  margin-right: 80px;
-  position: "flex";
+  marginright: 1px;
 `;
 
 const CardWrapper = styled.div`
@@ -81,7 +92,8 @@ function FormSection({
   updateActiveSection,
   active,
   handleAddSection,
-  handleTitleUpdate
+  handleTitleUpdate,
+  handleDescriptionUpdate
 }) {
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
@@ -184,9 +196,9 @@ function FormSection({
           }
           onClick={() => setSectionAsActive(sectionNum - 1)}
         >
-          <HeaderWrapper>
+          <div className={classes.title}>
             <InputBase
-              className={classes.sectionTitle}
+              className={classes.sectionTitleBox}
               placeholder="Untitled Section"
               value={sectionData.title}
               onChange={(e) => handleTitleUpdate(e.target.value)}
@@ -194,10 +206,25 @@ function FormSection({
               rowsMax={1}
               type="string"
             ></InputBase>
-            <CardContent className={classes.content}>
-              {sectionData.description}
-            </CardContent>
-          </HeaderWrapper>
+            <IconButton
+              className={classes.sectionMenu}
+              aria-label="actions"
+              aria-controls="actions-menu"
+              onClick={handleAnchorClick}
+            >
+              <MoreVertIcon />
+            </IconButton>
+          </div>
+          <TextField
+            placeholder="New Description"
+            value={sectionData.description}
+            onChange={(e) => handleDescriptionUpdate(e.target.value)}
+            multiline
+            rowsMax={10}
+            fullWidth="true"
+            type="string"
+          ></TextField>
+          <CardContent className={classes.content}>{"Admin Info"}</CardContent>
         </Card>
         {active && activeQuestion === -1 ? (
           <AddCardComponent

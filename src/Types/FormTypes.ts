@@ -15,6 +15,11 @@ export type EditSectionsAction =
       type: "EDIT_TITLE";
       index: number;
       title: string;
+    }
+  | {
+      type: "EDIT_DESCRIPTION";
+      index: number;
+      description: string;
     };
 
 export type EditQuestionsAction =

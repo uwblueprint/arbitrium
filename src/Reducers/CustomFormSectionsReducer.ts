@@ -19,6 +19,9 @@ function customFormSectionsReducer(
       case "EDIT_TITLE":
         draftState[action.index].name = action.title;
         break;
+      case "EDIT_DESCRIPTION":
+        draftState[action.index].description = action.description;
+        break;
       default:
         break;
     }
