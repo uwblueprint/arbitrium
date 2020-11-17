@@ -115,6 +115,17 @@ function FormSection({
     if (activeQuestion !== questionKey) {
       setActiveQuestion(questionKey);
     }
+    window.requestAnimationFrame(() => {
+      const element = document.getElementById(
+        "question_" + questionKey + "_" + sectionKey
+      );
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+    });
   }
 
   function setSectionAsActive(sectionKey) {
@@ -212,16 +223,18 @@ function FormSection({
       </CardWrapper>
       {questions.map((_question, questionKey) => (
         <CardWrapper key={questionKey}>
-          <FormCard
-            card={questions[questionKey]}
-            key={questionKey + "_question"}
-            active={active && activeQuestion === questionKey}
-            handleActive={updateActiveQuestion}
-            handleDuplicate={handleDuplicateQuestion}
-            handleDelete={handleDeleteQuestion}
-            sectionKey={sectionNum - 1}
-            questionKey={questionKey}
-          />
+          <div id={"question_" + questionKey + "_" + (sectionNum - 1)}>
+            <FormCard
+              card={questions[questionKey]}
+              key={questionKey + "_question"}
+              active={active && activeQuestion === questionKey}
+              handleActive={updateActiveQuestion}
+              handleDuplicate={handleDuplicateQuestion}
+              handleDelete={handleDeleteQuestion}
+              sectionKey={sectionNum - 1}
+              questionKey={questionKey}
+            />
+          </div>
           {active && activeQuestion === questionKey ? (
             <AddCardComponent
               handleAddSection={handleAddSection}

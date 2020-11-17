@@ -49,6 +49,8 @@ function CreateEditForm() {
   ] = useState(false);
   //const [deletedSection, setDeletedSection] = useState(null);
 
+  // const fieldRef = React.useRef < HTMLInputElement > null;
+
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
     // Get form from database using programID
@@ -66,6 +68,15 @@ function CreateEditForm() {
     if (activeSection !== sectionKey) {
       setActiveSection(sectionKey);
     }
+    window.requestAnimationFrame(() => {
+      const element = document.getElementById("section_" + sectionKey);
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -128,17 +139,17 @@ function CreateEditForm() {
       {sections &&
         sections.map((section, key) => (
           <FormWrapper key={key}>
-            <FormSection
-              key={key + "_section"}
-              numSections={sections.length}
-              sectionNum={key + 1}
-              sectionData={section}
-              updateActiveSection={updateActiveSection}
-              active={activeSection === key}
-              handleAddSection={handleAddSection}
-              handleMoveSection={handleMoveSection}
-              handleDeleteSection={handleDeleteSection}
-            />
+            <div id={"section_" + key}>
+              <FormSection
+                key={key + "_section"}
+                numSections={sections.length}
+                sectionNum={key + 1}
+                sectionData={section}
+                updateActiveSection={updateActiveSection}
+                active={activeSection === key}
+                handleAddSection={handleAddSection}
+              />
+            </div>
           </FormWrapper>
         ))}
       {showDeleteSectionConfirmation && (
