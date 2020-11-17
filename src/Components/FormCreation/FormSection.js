@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
@@ -10,6 +10,8 @@ import FormCard from "./FormCard";
 import AddCardComponent from "./AddCardComponent";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { deleteQuestion } from "../../requests/forms";
+import { AuthContext } from "../../Authentication/Auth.js";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 
 const useStyles = makeStyles({
@@ -84,6 +86,7 @@ function FormSection({
   handleDeleteSection
 }) {
   const classes = useStyles();
+  const { appUser } = useContext(AuthContext);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
@@ -119,7 +122,6 @@ function FormSection({
     updateActiveSection(sectionKey);
   }
 
-  // eslint-disable-next-line no-unused-vars
   function handleAddQuestion() {
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
@@ -128,11 +130,33 @@ function FormSection({
     updateActiveQuestion(sectionNum - 1, activeQuestion + 1);
   }
 
+  function handleDuplicateQuestion(questionId) {
+    dispatchQuestionsUpdate({
+      type: "DUPLICATE_QUESTION",
+      index: questionId,
+      targetIndex: questionId + 1
+    });
+    updateActiveQuestion(sectionNum - 1, questionId + 1);
+  }
+
   // eslint-disable-next-line no-unused-vars
   function handleMoveQuestion() {
     // TODO: update question location in section within sections object
     // TODO: call the update section API endpoint
     // TODO: call updateActive
+  }
+
+  function handleDeleteQuestion(questionKey) {
+    /* Calling delete endpoint to remove question in mongo */
+    deleteQuestion(
+      { formId: appUser.currentProgram },
+      sectionData._id,
+      questions[questionKey]._id
+    );
+    dispatchQuestionsUpdate({ type: "DELETE_QUESTION", index: questionKey });
+    if (questionKey !== 0) {
+      setActiveQuestion(questionKey - 1);
+    }
   }
 
   // async function handleUpdateQuestion(prevSection, prevQuestion) {
@@ -193,6 +217,8 @@ function FormSection({
             key={questionKey + "_question"}
             active={active && activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
+            handleDuplicate={handleDuplicateQuestion}
+            handleDelete={handleDeleteQuestion}
             sectionKey={sectionNum - 1}
             questionKey={questionKey}
           />
