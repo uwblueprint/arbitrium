@@ -29,7 +29,6 @@ import usePromise from "../../Hooks/usePromise";
 import { getReviewAPI } from "../../requests/get";
 import * as UPDATE from "../../requests/update";
 import { ProgramContext } from "../../Contexts/ProgramContext";
-import { AuthContext } from "../../Authentication/Auth.js";
 
 const padding = HEADER_HEIGHT * 2 + "px";
 const PageWrapper = styled.div`
@@ -88,7 +87,6 @@ function Application({
   const appId = match.params.organizationId;
   const isRated = useRef(false);
   const [review, setReview] = useState(null);
-  const { appUser } = useContext(AuthContext);
 
   const loadedApplications = useContext(ProgramContext);
   const blankReview = useMemo(() => createReview(user, appId), [appId, user]);
