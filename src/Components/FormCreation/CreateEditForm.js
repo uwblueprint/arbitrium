@@ -93,14 +93,14 @@ function CreateEditForm() {
   async function deleteSection() {
     // call API to delete
     const response = FORM.deleteSection(
-      loadForm.value.formId,
+      loadForm.value._id,
       loadForm.value.sections[activeSection]._id
     )
       .then(() => {
         //setDeletedSection({...loadForm.value.sections[activeSection]});
 
         dispatchSectionsUpdate({
-          type: "DELETE_SECTION",
+          type: "LOAD",
           index: activeSection
         });
         updateActiveSection(activeSection !== 0 ? activeSection - 1 : 0);
