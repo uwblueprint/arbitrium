@@ -126,6 +126,7 @@ function CreateEditForm() {
     setShowDeleteSectionConfirmation(false);
   }
 
+  // eslint-disable-next-line no-unused-vars
   function handleDeleteSection() {
     // prompt user for confirmation
     setShowDeleteSectionConfirmation(true);
