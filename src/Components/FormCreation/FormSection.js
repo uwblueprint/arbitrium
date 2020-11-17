@@ -53,8 +53,21 @@ const useStyles = makeStyles({
     paddingTop: "5px",
     paddingBottom: "5px"
   },
-  paper: {
-    boxShadow: "0 2px 3px 1px #cccccc"
+  action_menu: {
+    boxShadow:
+      "0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 5px 5px rgba(0, 0, 0, 0.2)",
+    borderRadius: "4px",
+    width: "158px"
+  },
+  action_menu_content: {
+    paddingTop: "8px",
+    paddingBottom: "8px"
+  },
+  action_menu_item: {
+    fontSize: "14px",
+    color: "rgba(0, 0, 0, 0.87)",
+    lineHeight: "20px",
+    letterSpacing: "0.25px"
   }
 });
 
@@ -68,7 +81,9 @@ function FormSection({
   sectionData,
   updateActiveSection,
   active,
-  handleAddSection
+  handleAddSection,
+  handleMoveSection,
+  handleDeleteSection
 }) {
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
@@ -217,7 +232,10 @@ function FormSection({
       ))}
       <Menu
         id="actions-menu"
-        classes={classes}
+        classes={{
+          paper: classes.action_menu,
+          list: classes.action_menu_content
+        }}
         anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -226,8 +244,24 @@ function FormSection({
         open={Boolean(anchorEl)}
         onClose={handleAnchorClose}
       >
-        <MenuItem onClick={() => console.info("b")}>Move section</MenuItem>
-        <MenuItem onClick={() => console.info("a")}>Delete section</MenuItem>
+        <MenuItem
+          classes={{ root: classes.action_menu_item }}
+          onClick={() => {
+            handleMoveSection();
+            handleAnchorClose();
+          }}
+        >
+          Move section
+        </MenuItem>
+        <MenuItem
+          classes={{ root: classes.action_menu_item }}
+          onClick={() => {
+            handleDeleteSection();
+            handleAnchorClose();
+          }}
+        >
+          Delete section
+        </MenuItem>
       </Menu>
     </div>
   );
