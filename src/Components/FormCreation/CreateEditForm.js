@@ -12,7 +12,7 @@ import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
 //import Snackbar from "@material-ui/core/Snackbar";
 
 const FormWrapper = styled.div`
-  margin-top: 50px;
+  padding-top: 70px;
   padding-left: 15%;
 `;
 
@@ -48,8 +48,6 @@ function CreateEditForm() {
     setShowDeleteSectionConfirmation
   ] = useState(false);
   //const [deletedSection, setDeletedSection] = useState(null);
-
-  // const fieldRef = React.useRef < HTMLInputElement > null;
 
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
@@ -138,18 +136,16 @@ function CreateEditForm() {
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
       {sections &&
         sections.map((section, key) => (
-          <FormWrapper key={key}>
-            <div id={"section_" + key}>
-              <FormSection
-                key={key + "_section"}
-                numSections={sections.length}
-                sectionNum={key + 1}
-                sectionData={section}
-                updateActiveSection={updateActiveSection}
-                active={activeSection === key}
-                handleAddSection={handleAddSection}
-              />
-            </div>
+          <FormWrapper key={key} id={"section_" + key}>
+            <FormSection
+              key={key + "_section"}
+              numSections={sections.length}
+              sectionNum={key + 1}
+              sectionData={section}
+              updateActiveSection={updateActiveSection}
+              active={activeSection === key}
+              handleAddSection={handleAddSection}
+            />
           </FormWrapper>
         ))}
       {showDeleteSectionConfirmation && (
