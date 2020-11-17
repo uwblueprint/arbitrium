@@ -91,9 +91,6 @@ function CreateEditForm() {
   }
 
   async function deleteSection() {
-    console.log(loadForm.value.formId);
-    console.log(loadForm.value.sections[activeSection]);
-    console.log(loadForm.value.sections[activeSection]._id);
     // call API to delete
     const response = FORM.deleteSection(
       loadForm.value._id,
