@@ -92,7 +92,6 @@ function CreateEditForm() {
     updateActiveSection(activeSection + 1);
   }
 
-  // eslint-disable-next-line no-unused-vars
   function handleMoveSection() {
     // TODO: update section location in sections object
     // TODO: call handleSave to update all sections
@@ -126,7 +125,6 @@ function CreateEditForm() {
     setShowDeleteSectionConfirmation(false);
   }
 
-  // eslint-disable-next-line no-unused-vars
   function handleDeleteSection() {
     // prompt user for confirmation
     setShowDeleteSectionConfirmation(true);
@@ -146,6 +144,8 @@ function CreateEditForm() {
               updateActiveSection={updateActiveSection}
               active={activeSection === key}
               handleAddSection={handleAddSection}
+              handleMoveSection={handleMoveSection}
+              handleDeleteSection={handleDeleteSection}
             />
           </FormWrapper>
         ))}
