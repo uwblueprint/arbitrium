@@ -114,18 +114,18 @@ function FormSection({
     updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
       setActiveQuestion(questionKey);
+      window.requestAnimationFrame(() => {
+        const element = document.getElementById(
+          "question_" + questionKey + "_" + sectionKey
+        );
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }
+      });
     }
-    window.requestAnimationFrame(() => {
-      const element = document.getElementById(
-        "question_" + questionKey + "_" + sectionKey
-      );
-      if (element) {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-      }
-    });
   }
 
   function setSectionAsActive(sectionKey) {
@@ -222,19 +222,20 @@ function FormSection({
         ) : null}
       </CardWrapper>
       {questions.map((_question, questionKey) => (
-        <CardWrapper key={questionKey}>
-          <div id={"question_" + questionKey + "_" + (sectionNum - 1)}>
-            <FormCard
-              card={questions[questionKey]}
-              key={questionKey + "_question"}
-              active={active && activeQuestion === questionKey}
-              handleActive={updateActiveQuestion}
-              handleDuplicate={handleDuplicateQuestion}
-              handleDelete={handleDeleteQuestion}
-              sectionKey={sectionNum - 1}
-              questionKey={questionKey}
-            />
-          </div>
+        <CardWrapper
+          key={questionKey}
+          id={"question_" + questionKey + "_" + (sectionNum - 1)}
+        >
+          <FormCard
+            card={questions[questionKey]}
+            key={questionKey + "_question"}
+            active={active && activeQuestion === questionKey}
+            handleActive={updateActiveQuestion}
+            handleDuplicate={handleDuplicateQuestion}
+            handleDelete={handleDeleteQuestion}
+            sectionKey={sectionNum - 1}
+            questionKey={questionKey}
+          />
           {active && activeQuestion === questionKey ? (
             <AddCardComponent
               handleAddSection={handleAddSection}

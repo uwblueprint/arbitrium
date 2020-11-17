@@ -63,9 +63,6 @@ function CreateEditForm() {
   }, [loadForm, appUser, refetch]);
 
   function updateActiveSection(sectionKey) {
-    if (activeSection !== sectionKey) {
-      setActiveSection(sectionKey);
-    }
     window.requestAnimationFrame(() => {
       const element = document.getElementById("section_" + sectionKey);
       if (element) {
@@ -75,6 +72,9 @@ function CreateEditForm() {
         });
       }
     });
+    if (activeSection !== sectionKey) {
+      setActiveSection(sectionKey);
+    }
   }
 
   // eslint-disable-next-line no-unused-vars
