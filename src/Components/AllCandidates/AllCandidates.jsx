@@ -74,7 +74,7 @@ function convertToTableData(applications) {
     avgRating: application.avgRating || 0,
     numReviews: application.numReviews,
     candidateLink: (
-      <a href={`/submissions/${application._id}`}>
+      <a href={`/admin/submissions/${application._id}`}>
         <Button
           variant="contained"
           color="primary"
