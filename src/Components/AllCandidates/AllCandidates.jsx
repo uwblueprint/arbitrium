@@ -39,7 +39,7 @@ const Header = styled.div`
 `;
 
 const Wrapper = styled.div`
-  margin-top: 150px;
+  margin-top: 50px;
   padding: 0 136px;
   h1 {
     font-family: Roboto;
@@ -88,7 +88,7 @@ function convertToTableData(applications) {
   }));
 }
 
-async function getComments({ applications }) {
+async function getComments({ applications, allUsers }) {
   if (applications == null || applications.length === 0) return [];
   const reviews = await getAllReviewsAPI();
   const appsMap = {};
@@ -97,9 +97,12 @@ async function getComments({ applications }) {
   reviews.forEach((review) => {
     if (
       appsMap[review.applicationId] == null ||
-      (process.env.REACT_APP_NODE_ENV !== "development" &&
-        (review.email.endsWith("uwblueprint.org") ||
-          review.email.endsWith("test.com")))
+      (allUsers
+        .find((user) => user.userId === review.userId)
+        .email.endsWith("uwblueprint.org") &&
+        allUsers
+          .find((user) => user.userId === review.userId)
+          .email.endsWith("test.com"))
     ) {
       return;
     }
@@ -167,8 +170,8 @@ function AllCandidates({ history, program }) {
   const [allUsers] = usePromise(getAllUsersAPI, {}, []);
   const [comments] = usePromise(
     getComments,
-    { applications: applications.value },
-    []
+    { applications: applications.value, allUsers: allUsers.value },
+    [allUsers]
   );
   const commentsDownloadLink = useRef();
   const appsDownloadLink = useRef();
@@ -191,21 +194,6 @@ function AllCandidates({ history, program }) {
     appsDownloadLink.current.link.click();
   }
 
-  async function initiateForm() {
-    const data = {
-      formId: program,
-      name: defaultFormState.name,
-      description: defaultFormState.description,
-      createdBy: appUser.userId,
-      draft: true,
-      sections: defaultFormState.sections
-    };
-    const res = await createForm(data);
-    if (res) {
-      history.push("/admin/form/" + program);
-    }
-  }
-
   const dataReady = !(applications.isPending || allUsers.isPending);
   const applicationsCSVFilename = `Ratings and Rankings - ${moment().format(
     "DD-MM-YYYY hh-mm-ss"
@@ -220,18 +208,6 @@ function AllCandidates({ history, program }) {
         <div>
           <Header>
             <h1 style={{ color: "black" }}>All Candidates</h1>
-            <div className="button-container">
-              <Button
-                variant="contained"
-                color="primary"
-                target="_blank"
-                value="CreateForm"
-                style={{ width: "250px", maxWidth: "250px" }}
-                onClick={initiateForm}
-              >
-                Create form
-              </Button>
-            </div>
             <div className="button-container">
               <Button
                 variant="contained"
