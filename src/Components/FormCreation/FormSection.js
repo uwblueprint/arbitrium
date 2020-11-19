@@ -17,33 +17,38 @@ import { AuthContext } from "../../Authentication/Auth.js";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 
 const useStyles = makeStyles({
+  //Wraps the card
   content: {
-    marginTop: -16
+    marginBottom: 8,
+    marginLeft: 24,
+    marginTop: 24,
+    marginRight: 16
   },
+
   root: {
-    fontSize: 14,
     borderRadius: 0,
     borderTop: "8px solid #2261AD",
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
-    width: 816,
-    minWidth: 400
+    minWidth: 816,
+    width: 816
   },
-  active: {
-    fontSize: 14,
+  rootActive: {
     borderRadius: 0,
     borderTop: "8px solid #2261AD",
     borderLeft: "4px solid #2261AD",
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
+    minWidth: 816,
     width: 816
   },
-  title: {
-    height: 36,
-    marginBottom: 16,
-    width: 816,
-    marginTop: 32
+
+  //Question Title and Menu Wrapper
+  sectionTitleAndMenuWrapper: {
+    display: "flex"
   },
+
+  //Display for "Section 1 of 2"
   section_index: {
     borderTopLeftRadius: "4px",
     borderTopRightRadius: "4px",
@@ -57,18 +62,28 @@ const useStyles = makeStyles({
     paddingTop: "5px",
     paddingBottom: "5px"
   },
-  sectionTitleBox: {
+
+  //Section Title
+  sectionTitle: {
     height: 36,
     width: 440,
-    marginLeft: 28,
-    marginBottom: 16,
-    fontSize: 24,
-    fontWeight: 400
+    fontSize: 24
   },
+
+  //Section Menu
   sectionMenu: {
     marginLeft: "auto",
-    float: "right"
+    float: "right",
+    marginBottom: 10
   },
+
+  //Section Description
+  sectionDescription: {
+    height: 21,
+    width: 764,
+    marginBottom: 16
+  },
+
   paper: {
     boxShadow: "0 2px 3px 1px #cccccc"
   },
@@ -89,13 +104,6 @@ const useStyles = makeStyles({
     letterSpacing: "0.25px"
   }
 });
-
-const HeaderWrapper = styled.div`
-  margin-top: 32px;
-  margin-left: 12px;
-  margin-bottom: 25px;
-  marginright: 1px;
-`;
 
 const CardWrapper = styled.div`
   display: flex;
@@ -227,43 +235,44 @@ function FormSection({
       <span className={classes.section_index}>
         Section {sectionNum} of {numSections}
       </span>
-      <CardWrapper key={sectionNum}>
+      <CardWrapper>
         <Card
           className={
-            active && activeQuestion === -1 ? classes.active : classes.root
+            active && activeQuestion === -1 ? classes.rootActive : classes.root
           }
           onClick={() => setSectionAsActive(sectionNum - 1)}
         >
-          <div className={classes.title}>
-            <InputBase
-              className={classes.sectionTitleBox}
-              placeholder="Untitled Section"
-              value={sectionData.title}
-              onChange={(e) => handleTitleUpdate(e.target.value)}
-              autoFocus={true}
-              rowsMax={1}
+          <CardContent className={classes.content}>
+            <div className={classes.sectionTitleAndMenuWrapper}>
+              <InputBase
+                className={classes.sectionTitle}
+                placeholder="Untitled Section"
+                value={sectionData.title}
+                onChange={(e) => handleTitleUpdate(e.target.value)}
+                autoFocus={true}
+                rowsMax={1}
+                type="string"
+              ></InputBase>
+              <IconButton
+                className={classes.sectionMenu}
+                aria-label="actions"
+                aria-controls="actions-menu"
+                onClick={handleAnchorClick}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </div>
+            <TextField
+              className={classes.sectionDescription}
+              placeholder="New Description"
+              value={sectionData.description}
+              onChange={(e) => handleDescriptionUpdate(e.target.value)}
+              multiline
+              rowsMax={10}
+              fullWidth="true"
               type="string"
-            ></InputBase>
-            <IconButton
-              className={classes.sectionMenu}
-              aria-label="actions"
-              aria-controls="actions-menu"
-              onClick={handleAnchorClick}
-            >
-              <MoreVertIcon />
-            </IconButton>
-          </div>
-          <TextField
-            className={classes.sectionTitleBox}
-            placeholder="New Description"
-            value={"New Description"}
-            onChange={(e) => handleDescriptionUpdate(e.target.value)}
-            multiline
-            rowsMax={10}
-            fullWidth="true"
-            type="string"
-          ></TextField>
-          <CardContent className={classes.content}>{"Admin Info"}</CardContent>
+            ></TextField>
+          </CardContent>
         </Card>
         {active && activeQuestion === -1 ? (
           <AddCardComponent
