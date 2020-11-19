@@ -18,7 +18,6 @@ const AppWrapper = styled.div`
   flex-direction: column;
   /*align-items: center;*/
   justify-content: center;
-  font-size: calc(0.3vh + 0.5vw + 10px);
   p {
     color: black;
   }
