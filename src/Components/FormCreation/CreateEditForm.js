@@ -39,7 +39,7 @@ const DialogOverlay = styled.div`
 
 //Users can access this page in two ways
 //1. By clicking on the form from within a table
-//2. By pasting the url with the programId in it
+//TODO: 2. By pasting the url with the programId in it
 
 //In case 2 we will update the program to the one in the ID, so the proper form
 //will load. In the event they don't have admin access to the program they will
@@ -52,16 +52,9 @@ function CreateEditForm({ program, history, match }) {
   );
   const [activeSection, setActiveSection] = useState(0);
 
-  console.log(match.programId);
-  if (match.programId != appUser.currentProgram) {
-    console.log("mismatch");
-  }
-
   async function getPrograms() {
     const res = await fetch("http://localhost:4000/api/programs/all");
-    res.then(function(res) {
-      console.log(res.json());
-    });
+    res.then(function(res) {});
   }
   getPrograms();
 
@@ -82,13 +75,11 @@ function CreateEditForm({ program, history, match }) {
     if (loadForm.isPending) return;
 
     if (loadForm.value == null) {
-      console.log(loadForm.value);
       //Create a form and refetch
       initiateForm();
       refetch({ programId: appUser.currentProgram });
       return;
     }
-    console.log(loadForm.value);
 
     // Get form from database using programID
     dispatchSectionsUpdate({
@@ -145,7 +136,6 @@ function CreateEditForm({ program, history, match }) {
   }
 
   function handleTitleUpdate(title) {
-    console.log("Editing Title");
     dispatchSectionsUpdate({
       type: "EDIT_TITLE",
       index: activeSection,
@@ -154,7 +144,6 @@ function CreateEditForm({ program, history, match }) {
   }
 
   function handleDescriptionUpdate(description) {
-    console.log("Editing Description");
     dispatchSectionsUpdate({
       type: "EDIT_DESCRIPTION",
       index: activeSection,
