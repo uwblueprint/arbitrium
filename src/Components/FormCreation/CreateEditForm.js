@@ -52,12 +52,6 @@ function CreateEditForm({ program, history, match }) {
   );
   const [activeSection, setActiveSection] = useState(0);
 
-  async function getPrograms() {
-    const res = await fetch("http://localhost:4000/api/programs/all");
-    res.then(function(res) {});
-  }
-  getPrograms();
-
   const [loadForm, refetch] = usePromise(FORM.getForm, {
     programId: appUser.currentProgram
   });
