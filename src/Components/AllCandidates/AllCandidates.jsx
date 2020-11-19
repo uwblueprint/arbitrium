@@ -88,7 +88,7 @@ function convertToTableData(applications) {
   }));
 }
 
-async function getComments({ applications }) {
+async function getComments({ applications, allUsers }) {
   if (applications == null || applications.length === 0) return [];
   const reviews = await getAllReviewsAPI();
   const appsMap = {};
@@ -97,9 +97,12 @@ async function getComments({ applications }) {
   reviews.forEach((review) => {
     if (
       appsMap[review.applicationId] == null ||
-      (process.env.REACT_APP_NODE_ENV !== "development" &&
-        (review.email.endsWith("uwblueprint.org") ||
-          review.email.endsWith("test.com")))
+      (allUsers
+        .find((user) => user.userId === review.userId)
+        .email.endsWith("uwblueprint.org") &&
+        allUsers
+          .find((user) => user.userId === review.userId)
+          .email.endsWith("test.com"))
     ) {
       return;
     }
@@ -167,8 +170,8 @@ function AllCandidates({ history, program }) {
   const [allUsers] = usePromise(getAllUsersAPI, {}, []);
   const [comments] = usePromise(
     getComments,
-    { applications: applications.value },
-    []
+    { applications: applications.value, allUsers: allUsers.value },
+    [allUsers]
   );
   const commentsDownloadLink = useRef();
   const appsDownloadLink = useRef();
