@@ -12,7 +12,7 @@ import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
 //import Snackbar from "@material-ui/core/Snackbar";
 
 const FormWrapper = styled.div`
-  margin-top: 50px;
+  padding-top: 70px;
   padding-left: 15%;
 `;
 
@@ -63,6 +63,15 @@ function CreateEditForm() {
   }, [loadForm, appUser, refetch]);
 
   function updateActiveSection(sectionKey) {
+    window.requestAnimationFrame(() => {
+      const element = document.getElementById("section_" + sectionKey);
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
     if (activeSection !== sectionKey) {
       setActiveSection(sectionKey);
     }
@@ -83,7 +92,6 @@ function CreateEditForm() {
     updateActiveSection(activeSection + 1);
   }
 
-  // eslint-disable-next-line no-unused-vars
   function handleMoveSection() {
     // TODO: update section location in sections object
     // TODO: call handleSave to update all sections
@@ -127,7 +135,7 @@ function CreateEditForm() {
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
       {sections &&
         sections.map((section, key) => (
-          <FormWrapper key={key}>
+          <FormWrapper key={key} id={"section_" + key}>
             <FormSection
               key={key + "_section"}
               numSections={sections.length}
