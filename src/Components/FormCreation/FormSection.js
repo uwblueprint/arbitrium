@@ -26,7 +26,8 @@ const useStyles = makeStyles({
     borderTop: "8px solid #2261AD",
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
-    width: 816
+    width: 816,
+    minWidth: 400
   },
   active: {
     fontSize: 14,
@@ -60,14 +61,13 @@ const useStyles = makeStyles({
     height: 36,
     width: 440,
     marginLeft: 28,
-    marginRight: 279,
     marginBottom: 16,
     fontSize: 24,
     fontWeight: 400
   },
   sectionMenu: {
-    alignItems: "center",
-    margin: "auto"
+    marginLeft: "auto",
+    float: "right"
   },
   paper: {
     boxShadow: "0 2px 3px 1px #cccccc"
@@ -216,8 +216,9 @@ function FormSection({
             </IconButton>
           </div>
           <TextField
+            className={classes.sectionTitleBox}
             placeholder="New Description"
-            value={sectionData.description}
+            value={"New Description"}
             onChange={(e) => handleDescriptionUpdate(e.target.value)}
             multiline
             rowsMax={10}
