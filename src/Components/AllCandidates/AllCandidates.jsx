@@ -207,16 +207,23 @@ function AllCandidates({ history, program }) {
         <div>
           <Header>
             <h1 style={{ color: "black" }}>All Candidates</h1>
+
             <div className="button-container">
               <Button
                 variant="contained"
                 color="primary"
                 target="_blank"
-                value="CreateForm"
-                style={{ width: "250px", maxWidth: "250px" }}
-                onClick={history.push("/admin/form/")}
+                value="OpenCommittee"
+                style={{
+                  width: "250px",
+                  maxWidth: "250px",
+                  marginLeft: "10px"
+                }}
+                onClick={() => {
+                  history.push("/admin/committeereview");
+                }}
               >
-                Create form
+                View committee review
               </Button>
             </div>
             <div className="button-container">
