@@ -7,7 +7,6 @@ import AllCandidatesTable from "./AllCandidatesTable";
 import { CSVLink } from "react-csv";
 import moment from "moment";
 import usePromise from "../../Hooks/usePromise";
-import { createForm } from "../../requests/forms";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { defaultFormState } from "../FormCreation/CreateEditFormStateManagement";
 
@@ -194,21 +193,6 @@ function AllCandidates({ history, program }) {
     appsDownloadLink.current.link.click();
   }
 
-  async function initiateForm() {
-    const data = {
-      formId: program,
-      name: defaultFormState.name,
-      description: defaultFormState.description,
-      createdBy: appUser.userId,
-      draft: true,
-      sections: defaultFormState.sections
-    };
-    const res = await createForm(data);
-    if (res) {
-      history.push("/admin/form/" + program);
-    }
-  }
-
   const dataReady = !(applications.isPending || allUsers.isPending);
   const applicationsCSVFilename = `Ratings and Rankings - ${moment().format(
     "DD-MM-YYYY hh-mm-ss"
@@ -230,27 +214,9 @@ function AllCandidates({ history, program }) {
                 target="_blank"
                 value="CreateForm"
                 style={{ width: "250px", maxWidth: "250px" }}
-                onClick={initiateForm}
+                onClick={history.push("/admin/form/")}
               >
                 Create form
-              </Button>
-            </div>
-            <div className="button-container">
-              <Button
-                variant="contained"
-                color="primary"
-                target="_blank"
-                value="OpenCommittee"
-                style={{
-                  width: "250px",
-                  maxWidth: "250px",
-                  marginLeft: "10px"
-                }}
-                onClick={() => {
-                  history.push("/admin/committeereview");
-                }}
-              >
-                View committee review
               </Button>
             </div>
             <div className="button-container">

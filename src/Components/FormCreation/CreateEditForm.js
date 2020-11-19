@@ -15,6 +15,7 @@ import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
 import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
+import { createForm } from "../../requests/forms";
 //import Button from "@material-ui/core/Button";
 //import Snackbar from "@material-ui/core/Snackbar";
 
@@ -36,15 +37,36 @@ const DialogOverlay = styled.div`
   }
 `;
 
-function CreateEditForm() {
+//Users can access this page in two ways
+//1. By clicking on the form from within a table
+//2. By pasting the url with the programId in it
+
+//In case 2 we will update the program to the one in the ID, so the proper form
+//will load. In the event they don't have admin access to the program they will
+//denied access
+function CreateEditForm({ program, history, match }) {
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
     customFormSectionsReducer,
     []
   );
   const [activeSection, setActiveSection] = useState(0);
+
+  console.log(match.programId);
+  if (match.programId != appUser.currentProgram) {
+    console.log("mismatch");
+  }
+
+  async function getPrograms() {
+    const res = await fetch("http://localhost:4000/api/programs/all");
+    res.then(function(res) {
+      console.log(res.json());
+    });
+  }
+  getPrograms();
+
   const [loadForm, refetch] = usePromise(FORM.getForm, {
-    formId: appUser.currentProgram
+    programId: appUser.currentProgram
   });
   const [headerData, setHeaderData] = useState({
     name: defaultFormState.name,
@@ -57,7 +79,17 @@ function CreateEditForm() {
   //const [deletedSection, setDeletedSection] = useState(null);
 
   useEffect(() => {
-    if (loadForm.isPending || !loadForm.value) return;
+    if (loadForm.isPending) return;
+
+    if (loadForm.value == null) {
+      console.log(loadForm.value);
+      //Create a form and refetch
+      initiateForm();
+      refetch({ programId: appUser.currentProgram });
+      return;
+    }
+    console.log(loadForm.value);
+
     // Get form from database using programID
     dispatchSectionsUpdate({
       type: "LOAD",
@@ -84,12 +116,18 @@ function CreateEditForm() {
     }
   }
 
-  useMemo(() => {
-    if (sections != []) {
-      //Save sections
-      console.log(sections);
-    }
-  }, [sections]);
+  //If a form doesn't exist then create a new one from the default template
+  async function initiateForm() {
+    const data = {
+      programId: program,
+      name: defaultFormState.name,
+      description: defaultFormState.description,
+      createdBy: appUser.userId,
+      draft: true,
+      sections: defaultFormState.sections
+    };
+    const res = await createForm(data);
+  }
 
   // eslint-disable-next-line no-unused-vars
   function handleSaveAll() {

@@ -112,7 +112,7 @@ const formsSchema = new mongoose.Schema(
     sections: {
       type: [section]
     },
-    formId: {
+    programId: {
       type: String
     }
   },

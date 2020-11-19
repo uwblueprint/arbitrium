@@ -13,7 +13,7 @@ const db = require("../mongo.js");
 router.post("/", (req, res) => {
   db[req.headers.database].forms.updateOne(
     {
-      formId: req.body.formId
+      programId: req.body.programId
     },
     req.body,
     { upsert: true },
@@ -43,15 +43,15 @@ router.delete("/:formId", (req, res) => {
   );
 });
 
-// Get form with formId
-router.get("/:formId", (req, res) => {
+// Get form with programId
+router.get("/:progamId", (req, res) => {
   db[req.headers.database].forms
-    .findOne({ formId: req.params.formId })
+    .findOne({ programId: req.params.programId })
     .then(function(found) {
       res.status(200).json(found);
     })
     .catch(function(err) {
-      console.error(`Error getting form with ID = ${req.params.formId}`);
+      console.error(`Error getting form with ID = ${req.params.programId}`);
       res.status(500).send(err);
     });
 });
