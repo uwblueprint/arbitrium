@@ -7,9 +7,6 @@ const theme = createMuiTheme({
     },
     MuiCard: {
       elevation: 0
-    },
-    "MuiTableCell-root": {
-      fontSize: 14
     }
   },
   palette: {
