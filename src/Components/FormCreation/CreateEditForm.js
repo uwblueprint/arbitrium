@@ -14,10 +14,26 @@ import usePromise from "../../Hooks/usePromise";
 import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
+import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
+//import Button from "@material-ui/core/Button";
+//import Snackbar from "@material-ui/core/Snackbar";
 
 const FormWrapper = styled.div`
-  margin-top: 50px;
+  padding-top: 70px;
   padding-left: 15%;
+`;
+
+const DialogOverlay = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 150%;
+  width: 100vw;
+  z-index: 110;
+  background: rgba(0, 0, 0, 0.5);
+  .dialogButton {
+    text-transform: none;
+  }
 `;
 
 function CreateEditForm() {
@@ -34,6 +50,11 @@ function CreateEditForm() {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+  const [
+    showDeleteSectionConfirmation,
+    setShowDeleteSectionConfirmation
+  ] = useState(false);
+  //const [deletedSection, setDeletedSection] = useState(null);
 
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
@@ -49,7 +70,15 @@ function CreateEditForm() {
   }, [loadForm, appUser, refetch]);
 
   function updateActiveSection(sectionKey) {
-    console.log("Active Section Changed: " + sectionKey);
+    window.requestAnimationFrame(() => {
+      const element = document.getElementById("section_" + sectionKey);
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
     if (activeSection !== sectionKey) {
       setActiveSection(sectionKey);
     }
@@ -102,12 +131,44 @@ function CreateEditForm() {
     // TODO: call updateActive
   }
 
+  async function deleteSection() {
+    // call API to delete
+    const response = FORM.deleteSection(
+      loadForm.value._id,
+      loadForm.value.sections[activeSection]._id
+    )
+      .then(() => {
+        //setDeletedSection({...loadForm.value.sections[activeSection]});
+
+        dispatchSectionsUpdate({
+          type: "LOAD",
+          index: activeSection
+        });
+        updateActiveSection(activeSection !== 0 ? activeSection - 1 : 0);
+      })
+      .catch(() => {
+        //setDeletedSection(null);
+
+        alert("Something went wrong. Form section deleted unsuccessfully.");
+        console.error(`ERROR: Status - ${response}`);
+      });
+  }
+
+  function closeDeleteSectionConfirmation() {
+    setShowDeleteSectionConfirmation(false);
+  }
+
+  function handleDeleteSection() {
+    // prompt user for confirmation
+    setShowDeleteSectionConfirmation(true);
+  }
+
   return (
     <div>
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
       {sections &&
         sections.map((section, key) => (
-          <FormWrapper key={key}>
+          <FormWrapper key={key} id={"section_" + key}>
             <FormSection
               key={key + "_section"}
               numSections={sections.length}
@@ -118,9 +179,42 @@ function CreateEditForm() {
               handleAddSection={handleAddSection}
               handleTitleUpdate={handleTitleUpdate}
               handleDescriptionUpdate={handleDescriptionUpdate}
+              handleMoveSection={handleMoveSection}
+              handleDeleteSection={handleDeleteSection}
             />
           </FormWrapper>
         ))}
+      {showDeleteSectionConfirmation && (
+        <>
+          <DialogOverlay />
+          <DeleteSectionConfirmation
+            confirm={deleteSection}
+            close={closeDeleteSectionConfirmation}
+            sectionName={loadForm.value.sections[activeSection].name}
+            questionCount={
+              loadForm.value.sections[activeSection].questions.length
+            }
+          />
+        </>
+      )}
+      {/* deletedSection && (
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={deletedSection}
+          onClose={setDeletedSection(null)}
+          message={deletedSection ? '"' + deletedSection.name + '" deleted' : ""}
+          action={
+            <React.Fragment>
+              <Button color="secondary" size="small" onClick={undoDeleteSection}>
+                UNDO
+              </Button>
+            </React.Fragment>
+          }
+        />
+        ) */}
     </div>
   );
 }
