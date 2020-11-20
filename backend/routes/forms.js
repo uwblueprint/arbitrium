@@ -44,7 +44,7 @@ router.delete("/:formId", (req, res) => {
 });
 
 // Get form with programId
-router.get("/:progamId", (req, res) => {
+router.get("/:programId", (req, res) => {
   db[req.headers.database].forms
     .findOne({ programId: req.params.programId })
     .then(function(found) {
