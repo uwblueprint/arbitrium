@@ -71,10 +71,10 @@ const question = new mongoose.Schema({
     type: [regularExpressions],
     default: null
   },
-  Yoptions: {
+  y_options: {
     type: [option]
   },
-  Xoptions: {
+  x_options: {
     type: [option]
   }
 });
@@ -88,6 +88,10 @@ const section = new mongoose.Schema({
   },
   questions: {
     type: [question]
+  },
+  deleted: {
+    type: Boolean,
+    default: false
   }
 });
 

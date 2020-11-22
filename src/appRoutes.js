@@ -32,6 +32,13 @@ const routes = [
     groups: []
   },
   {
+    path: "/admin/submissions/:organizationId",
+    component: Application,
+    title: "Admin Applications View",
+    header: false,
+    groups: ["Admin"]
+  },
+  {
     path: "/rankings",
     component: StackedRankings,
     title: "Stacked Rankings",

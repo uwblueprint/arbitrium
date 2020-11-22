@@ -9,6 +9,7 @@ import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import { Switch } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import CreateEditMultipleChoice from "./CreateEditMultipleChoice";
+import CreateEditCheckbox from "./CreateEditCheckbox";
 import CreateEditShortAnswer from "./CreateEditShortAnswer";
 import CreateEditParagraph from "./CreateEditParagraph";
 import TextField from "@material-ui/core/TextField";
@@ -106,7 +107,15 @@ const StyledSwitch = withStyles({
 
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
+function FormCard({
+  card,
+  active,
+  handleActive,
+  handleDuplicate,
+  handleDelete,
+  sectionKey,
+  questionKey
+}) {
   const classes = useStyles();
   const [required, setRequired] = useState(card.required);
   const [title, setTitle] = useState(card.name);
@@ -116,6 +125,7 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
   const handleSwitch = () => {
     setRequired((prev) => !prev);
   };
+
   return (
     <div className={classes.container}>
       <Card
@@ -172,13 +182,21 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
             <CreateEditShortAnswer />
           ) : null}
           {card && card.type === "PARAGRAPHS" ? <CreateEditParagraph /> : null}
-          {card && card.type === "CHECKBOXES" ? <div>todo</div> : null}
+          {card && card.type === "CHECKBOXES" ? (
+            <CreateEditCheckbox data={card.options} />
+          ) : null}
           {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
           {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
           <Divider />
           <div className={classes.buttonRow}>
             <div className={classes.buttonContainer}>
-              <Button size="small" className={classes.button}>
+              <Button
+                size="small"
+                className={classes.button}
+                onClick={() => {
+                  handleDelete(questionKey);
+                }}
+              >
                 <DeleteOutlineIcon style={{ marginRight: 5 }} />{" "}
                 <span className={classes.buttonLabel}>Delete</span>
               </Button>
@@ -187,7 +205,7 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
               <Button
                 size="small"
                 className={classes.button}
-                //onClick={handleDuplicate({ sectionKey, questionKey, question })}
+                onClick={() => handleDuplicate(questionKey)}
               >
                 <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
                 <span className={classes.buttonLabel}>Duplicate</span>

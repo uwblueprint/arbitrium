@@ -24,6 +24,11 @@ export type EditQuestionsAction =
   | {
       type: "DELETE_QUESTION";
       index: number;
+    }
+  | {
+      type: "DUPLICATE_QUESTION";
+      index: number;
+      targetIndex: number;
     };
 
 export type QuestionType =
