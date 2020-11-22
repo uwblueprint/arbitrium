@@ -11,6 +11,7 @@ function customFormSectionsReducer(
       case "LOAD":
         return action.sections;
       case "ADD_SECTION":
+        console.log(action.index + 1);
         draftState.splice(action.index + 1, 0, defaultNewSection);
         break;
       case "DELETE_SECTION":

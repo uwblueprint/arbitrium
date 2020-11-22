@@ -12,6 +12,7 @@ function customFormQuestionsReducer(
         return action.questions;
       case "ADD_QUESTION":
         draftState.splice(action.index + 1, 0, defaultNewQuestion);
+        console.log(state);
         break;
       case "DELETE_QUESTION":
         draftState.splice(action.index, 1);

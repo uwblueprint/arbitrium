@@ -175,6 +175,7 @@ function FormCard({
               type="string"
             ></TextField>
           </TitleWrapper>
+          {card._id}
           {card && card.type === "MULTIPLE_CHOICE" ? (
             <CreateEditMultipleChoice data={card.options} />
           ) : null}
@@ -188,6 +189,7 @@ function FormCard({
           {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
           {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
           <Divider />
+          {questionKey}
           <div className={classes.buttonRow}>
             <div className={classes.buttonContainer}>
               <Button

@@ -134,6 +134,7 @@ function FormSection({
   }
 
   function handleAddQuestion() {
+    console.log("add quesiton");
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
       index: activeQuestion

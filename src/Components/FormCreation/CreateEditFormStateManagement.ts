@@ -25,6 +25,7 @@ export const sectionsStarter = [
     description: "Section Type: Decision Criteria",
     questions: [
       {
+        name: "Test 3",
         type: "MULTIPLE_CHOICE" as QuestionType,
         question: "Untitled Question",
         options: ["Option 1"],
@@ -39,18 +40,18 @@ export const defaultNewSection = {
   description: "Section Type: Decision Criteria",
   questions: [
     {
+      name: "Default Section",
       type: "SHORT_ANSWER" as QuestionType,
       question: "Untitled Question",
-      options: ["Option 1"],
       required: false
     }
   ]
 };
 
 export const defaultNewQuestion = {
+  name: "Default Question",
   type: "SHORT_ANSWER" as QuestionType,
   question: "Untitled Question",
-  options: ["Option 1"],
   required: false
 };
 
