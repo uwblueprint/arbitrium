@@ -33,7 +33,8 @@ const programSchema = new mongoose.Schema(
       type: String
     },
     displayName: {
-      type: String
+      type: String,
+      default: "Untitled Program"
     },
     form: {
       type: form,
@@ -44,10 +45,19 @@ const programSchema = new mongoose.Schema(
       default: null
     },
     appVersion: {
-      type: Number
+      type: Number,
+      default: 2 //1 is for google forms data, 2 is for our own data
     },
     s3bucket: {
       type: String
+    },
+    deleted: {
+      type: Boolean,
+      default: false
+    },
+    archived: {
+      type: Boolean,
+      default: false
     }
   },
   { collection: "programs" }
