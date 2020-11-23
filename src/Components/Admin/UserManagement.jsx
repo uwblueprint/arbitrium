@@ -33,26 +33,30 @@ const Header = styled.div`
 // convert fetched users to table format
 // fetched: array
 function convertToTableData(fetched, programs) {
-  return fetched.map((user) => ({
-    name: user.name,
-    email: user.email,
-    programAccess: (user.programs || [])
-      .filter((p) => programs.find((prog) => prog._id === p.id))
-      .map((p) => p.displayName),
-    role: user.admin ? "Admin" : "Reviewer",
-    userLink: (
-      <div className="button-container">
-        <DialogTriggerButton
-          Dialog={EditUserDialog}
-          closeOnEsc={true}
-          variant="outlined"
-          dialogProps={{ data: user }}
-        >
-          Edit
-        </DialogTriggerButton>
-      </div>
-    )
-  }));
+  return fetched.map((user) => {
+    return {
+      name: user.name,
+      email: user.email,
+      programAccess: programs
+        .filter((prog) => {
+          return (user.programs || []).find((p) => prog._id === p.id);
+        })
+        .map((p) => p.displayName),
+      role: user.admin ? "Admin" : "Reviewer",
+      userLink: (
+        <div className="button-container">
+          <DialogTriggerButton
+            Dialog={EditUserDialog}
+            closeOnEsc={true}
+            variant="outlined"
+            dialogProps={{ data: user }}
+          >
+            Edit
+          </DialogTriggerButton>
+        </div>
+      )
+    };
+  });
 }
 
 function UserManagement() {

@@ -43,6 +43,7 @@ const columns = [
         return "None";
       }
       if (rowData.programAccess.length > 1) {
+        console.log(rowData);
         return (
           <div>
             {rowData.programAccess[0]}
