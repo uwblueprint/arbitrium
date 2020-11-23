@@ -58,6 +58,10 @@ const programSchema = new mongoose.Schema(
     archived: {
       type: Boolean,
       default: false
+    },
+    archivedDate: {
+      type: Date,
+      default: null
     }
   },
   { collection: "programs" }
