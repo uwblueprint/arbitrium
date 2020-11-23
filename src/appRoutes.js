@@ -6,6 +6,7 @@ import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
 import CreateEditForm from "./Components/FormCreation/CreateEditForm";
+import ProgramManagement from "./Components/ProgramManagement/ProgramManagement";
 
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
@@ -22,6 +23,13 @@ const routes = [
     component: AllApplications,
     title: "Candiate Submissions",
     header: true,
+    groups: []
+  },
+  {
+    path: "/programs",
+    component: ProgramManagement,
+    header: false,
+    title: "Programs",
     groups: []
   },
   {

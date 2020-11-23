@@ -22,6 +22,7 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
 
   //This affects the loading of the navbar or not
   const adminRoute = route.path.includes("admin");
+  const programRoute = route.path.includes("program");
   const Container = createContainer(adminRoute);
 
   //Filter the list of appRoutes for routes that should NOT be displayed in the header
@@ -55,7 +56,7 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
           curRoute={route}
           routes={headerRoutes}
         />
-        {!adminRoute ? (
+        {!adminRoute && !programRoute ? (
           <NavigationHeader
             history={history}
             admin={adminRoute}
