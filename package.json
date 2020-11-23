@@ -14,7 +14,7 @@
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "@types/styled-components": "^5.1.4",
-    "aws-sdk": "^2.787.0",
+    "aws-sdk": "^2.797.0",
     "body-parser": "^1.18.3",
     "classnames": "^2.2.6",
     "connected-react-router": "6.6.0",
