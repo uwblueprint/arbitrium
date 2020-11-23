@@ -29,9 +29,17 @@ const Overflow = styled.div`
 const rowStyle = {
   border: "1px solid #cccccc"
 };
+const columnStyle = {
+  width: "100%"
+};
 
 const columns = [
-  { title: "Program Name", field: "name" },
+  {
+    title: "Program Name",
+    field: "name",
+    cellStyle: { width: 500, maxWidth: 800 },
+    headerStyle: { width: 500, maxWidth: 800 }
+  },
   { title: "Organization", field: "organization" },
   { title: "Role", field: "role" },
   { title: "Status", field: "status" },
@@ -48,7 +56,7 @@ const columnsArchived = [
   { title: "Program Name", field: "name" },
   { title: "Organization", field: "organization" },
   { title: "Role", field: "role" },
-  { title: "Status", field: "status" },
+  { title: "Archived", field: "archived" },
   {
     title: "",
     field: "link",
@@ -71,6 +79,7 @@ function ProgramManagementTable({ archived, ...props }) {
         options={{
           pageSize: Math.min(5, props.data.length),
           rowStyle: rowStyle,
+          columnStyle: columnStyle,
           search: true,
           showTitle: false,
           exportButton: true,
