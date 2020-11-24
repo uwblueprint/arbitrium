@@ -121,10 +121,6 @@ function CreateEditForm() {
     setShowMoveSectionsDialog(false);
   }
 
-  function openMoveSectionsDialog(value) {
-    setShowMoveSectionsDialog(value);
-  }
-
   async function deleteSection() {
     // call API to delete
     const response = FORM.deleteSection(
@@ -181,7 +177,7 @@ function CreateEditForm() {
               handleAddSection={handleAddSection}
               handleMoveSection={handleMoveSection}
               handleDeleteSection={handleDeleteSection}
-              setShowMoveSectionsDialog={openMoveSectionsDialog}
+              setShowMoveSectionsDialog={setShowMoveSectionsDialog}
             />
           </FormWrapper>
         ))}
