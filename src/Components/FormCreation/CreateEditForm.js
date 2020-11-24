@@ -103,6 +103,12 @@ function CreateEditForm() {
   }
 
   async function handleMoveSection(reorderedSections) {
+    if (
+      reorderedSections == null ||
+      reorderedSections.length !== sections.length
+    ) {
+      return;
+    }
     const newForm = await FORM.updateSection(formId, reorderedSections);
     if (newForm == null) return;
     dispatchSectionsUpdate({
@@ -113,6 +119,10 @@ function CreateEditForm() {
 
   function closeMoveSectionDialog() {
     setShowMoveSectionsDialog(false);
+  }
+
+  function openMoveSectionsDialog(value) {
+    setShowMoveSectionsDialog(value);
   }
 
   async function deleteSection() {
@@ -171,7 +181,7 @@ function CreateEditForm() {
               handleAddSection={handleAddSection}
               handleMoveSection={handleMoveSection}
               handleDeleteSection={handleDeleteSection}
-              setShowMoveSectionsDialog={setShowMoveSectionsDialog}
+              setShowMoveSectionsDialog={openMoveSectionsDialog}
             />
           </FormWrapper>
         ))}

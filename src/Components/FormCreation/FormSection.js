@@ -80,7 +80,6 @@ function FormSection({
   updateActiveSection,
   active,
   handleAddSection,
-  handleMoveSection,
   handleDeleteSection,
   setShowMoveSectionsDialog
 }) {
@@ -167,14 +166,6 @@ function FormSection({
     }
   }
 
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
-  const handleClickMove = () => {
-    setShowMoveSectionsDialog(true);
-  };
-
   return (
     <div>
       <span className={classes.section_title}>
@@ -203,15 +194,34 @@ function FormSection({
           />
           <Menu
             anchorEl={anchorEl}
+            classes={{
+              paper: classes.action_menu,
+              list: classes.action_menu_content
+            }}
             getContentAnchorEl={null}
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
             transformOrigin={{ vertical: "top", horizontal: "center" }}
             keepMounted
-            open={anchorEl != null}
-            onClose={handleCloseMenu}
+            open={Boolean(anchorEl)}
+            onClose={handleAnchorClose}
           >
-            <MenuItem onClick={handleClickMove}>Move section</MenuItem>
-            <MenuItem>Delete section</MenuItem>
+            <MenuItem
+              classes={{ root: classes.action_menu_item }}
+              onClick={() => {
+                handleAnchorClose();
+                setShowMoveSectionsDialog(true);
+              }}
+            >
+              Move section
+            </MenuItem>
+            <MenuItem
+              classes={{ root: classes.action_menu_item }}
+              onClick={() => {
+                handleDeleteSection();
+              }}
+            >
+              Delete section
+            </MenuItem>
           </Menu>
           <CardContent className={classes.content}>
             {sectionData.description}
@@ -247,39 +257,6 @@ function FormSection({
           ) : null}
         </CardWrapper>
       ))}
-      <Menu
-        id="actions-menu"
-        classes={{
-          paper: classes.action_menu,
-          list: classes.action_menu_content
-        }}
-        anchorEl={anchorEl}
-        getContentAnchorEl={null}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "center" }}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleAnchorClose}
-      >
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleMoveSection();
-            handleAnchorClose();
-          }}
-        >
-          Move section
-        </MenuItem>
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleDeleteSection();
-            handleAnchorClose();
-          }}
-        >
-          Delete section
-        </MenuItem>
-      </Menu>
     </div>
   );
 }
