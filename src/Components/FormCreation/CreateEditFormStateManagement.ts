@@ -5,6 +5,7 @@ export const sectionsStarter = [
   {
     name: "About Your Charity",
     description: "Section Type: Admin Info",
+    deleted: "0",
     questions: [
       {
         name: "Test",
@@ -23,6 +24,7 @@ export const sectionsStarter = [
   {
     name: "Untitled Section",
     description: "Section Type: Decision Criteria",
+    deleted: "0",
     questions: [
       {
         type: "MULTIPLE_CHOICE" as QuestionType,
@@ -37,6 +39,7 @@ export const sectionsStarter = [
 export const defaultNewSection = {
   name: "Untitled Section",
   description: "Section Type: Decision Criteria",
+  deleted: "0",
   questions: [
     {
       type: "SHORT_ANSWER" as QuestionType,

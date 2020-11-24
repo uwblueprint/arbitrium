@@ -13,8 +13,12 @@ function customFormSectionsReducer(
       case "ADD_SECTION":
         draftState.splice(action.index + 1, 0, defaultNewSection);
         break;
-      case "DELETE_SECTION":
-        draftState.splice(action.index, 1);
+      case "TOGGLE_DELETE_SECTION":
+        const deletedSection = JSON.parse(
+          JSON.stringify(draftState[action.index])
+        );
+        deletedSection.deleted = deletedSection.deleted === 1 ? 0 : 1;
+        draftState.splice(action.index, 1, deletedSection);
         break;
       default:
         break;

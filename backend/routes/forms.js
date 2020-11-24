@@ -81,7 +81,22 @@ router.post("/:formId/sections", (req, res) => {
 
 // Delete a section from an existing form, returns the resulting form object
 router.delete("/:formId/sections/:sectionId", (req, res) => {
-  db[req.headers.database].forms.findByIdAndUpdate(
+  db[req.headers.database].forms.findOneAndUpdate(
+    { _id: req.params.formId, "sections._id": req.params.sectionId },
+    { $bit: { "sections.$.deleted": {xor: 1} } },
+    { useFindAndModify: false, returnOriginal: false, runValidators: true },
+    (error, result) => {
+      if (error) {
+        console.error(
+          `Error deleting section with ID = ${req.params.sectionId} from form with ID = ${req.params.formId}`
+        );
+        res.status(500).send(error);
+      } else {
+        res.status(200).json(result);
+      }
+    }
+  );
+  /*db[req.headers.database].forms.findByIdAndUpdate(
     req.params.formId,
     { $pull: { sections: { _id: req.params.sectionId } } },
     { useFindAndModify: false, returnOriginal: false },
@@ -95,7 +110,7 @@ router.delete("/:formId/sections/:sectionId", (req, res) => {
         res.status(200).json(result);
       }
     }
-  );
+  );*/
 });
 
 // Update sections (e.g. change order), returns the resulting form object

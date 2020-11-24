@@ -1,4 +1,5 @@
 import React, { useReducer, useEffect, useState, useContext } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import FormSection from "./FormSection";
 import { AuthContext } from "../../Authentication/Auth.js";
@@ -8,8 +9,23 @@ import CreateEditFormHeader from "./CreateEditFormHeader";
 import { defaultFormState } from "./CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer";
 import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
-//import Button from "@material-ui/core/Button";
-//import Snackbar from "@material-ui/core/Snackbar";
+import Button from "@material-ui/core/Button";
+import Snackbar from "@material-ui/core/Snackbar";
+
+const useStyles = makeStyles({
+  snackbar: {
+    background: "rgba(0, 0, 0, 0.87)",
+    borderRadius: "4px",
+    fontSize: "14px",
+    fontWeight: "400",
+    lineHeight: "20px",
+    letterSpacing: "0.25px"
+  },
+  snackbar_button_label: {
+    paddingRight: "12px",
+    color: "#EB9546"
+  }
+});
 
 const FormWrapper = styled.div`
   margin-top: 50px;
@@ -30,6 +46,7 @@ const DialogOverlay = styled.div`
 `;
 
 function CreateEditForm() {
+  const classes = useStyles();
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
     customFormSectionsReducer,
@@ -47,7 +64,7 @@ function CreateEditForm() {
     showDeleteSectionConfirmation,
     setShowDeleteSectionConfirmation
   ] = useState(false);
-  //const [deletedSection, setDeletedSection] = useState(null);
+  const [deletedSection, setDeletedSection] = useState(null);
 
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
@@ -91,24 +108,45 @@ function CreateEditForm() {
   }
 
   async function deleteSection() {
-    // call API to delete
     const response = FORM.deleteSection(
       loadForm.value._id,
       loadForm.value.sections[activeSection]._id
     )
       .then(() => {
-        //setDeletedSection({...loadForm.value.sections[activeSection]});
+        setDeletedSection(activeSection);
 
         dispatchSectionsUpdate({
-          type: "LOAD",
+          type: "TOGGLE_DELETE_SECTION",
           index: activeSection
         });
-        updateActiveSection(activeSection !== 0 ? activeSection - 1 : 0);
+        updateActiveSection(
+          activeSection !== 0 ? activeSection - 1 : activeSection + 1
+        );
       })
       .catch(() => {
-        //setDeletedSection(null);
+        setDeletedSection(null);
 
         alert("Something went wrong. Form section deleted unsuccessfully.");
+        console.error(`ERROR: Status - ${response}`);
+      });
+  }
+
+  async function undoDeleteSection() {
+    const response = FORM.deleteSection(
+      loadForm.value._id,
+      loadForm.value.sections[activeSection]._id
+    )
+      .then(() => {
+        dispatchSectionsUpdate({
+          type: "TOGGLE_DELETE_SECTION",
+          index: deletedSection
+        });
+
+        updateActiveSection(deletedSection);
+        setDeletedSection(null);
+      })
+      .catch(() => {
+        alert("Something went wrong. Form section could not be restored.");
         console.error(`ERROR: Status - ${response}`);
       });
   }
@@ -126,21 +164,25 @@ function CreateEditForm() {
     <div>
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
       {sections &&
-        sections.map((section, key) => (
-          <FormWrapper key={key}>
-            <FormSection
-              key={key + "_section"}
-              numSections={sections.length}
-              sectionNum={key + 1}
-              sectionData={section}
-              updateActiveSection={updateActiveSection}
-              active={activeSection === key}
-              handleAddSection={handleAddSection}
-              handleMoveSection={handleMoveSection}
-              handleDeleteSection={handleDeleteSection}
-            />
-          </FormWrapper>
-        ))}
+        sections
+          .filter((section) => section.deleted !== 1)
+          .map((section, key) => (
+            <FormWrapper key={section._id}>
+              <FormSection
+                key={key + "_section"}
+                numSections={
+                  sections.filter((section) => section.deleted !== 1).length
+                }
+                sectionNum={key + 1}
+                sectionData={section}
+                updateActiveSection={updateActiveSection}
+                active={activeSection === key}
+                handleAddSection={handleAddSection}
+                handleMoveSection={handleMoveSection}
+                handleDeleteSection={handleDeleteSection}
+              />
+            </FormWrapper>
+          ))}
       {showDeleteSectionConfirmation && (
         <>
           <DialogOverlay />
@@ -154,24 +196,32 @@ function CreateEditForm() {
           />
         </>
       )}
-      {/* deletedSection && (
+      {deletedSection && (
         <Snackbar
+          ContentProps={{ classes: { root: classes.snackbar } }}
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
+            vertical: "bottom",
+            horizontal: "left"
           }}
           open={deletedSection}
-          onClose={setDeletedSection(null)}
-          message={deletedSection ? '"' + deletedSection.name + '" deleted' : ""}
+          message={
+            deletedSection
+              ? '"' + loadForm.value.sections[deletedSection].name + '" deleted'
+              : ""
+          }
           action={
             <React.Fragment>
-              <Button color="secondary" size="small" onClick={undoDeleteSection}>
+              <Button
+                classes={{ label: classes.snackbar_button_label }}
+                size="small"
+                onClick={undoDeleteSection}
+              >
                 UNDO
               </Button>
             </React.Fragment>
           }
         />
-        ) */}
+      )}
     </div>
   );
 }
