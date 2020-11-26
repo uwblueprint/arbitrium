@@ -62,10 +62,18 @@ router.get("/:formId", (req, res) => {
 
 // Add a section to an existing form, returns the resulting form object
 router.post("/:formId/sections", (req, res) => {
-  db[req.headers.database].findByIdAndUpdate(
-    req.params.formId,
-    { $push: { sections: req.body } },
-    { useFindAndModify: false, runValidators: true, returnOriginal: false },
+  db[req.headers.database].forms.findOneAndUpdate(
+    { formId: req.params.formId },
+    {
+      $push: {
+        sections: { $each: [req.body.section], $position: req.body.index }
+      }
+    },
+    {
+      useFindAndModify: false,
+      runValidators: true,
+      returnOriginal: false
+    },
     (error, result) => {
       if (error) {
         console.error(
@@ -102,10 +110,14 @@ router.delete("/:formId/sections/:sectionId", (req, res) => {
 // NOTE: The entire sections array is overwritten, req.body should include
 //       the _id for each section if _id is required to stay constant
 router.patch("/:formId/sections", (req, res) => {
-  db[req.headers.database].forms.findByIdAndUpdate(
-    req.params.formId,
+  db[req.headers.database].forms.findOneAndUpdate(
+    { formId: req.params.formId },
     { $set: { sections: req.body } },
-    { useFindAndModify: false, returnOriginal: false, runValidators: true },
+    {
+      useFindAndModify: false,
+      returnOriginal: false,
+      runValidators: true
+    },
     (error, result) => {
       if (error) {
         console.error(
