@@ -1,6 +1,7 @@
 import React from "react";
 import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
+import Button from "@material-ui/core/Button";
 
 const Header = styled.div`
   padding: 48px 100px;
@@ -32,6 +33,20 @@ const DescriptionInput = styled(InputBase)`
   textarea {
     font-size: 14px;
     color: #888888;
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  position: absolute;
+  padding-left: 846px;
+  padding-bottom: 86px;
+  top: 176px;
+  left: 0px;
+  button {
+    text-transform: none;
+    font-weight: 500;
+    font-size: 14px;
+    text-transform: uppercase;
   }
 `;
 
@@ -74,6 +89,24 @@ function CreateEditFormHeader({
         value={description}
         onChange={onDescriptionChange}
       />
+      <ButtonWrapper>
+        <Button
+          variant="outlined"
+          onClick={() => {}}
+          href="#text-buttons"
+          color="primary"
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => {}}
+          href="#text-buttons"
+          color="primary"
+        >
+          Delete
+        </Button>
+      </ButtonWrapper>
     </Header>
   );
 }
