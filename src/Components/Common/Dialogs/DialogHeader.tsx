@@ -19,6 +19,7 @@ const Header = styled.div`
     margin: 0;
     font-weight: normal;
     font-size: 16px;
+    font-weight: 500;
     display: inline-block;
   }
 `;

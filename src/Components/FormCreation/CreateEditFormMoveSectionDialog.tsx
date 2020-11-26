@@ -20,9 +20,9 @@ import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
 
 const DragSection = styled.div`
   background: white;
-  padding: 16px;
   align-items: center;
   display: flex;
+  border: 1px solid #dadada;
   .drag-section-text {
     h4 {
       display: block;
@@ -46,16 +46,17 @@ const DroppableContainer = styled.div`
   text-align: center;
   .draggable-container {
     width: 100%;
+    height: 76px;
   }
 `;
 
 const StyledDragHandle = styled(DragHandle)`
   display: inline-block;
   color: #dadada;
-  margin-right: 24px;
 `;
 
 const Footer = styled.div`
+  margin-top: 36px;
   text-align: right;
   height: 100%;
 `;
@@ -78,7 +79,6 @@ function CreateEditFormMoveSectionDialog({
   onSubmit
 }: Props): React.ReactElement<typeof Dialog> {
   const [sections, setSections] = useState(initSections);
-
   function reorderSections(sourceIndex?: number, destinationIndex?: number) {
     if (
       sourceIndex == null ||
