@@ -38,16 +38,9 @@ const DescriptionInput = styled(InputBase)`
 
 const ButtonWrapper = styled.div`
   position: absolute;
-  padding-left: 846px;
   padding-bottom: 86px;
-  top: 176px;
-  left: 0px;
-  button {
-    text-transform: none;
-    font-weight: 500;
-    font-size: 14px;
-    text-transform: uppercase;
-  }
+  top: 112px;
+  right: 35%;
 `;
 
 type HeaderData = {
@@ -95,16 +88,33 @@ function CreateEditFormHeader({
           onClick={() => {}}
           href="#text-buttons"
           color="primary"
+          style={{
+            marginRight: "16px",
+            marginBottom: "8px",
+            textTransform: "none",
+            letterSpacing: "1.25px",
+            lineHeight: "16px",
+            padding: "10px 12px 10px 12px",
+            border: "1px solid rgba(0, 0, 0, 0.33)"
+          }}
         >
-          Cancel
+          Get Preview Link
         </Button>
         <Button
-          variant="outlined"
+          variant="contained"
           onClick={() => {}}
           href="#text-buttons"
           color="primary"
+          style={{
+            marginLeft: "0px",
+            marginBottom: "8px",
+            textTransform: "none",
+            letterSpacing: "1.25px",
+            lineHeight: "16px",
+            padding: "10px 12px 10px 12px"
+          }}
         >
-          Delete
+          Publish
         </Button>
       </ButtonWrapper>
     </Header>
