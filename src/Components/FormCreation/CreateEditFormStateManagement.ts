@@ -10,7 +10,7 @@ export const sectionsStarter: FormSectionBase[] = [
   {
     name: "About Your Charity",
     description: "Section Type: Admin Info",
-    deleted: "0",
+    deleted: 0,
     questions: [
       {
         name: "Test",
@@ -29,7 +29,7 @@ export const sectionsStarter: FormSectionBase[] = [
   {
     name: "Untitled Section",
     description: "Section Type: Decision Criteria",
-    deleted: "0",
+    deleted: 0,
     questions: [
       {
         name: "Test 3",
@@ -45,7 +45,7 @@ export const sectionsStarter: FormSectionBase[] = [
 export const defaultNewSection: FormSectionBase = {
   name: "Untitled Section",
   description: "Section Type: Decision Criteria",
-  deleted: "0",
+  deleted: 0,
   questions: [
     {
       name: "Untitled",
