@@ -55,6 +55,7 @@ export type FormSection = {
   name: string;
   description: string;
   questions: Array<QuestionCard>;
+  deleted: number;
 };
 
 export interface FormState {
