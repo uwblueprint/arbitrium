@@ -49,7 +49,9 @@ router.get("/:formId", (req, res) => {
     .findOne({ formId: req.params.formId })
     .then(function(found) {
       const result = found;
-      result.sections = result.sections.filter((section) => section.deleted !== 1);
+      result.sections = result.sections.filter(
+        (section) => section.deleted !== 1
+      );
       res.status(200).json(result);
     })
     .catch(function(err) {
@@ -85,7 +87,7 @@ router.post("/:formId/sections", (req, res) => {
 router.delete("/:formId/sections/:sectionId", (req, res) => {
   db[req.headers.database].forms.findOneAndUpdate(
     { _id: req.params.formId, "sections._id": req.params.sectionId },
-    { $bit: { "sections.$.deleted": {xor: 1} } },
+    { $bit: { "sections.$.deleted": { xor: 1 } } },
     { useFindAndModify: false, returnOriginal: false, runValidators: true },
     (error, result) => {
       if (error) {
