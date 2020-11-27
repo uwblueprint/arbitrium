@@ -155,7 +155,7 @@ function CreateEditForm() {
         });
 
         dispatchSectionsUpdate({
-          type: "LOAD",
+          type: "DELETE_SECTION",
           index: activeSection
         });
         updateActiveSection(activeSection !== 0 ? activeSection - 1 : 0);
