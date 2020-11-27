@@ -48,7 +48,9 @@ router.get("/:formId", (req, res) => {
   db[req.headers.database].forms
     .findOne({ formId: req.params.formId })
     .then(function(found) {
-      res.status(200).json(found);
+      const result = found;
+      result.sections = result.sections.filter((section) => section.deleted !== 1);
+      res.status(200).json(result);
     })
     .catch(function(err) {
       console.error(`Error getting form with ID = ${req.params.formId}`);
@@ -96,21 +98,6 @@ router.delete("/:formId/sections/:sectionId", (req, res) => {
       }
     }
   );
-  /*db[req.headers.database].forms.findByIdAndUpdate(
-    req.params.formId,
-    { $pull: { sections: { _id: req.params.sectionId } } },
-    { useFindAndModify: false, returnOriginal: false },
-    (error, result) => {
-      if (error) {
-        console.error(
-          `Error deleting section with ID = ${req.params.sectionId} from form with ID = ${req.params.formId}`
-        );
-        res.status(500).send(error);
-      } else {
-        res.status(200).json(result);
-      }
-    }
-  );*/
 });
 
 // Update sections (e.g. change order), returns the resulting form object

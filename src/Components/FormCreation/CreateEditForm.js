@@ -80,6 +80,10 @@ function CreateEditForm() {
   }, [loadForm, appUser, refetch]);
 
   function updateActiveSection(sectionKey) {
+    if (deletedSection && activeSection !== deletedSection.index) {
+      setDeletedSection(null);
+    }
+
     if (activeSection !== sectionKey) {
       setActiveSection(sectionKey);
     }
@@ -108,20 +112,21 @@ function CreateEditForm() {
   }
 
   async function deleteSection() {
-    const response = FORM.deleteSection(
-      loadForm.value._id,
-      loadForm.value.sections[activeSection]._id
-    )
+    const section = loadForm.value.sections[activeSection];
+
+    const response = FORM.deleteSection(loadForm.value._id, section._id)
       .then(() => {
-        setDeletedSection(activeSection);
+        setDeletedSection({
+          index: activeSection,
+          sectionId: section._id,
+          name: section.name
+        });
 
         dispatchSectionsUpdate({
-          type: "TOGGLE_DELETE_SECTION",
+          type: "DELETE_SECTION",
           index: activeSection
         });
-        updateActiveSection(
-          activeSection !== 0 ? activeSection - 1 : activeSection + 1
-        );
+        updateActiveSection(activeSection !== 0 ? activeSection - 1 : 0);
       })
       .catch(() => {
         setDeletedSection(null);
@@ -134,15 +139,15 @@ function CreateEditForm() {
   async function undoDeleteSection() {
     const response = FORM.deleteSection(
       loadForm.value._id,
-      loadForm.value.sections[activeSection]._id
+      deletedSection.sectionId
     )
       .then(() => {
         dispatchSectionsUpdate({
-          type: "TOGGLE_DELETE_SECTION",
-          index: deletedSection
+          type: "LOAD",
+          sections: loadForm.value.sections
         });
 
-        updateActiveSection(deletedSection);
+        updateActiveSection(deletedSection.index);
         setDeletedSection(null);
       })
       .catch(() => {
@@ -164,25 +169,21 @@ function CreateEditForm() {
     <div>
       <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
       {sections &&
-        sections
-          .filter((section) => section.deleted !== 1)
-          .map((section, key) => (
-            <FormWrapper key={section._id}>
-              <FormSection
-                key={key + "_section"}
-                numSections={
-                  sections.filter((section) => section.deleted !== 1).length
-                }
-                sectionNum={key + 1}
-                sectionData={section}
-                updateActiveSection={updateActiveSection}
-                active={activeSection === key}
-                handleAddSection={handleAddSection}
-                handleMoveSection={handleMoveSection}
-                handleDeleteSection={handleDeleteSection}
-              />
-            </FormWrapper>
-          ))}
+        sections.map((section, key) => (
+          <FormWrapper key={section._id}>
+            <FormSection
+              key={key + "_section"}
+              numSections={sections.length}
+              sectionNum={key + 1}
+              sectionData={section}
+              updateActiveSection={updateActiveSection}
+              active={activeSection === key}
+              handleAddSection={handleAddSection}
+              handleMoveSection={handleMoveSection}
+              handleDeleteSection={handleDeleteSection}
+            />
+          </FormWrapper>
+        ))}
       {showDeleteSectionConfirmation && (
         <>
           <DialogOverlay />
@@ -205,9 +206,7 @@ function CreateEditForm() {
           }}
           open={deletedSection}
           message={
-            deletedSection
-              ? '"' + loadForm.value.sections[deletedSection].name + '" deleted'
-              : ""
+            deletedSection ? '"' + deletedSection.name + '" deleted' : ""
           }
           action={
             <React.Fragment>

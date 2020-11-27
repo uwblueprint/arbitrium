@@ -8,7 +8,7 @@ export type EditSectionsAction =
       index: number;
     }
   | {
-      type: "TOGGLE_DELETE_SECTION";
+      type: "DELETE_SECTION";
       index: number;
     };
 
