@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
+import GetPreviewLinkDialog from "./GetPreviewLinkDialog";
 
 const Header = styled.div`
   padding: 48px 100px;
@@ -43,6 +44,19 @@ const ButtonWrapper = styled.div`
   right: 35%;
 `;
 
+const DialogOverlay = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 150%;
+  width: 100vw;
+  z-index: 110;
+  background: rgba(0, 0, 0, 0.5);
+  .dialogButton {
+    text-transform: none;
+  }
+`;
+
 type HeaderData = {
   name: string;
   description: string;
@@ -73,6 +87,8 @@ function CreateEditFormHeader({
     });
   };
 
+  const [showPreviewLink, setShowPreviewLink] = useState(false);
+
   return (
     <Header>
       <NameInput placeholder="Form name" value={name} onChange={onNameChange} />
@@ -85,7 +101,9 @@ function CreateEditFormHeader({
       <ButtonWrapper>
         <Button
           variant="outlined"
-          onClick={() => {}}
+          onClick={() => {
+            setShowPreviewLink(true);
+          }}
           href="#text-buttons"
           color="primary"
           style={{
@@ -117,6 +135,12 @@ function CreateEditFormHeader({
           Publish
         </Button>
       </ButtonWrapper>
+      {showPreviewLink && (
+        <>
+          <DialogOverlay />
+          <GetPreviewLinkDialog confirm={() => {}} close={() => {}} />
+        </>
+      )}
     </Header>
   );
 }
