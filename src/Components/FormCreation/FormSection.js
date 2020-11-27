@@ -3,21 +3,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import CardHeader from "@material-ui/core/CardHeader";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FormCard from "./FormCard";
 import AddCardComponent from "./AddCardComponent";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import { deleteQuestion } from "../../requests/forms";
 import { AuthContext } from "../../Authentication/Auth.js";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 
 const useStyles = makeStyles({
-  content: {
-    marginTop: -16
-  },
+  content: { marginTop: -16 },
   root: {
     fontSize: 14,
     borderRadius: 0,
@@ -82,9 +80,10 @@ function FormSection({
   updateActiveSection,
   active,
   handleAddSection,
-  handleMoveSection,
-  handleDeleteSection
+  handleDeleteSection,
+  setShowMoveSectionsDialog
 }) {
+  const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -92,9 +91,6 @@ function FormSection({
     customFormQuestionsReducer,
     sectionData.questions
   );
-
-  // For actions menu for each form section
-  const [anchorEl, setAnchorEl] = useState(null);
   const handleAnchorClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -114,6 +110,17 @@ function FormSection({
     updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
       setActiveQuestion(questionKey);
+      window.requestAnimationFrame(() => {
+        const element = document.getElementById(
+          "question_" + questionKey + "_" + sectionKey
+        );
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }
+      });
     }
   }
 
@@ -159,20 +166,6 @@ function FormSection({
     }
   }
 
-  // async function handleUpdateQuestion(prevSection, prevQuestion) {
-  //   // update recently de-selected question
-  //   const response = await FORM.updateQuestion(
-  //     appUser.currentProgram,
-  //     prevSection,
-  //     sectionData.questions[prevQuestion]
-  //   );
-
-  //   // check status of update
-  //   if (response.status !== 200) {
-  //     console.error(`ERROR: Status - ${response.status}`);
-  //   }
-  // }
-
   return (
     <div>
       <span className={classes.section_title}>
@@ -199,6 +192,37 @@ function FormSection({
               </IconButton>
             }
           />
+          <Menu
+            anchorEl={anchorEl}
+            classes={{
+              paper: classes.action_menu,
+              list: classes.action_menu_content
+            }}
+            getContentAnchorEl={null}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "center" }}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleAnchorClose}
+          >
+            <MenuItem
+              classes={{ root: classes.action_menu_item }}
+              onClick={() => {
+                handleAnchorClose();
+                setShowMoveSectionsDialog(true);
+              }}
+            >
+              Move section
+            </MenuItem>
+            <MenuItem
+              classes={{ root: classes.action_menu_item }}
+              onClick={() => {
+                handleDeleteSection();
+              }}
+            >
+              Delete section
+            </MenuItem>
+          </Menu>
           <CardContent className={classes.content}>
             {sectionData.description}
           </CardContent>
@@ -211,7 +235,10 @@ function FormSection({
         ) : null}
       </CardWrapper>
       {questions.map((_question, questionKey) => (
-        <CardWrapper key={questionKey}>
+        <CardWrapper
+          key={questionKey}
+          id={"question_" + questionKey + "_" + (sectionNum - 1)}
+        >
           <FormCard
             card={questions[questionKey]}
             key={questionKey + "_question"}
@@ -230,39 +257,6 @@ function FormSection({
           ) : null}
         </CardWrapper>
       ))}
-      <Menu
-        id="actions-menu"
-        classes={{
-          paper: classes.action_menu,
-          list: classes.action_menu_content
-        }}
-        anchorEl={anchorEl}
-        getContentAnchorEl={null}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "center" }}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleAnchorClose}
-      >
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleMoveSection();
-            handleAnchorClose();
-          }}
-        >
-          Move section
-        </MenuItem>
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleDeleteSection();
-            handleAnchorClose();
-          }}
-        >
-          Delete section
-        </MenuItem>
-      </Menu>
     </div>
   );
 }
