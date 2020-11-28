@@ -1,6 +1,14 @@
 import styled from "styled-components";
 
-const Dialog = styled.div`
+type Props = {
+  height?: string;
+  paddingHorizontal?: number;
+  maxHeight?: string;
+  paddingVertical?: number;
+  width?: string;
+};
+
+const Dialog = styled.div<Props>`
   background: white;
   color: black;
   display: inline-block;
@@ -12,7 +20,7 @@ const Dialog = styled.div`
     width: 10px;
   }
 
-  padding: ${({ paddingHorizontal, paddingVertical }) =>
+  padding: ${({ paddingHorizontal, paddingVertical }: Props) =>
     `${paddingVertical || 0}px ${paddingHorizontal || 0}px ${paddingVertical ||
       0}px ${paddingVertical || 0}px`};
 
@@ -21,7 +29,7 @@ const Dialog = styled.div`
   width: ${(props) => (props.width ? props.width : "auto")};
   height: ${(props) => (props.height ? props.height : "auto")};
   max-height: ${(props) => (props.maxHeight ? props.maxHeight : "auto")};
-  z-index: 1000;
+  z-index: 10000;
 
   -moz-transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);

@@ -1,10 +1,16 @@
 import { createContext, useContext } from "react";
-import { FormState, QuestionType, FormContext } from "../../Types/FormTypes";
+import {
+  DefaultFormState,
+  QuestionType,
+  FormContext,
+  FormSectionBase
+} from "../../Types/FormTypes";
 
-export const sectionsStarter = [
+export const sectionsStarter: FormSectionBase[] = [
   {
     name: "About Your Charity",
     description: "Section Type: Admin Info",
+    deleted: 0,
     questions: [
       {
         name: "Test",
@@ -23,9 +29,11 @@ export const sectionsStarter = [
   {
     name: "Untitled Section",
     description: "Section Type: Decision Criteria",
+    deleted: 0,
     questions: [
       {
-        type: "MULTIPLE_CHOICE" as QuestionType,
+        name: "Test 3",
+        type: "SHORT_ANSWER" as QuestionType,
         question: "Untitled Question",
         options: ["Option 1"],
         required: false
@@ -34,11 +42,13 @@ export const sectionsStarter = [
   }
 ];
 
-export const defaultNewSection = {
+export const defaultNewSection: FormSectionBase = {
   name: "Untitled Section",
   description: "Section Type: Decision Criteria",
+  deleted: 0,
   questions: [
     {
+      name: "Untitled",
       type: "SHORT_ANSWER" as QuestionType,
       question: "Untitled Question",
       options: ["Option 1"],
@@ -48,13 +58,14 @@ export const defaultNewSection = {
 };
 
 export const defaultNewQuestion = {
+  name: "Untitled",
   type: "SHORT_ANSWER" as QuestionType,
   question: "Untitled Question",
   options: ["Option 1"],
   required: false
 };
 
-export const defaultFormState: FormState = {
+export const defaultFormState: DefaultFormState = {
   name: "Untitled Form",
   description: "",
   sections: sectionsStarter

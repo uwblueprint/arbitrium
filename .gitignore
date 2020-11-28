@@ -21,6 +21,7 @@ src/*.d.ts
 .env.production.local
 .env
 */.vs
+.vscode
 
 npm-debug.log*
 yarn-debug.log*
