@@ -122,7 +122,9 @@ function DecisionCanvas({ update, review, categoryData }) {
                         {item.question
                           .replace(/-/g, ".")
                           .replace("One.Line", "One-Line")
-                          .replace("COVID.19", "COVID-19")}
+                          .replace("COVID.19", "COVID-19")
+                          .replaceAll("_dot_", ".")
+                          .replaceAll("_dash_", "-")}
                       </li>
                     ))}
                   </ol>
