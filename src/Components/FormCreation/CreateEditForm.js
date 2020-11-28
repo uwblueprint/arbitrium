@@ -144,7 +144,7 @@ function CreateEditForm() {
   }
 
   async function deleteSection() {
-    const section = loadForm.value.sections[activeSection];
+    const section = sections[activeSection];
 
     const response = FORM.deleteSection(loadForm.value._id, section._id)
       .then(() => {
@@ -231,10 +231,8 @@ function CreateEditForm() {
           <DeleteSectionConfirmation
             confirm={deleteSection}
             close={closeDeleteSectionConfirmation}
-            sectionName={loadForm.value.sections[activeSection].name}
-            questionCount={
-              loadForm.value.sections[activeSection].questions.length
-            }
+            sectionName={sections[activeSection].name}
+            questionCount={sections[activeSection].questions.length}
           />
         </>
       )}
