@@ -61,6 +61,7 @@ export interface FormSectionBase {
   name: string;
   description: string;
   questions: Array<QuestionCard>;
+  deleted: number;
 }
 
 export interface FormSection extends FormSectionBase {
