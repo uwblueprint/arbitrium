@@ -130,7 +130,6 @@ function FormSection({
   handleTitleUpdate,
   handleDescriptionUpdate,
   handleSectionTypeUpdate,
-  handleMoveSection,
   handleDeleteSection,
   setShowMoveSectionsDialog
 }) {
@@ -167,7 +166,7 @@ function FormSection({
   function updateActiveQuestion(sectionKey, questionKey) {
     //Saving is done on focus change and is handled at the section level
     //Every question change updates the active section and saves the changes
-    console.log("Active Question Changed: " + questionKey);
+
     // handleUpdateQuestion(sectionKey, questionKey);
     updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {

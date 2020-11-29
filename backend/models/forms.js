@@ -59,7 +59,7 @@ const question = new mongoose.Schema({
   },
   required: {
     type: Boolean,
-    default: true
+    default: false
   },
   description: {
     type: String
@@ -85,10 +85,6 @@ const question = new mongoose.Schema({
   },
   x_options: {
     type: [option]
-  },
-  required: {
-    type: Boolean,
-    default: false
   }
 });
 

@@ -57,7 +57,7 @@ const DialogOverlay = styled.div`
 //In case 2 we will update the program to the one in the ID, so the proper form
 //will load. In the event they don't have admin access to the program they will
 //denied access
-function CreateEditForm({ program, history, match }) {
+function CreateEditForm() {
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
@@ -124,7 +124,7 @@ function CreateEditForm({ program, history, match }) {
     //We also update the headerData as well (but it should already be updated)
     const newForm = loadForm.value;
     newForm.sections = sections;
-    const result = await FORM.updateForm(loadForm.value._id, newForm);
+    await FORM.updateForm(loadForm.value._id, newForm);
     //refetch({ programId: appUser.currentProgram });
   }
 
@@ -139,9 +139,7 @@ function CreateEditForm({ program, history, match }) {
       sections: defaultFormState.sections
     };
 
-    console.log(data);
-
-    const res = await FORM.createForm(data);
+    await FORM.createForm(data);
   }
 
   //----------------------------------------------------------------------------
@@ -155,14 +153,13 @@ function CreateEditForm({ program, history, match }) {
       setDeletedSection(null);
     }
 
-    console.log(sectionKey);
     //Scroll to the new active section
     window.requestAnimationFrame(() => {
       const element = document.getElementById("section_" + sectionKey);
 
       //If the element is the first section; scroll to the top instead of center
       if (element) {
-        if (sectionKey == 0) {
+        if (sectionKey === 0) {
           element.scrollIntoView({
             behavior: "smooth",
             block: "end"
@@ -218,8 +215,6 @@ function CreateEditForm({ program, history, match }) {
   //----------------------------------------------------------------------------
 
   function handleTitleUpdate(title) {
-    console.log("Editing Section Title: " + title);
-    console.log(activeSection);
     dispatchSectionsUpdate({
       type: "EDIT_TITLE",
       index: activeSection,
@@ -314,7 +309,7 @@ function CreateEditForm({ program, history, match }) {
     newForm.description = description;
     newForm.name = title;
     newForm.sections = sections;
-    const result = await FORM.updateForm(loadForm.value._id, newForm);
+    await FORM.updateForm(loadForm.value._id, newForm);
   }
 
   //TODO: Add header customization here

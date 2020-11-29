@@ -87,7 +87,6 @@ function addConnection(database) {
     const applicationModel = mongo.model("applicationModel", applicationSchema);
     const rankingModel = mongo.model("rankingModel", rankingSchema);
     const ratingModel = mongo.model("ratingModel", ratingSchema);
-    const formsModel = mongo.model("formsModel", formsSchema);
 
     //These are program specific collections. Each program has a database with
     //the collections below.

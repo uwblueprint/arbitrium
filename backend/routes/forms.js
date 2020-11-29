@@ -14,7 +14,6 @@ const db = require("../mongo.js");
 
 // Create a new form (use upsert to avoid duplication)
 router.post("/", (req, res) => {
-  console.log(req.body);
   db["Authentication"].forms.updateOne(
     {
       programId: req.body.programId
@@ -49,7 +48,6 @@ router.delete("/:formId", (req, res) => {
 
 // Get form with programId
 router.get("/:programId", (req, res) => {
-  console.log(req.params.programId);
   db["Authentication"].forms
     .findOne({ programId: req.params.programId })
     .then(function(found) {
@@ -67,7 +65,6 @@ router.get("/:programId", (req, res) => {
 
 //Update a form by ID
 router.patch("/:formId", (req, res) => {
-  console.log("Updating a form");
   db["Authentication"].forms.updateOne(
     {
       _id: req.params.formId
