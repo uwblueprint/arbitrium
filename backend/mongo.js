@@ -35,11 +35,13 @@ const organizationModel = mongoPrograms.model(
   "organizationModel",
   organizationSchema
 );
+const formsModel = mongoPrograms.model("formsModel", formsSchema);
 const newConnection = {
   mongo: mongoPrograms,
   users: userModel,
   programs: programModel,
-  organizations: organizationModel
+  organizations: organizationModel,
+  forms: formsModel
 };
 connections["Authentication"] = newConnection;
 
@@ -87,13 +89,15 @@ function addConnection(database) {
     const ratingModel = mongo.model("ratingModel", ratingSchema);
     const formsModel = mongo.model("formsModel", formsSchema);
 
+    //These are program specific collections. Each program has a database with
+    //the collections below.
+    //TODO: Move all program data to the program schema in the far future
     const newConnection = {
       mongo: mongo,
       users: userModel,
       applications: applicationModel,
       rankings: rankingModel,
-      ratings: ratingModel,
-      forms: formsModel
+      ratings: ratingModel
     };
     connections[database._id] = newConnection;
   }

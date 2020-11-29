@@ -1,11 +1,4 @@
-import React, {
-  useReducer,
-  useEffect,
-  useState,
-  useContext,
-  useCallback,
-  useMemo
-} from "react";
+import React, { useReducer, useEffect, useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import FormSection from "./FormSection";
@@ -21,7 +14,6 @@ import customFormSectionsReducer from "../../Reducers/CustomFormSectionsReducer"
 import DeleteSectionConfirmation from "./DeleteSectionConfirmation";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
-import { createForm } from "../../requests/forms";
 import CreateEditFormMoveSectionDialog from "./CreateEditFormMoveSectionDialog";
 import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
 
@@ -74,7 +66,7 @@ function CreateEditForm({ program, history, match }) {
   );
   const [showMoveSectionsDialog, setShowMoveSectionsDialog] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
-  const formId = appUser.currentProgram;
+  const programId = appUser.currentProgram;
   const [loadForm, refetch] = usePromise(FORM.getForm, {
     programId: appUser.currentProgram
   });
@@ -82,78 +74,121 @@ function CreateEditForm({ program, history, match }) {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+
   const [
     showDeleteSectionConfirmation,
     setShowDeleteSectionConfirmation
   ] = useState(false);
   const [deletedSection, setDeletedSection] = useState(null);
 
+  //----------------------------------------------------------------------------
+  //FORM INIT/SAVE FUNCTIONS
+  //----------------------------------------------------------------------------
   useEffect(() => {
     if (loadForm.isPending) return;
 
-    if (loadForm.value == null) {
+    if (!loadForm.value) {
       //Create a form and refetch
       initiateForm();
       refetch({ programId: appUser.currentProgram });
       return;
     }
 
-    // Get form from database using programID
+    //Check to see if it is still null after initalizing
     if (loadForm.value == null) return;
+
+    //Load the sections Data
     dispatchSectionsUpdate({
       type: "LOAD",
       sections: loadForm.value.sections
     });
+    //Load the headerData
     setHeaderData({
       name: loadForm.value.name,
       description: loadForm.value.description
     });
-  }, [loadForm, appUser, refetch]);
 
-  function updateActiveSection(sectionKey) {
-    if (deletedSection && activeSection !== deletedSection.index) {
-      setDeletedSection(null);
-    }
-    window.requestAnimationFrame(() => {
-      const element = document.getElementById("section_" + sectionKey);
-      if (element) {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-      }
-    });
-    if (activeSection !== sectionKey) {
-      setActiveSection(sectionKey);
-    }
+    //Set the active form to be the first one
+    updateActiveSection(0);
+  }, [loadForm, appUser]);
+
+  //When the sections changes we will update the form.
+  //1. When an input on the section card itself changes focus OR
+  //2. The section changes focus in general
+  useEffect(() => {
+    if (loadForm.isPending || sections === []) return;
+    saveForm();
+  }, [sections]);
+
+  async function saveForm() {
+    //We also update the headerData as well (but it should already be updated)
+    const newForm = loadForm.value;
+    newForm.sections = sections;
+    const result = await FORM.updateForm(loadForm.value._id, newForm);
+    //refetch({ programId: appUser.currentProgram });
   }
 
   //If a form doesn't exist then create a new one from the default template
   async function initiateForm() {
     const data = {
-      programId: program,
+      programId: programId,
       name: defaultFormState.name,
       description: defaultFormState.description,
       createdBy: appUser.userId,
       draft: true,
       sections: defaultFormState.sections
     };
-    const res = await createForm(data);
+
+    console.log(data);
+
+    const res = await FORM.createForm(data);
   }
 
-  // eslint-disable-next-line no-unused-vars
-  function handleSaveAll() {
-    // TODO: Create backend endpoint to update an entire form
-    // TODO: Call to update the entire form.
-    // (don't use in place of updateActive())
+  //----------------------------------------------------------------------------
+  //UPDATE/ADD/MOVE SECTION
+  //----------------------------------------------------------------------------
+
+  //Save the current section and update the current section
+  async function updateActiveSection(sectionKey) {
+    //Remove the ability to undo if the section changed
+    if (deletedSection && activeSection !== deletedSection.index) {
+      setDeletedSection(null);
+    }
+
+    console.log(sectionKey);
+    //Scroll to the new active section
+    window.requestAnimationFrame(() => {
+      const element = document.getElementById("section_" + sectionKey);
+
+      //If the element is the first section; scroll to the top instead of center
+      if (element) {
+        if (sectionKey == 0) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "end"
+          });
+        } else {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }
+      }
+    });
+
+    //Update section if it changed
+    if (activeSection !== sectionKey) {
+      setActiveSection(sectionKey);
+    }
   }
 
   async function handleAddSection() {
-    const newForm = await FORM.createSection(formId, {
+    const newForm = await FORM.createSection(loadForm.value._id, {
       section: defaultNewSection,
       index: activeSection + 1
     });
-    dispatchSectionsUpdate({
+    updateActiveSection(activeSection + 1);
+    await dispatchSectionsUpdate({
       type: "LOAD",
       sections: newForm.sections
     });
@@ -167,7 +202,10 @@ function CreateEditForm({ program, history, match }) {
     ) {
       return;
     }
-    const newForm = await FORM.updateSection(formId, reorderedSections);
+    const newForm = await FORM.updateSections(
+      loadForm.value._id,
+      reorderedSections
+    );
     if (newForm == null) return;
     dispatchSectionsUpdate({
       type: "LOAD",
@@ -175,7 +213,13 @@ function CreateEditForm({ program, history, match }) {
     });
   }
 
+  //----------------------------------------------------------------------------
+  //UPDATE CARD CONTENTS
+  //----------------------------------------------------------------------------
+
   function handleTitleUpdate(title) {
+    console.log("Editing Section Title: " + title);
+    console.log(activeSection);
     dispatchSectionsUpdate({
       type: "EDIT_TITLE",
       index: activeSection,
@@ -191,9 +235,21 @@ function CreateEditForm({ program, history, match }) {
     });
   }
 
+  function handleSectionTypeUpdate(sectionType) {
+    dispatchSectionsUpdate({
+      type: "EDIT_SECTION_TYPE",
+      index: activeSection,
+      sectionType: sectionType
+    });
+  }
+
   function closeMoveSectionDialog() {
     setShowMoveSectionsDialog(false);
   }
+
+  //----------------------------------------------------------------------------
+  //DELETE/UNDO-DELETE SECTION
+  //----------------------------------------------------------------------------
 
   async function deleteSection() {
     const section = sections[activeSection];
@@ -249,9 +305,28 @@ function CreateEditForm({ program, history, match }) {
     setShowDeleteSectionConfirmation(true);
   }
 
+  //----------------------------------------------------------------------------
+  //FORM HEADER UPDATE / CUSTOMIZATION
+  //----------------------------------------------------------------------------
+
+  async function updateHeader(title, description) {
+    const newForm = loadForm.value;
+    newForm.description = description;
+    newForm.name = title;
+    newForm.sections = sections;
+    const result = await FORM.updateForm(loadForm.value._id, newForm);
+  }
+
+  //TODO: Add header customization here
+
   return (
     <div>
-      <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
+      <CreateEditFormHeader
+        {...headerData}
+        onChange={updateHeader}
+        id={"header_" + 1}
+        key={1}
+      />
       <ControlledDialogTrigger
         showDialog={showMoveSectionsDialog}
         Dialog={CreateEditFormMoveSectionDialog}
@@ -262,17 +337,19 @@ function CreateEditForm({ program, history, match }) {
         }}
       />
       {sections &&
-        sections.map((section, index) => (
-          <FormWrapper key={section._id}>
+        sections.map((section, key) => (
+          <FormWrapper key={section._id} id={"section_" + key}>
             <FormSection
+              key={key + "_section"}
               numSections={sections.length}
-              sectionNum={index + 1}
+              sectionNum={key + 1}
               sectionData={section}
               updateActiveSection={updateActiveSection}
-              active={activeSection === index}
+              active={activeSection === key}
               handleAddSection={handleAddSection}
               handleTitleUpdate={handleTitleUpdate}
               handleDescriptionUpdate={handleDescriptionUpdate}
+              handleSectionTypeUpdate={handleSectionTypeUpdate}
               handleMoveSection={handleMoveSection}
               handleDeleteSection={handleDeleteSection}
               setShowMoveSectionsDialog={setShowMoveSectionsDialog}

@@ -5,8 +5,12 @@ async function createForm(databody) {
   return POST("/api/forms", databody);
 }
 
-async function getForm(formId) {
-  return GET(`/api/forms/${formId.formId}`);
+async function updateForm(formId, databody) {
+  return PATCH(`/api/forms/${formId}`, databody);
+}
+
+async function getForm({ programId }) {
+  return GET(`/api/forms/${programId}`);
 }
 
 async function deleteForm(formId) {
@@ -22,7 +26,7 @@ async function deleteSection(formId, sectionId) {
   return DELETE(`/api/forms/${formId}/sections/${sectionId}`);
 }
 
-async function updateSection(formId, databody) {
+async function updateSections(formId, databody) {
   return PATCH(`/api/forms/${formId}/sections`, databody);
 }
 
@@ -51,9 +55,10 @@ export {
   getForm,
   createForm,
   deleteForm,
+  updateForm,
   createSection,
   deleteSection,
-  updateSection,
+  updateSections,
   createQuestion,
   deleteQuestion,
   updateQuestion

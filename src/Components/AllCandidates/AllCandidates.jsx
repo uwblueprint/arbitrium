@@ -8,7 +8,6 @@ import { CSVLink } from "react-csv";
 import moment from "moment";
 import usePromise from "../../Hooks/usePromise";
 import { AuthContext } from "../../Authentication/Auth.js";
-import { defaultFormState } from "../FormCreation/CreateEditFormStateManagement";
 
 import {
   getCandidateSubmissions,

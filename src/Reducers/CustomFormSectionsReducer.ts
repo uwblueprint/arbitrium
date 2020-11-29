@@ -18,6 +18,9 @@ function customFormSectionsReducer(
       case "EDIT_DESCRIPTION":
         draftState[action.index].description = action.description;
         break;
+      case "EDIT_SECTION_TYPE":
+        draftState[action.index].sectionType = action.sectionType;
+        break;
       default:
         break;
     }

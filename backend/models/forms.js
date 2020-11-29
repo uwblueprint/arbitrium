@@ -28,6 +28,15 @@ const regularExpressions = new mongoose.Schema({
   }
 });
 
+const link = new mongoose.Schema({
+  open: {
+    type: String
+  },
+  close: {
+    type: String
+  }
+});
+
 //Yoptions and Xoptions explained:
 //Each Xoption is a collumn and ech Yoption is a row
 //Each option contains a string and a min/max for validations.
@@ -76,6 +85,10 @@ const question = new mongoose.Schema({
   },
   x_options: {
     type: [option]
+  },
+  required: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -92,6 +105,15 @@ const section = new mongoose.Schema({
   deleted: {
     type: Number,
     default: false
+  },
+  sectionType: {
+    type: String,
+    default: "Decision Criteria",
+    enum: ["Admin Info", "Decision Criteria"]
+  },
+  required: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -107,10 +129,14 @@ const formsSchema = new mongoose.Schema(
       type: String
     },
     draft: {
-      type: Boolean
+      type: Boolean,
+      default: true
     },
     sections: {
       type: [section]
+    },
+    submissionLinks: {
+      type: [link]
     },
     programId: {
       type: String

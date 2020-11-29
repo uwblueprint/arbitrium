@@ -14,7 +14,6 @@ import CreateEditShortAnswer from "./CreateEditShortAnswer";
 import CreateEditParagraph from "./CreateEditParagraph";
 import TextField from "@material-ui/core/TextField";
 import InputBase from "@material-ui/core/InputBase";
-import styled from "styled-components";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ShortTextIcon from "@material-ui/icons/ShortText";
@@ -154,7 +153,6 @@ function FormCard({
               onChange={(e) => setTitle(e.target.value)}
               autoFocus={true}
               rowsMax={1}
-              fullWidth="true"
               type="string"
             ></InputBase>
             <Button
@@ -186,7 +184,6 @@ function FormCard({
             onChange={(e) => setDescription(e.target.value)}
             multiline
             rowsMax={10}
-            fullWidth="true"
             type="string"
           ></TextField>
           {card && card.type === "MULTIPLE_CHOICE" ? (

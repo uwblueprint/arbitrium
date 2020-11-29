@@ -5,7 +5,6 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import CardHeader from "@material-ui/core/CardHeader";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FormCard from "./FormCard";
@@ -14,14 +13,27 @@ import AddCardComponent from "./AddCardComponent";
 import { deleteQuestion } from "../../requests/forms";
 import TextField from "@material-ui/core/TextField";
 import { AuthContext } from "../../Authentication/Auth.js";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import { Divider } from "@material-ui/core";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 
 const useStyles = makeStyles({
   //Wraps the card
-  content: {
+
+  //Used when content is active
+  contentActive: {
     marginBottom: 8,
     marginLeft: 24,
     marginTop: 24,
+    marginRight: 16
+  },
+  content: {
+    marginBottom: 0,
+    marginLeft: 24,
+    marginTop: 0,
     marginRight: 16
   },
 
@@ -80,8 +92,7 @@ const useStyles = makeStyles({
   //Section Description
   sectionDescription: {
     height: 21,
-    width: 764,
-    marginBottom: 16
+    width: 764
   },
 
   paper: {
@@ -118,6 +129,7 @@ function FormSection({
   handleAddSection,
   handleTitleUpdate,
   handleDescriptionUpdate,
+  handleSectionTypeUpdate,
   handleMoveSection,
   handleDeleteSection,
   setShowMoveSectionsDialog
@@ -130,7 +142,13 @@ function FormSection({
     customFormQuestionsReducer,
     sectionData.questions
   );
-  const [title, setTitle] = useState(sectionData.title);
+
+  //States to manage content of section card
+  const [title, setTitle] = useState(sectionData.name);
+  const [description, setDescription] = useState(sectionData.description);
+  const [sectionType, setSectionType] = useState(sectionData.sectionType);
+
+  //Menu open/close
   const handleAnchorClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -177,6 +195,7 @@ function FormSection({
 
   function handleAddQuestion() {
     //When a question is added we update the DB with the new question
+    //TODO: Post the question to mongo and then reload
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
       index: activeQuestion
@@ -201,9 +220,6 @@ function FormSection({
   }
 
   function handleDeleteQuestion(questionKey) {
-    //We should be able to undo the deletion of a section
-    //To implement this we will do a soft delete
-
     deleteQuestion(
       { formId: appUser.currentProgram },
       sectionData._id,
@@ -227,36 +243,42 @@ function FormSection({
           }
           onClick={() => setSectionAsActive(sectionNum - 1)}
         >
-          <CardContent className={classes.content}>
+          <CardContent
+            className={active ? classes.contentActive : classes.content}
+          >
             <div className={classes.sectionTitleAndMenuWrapper}>
               <InputBase
                 className={classes.sectionTitle}
                 placeholder="Untitled Section"
-                value={sectionData.title}
-                onChange={(e) => handleTitleUpdate(e.target.value)}
-                autoFocus={true}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={() => handleTitleUpdate(title)}
                 rowsMax={1}
                 type="string"
               ></InputBase>
-              <IconButton
-                className={classes.sectionMenu}
-                aria-label="actions"
-                aria-controls="actions-menu"
-                onClick={handleAnchorClick}
-              >
-                <MoreVertIcon />
-              </IconButton>
+              {active ? (
+                <IconButton
+                  className={classes.sectionMenu}
+                  aria-label="actions"
+                  aria-controls="actions-menu"
+                  onClick={handleAnchorClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              ) : null}
             </div>
-            <TextField
-              className={classes.sectionDescription}
-              placeholder="New Description"
-              value={sectionData.description}
-              onChange={(e) => handleDescriptionUpdate(e.target.value)}
-              multiline
-              rowsMax={10}
-              fullWidth="true"
-              type="string"
-            ></TextField>
+            {active ? (
+              <TextField
+                className={classes.sectionDescription}
+                placeholder="New Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                multiline
+                onBlur={() => handleDescriptionUpdate(description)}
+                rowsMax={10}
+                type="string"
+              ></TextField>
+            ) : null}
           </CardContent>
           <Menu
             anchorEl={anchorEl}
@@ -280,18 +302,63 @@ function FormSection({
             >
               Move section
             </MenuItem>
-            <MenuItem
-              classes={{ root: classes.action_menu_item }}
-              onClick={() => {
-                handleDeleteSection();
-              }}
-            >
-              Delete section
-            </MenuItem>
+            {!sectionData.required ? (
+              <MenuItem
+                classes={{ root: classes.action_menu_item }}
+                onClick={() => {
+                  handleDeleteSection();
+                }}
+              >
+                Delete section
+              </MenuItem>
+            ) : null}
           </Menu>
-          <CardContent className={classes.content}>
-            {sectionData.description}
-          </CardContent>
+          {active ? (
+            <CardContent
+              className={active ? classes.contentActive : classes.content}
+            >
+              <Divider />
+              <p style={{ fontWeight: 500 }}>
+                {" "}
+                How will information from this section be used?{" "}
+              </p>
+              <div>
+                <FormControl component="fieldset">
+                  <RadioGroup
+                    row
+                    aria-label="position"
+                    name="position"
+                    defaultValue="Decision Criteria"
+                    value={sectionType}
+                    //We can call handleSectionTypeUpdate prop on each change
+                    //since there is very little updates compared to text input
+                    onChange={(e) => {
+                      setSectionType(e.target.value);
+                      handleSectionTypeUpdate(e.target.value);
+                    }}
+                    onBlur={() => handleSectionTypeUpdate(sectionType)}
+                  >
+                    <FormControlLabel
+                      value="Admin Info"
+                      control={<Radio color="primary" />}
+                      label="Admin Info"
+                    />
+                    <FormControlLabel
+                      value="Decision Criteria"
+                      control={<Radio color="primary" />}
+                      label="Decision Criteria"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
+            </CardContent>
+          ) : (
+            <CardContent className={classes.content}>
+              <p style={{ fontWeight: 500 }}>
+                {"Section Type: " + sectionType}
+              </p>
+            </CardContent>
+          )}
         </Card>
         {active && activeQuestion === -1 ? (
           <AddCardComponent
