@@ -23,7 +23,7 @@ async function deleteSection(formId, sectionId) {
 }
 
 async function updateSection(formId, databody) {
-  return PATCH(`/api/forms/${formId.formId}/sections`, databody);
+  return PATCH(`/api/forms/${formId}/sections`, databody);
 }
 
 // QUESTIONS

@@ -90,7 +90,7 @@ const section = new mongoose.Schema({
     type: [question]
   },
   deleted: {
-    type: Boolean,
+    type: Number,
     default: false
   }
 });
