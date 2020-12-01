@@ -91,6 +91,8 @@ function CreateEditForm() {
   //FORM INIT/SAVE FUNCTIONS
   //----------------------------------------------------------------------------
 
+  //usecallback prevents functions from being re-created on every render.
+  //This is useful when a function is a dependency of useEffect (otherwise you get infinite renders)
   const saveForm = useCallback(() => {
     if (!loadForm.isPending && loadForm.value && sections !== []) {
       const newForm = loadForm.value;
@@ -119,13 +121,11 @@ function CreateEditForm() {
 
   useEffect(() => {
     if (loadForm.isPending) return;
-
     if (!loadForm.value) {
       //Create a form and refetch
       initiateForm();
       return;
     }
-
     //Check to see if it is still null after initalizing
     if (loadForm.value == null) return;
 
