@@ -258,24 +258,8 @@ function FormSection({
         open={Boolean(anchorEl)}
         onClose={handleAnchorClose}
       >
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleMoveSection();
-            handleAnchorClose();
-          }}
-        >
-          Move section
-        </MenuItem>
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleDeleteSection();
-            handleAnchorClose();
-          }}
-        >
-          Delete section
-        </MenuItem>
+        <MenuItem onClick={handleMoveSection}>Move section</MenuItem>
+        <MenuItem onClick={handleDeleteSection}>Delete section</MenuItem>
       </Menu>
     </div>
   );
