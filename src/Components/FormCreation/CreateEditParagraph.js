@@ -8,11 +8,11 @@ const Wrapper = styled.div`
   width: 816px;
 `;
 
-function CreateEditParagraph() {
+function CreateEditParagraph({ submission = false }) {
   return (
     <Wrapper>
       <TextField
-        disabled
+        disabled={!submission}
         placeholder="Long answer text"
         size="medium"
         multiline
