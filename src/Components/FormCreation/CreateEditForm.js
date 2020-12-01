@@ -238,8 +238,6 @@ function CreateEditForm() {
     const { source, destination } = result;
     if (!destination) return; // return if item was dropped outside
 
-    // const sectionIndex = parseInt(destination.droppableId);
-
     if (
       source.droppableId === destination.droppableId &&
       source.index === destination.index

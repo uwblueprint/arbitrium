@@ -147,14 +147,6 @@ function FormSection({
     updateActiveQuestion(sectionNum - 1, questionId + 1);
   }
 
-  const handleMoveQuestion = (questionKey, targetIndex) => {
-    dispatchQuestionsUpdate({
-      type: "MOVE_QUESTION",
-      index: questionKey,
-      targetIndex: targetIndex
-    });
-  };
-
   function handleDeleteQuestion(questionKey) {
     /* Calling delete endpoint to remove question in mongo */
     deleteQuestion(
