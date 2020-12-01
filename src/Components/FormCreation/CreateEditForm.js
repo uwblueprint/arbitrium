@@ -92,7 +92,7 @@ function CreateEditForm() {
   //----------------------------------------------------------------------------
 
   const saveForm = useCallback(() => {
-    if (!loadForm.isPending && sections !== []) {
+    if (!loadForm.isPending && loadForm.value && sections !== []) {
       const newForm = loadForm.value;
       newForm.sections = sections;
       FORM.updateForm(loadForm.value._id, newForm);
@@ -139,8 +139,6 @@ function CreateEditForm() {
       name: loadForm.value.name,
       description: loadForm.value.description
     });
-
-    updateActiveSection(0);
 
     //Set the active form to be the first one
     //updateActiveSection(0);
