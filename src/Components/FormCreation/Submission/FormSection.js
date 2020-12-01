@@ -90,7 +90,6 @@ function FormSection({
   }, [questions, dispatchQuestionsUpdate]);
 
   function updateActiveQuestion(sectionKey, questionKey) {
-    // handleUpdateQuestion(sectionKey, questionKey);
     updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
       setActiveQuestion(questionKey);

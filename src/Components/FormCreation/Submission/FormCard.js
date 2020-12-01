@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -6,8 +6,6 @@ import CreateEditMultipleChoice from "../CreateEditMultipleChoice";
 import CreateEditCheckbox from "../CreateEditCheckbox";
 import CreateEditShortAnswer from "../CreateEditShortAnswer";
 import CreateEditParagraph from "../CreateEditParagraph";
-import TextField from "@material-ui/core/TextField";
-import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
 
 const useStyles = makeStyles({
@@ -81,13 +79,27 @@ const TitleWrapper = styled.div`
   position: "flex";
 `;
 
+const NameField = styled.div`
+  font-size: 20px;
+  width: 846px;
+  margin-bottom: 16px;
+  line-height: 22px;
+`;
+
+const DescriptionField = styled.div`
+  width: 846px;
+  display: block;
+  line-height: 21px;
+  overflow-y: auto;
+  max-height: 48px;
+  font-size: 16px;
+  color: #888888;
+`;
+
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
 function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
   const classes = useStyles();
-  const [title, setTitle] = useState(card.name);
-  const [description, setDescription] = useState(card.description);
-  const [questionMenuAnchor, setQuestionMenuAnchor] = useState(false);
 
   return (
     <div className={classes.container}>
@@ -97,35 +109,22 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
       >
         <CardContent className={classes.content}>
           <TitleWrapper>
-            <InputBase
-              className={classes.questionTitle}
-              placeholder="Question"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              autoFocus={true}
-              rowsMax={1}
-              fullWidth="true"
-              type="string"
-            ></InputBase>
-            <TextField
-              placeholder="New Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              multiline
-              rowsMax={10}
-              fullWidth="true"
-              type="string"
-            ></TextField>
+            <NameField>{card.name ? card.name : "Default Card Name"}</NameField>
+            <DescriptionField>
+              {card.description ? card.description : "Default Card Description"}
+            </DescriptionField>
           </TitleWrapper>
           {card && card.type === "MULTIPLE_CHOICE" ? (
-            <CreateEditMultipleChoice data={card.options} />
+            <CreateEditMultipleChoice data={card.options} submission={true} />
           ) : null}
           {card && card.type === "SHORT_ANSWER" ? (
-            <CreateEditShortAnswer />
+            <CreateEditShortAnswer submission={true} />
           ) : null}
-          {card && card.type === "PARAGRAPHS" ? <CreateEditParagraph /> : null}
+          {card && card.type === "PARAGRAPHS" ? (
+            <CreateEditParagraph submission={true} />
+          ) : null}
           {card && card.type === "CHECKBOXES" ? (
-            <CreateEditCheckbox data={card.options} />
+            <CreateEditCheckbox data={card.options} submission={true} />
           ) : null}
           {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
           {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
