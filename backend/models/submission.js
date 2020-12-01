@@ -9,19 +9,6 @@ const coordinates = new mongoose.Schema({
   }
 });
 
-const option = new mongoose.Schema({
-  min: {
-    type: Number
-  },
-  max: {
-    type: Number
-  },
-  opt: {
-    type: String,
-    default: null
-  }
-});
-
 const answer = new mongoose.Schema({
   type: {
     type: String,
@@ -42,7 +29,7 @@ const answer = new mongoose.Schema({
   // MULTIPLE_CHOICE
   // CHECKBOXES
   answerArray: {
-    type: [option]
+    type: [String]
   },
   // CHECKBOX_GRID
   answerMatrix: {
@@ -73,6 +60,9 @@ const submissionsSchema = new mongoose.Schema(
     },
     answers: {
       type: [answer]
+    },
+    identifier: {
+      type: String // Since it is a short answer question
     }
   },
   { collection: "Submissions" }
