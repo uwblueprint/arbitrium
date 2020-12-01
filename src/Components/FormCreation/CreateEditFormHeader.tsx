@@ -3,13 +3,14 @@ import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import GetPreviewLinkDialog from "./GetPreviewLinkDialog";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const Header = styled.div`
-  padding: 48px 100px;
-  padding-left: 15%;
   box-sizing: border-box;
   height: 176px;
+  width: 100%;
   box-shadow: 0 2px 3px 1px #cccccc;
+  display: flex;
 `;
 
 const NameInput = styled(InputBase)`
@@ -17,7 +18,7 @@ const NameInput = styled(InputBase)`
     font-size: 24px;
   }
   && {
-    width: 846px;
+    width: 526px;
     margin-bottom: 16px;
     line-height: 36px;
   }
@@ -25,7 +26,7 @@ const NameInput = styled(InputBase)`
 
 const DescriptionInput = styled(InputBase)`
   && {
-    width: 846px;
+    width: 526px;
     display: block;
     line-height: 21px;
     overflow-y: auto;
@@ -37,11 +38,17 @@ const DescriptionInput = styled(InputBase)`
   }
 `;
 
+const InputWrapper = styled.div`
+  padding: 48px 100px;
+  padding-left: 15%;
+  padding-right: 0px;
+`;
+
 const ButtonWrapper = styled.div`
-  position: absolute;
-  padding-bottom: 86px;
-  top: 112px;
-  right: 35%;
+  padding: 48px 0px;
+  padding-left: 32px;
+  align-items: center;
+  justify-content: center;
 `;
 
 const DialogOverlay = styled.div`
@@ -60,44 +67,72 @@ const DialogOverlay = styled.div`
 type HeaderData = {
   name: string;
   description: string;
+  previewLink: string;
 };
 
 type Props = {
   name: string;
   description: string;
+  previewLink: string;
   onChange: (data: HeaderData) => void;
 };
 
 function CreateEditFormHeader({
   name,
   description,
+  previewLink,
   onChange
 }: Props): React.ReactElement<typeof Header> {
   const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       name: e.target.value,
-      description
+      description,
+      previewLink
     });
   };
 
   const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange({
       name,
-      description: e.target.value
+      description: e.target.value,
+      previewLink
     });
   };
 
   const [showPreviewLink, setShowPreviewLink] = useState(false);
+  const [copiedPreviewLink, setCopiedPreviewLink] = useState(false);
+
+  function closePreviewLinkDialog() {
+    setShowPreviewLink(false);
+  }
+
+  const copyLinkToClipboard = () => {
+    navigator.clipboard.writeText(previewLink);
+    var dummy = document.createElement("input");
+    dummy.innerText = previewLink;
+    document.body.appendChild(dummy);
+    dummy.setAttribute("id", "dummy_id");
+    dummy.select();
+    document.execCommand("copy");
+    dummy.remove();
+    setCopiedPreviewLink(true);
+  };
 
   return (
     <Header>
-      <NameInput placeholder="Form name" value={name} onChange={onNameChange} />
-      <DescriptionInput
-        multiline
-        placeholder="Form description..."
-        value={description}
-        onChange={onDescriptionChange}
-      />
+      <InputWrapper>
+        <NameInput
+          placeholder="Form name"
+          value={name}
+          onChange={onNameChange}
+        />
+        <DescriptionInput
+          multiline
+          placeholder="Form description..."
+          value={description}
+          onChange={onDescriptionChange}
+        />
+      </InputWrapper>
       <ButtonWrapper>
         <Button
           variant="outlined"
@@ -107,6 +142,7 @@ function CreateEditFormHeader({
           href="#text-buttons"
           color="primary"
           style={{
+            color: "#2261AD",
             marginRight: "16px",
             marginBottom: "8px",
             textTransform: "none",
@@ -124,6 +160,7 @@ function CreateEditFormHeader({
           href="#text-buttons"
           color="primary"
           style={{
+            backgroundColor: "#2261AD",
             marginLeft: "0px",
             marginBottom: "8px",
             textTransform: "none",
@@ -138,9 +175,26 @@ function CreateEditFormHeader({
       {showPreviewLink && (
         <>
           <DialogOverlay />
-          <GetPreviewLinkDialog confirm={() => {}} close={() => {}} />
+          <GetPreviewLinkDialog
+            link={previewLink}
+            close={closePreviewLinkDialog}
+            copyLinkToClipboard={copyLinkToClipboard}
+          />
         </>
       )}
+      <Snackbar
+        open={copiedPreviewLink}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left"
+        }}
+        autoHideDuration={5000}
+        resumeHideDuration={5000}
+        onClose={() => {
+          setCopiedPreviewLink(false);
+        }}
+        message={"Copied to clipboard."}
+      />
     </Header>
   );
 }

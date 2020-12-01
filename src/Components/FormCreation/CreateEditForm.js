@@ -58,7 +58,9 @@ function CreateEditForm() {
     });
     setHeaderData({
       name: loadForm.value.name,
-      description: loadForm.value.description
+      description: loadForm.value.description,
+      previewLink:
+        "https://arbitrium.web.app/form/preview/" + loadForm.value._id
     });
   }, [loadForm, appUser, refetch]);
 
