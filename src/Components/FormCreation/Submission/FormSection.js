@@ -4,14 +4,7 @@ import styled from "styled-components";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import IconButton from "@material-ui/core/IconButton";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FormCard from "./FormCard";
-import AddCardComponent from "../AddCardComponent";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import { deleteQuestion } from "../../../requests/forms";
-import { AuthContext } from "../../../Authentication/Auth.js";
 import customFormQuestionsReducer from "../../../Reducers/CustomFormQuestionsReducer";
 
 const useStyles = makeStyles({
@@ -80,27 +73,14 @@ function FormSection({
   sectionNum,
   sectionData,
   updateActiveSection,
-  active,
-  handleAddSection,
-  handleMoveSection,
-  handleDeleteSection
+  active
 }) {
   const classes = useStyles();
-  const { appUser } = useContext(AuthContext);
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
     sectionData.questions
   );
-
-  // For actions menu for each form section
-  const [anchorEl, setAnchorEl] = useState(null);
-  const handleAnchorClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleAnchorClose = () => {
-    setAnchorEl(null);
-  };
 
   useEffect(() => {
     dispatchQuestionsUpdate({
@@ -133,57 +113,6 @@ function FormSection({
     updateActiveSection(sectionKey);
   }
 
-  function handleAddQuestion() {
-    dispatchQuestionsUpdate({
-      type: "ADD_QUESTION",
-      index: activeQuestion
-    });
-    updateActiveQuestion(sectionNum - 1, activeQuestion + 1);
-  }
-
-  function handleDuplicateQuestion(questionId) {
-    dispatchQuestionsUpdate({
-      type: "DUPLICATE_QUESTION",
-      index: questionId,
-      targetIndex: questionId + 1
-    });
-    updateActiveQuestion(sectionNum - 1, questionId + 1);
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  function handleMoveQuestion() {
-    // TODO: update question location in section within sections object
-    // TODO: call the update section API endpoint
-    // TODO: call updateActive
-  }
-
-  function handleDeleteQuestion(questionKey) {
-    /* Calling delete endpoint to remove question in mongo */
-    deleteQuestion(
-      { formId: appUser.currentProgram },
-      sectionData._id,
-      questions[questionKey]._id
-    );
-    dispatchQuestionsUpdate({ type: "DELETE_QUESTION", index: questionKey });
-    if (questionKey !== 0) {
-      setActiveQuestion(questionKey - 1);
-    }
-  }
-
-  // async function handleUpdateQuestion(prevSection, prevQuestion) {
-  //   // update recently de-selected question
-  //   const response = await FORM.updateQuestion(
-  //     appUser.currentProgram,
-  //     prevSection,
-  //     sectionData.questions[prevQuestion]
-  //   );
-
-  //   // check status of update
-  //   if (response.status !== 200) {
-  //     console.error(`ERROR: Status - ${response.status}`);
-  //   }
-  // }
-
   return (
     <div>
       <span className={classes.section_title}>
@@ -200,26 +129,11 @@ function FormSection({
             className={classes.title}
             title={sectionData.name}
             id={sectionNum}
-            action={
-              <IconButton
-                aria-label="actions"
-                aria-controls="actions-menu"
-                onClick={handleAnchorClick}
-              >
-                <MoreVertIcon />
-              </IconButton>
-            }
           />
           <CardContent className={classes.content}>
             {sectionData.description}
           </CardContent>
         </Card>
-        {active && activeQuestion === -1 ? (
-          <AddCardComponent
-            handleAddSection={handleAddSection}
-            handleAddQuestion={handleAddQuestion}
-          />
-        ) : null}
       </CardWrapper>
       {questions.map((_question, questionKey) => (
         <CardWrapper
@@ -231,52 +145,11 @@ function FormSection({
             key={questionKey + "_question"}
             active={active && activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
-            handleDuplicate={handleDuplicateQuestion}
-            handleDelete={handleDeleteQuestion}
             sectionKey={sectionNum - 1}
             questionKey={questionKey}
           />
-          {active && activeQuestion === questionKey ? (
-            <AddCardComponent
-              handleAddSection={handleAddSection}
-              handleAddQuestion={handleAddQuestion}
-            />
-          ) : null}
         </CardWrapper>
       ))}
-      <Menu
-        id="actions-menu"
-        classes={{
-          paper: classes.action_menu,
-          list: classes.action_menu_content
-        }}
-        anchorEl={anchorEl}
-        getContentAnchorEl={null}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "center" }}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleAnchorClose}
-      >
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleMoveSection();
-            handleAnchorClose();
-          }}
-        >
-          Move section
-        </MenuItem>
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleDeleteSection();
-            handleAnchorClose();
-          }}
-        >
-          Delete section
-        </MenuItem>
-      </Menu>
     </div>
   );
 }
