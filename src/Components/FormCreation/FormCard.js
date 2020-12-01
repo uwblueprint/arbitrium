@@ -18,6 +18,7 @@ import styled from "styled-components";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ShortTextIcon from "@material-ui/icons/ShortText";
+import { Draggable } from "react-beautiful-dnd";
 
 const useStyles = makeStyles({
   content: {
@@ -127,118 +128,130 @@ function FormCard({
   };
 
   return (
-    <div className={classes.container}>
-      <Card
-        onClick={() => handleActive(sectionKey, questionKey)}
-        className={active ? classes.active : classes.root}
-      >
-        <CardContent className={classes.content}>
-          <TitleWrapper>
-            <InputBase
-              className={classes.questionTitle}
-              placeholder="Question"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              autoFocus={true}
-              rowsMax={1}
-              fullWidth="true"
-              type="string"
-            ></InputBase>
-            <Button
-              className={classes.questionTypeMenu}
-              variant="outlined"
-              onClick={() => setQuestionMenuAnchor(true)}
+    <Draggable draggableId={String(card._id)} index={questionKey}>
+      {(provided) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <div className={classes.container}>
+            <Card
+              onClick={() => handleActive(sectionKey, questionKey)}
+              className={active ? classes.active : classes.root}
             >
-              <ShortTextIcon />
-              Open Menu
-            </Button>
-            <Menu
-              elevation={0}
-              id="simple-menu"
-              anchorEl={questionMenuAnchor}
-              keepMounted
-              open={Boolean(questionMenuAnchor)}
-              onClose={() => setQuestionMenuAnchor(null)}
-            >
-              <MenuItem> {"Test"}</MenuItem>
-              <MenuItem> {"Test2"}</MenuItem>
-              <MenuItem> {"Test3"}</MenuItem>
-              <MenuItem> {"Test4"}</MenuItem>
-            </Menu>
-            <TextField
-              placeholder="New Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              multiline
-              rowsMax={10}
-              fullWidth="true"
-              type="string"
-            ></TextField>
-          </TitleWrapper>
-          {card && card.type === "MULTIPLE_CHOICE" ? (
-            <CreateEditMultipleChoice data={card.options} />
-          ) : null}
-          {card && card.type === "SHORT_ANSWER" ? (
-            <CreateEditShortAnswer />
-          ) : null}
-          {card && card.type === "PARAGRAPHS" ? <CreateEditParagraph /> : null}
-          {card && card.type === "CHECKBOXES" ? (
-            <CreateEditCheckbox data={card.options} />
-          ) : null}
-          {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
-          {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
-          <Divider />
-          <div className={classes.buttonRow}>
-            <div className={classes.buttonContainer}>
-              <Button
-                size="small"
-                className={classes.button}
-                onClick={() => {
-                  handleDelete(questionKey);
-                }}
-              >
-                <DeleteOutlineIcon style={{ marginRight: 5 }} />{" "}
-                <span className={classes.buttonLabel}>Delete</span>
-              </Button>
-            </div>
-            <div className={classes.buttonContainer}>
-              <Button
-                size="small"
-                className={classes.button}
-                onClick={() => handleDuplicate(questionKey)}
-              >
-                <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
-                <span className={classes.buttonLabel}>Duplicate</span>
-              </Button>
-            </div>
-            <Divider orientation="vertical" flexItem />
-            <div className={classes.buttonContainer}>
-              <Button size="small" className={classes.button}>
-                <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
-                <span className={classes.buttonLabel}>Validation</span>
-              </Button>
-            </div>
-            <div className={classes.switch}>
-              <FormControlLabel
-                control={
-                  <StyledSwitch
-                    size="small"
-                    checked={required}
-                    onChange={handleSwitch}
-                    color="primary"
-                  />
-                }
-                label={
-                  <Typography className={classes.buttonLabel}>
-                    Required
-                  </Typography>
-                }
-              />
-            </div>
+              <CardContent className={classes.content}>
+                <TitleWrapper>
+                  <InputBase
+                    className={classes.questionTitle}
+                    placeholder="Question"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    autoFocus={true}
+                    rowsMax={1}
+                    fullWidth="true"
+                    type="string"
+                  ></InputBase>
+                  <Button
+                    className={classes.questionTypeMenu}
+                    variant="outlined"
+                    onClick={() => setQuestionMenuAnchor(true)}
+                  >
+                    <ShortTextIcon />
+                    Open Menu
+                  </Button>
+                  <Menu
+                    elevation={0}
+                    id="simple-menu"
+                    anchorEl={questionMenuAnchor}
+                    keepMounted
+                    open={Boolean(questionMenuAnchor)}
+                    onClose={() => setQuestionMenuAnchor(null)}
+                  >
+                    <MenuItem> {"Test"}</MenuItem>
+                    <MenuItem> {"Test2"}</MenuItem>
+                    <MenuItem> {"Test3"}</MenuItem>
+                    <MenuItem> {"Test4"}</MenuItem>
+                  </Menu>
+                  <TextField
+                    placeholder="New Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    multiline
+                    rowsMax={10}
+                    fullWidth="true"
+                    type="string"
+                  ></TextField>
+                </TitleWrapper>
+                {card && card.type === "MULTIPLE_CHOICE" ? (
+                  <CreateEditMultipleChoice data={card.options} />
+                ) : null}
+                {card && card.type === "SHORT_ANSWER" ? (
+                  <CreateEditShortAnswer />
+                ) : null}
+                {card && card.type === "PARAGRAPHS" ? (
+                  <CreateEditParagraph />
+                ) : null}
+                {card && card.type === "CHECKBOXES" ? (
+                  <CreateEditCheckbox data={card.options} />
+                ) : null}
+                {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
+                {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
+                <Divider />
+                <div className={classes.buttonRow}>
+                  <div className={classes.buttonContainer}>
+                    <Button
+                      size="small"
+                      className={classes.button}
+                      onClick={() => {
+                        handleDelete(questionKey);
+                      }}
+                    >
+                      <DeleteOutlineIcon style={{ marginRight: 5 }} />{" "}
+                      <span className={classes.buttonLabel}>Delete</span>
+                    </Button>
+                  </div>
+                  <div className={classes.buttonContainer}>
+                    <Button
+                      size="small"
+                      className={classes.button}
+                      onClick={() => handleDuplicate(questionKey)}
+                    >
+                      <FileCopyOutlinedIcon style={{ marginRight: 5 }} />{" "}
+                      <span className={classes.buttonLabel}>Duplicate</span>
+                    </Button>
+                  </div>
+                  <Divider orientation="vertical" flexItem />
+                  <div className={classes.buttonContainer}>
+                    <Button size="small" className={classes.button}>
+                      <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
+                      <span className={classes.buttonLabel}>Validation</span>
+                    </Button>
+                  </div>
+                  <div className={classes.switch}>
+                    <FormControlLabel
+                      control={
+                        <StyledSwitch
+                          size="small"
+                          checked={required}
+                          onChange={handleSwitch}
+                          color="primary"
+                        />
+                      }
+                      label={
+                        <Typography className={classes.buttonLabel}>
+                          Required
+                        </Typography>
+                      }
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      )}
+    </Draggable>
   );
 }
 
