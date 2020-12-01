@@ -13,6 +13,7 @@ import AddCardComponent from "./AddCardComponent";
 import { deleteQuestion } from "../../requests/forms";
 import { AuthContext } from "../../Authentication/Auth.js";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
+import { Droppable } from "react-beautiful-dnd";
 
 const useStyles = makeStyles({
   content: { marginTop: -16 },
@@ -146,12 +147,13 @@ function FormSection({
     updateActiveQuestion(sectionNum - 1, questionId + 1);
   }
 
-  // eslint-disable-next-line no-unused-vars
-  function handleMoveQuestion() {
-    // TODO: update question location in section within sections object
-    // TODO: call the update section API endpoint
-    // TODO: call updateActive
-  }
+  const handleMoveQuestion = (questionKey, targetIndex) => {
+    dispatchQuestionsUpdate({
+      type: "MOVE_QUESTION",
+      index: questionKey,
+      targetIndex: targetIndex
+    });
+  };
 
   function handleDeleteQuestion(questionKey) {
     /* Calling delete endpoint to remove question in mongo */
@@ -234,29 +236,38 @@ function FormSection({
           />
         ) : null}
       </CardWrapper>
-      {questions.map((_question, questionKey) => (
-        <CardWrapper
-          key={questionKey}
-          id={"question_" + questionKey + "_" + (sectionNum - 1)}
-        >
-          <FormCard
-            card={questions[questionKey]}
-            key={questionKey + "_question"}
-            active={active && activeQuestion === questionKey}
-            handleActive={updateActiveQuestion}
-            handleDuplicate={handleDuplicateQuestion}
-            handleDelete={handleDeleteQuestion}
-            sectionKey={sectionNum - 1}
-            questionKey={questionKey}
-          />
-          {active && activeQuestion === questionKey ? (
-            <AddCardComponent
-              handleAddSection={handleAddSection}
-              handleAddQuestion={handleAddQuestion}
-            />
-          ) : null}
-        </CardWrapper>
-      ))}
+      <Droppable droppableId={String(sectionNum - 1)}>
+        {(provided, snapshot) => (
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            {questions.map((_question, questionKey) => (
+              <CardWrapper
+                key={questionKey}
+                id={"question_" + questionKey + "_" + (sectionNum - 1)}
+              >
+                <FormCard
+                  card={questions[questionKey]}
+                  key={questionKey + "_question"}
+                  active={active && activeQuestion === questionKey}
+                  handleActive={updateActiveQuestion}
+                  handleDuplicate={handleDuplicateQuestion}
+                  handleDelete={handleDeleteQuestion}
+                  sectionKey={sectionNum - 1}
+                  questionKey={questionKey}
+                />
+                <div style={{ marginLeft: snapshot.isDraggingOver ? 820 : 0 }}>
+                  {active && activeQuestion === questionKey ? (
+                    <AddCardComponent
+                      handleAddSection={handleAddSection}
+                      handleAddQuestion={handleAddQuestion}
+                    />
+                  ) : null}
+                </div>
+              </CardWrapper>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </div>
   );
 }
