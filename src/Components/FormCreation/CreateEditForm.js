@@ -1,4 +1,10 @@
-import React, { useReducer, useEffect, useState, useContext } from "react";
+import React, {
+  useReducer,
+  useEffect,
+  useState,
+  useContext,
+  useCallback
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import FormSection from "./FormSection";
@@ -84,13 +90,39 @@ function CreateEditForm() {
   //----------------------------------------------------------------------------
   //FORM INIT/SAVE FUNCTIONS
   //----------------------------------------------------------------------------
+
+  const saveForm = useCallback(() => {
+    if (!loadForm.isPending && sections !== []) {
+      const newForm = loadForm.value;
+      newForm.sections = sections;
+      FORM.updateForm(loadForm.value._id, newForm);
+    }
+  }, [sections, loadForm.value, loadForm.isPending]);
+
+  //If a form doesn't exist then create a new one from the default template
+  const initiateForm = useCallback(() => {
+    async function initiate() {
+      const data = {
+        programId: programId,
+        name: defaultFormState.name,
+        description: defaultFormState.description,
+        createdBy: appUser.userId,
+        draft: true,
+        sections: defaultFormState.sections
+      };
+
+      await FORM.createForm(data);
+      refetch({ programId: programId });
+    }
+    initiate();
+  }, [appUser, refetch, programId]);
+
   useEffect(() => {
     if (loadForm.isPending) return;
 
     if (!loadForm.value) {
       //Create a form and refetch
       initiateForm();
-      refetch({ programId: appUser.currentProgram });
       return;
     }
 
@@ -108,39 +140,18 @@ function CreateEditForm() {
       description: loadForm.value.description
     });
 
-    //Set the active form to be the first one
     updateActiveSection(0);
-  }, [loadForm, appUser]);
+
+    //Set the active form to be the first one
+    //updateActiveSection(0);
+  }, [loadForm, appUser, refetch, initiateForm]);
 
   //When the sections changes we will update the form.
   //1. When an input on the section card itself changes focus OR
   //2. The section changes focus in general
   useEffect(() => {
-    if (loadForm.isPending || sections === []) return;
     saveForm();
-  }, [sections]);
-
-  async function saveForm() {
-    //We also update the headerData as well (but it should already be updated)
-    const newForm = loadForm.value;
-    newForm.sections = sections;
-    await FORM.updateForm(loadForm.value._id, newForm);
-    //refetch({ programId: appUser.currentProgram });
-  }
-
-  //If a form doesn't exist then create a new one from the default template
-  async function initiateForm() {
-    const data = {
-      programId: programId,
-      name: defaultFormState.name,
-      description: defaultFormState.description,
-      createdBy: appUser.userId,
-      draft: true,
-      sections: defaultFormState.sections
-    };
-
-    await FORM.createForm(data);
-  }
+  }, [sections, saveForm]);
 
   //----------------------------------------------------------------------------
   //UPDATE/ADD/MOVE SECTION
@@ -313,7 +324,6 @@ function CreateEditForm() {
   }
 
   //TODO: Add header customization here
-
   return (
     <div>
       <CreateEditFormHeader
