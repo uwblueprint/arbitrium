@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const matrix = new mongoose.Schema({
+const coordinates = new mongoose.Schema({
   x: {
     type: Number
   },
@@ -46,7 +46,7 @@ const answer = new mongoose.Schema({
   },
   // CHECKBOX_GRID
   answerMatrix: {
-    type: [matrix]
+    type: [coordinates]
   },
   sectionId: {
     type: String
@@ -65,11 +65,11 @@ const submissionsSchema = new mongoose.Schema(
       type: String
     },
     submissionDate: {
-      type: String,
-      default: null //If null then it hasn't been submitted (i.e it is in draft mode)
+      type: Date,
+      default: null // If null then it hasn't been submitted (i.e it is in draft mode)
     },
     lastSaveDate: {
-      type: String
+      type: Date
     },
     answers: {
       type: [answer]
