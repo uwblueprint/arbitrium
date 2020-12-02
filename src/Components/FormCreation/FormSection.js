@@ -117,13 +117,6 @@ const useStyles = makeStyles({
   }
 });
 
-const HeaderWrapper = styled.div`
-  margin-top: 32px;
-  margin-left: 12px;
-  margin-bottom: 25px;
-  marginright: 1px;
-`;
-
 const CardWrapper = styled.div`
   display: flex;
 `;
