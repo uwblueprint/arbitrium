@@ -14,16 +14,21 @@ import CreateEditShortAnswer from "./CreateEditShortAnswer";
 import CreateEditParagraph from "./CreateEditParagraph";
 import TextField from "@material-ui/core/TextField";
 import InputBase from "@material-ui/core/InputBase";
-import styled from "styled-components";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ShortTextIcon from "@material-ui/icons/ShortText";
 import { Draggable } from "react-beautiful-dnd";
 
 const useStyles = makeStyles({
+  //Wraps the card
   content: {
-    marginTop: -16
+    marginBottom: 8,
+    marginLeft: 24,
+    marginTop: 24,
+    marginRight: 16
   },
+
+  //CSS for the card component
   root: {
     fontSize: 14,
     borderRadius: 0,
@@ -31,7 +36,7 @@ const useStyles = makeStyles({
     marginBottom: 20,
     width: 816
   },
-  active: {
+  rootActive: {
     fontSize: 14,
     borderRadius: 0,
     borderLeft: "4px solid #2261AD",
@@ -39,14 +44,46 @@ const useStyles = makeStyles({
     marginBottom: 20,
     width: 816
   },
-  title: {
-    color: "#000",
-    fontSize: "20px",
-    fontWeight: "500"
+
+  //Question Title and Menu Wrapper
+  questionTitleAndMenuWrapper: {
+    display: "flex",
+    paddingBottom: 16
   },
-  container: {
+
+  //Question Title
+  questionTitle: {
+    borderRadius: 4,
+    border: "1px solid #ffffff",
+    background: "#f4f5f6",
+    height: 56,
+    width: 568,
+    paddingLeft: 16,
     display: "flex"
   },
+
+  //Question Menu
+  questionTypeMenu: {
+    borderRadius: 4,
+    border: "1px solid rgba(0, 0, 0, 0.12)",
+    boxSizing: "border-box",
+    background: "#FFFFFF",
+    height: 40,
+    width: 192,
+    marginBottom: 16,
+    marginLeft: 16,
+    textAlign: "left",
+    justifyContent: "left"
+  },
+
+  //Question Description
+  questionDescription: {
+    width: 764,
+    height: 21,
+    marginBottom: 24
+  },
+
+  //Row of options at bottom wrapper
   buttonRow: {
     display: "flex",
     flexDirection: "row",
@@ -57,6 +94,12 @@ const useStyles = makeStyles({
     marginRight: 5,
     marginLeft: 5
   },
+  //required
+  switch: {
+    textTransform: "none",
+    paddingTop: 4,
+    paddingLeft: 10
+  },
   button: {
     textTransform: "none"
   },
@@ -66,39 +109,8 @@ const useStyles = makeStyles({
     fontWeight: "normal",
     fontSize: 12,
     letterSpacing: 0.4
-  },
-  switch: {
-    textTransform: "none",
-    paddingTop: 4,
-    paddingLeft: 10
-  },
-  questionTitle: {
-    borderRadius: 4,
-    border: "1px solid #ffffff",
-    background: "#f4f5f6",
-    height: 56,
-    width: 568,
-    paddingLeft: 16,
-    marginBottom: 16
-  },
-  questionTypeMenu: {
-    borderRadius: 4,
-    border: "1px solid rgba(0, 0, 0, 0.12)",
-    boxSizing: "border-box",
-    background: "#FFFFFF",
-    height: 40,
-    width: 192,
-    marginBottom: 16
   }
 });
-
-const TitleWrapper = styled.div`
-  margin-top: 24px;
-  margin-left: 8px;
-  margin-bottom: 16px;
-  margin-right: 16px;
-  position: "flex";
-`;
 
 const StyledSwitch = withStyles({
   switchBase: {
@@ -138,10 +150,10 @@ function FormCard({
           <div className={classes.container}>
             <Card
               onClick={() => handleActive(sectionKey, questionKey)}
-              className={active ? classes.active : classes.root}
+              className={active ? classes.rootActive : classes.root}
             >
               <CardContent className={classes.content}>
-                <TitleWrapper>
+                <div className={classes.questionTitleAndMenuWrapper}>
                   <InputBase
                     className={classes.questionTitle}
                     placeholder="Question"
@@ -149,7 +161,6 @@ function FormCard({
                     onChange={(e) => setTitle(e.target.value)}
                     autoFocus={true}
                     rowsMax={1}
-                    fullWidth="true"
                     type="string"
                   ></InputBase>
                   <Button
@@ -173,16 +184,16 @@ function FormCard({
                     <MenuItem> {"Test3"}</MenuItem>
                     <MenuItem> {"Test4"}</MenuItem>
                   </Menu>
-                  <TextField
-                    placeholder="New Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    multiline
-                    rowsMax={10}
-                    fullWidth="true"
-                    type="string"
-                  ></TextField>
-                </TitleWrapper>
+                </div>
+                <TextField
+                  placeholder="New Description"
+                  className={classes.questionDescription}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  multiline
+                  rowsMax={10}
+                  type="string"
+                ></TextField>
                 {card && card.type === "MULTIPLE_CHOICE" ? (
                   <CreateEditMultipleChoice data={card.options} />
                 ) : null}

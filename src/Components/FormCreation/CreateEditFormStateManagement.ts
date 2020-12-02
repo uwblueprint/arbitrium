@@ -9,8 +9,10 @@ import {
 export const sectionsStarter: FormSectionBase[] = [
   {
     name: "About Your Charity",
-    description: "Section Type: Admin Info",
+    description: "This section is used to uniquely identify each applicant",
     deleted: 0,
+    sectionType: "Admin Info",
+    required: true,
     questions: [
       {
         name: "Test",
@@ -27,9 +29,11 @@ export const sectionsStarter: FormSectionBase[] = [
     ]
   },
   {
-    name: "Untitled Section",
-    description: "Section Type: Decision Criteria",
+    name: "Untitled Section2",
+    description: "Description",
     deleted: 0,
+    required: false,
+    sectionType: "Decision Criteria",
     questions: [
       {
         name: "Test 3",
@@ -44,8 +48,10 @@ export const sectionsStarter: FormSectionBase[] = [
 
 export const defaultNewSection: FormSectionBase = {
   name: "Untitled Section",
-  description: "Section Type: Decision Criteria",
+  description: "Description",
   deleted: 0,
+  sectionType: "Decision Criteria",
+  required: false,
   questions: [
     {
       name: "Untitled",

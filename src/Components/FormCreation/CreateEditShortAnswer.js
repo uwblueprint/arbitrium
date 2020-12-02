@@ -17,7 +17,7 @@ function CreateEditShortAnswer() {
         size="medium"
         multiline
         rowsMax={2}
-        fullWidth="true"
+        fullWidth={true}
       ></TextField>
     </Wrapper>
   );

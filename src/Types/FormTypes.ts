@@ -14,6 +14,21 @@ export type EditSectionsAction =
   | {
       type: "DELETE_SECTION";
       index: number;
+    }
+  | {
+      type: "EDIT_TITLE";
+      index: number;
+      title: string;
+    }
+  | {
+      type: "EDIT_DESCRIPTION";
+      index: number;
+      description: string;
+    }
+  | {
+      type: "EDIT_SECTION_TYPE";
+      index: number;
+      sectionType: string;
     };
 
 export type EditQuestionsAction =
@@ -62,6 +77,8 @@ export interface FormSectionBase {
   description: string;
   questions: Array<QuestionCard>;
   deleted: number;
+  sectionType: string;
+  required: boolean;
 }
 
 export interface FormSection extends FormSectionBase {

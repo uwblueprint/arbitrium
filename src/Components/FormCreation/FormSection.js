@@ -5,41 +5,64 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import CardHeader from "@material-ui/core/CardHeader";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FormCard from "./FormCard";
+import InputBase from "@material-ui/core/InputBase";
 import AddCardComponent from "./AddCardComponent";
 import { deleteQuestion } from "../../requests/forms";
+import TextField from "@material-ui/core/TextField";
 import { AuthContext } from "../../Authentication/Auth.js";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import { Divider } from "@material-ui/core";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 import { Droppable } from "react-beautiful-dnd";
 
 const useStyles = makeStyles({
-  content: { marginTop: -16 },
+  //Wraps the card
+
+  //Used when content is active
+  contentActive: {
+    marginBottom: 8,
+    marginLeft: 24,
+    marginTop: 24,
+    marginRight: 16
+  },
+  content: {
+    marginBottom: 0,
+    marginLeft: 24,
+    marginTop: 0,
+    marginRight: 16
+  },
+
   root: {
-    fontSize: 14,
     borderRadius: 0,
     borderTop: "8px solid #2261AD",
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
+    minWidth: 816,
     width: 816
   },
-  active: {
-    fontSize: 14,
+  rootActive: {
     borderRadius: 0,
     borderTop: "8px solid #2261AD",
     borderLeft: "4px solid #2261AD",
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
+    minWidth: 816,
     width: 816
   },
-  title: {
-    color: "#000",
-    fontSize: "20px",
-    fontWeight: "500"
+
+  //Question Title and Menu Wrapper
+  sectionTitleAndMenuWrapper: {
+    display: "flex"
   },
-  section_title: {
+
+  //Display for "Section 1 of 2"
+  section_index: {
     borderTopLeftRadius: "4px",
     borderTopRightRadius: "4px",
     marginBottom: "0px",
@@ -51,6 +74,30 @@ const useStyles = makeStyles({
     paddingRight: "10px",
     paddingTop: "5px",
     paddingBottom: "5px"
+  },
+
+  //Section Title
+  sectionTitle: {
+    height: 36,
+    width: 440,
+    fontSize: 24
+  },
+
+  //Section Menu
+  sectionMenu: {
+    marginLeft: "auto",
+    float: "right",
+    marginBottom: 10
+  },
+
+  //Section Description
+  sectionDescription: {
+    height: 21,
+    width: 764
+  },
+
+  paper: {
+    boxShadow: "0 2px 3px 1px #cccccc"
   },
   action_menu: {
     boxShadow:
@@ -78,9 +125,13 @@ function FormSection({
   numSections,
   sectionNum,
   sectionData,
+  questionData,
   updateActiveSection,
   active,
   handleAddSection,
+  handleTitleUpdate,
+  handleDescriptionUpdate,
+  handleSectionTypeUpdate,
   handleDeleteSection,
   setShowMoveSectionsDialog
 }) {
@@ -90,8 +141,15 @@ function FormSection({
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
-    sectionData.questions
+    questionData
   );
+
+  //States to manage content of section card
+  const [title, setTitle] = useState(sectionData.name);
+  const [description, setDescription] = useState(sectionData.description);
+  const [sectionType, setSectionType] = useState(sectionData.sectionType);
+
+  //Menu open/close
   const handleAnchorClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -100,6 +158,7 @@ function FormSection({
   };
 
   useEffect(() => {
+    //Loading Questions
     dispatchQuestionsUpdate({
       type: "LOAD",
       questions: questions
@@ -107,6 +166,9 @@ function FormSection({
   }, [questions, dispatchQuestionsUpdate]);
 
   function updateActiveQuestion(sectionKey, questionKey) {
+    //Saving is done on focus change and is handled at the section level
+    //Every question change updates the active section and saves the changes
+
     // handleUpdateQuestion(sectionKey, questionKey);
     updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
@@ -126,11 +188,15 @@ function FormSection({
   }
 
   function setSectionAsActive(sectionKey) {
+    //This is called when the header for the section is focused
+    //A question id of -1 means that we are editing the section itself
     setActiveQuestion(-1);
     updateActiveSection(sectionKey);
   }
 
   function handleAddQuestion() {
+    //When a question is added we update the DB with the new question
+    //TODO: Post the question to mongo and then reload
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
       index: activeQuestion
@@ -148,7 +214,6 @@ function FormSection({
   }
 
   function handleDeleteQuestion(questionKey) {
-    /* Calling delete endpoint to remove question in mongo */
     deleteQuestion(
       { formId: appUser.currentProgram },
       sectionData._id,
@@ -162,30 +227,53 @@ function FormSection({
 
   return (
     <div>
-      <span className={classes.section_title}>
+      <span className={classes.section_index}>
         Section {sectionNum} of {numSections}
       </span>
-      <CardWrapper key={sectionNum}>
+      <CardWrapper>
         <Card
           className={
-            active && activeQuestion === -1 ? classes.active : classes.root
+            active && activeQuestion === -1 ? classes.rootActive : classes.root
           }
           onClick={() => setSectionAsActive(sectionNum - 1)}
         >
-          <CardHeader
-            className={classes.title}
-            title={sectionData.name}
-            id={sectionNum}
-            action={
-              <IconButton
-                aria-label="actions"
-                aria-controls="actions-menu"
-                onClick={handleAnchorClick}
-              >
-                <MoreVertIcon />
-              </IconButton>
-            }
-          />
+          <CardContent
+            className={active ? classes.contentActive : classes.content}
+          >
+            <div className={classes.sectionTitleAndMenuWrapper}>
+              <InputBase
+                className={classes.sectionTitle}
+                placeholder="Untitled Section"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={() => handleTitleUpdate(title)}
+                rowsMax={1}
+                type="string"
+              ></InputBase>
+              {active ? (
+                <IconButton
+                  className={classes.sectionMenu}
+                  aria-label="actions"
+                  aria-controls="actions-menu"
+                  onClick={handleAnchorClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              ) : null}
+            </div>
+            {active ? (
+              <TextField
+                className={classes.sectionDescription}
+                placeholder="New Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                multiline
+                onBlur={() => handleDescriptionUpdate(description)}
+                rowsMax={10}
+                type="string"
+              ></TextField>
+            ) : null}
+          </CardContent>
           <Menu
             anchorEl={anchorEl}
             classes={{
@@ -208,18 +296,63 @@ function FormSection({
             >
               Move section
             </MenuItem>
-            <MenuItem
-              classes={{ root: classes.action_menu_item }}
-              onClick={() => {
-                handleDeleteSection();
-              }}
-            >
-              Delete section
-            </MenuItem>
+            {!sectionData.required ? (
+              <MenuItem
+                classes={{ root: classes.action_menu_item }}
+                onClick={() => {
+                  handleDeleteSection();
+                }}
+              >
+                Delete section
+              </MenuItem>
+            ) : null}
           </Menu>
-          <CardContent className={classes.content}>
-            {sectionData.description}
-          </CardContent>
+          {active ? (
+            <CardContent
+              className={active ? classes.contentActive : classes.content}
+            >
+              <Divider />
+              <p style={{ fontWeight: 500 }}>
+                {" "}
+                How will information from this section be used?{" "}
+              </p>
+              <div>
+                <FormControl component="fieldset">
+                  <RadioGroup
+                    row
+                    aria-label="position"
+                    name="position"
+                    defaultValue="Decision Criteria"
+                    value={sectionType}
+                    //We can call handleSectionTypeUpdate prop on each change
+                    //since there is very little updates compared to text input
+                    onChange={(e) => {
+                      setSectionType(e.target.value);
+                      handleSectionTypeUpdate(e.target.value);
+                    }}
+                    onBlur={() => handleSectionTypeUpdate(sectionType)}
+                  >
+                    <FormControlLabel
+                      value="Admin Info"
+                      control={<Radio color="primary" />}
+                      label="Admin Info"
+                    />
+                    <FormControlLabel
+                      value="Decision Criteria"
+                      control={<Radio color="primary" />}
+                      label="Decision Criteria"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
+            </CardContent>
+          ) : (
+            <CardContent className={classes.content}>
+              <p style={{ fontWeight: 500 }}>
+                {"Section Type: " + sectionType}
+              </p>
+            </CardContent>
+          )}
         </Card>
         {active && activeQuestion === -1 ? (
           <AddCardComponent
@@ -231,9 +364,9 @@ function FormSection({
       <Droppable droppableId={String(sectionNum - 1)}>
         {(provided, snapshot) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
-            {questions.map((_question, questionKey) => (
+            {questions.map((question, questionKey) => (
               <CardWrapper
-                key={questionKey}
+                key={question._id}
                 id={"question_" + questionKey + "_" + (sectionNum - 1)}
               >
                 <FormCard
