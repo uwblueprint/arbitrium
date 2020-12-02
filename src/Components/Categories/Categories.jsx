@@ -110,12 +110,20 @@ const Categories = ({ categoryData }) => {
                     {title !== "Agency Website" &&
                     title !== "Other Social Media" ? (
                       <>
-                        <span className="title">{title}</span>
+                        <span className="title">
+                          {title
+                            .replaceAll("_dot_", ".")
+                            .replaceAll("_dash_", "-")}
+                        </span>
                         <span className="value">{value}</span>
                       </>
                     ) : (
                       <>
-                        <span className="title">{title}</span>
+                        <span className="title">
+                          {title
+                            .replaceAll("_dot_", ".")
+                            .replaceAll("_dash_", "-")}
+                        </span>
                         <span className="value">
                           <Link target="_blank" href={value}>
                             {" "}
@@ -142,12 +150,20 @@ const Categories = ({ categoryData }) => {
                     {title !== "Agency Website" &&
                     title !== "Other Social Media" ? (
                       <>
-                        <span className="title">{title}</span>
+                        <span className="title">
+                          {title
+                            .replaceAll("_dot_", ".")
+                            .replaceAll("_dash_", "-")}
+                        </span>
                         <span className="value">{value}</span>
                       </>
                     ) : (
                       <>
-                        <span className="title">{title}</span>
+                        <span className="title">
+                          {title
+                            .replaceAll("_dot_", ".")
+                            .replaceAll("_dash_", "-")}
+                        </span>
                         <span className="value">
                           <Link target="_blank" href={value}>
                             {" "}
