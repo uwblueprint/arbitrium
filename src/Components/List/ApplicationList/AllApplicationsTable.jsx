@@ -1,7 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import MaterialTable from "material-table";
-import { Paper } from "@material-ui/core";
+import {
+  Paper,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl
+} from "@material-ui/core";
 import TableIcons from "../../Common/TableIcons";
 import moment from "moment";
 
@@ -26,6 +32,26 @@ const rowStyle = {
   border: "1px solid #cccccc"
 };
 
+const ExportWrapper = styled.div`
+  .dropdown-text {
+    color: #2261ad;
+    text-align: center;
+    font-size: 14px;
+    letter-spacing: 1.25px;
+    position: absolute;
+    height: 16px;
+    right: 42px;
+  }
+  .dropdown {
+    width: 180px;
+    position: absolute;
+    top: 0%;
+    bottom: 0%;
+    left: 0%;
+    right: 0%;
+  }
+`;
+
 function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
   const columns = [
     { title: "Applicant Name", field: "applicantName" },
@@ -43,7 +69,25 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
       }
     },
     {
-      title: "",
+      title: (
+        <ExportWrapper>
+          <FormControl
+            variant="outlined"
+            size="small"
+            margin="dense"
+            className="dropdown"
+          >
+            <InputLabel className="dropdown-text">Download All</InputLabel>
+            <Select>
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={"csv"}>Download as CSV</MenuItem>
+              <MenuItem value={"pdf"}>Download as PDF</MenuItem>
+            </Select>
+          </FormControl>
+        </ExportWrapper>
+      ),
       field: "applicantLink",
       sorting: false,
       searchable: false,

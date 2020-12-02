@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
 
@@ -43,7 +43,7 @@ type HeaderData = {
 type Props = {
   name: string;
   description: string;
-  onChange: (data: HeaderData) => void;
+  onChange: (name: string, description: string) => void;
 };
 
 function CreateEditFormHeader({
@@ -51,28 +51,40 @@ function CreateEditFormHeader({
   description,
   onChange
 }: Props): React.ReactElement<typeof Header> {
-  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({
-      name: e.target.value,
-      description
-    });
-  };
+  const [formTitle, setFormTitle] = useState(name);
+  const [formDescription, setFormDescription] = useState(description);
 
-  const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({
-      name,
-      description: e.target.value
-    });
+  useEffect(() => {
+    setFormTitle(name);
+    setFormDescription(description);
+  }, [name, description]);
+
+  const updateHeader = () => {
+    onChange(formTitle, formDescription);
   };
 
   return (
     <Header>
-      <NameInput placeholder="Form name" value={name} onChange={onNameChange} />
+      <NameInput
+        placeholder="Form name"
+        value={formTitle}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setFormTitle(e.target.value)
+        }
+        onBlur={() => {
+          updateHeader();
+        }}
+      />
       <DescriptionInput
         multiline
         placeholder="Form description..."
-        value={description}
-        onChange={onDescriptionChange}
+        value={formDescription}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setFormDescription(e.target.value)
+        }
+        onBlur={() => {
+          updateHeader();
+        }}
       />
     </Header>
   );
