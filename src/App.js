@@ -14,6 +14,7 @@ import ProgramContextProvider from "./Contexts/ProgramContext";
 const AppWrapper = styled.div`
   background-color: #ffffff;
   min-height: 10vh;
+  min-width: 960px;
   display: flex;
   flex-direction: column;
   /*align-items: center;*/

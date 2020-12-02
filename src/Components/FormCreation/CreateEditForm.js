@@ -22,6 +22,7 @@ import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import CreateEditFormMoveSectionDialog from "./CreateEditFormMoveSectionDialog";
 import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const useStyles = makeStyles({
   snackbar: {
@@ -309,6 +310,61 @@ function CreateEditForm() {
     setShowDeleteSectionConfirmation(true);
   }
 
+  async function reorderQuestion(
+    sectionIndex,
+    sectionTargetIndex,
+    questionIndex,
+    questionTargetIndex
+  ) {
+    const sectionsCopy = sections.map((section) => ({ ...section }));
+    const questionRemovedArray = Array.from(
+      sectionsCopy[sectionIndex].questions
+    );
+    const [movedQuestion] = questionRemovedArray.splice(questionIndex, 1);
+
+    if (sectionIndex === sectionTargetIndex) {
+      questionRemovedArray.splice(questionTargetIndex, 0, movedQuestion);
+    } else {
+      const questionAddArray = Array.from(
+        sectionsCopy[sectionTargetIndex].questions
+      );
+      questionAddArray.splice(questionTargetIndex, 0, movedQuestion);
+      sectionsCopy[sectionTargetIndex].questions = questionAddArray;
+    }
+
+    sectionsCopy[sectionIndex].questions = questionRemovedArray;
+
+    const newForm = await FORM.updateSections(
+      appUser.currentProgram,
+      sectionsCopy
+    );
+    if (newForm == null) return;
+
+    console.log(newForm);
+
+    dispatchSectionsUpdate({
+      type: "LOAD",
+      sections: newForm.sections
+    });
+  }
+
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+    if (!destination) return; // return if item was dropped outside
+
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    )
+      return;
+    reorderQuestion(
+      parseInt(source.droppableId),
+      parseInt(destination.droppableId),
+      source.index,
+      destination.index
+    );
+  };
+
   //----------------------------------------------------------------------------
   //FORM HEADER UPDATE / CUSTOMIZATION
   //----------------------------------------------------------------------------
@@ -322,6 +378,7 @@ function CreateEditForm() {
   }
 
   //TODO: Add header customization here
+
   return (
     <div>
       <CreateEditFormHeader
@@ -339,26 +396,28 @@ function CreateEditForm() {
           initSections: sections
         }}
       />
-      {sections &&
-        sections.map((section, key) => (
-          <FormWrapper key={section._id} id={"section_" + key}>
-            <FormSection
-              key={key + "_section"}
-              numSections={sections.length}
-              sectionNum={key + 1}
-              sectionData={section}
-              updateActiveSection={updateActiveSection}
-              active={activeSection === key}
-              handleAddSection={handleAddSection}
-              handleTitleUpdate={handleTitleUpdate}
-              handleDescriptionUpdate={handleDescriptionUpdate}
-              handleSectionTypeUpdate={handleSectionTypeUpdate}
-              handleMoveSection={handleMoveSection}
-              handleDeleteSection={handleDeleteSection}
-              setShowMoveSectionsDialog={setShowMoveSectionsDialog}
-            />
-          </FormWrapper>
-        ))}
+      <DragDropContext onDragEnd={onDragEnd}>
+        {sections &&
+          sections.map((section, key) => (
+            <FormWrapper key={section._id} id={"section_" + key}>
+              <FormSection
+                key={key + "_section"}
+                numSections={sections.length}
+                sectionNum={key + 1}
+                sectionData={section}
+                updateActiveSection={updateActiveSection}
+                active={activeSection === key}
+                handleAddSection={handleAddSection}
+                handleTitleUpdate={handleTitleUpdate}
+                handleDescriptionUpdate={handleDescriptionUpdate}
+                handleSectionTypeUpdate={handleSectionTypeUpdate}
+                handleMoveSection={handleMoveSection}
+                handleDeleteSection={handleDeleteSection}
+                setShowMoveSectionsDialog={setShowMoveSectionsDialog}
+              />
+            </FormWrapper>
+          ))}
+      </DragDropContext>
       {showDeleteSectionConfirmation && (
         <>
           <DialogOverlay />
