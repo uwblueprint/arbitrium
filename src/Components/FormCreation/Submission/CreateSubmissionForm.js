@@ -21,7 +21,7 @@ function CreateSubmissionForm() {
   );
   const [activeSection, setActiveSection] = useState(0);
   const [loadForm, refetch] = usePromise(FORM.getForm, {
-    formId: appUser.currentProgram
+    programId: appUser.currentProgram
   });
   const [headerData, setHeaderData] = useState({
     name: defaultFormState.name,
