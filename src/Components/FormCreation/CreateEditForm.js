@@ -95,7 +95,12 @@ function CreateEditForm() {
   //usecallback prevents functions from being re-created on every render.
   //This is useful when a function is a dependency of useEffect (otherwise you get infinite renders)
   const saveForm = useCallback(() => {
-    if (!loadForm.isPending && loadForm.value && sections !== []) {
+    if (
+      !loadForm.isPending &&
+      loadForm.value &&
+      sections.length > 0 &&
+      sections !== loadForm.value.sections
+    ) {
       const newForm = loadForm.value;
       newForm.sections = sections;
       FORM.updateForm(loadForm.value._id, newForm);
@@ -143,7 +148,7 @@ function CreateEditForm() {
 
     //Set the active form to be the first one
     //updateActiveSection(0);
-  }, [loadForm, appUser, refetch, initiateForm]);
+  }, [loadForm, appUser, initiateForm]);
 
   //When the sections changes we will update the form.
   //1. When an input on the section card itself changes focus OR
@@ -213,6 +218,7 @@ function CreateEditForm() {
       loadForm.value._id,
       reorderedSections
     );
+
     if (newForm == null) return;
     dispatchSectionsUpdate({
       type: "LOAD",
@@ -334,18 +340,11 @@ function CreateEditForm() {
 
     sectionsCopy[sectionIndex].questions = questionRemovedArray;
 
-    const newForm = await FORM.updateSections(
-      appUser.currentProgram,
-      sectionsCopy
-    );
-    if (newForm == null) return;
-
-    console.log(newForm);
-
     dispatchSectionsUpdate({
       type: "LOAD",
-      sections: newForm.sections
+      sections: sectionsCopy
     });
+    updateActiveSection(sectionTargetIndex);
   }
 
   const onDragEnd = (result) => {
@@ -379,6 +378,16 @@ function CreateEditForm() {
 
   //TODO: Add header customization here
 
+  //When we move a question/section this uniquekey string will be changed
+  //which will cause a complete re-render of the formSections
+  let uniquekey = "";
+  sections.forEach((section) => {
+    uniquekey += section._id;
+    section.questions.forEach((question) => {
+      uniquekey += question._id;
+    });
+  });
+
   return (
     <div>
       <CreateEditFormHeader
@@ -399,23 +408,26 @@ function CreateEditForm() {
       <DragDropContext onDragEnd={onDragEnd}>
         {sections &&
           sections.map((section, key) => (
-            <FormWrapper key={section._id} id={"section_" + key}>
-              <FormSection
-                key={key + "_section"}
-                numSections={sections.length}
-                sectionNum={key + 1}
-                sectionData={section}
-                updateActiveSection={updateActiveSection}
-                active={activeSection === key}
-                handleAddSection={handleAddSection}
-                handleTitleUpdate={handleTitleUpdate}
-                handleDescriptionUpdate={handleDescriptionUpdate}
-                handleSectionTypeUpdate={handleSectionTypeUpdate}
-                handleMoveSection={handleMoveSection}
-                handleDeleteSection={handleDeleteSection}
-                setShowMoveSectionsDialog={setShowMoveSectionsDialog}
-              />
-            </FormWrapper>
+            <div key={uniquekey + section._id}>
+              <FormWrapper key={section._id} id={"section_" + key}>
+                <FormSection
+                  key={key + "_section"}
+                  numSections={sections.length}
+                  sectionNum={key + 1}
+                  sectionData={section}
+                  questionData={section.questions}
+                  updateActiveSection={updateActiveSection}
+                  active={activeSection === key}
+                  handleAddSection={handleAddSection}
+                  handleTitleUpdate={handleTitleUpdate}
+                  handleDescriptionUpdate={handleDescriptionUpdate}
+                  handleSectionTypeUpdate={handleSectionTypeUpdate}
+                  handleMoveSection={handleMoveSection}
+                  handleDeleteSection={handleDeleteSection}
+                  setShowMoveSectionsDialog={setShowMoveSectionsDialog}
+                />
+              </FormWrapper>
+            </div>
           ))}
       </DragDropContext>
       {showDeleteSectionConfirmation && (

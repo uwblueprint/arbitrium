@@ -125,6 +125,7 @@ function FormSection({
   numSections,
   sectionNum,
   sectionData,
+  questionData,
   updateActiveSection,
   active,
   handleAddSection,
@@ -140,7 +141,7 @@ function FormSection({
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
-    sectionData.questions
+    questionData
   );
 
   //States to manage content of section card
@@ -363,9 +364,9 @@ function FormSection({
       <Droppable droppableId={String(sectionNum - 1)}>
         {(provided, snapshot) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
-            {questions.map((_question, questionKey) => (
+            {questions.map((question, questionKey) => (
               <CardWrapper
-                key={questionKey}
+                key={question._id}
                 id={"question_" + questionKey + "_" + (sectionNum - 1)}
               >
                 <FormCard
