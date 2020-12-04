@@ -99,10 +99,10 @@ function CreateSubmissionForm() {
       ) : null}
       <ButtonGroup>
         <Button
-          variant="contained"
+          variant="outlined"
           className={classes.button}
           disabled={page === -1}
-          color="outlined"
+          color="primary"
           onClick={() => setPage(page - 1)}
         >
           Back
@@ -119,7 +119,7 @@ function CreateSubmissionForm() {
         {page === -1 ? (
           <div></div>
         ) : (
-          <div style={{ width: 500 }}>
+          <div style={{ width: 500, marginLeft: 140 }}>
             <BorderLinearProgress
               variant="determinate"
               value={norm_progress(page + 1)}
