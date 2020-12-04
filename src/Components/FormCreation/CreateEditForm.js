@@ -388,6 +388,8 @@ function CreateEditForm() {
     });
   });
 
+  console.log("Sections Re-render");
+
   return (
     <div>
       <CreateEditFormHeader
@@ -412,6 +414,7 @@ function CreateEditForm() {
               <FormWrapper key={section._id} id={"section_" + key}>
                 <FormSection
                   key={key + "_section"}
+                  formId={loadForm.value._id}
                   numSections={sections.length}
                   sectionNum={key + 1}
                   sectionData={section}

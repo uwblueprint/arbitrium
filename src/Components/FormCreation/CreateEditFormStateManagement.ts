@@ -16,12 +16,14 @@ export const sectionsStarter: FormSectionBase[] = [
     questions: [
       {
         name: "Test",
+        description: "Description",
         type: "IDENTIFIER" as QuestionType,
         question: "What is the name of your charity?",
         required: true
       },
       {
         name: "Test 2",
+        description: "Description",
         type: "SHORT_ANSWER" as QuestionType,
         question: "What is the name of your charity?",
         required: false
@@ -37,6 +39,7 @@ export const sectionsStarter: FormSectionBase[] = [
     questions: [
       {
         name: "Test 3",
+        description: "Description",
         type: "SHORT_ANSWER" as QuestionType,
         question: "Untitled Question",
         options: ["Option 1"],
@@ -55,6 +58,7 @@ export const defaultNewSection: FormSectionBase = {
   questions: [
     {
       name: "Untitled",
+      description: "Description",
       type: "SHORT_ANSWER" as QuestionType,
       question: "Untitled Question",
       options: ["Option 1"],
@@ -65,6 +69,7 @@ export const defaultNewSection: FormSectionBase = {
 
 export const defaultNewQuestion = {
   name: "Untitled",
+  description: "Description",
   type: "SHORT_ANSWER" as QuestionType,
   question: "Untitled Question",
   options: ["Option 1"],

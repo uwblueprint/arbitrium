@@ -20,6 +20,7 @@ import FormControl from "@material-ui/core/FormControl";
 import { Divider } from "@material-ui/core";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 import { Droppable } from "react-beautiful-dnd";
+import * as FORM from "../../requests/forms.js";
 
 const useStyles = makeStyles({
   //Wraps the card
@@ -133,7 +134,8 @@ function FormSection({
   handleDescriptionUpdate,
   handleSectionTypeUpdate,
   handleDeleteSection,
-  setShowMoveSectionsDialog
+  setShowMoveSectionsDialog,
+  formId
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
@@ -224,6 +226,47 @@ function FormSection({
       setActiveQuestion(questionKey - 1);
     }
   }
+
+  //----------------------------------------------------------------------------
+  //UPDATE CARD CONTENTS
+  //----------------------------------------------------------------------------
+
+  function handleQuestionTitleUpdate(title) {
+    dispatchQuestionsUpdate({
+      type: "EDIT_TITLE",
+      index: activeQuestion,
+      title: title
+    });
+  }
+
+  function handleQuestionDescriptionUpdate(description) {
+    dispatchQuestionsUpdate({
+      type: "EDIT_DESCRIPTION",
+      index: activeQuestion,
+      description: description
+    });
+  }
+
+  function handleQuestionTypeUpdate(questionType) {
+    dispatchQuestionsUpdate({
+      type: "EDIT_SECTION_TYPE",
+      index: activeQuestion,
+      sectionType: questionType
+    });
+  }
+
+  //When the questions changes we will update the form.
+  //1. When an input on the question card itself changes focus OR
+  //2. The question changes focus in general
+  useEffect(() => {
+    if (questions && sectionData._id && formId && questions != questionData) {
+      console.log(questions);
+      console.log("Saving questions");
+      FORM.updateQuestions(formId, sectionData._id, questions);
+    }
+  }, [questions]);
+
+  console.log("Questions Re-render");
 
   return (
     <div>
@@ -378,6 +421,11 @@ function FormSection({
                   handleDelete={handleDeleteQuestion}
                   sectionKey={sectionNum - 1}
                   questionKey={questionKey}
+                  handleQuestionTitleUpdate={handleQuestionTitleUpdate}
+                  handleQuestionTypeUpdate={handleQuestionTypeUpdate}
+                  handleQuestionDescriptionUpdate={
+                    handleQuestionDescriptionUpdate
+                  }
                 />
                 <div style={{ marginLeft: snapshot.isDraggingOver ? 820 : 0 }}>
                   {active && activeQuestion === questionKey ? (
