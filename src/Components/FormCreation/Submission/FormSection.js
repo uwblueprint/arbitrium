@@ -68,13 +68,7 @@ const CardWrapper = styled.div`
   display: flex;
 `;
 
-function FormSection({
-  numSections,
-  sectionNum,
-  sectionData,
-  updateActiveSection,
-  active
-}) {
+function FormSection({ numSections, sectionNum, sectionData }) {
   const classes = useStyles();
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions, dispatchQuestionsUpdate] = useReducer(
@@ -90,7 +84,6 @@ function FormSection({
   }, [questions, dispatchQuestionsUpdate]);
 
   function updateActiveQuestion(sectionKey, questionKey) {
-    updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
       setActiveQuestion(questionKey);
       window.requestAnimationFrame(() => {
@@ -107,23 +100,13 @@ function FormSection({
     }
   }
 
-  function setSectionAsActive(sectionKey) {
-    setActiveQuestion(-1);
-    updateActiveSection(sectionKey);
-  }
-
   return (
     <div>
       <span className={classes.section_title}>
         Section {sectionNum} of {numSections}
       </span>
       <CardWrapper key={sectionNum}>
-        <Card
-          className={
-            active && activeQuestion === -1 ? classes.active : classes.root
-          }
-          onClick={() => setSectionAsActive(sectionNum - 1)}
-        >
+        <Card className={classes.active}>
           <CardHeader
             className={classes.title}
             title={sectionData.name}
@@ -142,7 +125,7 @@ function FormSection({
           <FormCard
             card={questions[questionKey]}
             key={questionKey + "_question"}
-            active={active && activeQuestion === questionKey}
+            active={activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
             sectionKey={sectionNum - 1}
             questionKey={questionKey}
