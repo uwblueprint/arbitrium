@@ -58,7 +58,7 @@ function CreateSubmissionForm() {
 
   return (
     <div>
-      <CreateEditFormHeader {...headerData} onChange={setHeaderData} />
+      <CreateEditFormHeader {...headerData} />
       {sections &&
         sections.map((section, key) => (
           <FormWrapper key={key} id={"section_" + key}>
