@@ -31,16 +31,16 @@ type Props = {
   description: string;
 };
 
-function SubmissionFormHeader({
+function SubmissionFormHeaderold({
   name,
   description
 }: Props): React.ReactElement<typeof Header> {
   return (
-    <Header>
+    <div>
       <NameField>{name}</NameField>
       <DescriptionField>{description}</DescriptionField>
-    </Header>
+    </div>
   );
 }
 
-export default SubmissionFormHeader;
+export default SubmissionFormHeaderold;
