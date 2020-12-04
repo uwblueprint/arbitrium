@@ -8,9 +8,8 @@ import CreateEditFormHeader from "./SubmissionFormHeader";
 import { defaultFormState } from "./SubmissionFormStateManagement";
 import customFormSectionsReducer from "../../../Reducers/CustomFormSectionsReducer";
 import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import { withStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
   button: {
