@@ -8,13 +8,51 @@ import CreateEditFormHeader from "./SubmissionFormHeader";
 import { defaultFormState } from "./SubmissionFormStateManagement";
 import customFormSectionsReducer from "../../../Reducers/CustomFormSectionsReducer";
 import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import { withStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  button: {
+    marginRight: 11
+  },
+  sectionProgress: {
+    marginTop: 13,
+    marginBottom: 13
+  }
+});
 
 const FormWrapper = styled.div`
   padding-top: 70px;
   padding-left: 15%;
 `;
 
+const ButtonGroup = styled.div`
+  padding-left: 15%;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: row;
+`;
+
+const BorderLinearProgress = withStyles((theme) => ({
+  root: {
+    height: 10,
+    borderRadius: 5,
+    width: 300
+  },
+  colorPrimary: {
+    backgroundColor:
+      theme.palette.grey[theme.palette.type === "light" ? 300 : 700]
+  },
+  bar: {
+    borderRadius: 5,
+    backgroundColor: "#55A94E"
+  }
+}))(LinearProgress);
+
 function CreateSubmissionForm() {
+  const classes = useStyles();
+
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
     customFormSectionsReducer,
@@ -42,6 +80,10 @@ function CreateSubmissionForm() {
     });
   }, [loadForm, appUser, refetch]);
 
+  const norm_progress = (pageNum) => {
+    return (pageNum * 100) / sections.length;
+  };
+
   return (
     <div>
       {page === -1 ? (
@@ -56,22 +98,37 @@ function CreateSubmissionForm() {
           />
         </FormWrapper>
       ) : null}
-      <Button
-        variant="contained"
-        disabled={page === -1}
-        color="primary"
-        onClick={() => setPage(page - 1)}
-      >
-        Previous
-      </Button>
-      <Button
-        variant="contained"
-        disabled={page === sections.length - 1}
-        color="primary"
-        onClick={() => setPage(page + 1)}
-      >
-        Next
-      </Button>
+      <ButtonGroup>
+        <Button
+          variant="contained"
+          className={classes.button}
+          disabled={page === -1}
+          color="outlined"
+          onClick={() => setPage(page - 1)}
+        >
+          Back
+        </Button>
+        <Button
+          variant="outlined"
+          className={classes.button}
+          disabled={page === sections.length - 1}
+          color="primary"
+          onClick={() => setPage(page + 1)}
+        >
+          Next
+        </Button>
+        {page === -1 ? (
+          <div></div>
+        ) : (
+          <div style={{ width: 500 }}>
+            <BorderLinearProgress
+              variant="determinate"
+              value={norm_progress(page + 1)}
+            />
+            Section {page + 1} of {sections.length}
+          </div>
+        )}
+      </ButtonGroup>
     </div>
   );
 }
