@@ -56,6 +56,9 @@ const Wrapper = styled.div`
   table.MuiTable-root {
     border: 1px solid #cccccc;
   }
+  a {
+    text-decoration: none;
+  }
   button {
     max-width: 200px;
     padding: 5px 5px;
