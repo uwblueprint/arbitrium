@@ -74,7 +74,8 @@ const question = new mongoose.Schema({
       "FILE_UPLOAD",
       "CHECKBOX_GRID",
       "IDENTIFIER"
-    ]
+    ],
+    default: "SHORT_ANSWER"
   },
   validations: {
     type: [regularExpressions],

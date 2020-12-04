@@ -18,7 +18,13 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import ShortTextIcon from "@material-ui/icons/ShortText";
 import { Draggable } from "react-beautiful-dnd";
+import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
+import SubjectIcon from "@material-ui/icons/Subject";
+import StarsOutlinedIcon from "@material-ui/icons/StarsOutlined";
 
+const MENU_BUTTON_HEIGHT = 40;
 const useStyles = makeStyles({
   //Wraps the card
   content: {
@@ -79,7 +85,7 @@ const useStyles = makeStyles({
     border: "1px solid rgba(0, 0, 0, 0.12)",
     boxSizing: "border-box",
     background: "#FFFFFF",
-    height: 40,
+    height: MENU_BUTTON_HEIGHT,
     width: 192,
     marginBottom: 16,
     marginLeft: 16,
@@ -120,6 +126,36 @@ const useStyles = makeStyles({
     fontWeight: "normal",
     fontSize: 12,
     letterSpacing: 0.4
+  },
+
+  menu_paper: {
+    boxShadow:
+      "0px 16px 24px rgba(0, 0, 0, 0.14), 0px 6px 30px rgba(0, 0, 0, 0.12), 0px 8px 10px rgba(0, 0, 0, 0.2)"
+  },
+
+  action_menu_item: {
+    color: "rgba(0, 0, 0, 0.87)",
+    height: 56,
+    borderBottom: "1px solid #cccccc",
+    width: 192,
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 0.4,
+    fontWeight: 400
+  },
+  //No border bottom
+  action_menu_item2: {
+    color: "rgba(0, 0, 0, 0.87)",
+    height: 56,
+    width: 192,
+    fontSize: 12,
+    lineHeight: 18,
+    letterSpacing: 0.4,
+    fontWeight: 400
+  },
+
+  action_menu_icon: {
+    paddingRight: 10
   }
 });
 
@@ -141,17 +177,13 @@ function FormCard({
   questionKey,
   handleQuestionDescriptionUpdate,
   handleQuestionTitleUpdate,
-  handleQuestionTypeUpdate
+  handleQuestionTypeUpdate,
+  handleRequiredToggle
 }) {
   const classes = useStyles();
-  const [required, setRequired] = useState(card.required);
   const [title, setTitle] = useState(card.name);
   const [description, setDescription] = useState(card.description);
   const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
-
-  const handleSwitch = () => {
-    setRequired((prev) => !prev);
-  };
 
   return (
     <div>
@@ -197,22 +229,122 @@ function FormCard({
                             setQuestionMenuAnchor(event.currentTarget)
                           }
                         >
-                          <ShortTextIcon />
-                          Open Menu
+                          {card && card.type === "IDENTIFIER" ? (
+                            <div style={{ display: "flex" }}>
+                              <StarsOutlinedIcon
+                                className={classes.action_menu_icon}
+                              />
+                              {"Identifier"}
+                            </div>
+                          ) : null}
+                          {card && card.type === "PARAGRAPHS" ? (
+                            <div style={{ display: "flex" }}>
+                              <SubjectIcon
+                                className={classes.action_menu_icon}
+                              />
+                              {"Paragraph"}
+                            </div>
+                          ) : null}
+                          {card && card.type === "SHORT_ANSWER" ? (
+                            <div style={{ display: "flex" }}>
+                              <ShortTextIcon
+                                className={classes.action_menu_icon}
+                              />
+                              {"Short Answer"}
+                            </div>
+                          ) : null}
+                          {card && card.type === "MULTIPLE_CHOICE" ? (
+                            <div style={{ display: "flex" }}>
+                              <RadioButtonCheckedIcon
+                                className={classes.action_menu_icon}
+                              />
+                              {"Multiple Choice"}
+                            </div>
+                          ) : null}
+                          {card && card.type === "CHECKBOXES" ? (
+                            <div style={{ display: "flex" }}>
+                              <CheckBoxIcon
+                                className={classes.action_menu_icon}
+                              />
+                              {"Checkboxes"}
+                            </div>
+                          ) : null}
+                          {card && card.type === "FILE_UPLOAD" ? (
+                            <div style={{ display: "flex" }}>
+                              <CloudUploadOutlinedIcon
+                                className={classes.action_menu_icon}
+                              />
+                              {"File Upload"}
+                            </div>
+                          ) : null}
                         </Button>
                         <Menu
                           anchorEl={questionMenuAnchor}
                           elevation={0}
                           id="simple-menu"
+                          classes={{
+                            paper: classes.menu_paper
+                          }}
+                          style={{ marginTop: 55 }}
                           keepMounted
                           open={Boolean(questionMenuAnchor)}
                           onClose={() => setQuestionMenuAnchor(null)}
                         >
-                          <MenuItem> {"SHORT_ANSWER"}</MenuItem>
-                          <MenuItem> {"PARAGRAPHS"}</MenuItem>
-                          <MenuItem> {"MULTIPLE_CHOICE"}</MenuItem>
-                          <MenuItem> {"CHECKBOXES"}</MenuItem>
-                          <MenuItem> {"FILE_UPLOAD"}</MenuItem>
+                          <MenuItem
+                            classes={{
+                              root: classes.action_menu_item2
+                            }}
+                            onClick={() =>
+                              handleQuestionTypeUpdate("SHORT_ANSWER")
+                            }
+                          >
+                            <ShortTextIcon
+                              className={classes.action_menu_icon}
+                            />{" "}
+                            {"Short Answer"}
+                          </MenuItem>
+                          <MenuItem
+                            classes={{ root: classes.action_menu_item }}
+                            onClick={() =>
+                              handleQuestionTypeUpdate("PARAGRAPHS")
+                            }
+                          >
+                            <SubjectIcon className={classes.action_menu_icon} />{" "}
+                            {"Paragraph"}
+                          </MenuItem>
+                          <MenuItem
+                            classes={{ root: classes.action_menu_item2 }}
+                            onClick={() =>
+                              handleQuestionTypeUpdate("MULTIPLE_CHOICE")
+                            }
+                          >
+                            <RadioButtonCheckedIcon
+                              className={classes.action_menu_icon}
+                            />{" "}
+                            {"Multiple Choice"}
+                          </MenuItem>
+                          <MenuItem
+                            classes={{ root: classes.action_menu_item }}
+                            onClick={() =>
+                              handleQuestionTypeUpdate("CHECKBOXES")
+                            }
+                          >
+                            <CheckBoxIcon
+                              className={classes.action_menu_icon}
+                            />{" "}
+                            {"Checkboxes"}
+                          </MenuItem>
+                          <MenuItem
+                            classes={{ root: classes.action_menu_item2 }}
+                            onClick={() =>
+                              handleQuestionTypeUpdate("FILE_UPLOAD")
+                            }
+                          >
+                            <CloudUploadOutlinedIcon
+                              className={classes.action_menu_icon}
+                            />{" "}
+                            {"File Upload"}
+                          </MenuItem>
                         </Menu>
                       </div>
                     ) : null}
@@ -296,9 +428,9 @@ function FormCard({
                           control={
                             <StyledSwitch
                               size="small"
-                              checked={required}
-                              onChange={handleSwitch}
+                              checked={card.required}
                               color="primary"
+                              onChange={() => handleRequiredToggle()}
                             />
                           }
                           label={

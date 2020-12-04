@@ -69,9 +69,13 @@ export type EditQuestionsAction =
       description: string;
     }
   | {
-      type: "EDIT_SECTION_TYPE";
+      type: "EDIT_QUESTION_TYPE";
       index: number;
       questionType: string;
+    }
+  | {
+      type: "REQUIRED_TOGGLE";
+      index: number;
     };
 
 export type FormContext = {

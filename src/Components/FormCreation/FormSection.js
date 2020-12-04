@@ -168,13 +168,10 @@ function FormSection({
   }, [questions, dispatchQuestionsUpdate]);
 
   function updateActiveQuestion(sectionKey, questionKey) {
-    //Saving is done on focus change and is handled at the section level
-    //Every question change updates the active section and saves the changes
+    //Saving is done on focus change
+    //Every question change updates the active section
 
-    // handleUpdateQuestion(sectionKey, questionKey);
-    updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
-      setActiveQuestion(questionKey);
       window.requestAnimationFrame(() => {
         const element = document.getElementById(
           "question_" + questionKey + "_" + sectionKey
@@ -186,7 +183,9 @@ function FormSection({
           });
         }
       });
+      setActiveQuestion(questionKey);
     }
+    updateActiveSection(sectionKey);
   }
 
   function setSectionAsActive(sectionKey) {
@@ -247,11 +246,20 @@ function FormSection({
     });
   }
 
-  function handleQuestionTypeUpdate(questionType) {
+  function handleRequiredToggle() {
+    console.log("Toggle");
     dispatchQuestionsUpdate({
-      type: "EDIT_SECTION_TYPE",
+      type: "REQUIRED_TOGGLE",
+      index: activeQuestion
+    });
+  }
+
+  function handleQuestionTypeUpdate(questionType) {
+    console.log("Changing question type");
+    dispatchQuestionsUpdate({
+      type: "EDIT_QUESTION_TYPE",
       index: activeQuestion,
-      sectionType: questionType
+      questionType: questionType
     });
   }
 
@@ -426,6 +434,7 @@ function FormSection({
                   handleQuestionDescriptionUpdate={
                     handleQuestionDescriptionUpdate
                   }
+                  handleRequiredToggle={handleRequiredToggle}
                 />
                 <div style={{ marginLeft: snapshot.isDraggingOver ? 820 : 0 }}>
                   {active && activeQuestion === questionKey ? (

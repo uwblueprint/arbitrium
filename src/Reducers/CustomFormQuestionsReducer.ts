@@ -22,6 +22,13 @@ function customFormQuestionsReducer(
       case "EDIT_DESCRIPTION":
         draftState[action.index].description = action.description;
         break;
+      case "EDIT_QUESTION_TYPE":
+        draftState[action.index].type = action.questionType;
+        break;
+      case "REQUIRED_TOGGLE":
+        console.log("Here");
+        draftState[action.index].required = !state[action.index].required;
+        break;
       case "DUPLICATE_QUESTION": {
         const newQuestion = JSON.parse(
           JSON.stringify(draftState[action.index])
