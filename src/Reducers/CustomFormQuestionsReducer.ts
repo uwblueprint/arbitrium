@@ -30,9 +30,10 @@ function customFormQuestionsReducer(
         draftState[action.index].required = !state[action.index].required;
         break;
       case "DUPLICATE_QUESTION": {
-        const newQuestion = JSON.parse(
-          JSON.stringify(draftState[action.index])
-        );
+        //It is important to not duplicate the question _id
+        let question = draftState[action.index];
+        question._id = undefined;
+        const newQuestion = JSON.parse(JSON.stringify(question));
         draftState.splice(action.index, 0, newQuestion);
         break;
       }

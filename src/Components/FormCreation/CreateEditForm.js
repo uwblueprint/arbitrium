@@ -415,6 +415,8 @@ function CreateEditForm() {
     console.log(section.questions);
   });
 
+  console.log(activeSection);
+
   return (
     <div>
       <CreateEditFormHeader

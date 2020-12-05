@@ -188,8 +188,8 @@ function FormSection({
         }
       });
       setActiveQuestion(questionKey);
-      updateActiveSection(sectionKey);
     }
+    updateActiveSection(sectionKey);
   }
 
   function setSectionAsActive(sectionKey) {
@@ -283,6 +283,7 @@ function FormSection({
         console.log("Saving questions");
         await FORM.updateQuestions(formId, sectionData._id, questions);
         if (questions.length != questionData.length) {
+          console.log("We are updating the parent!!!!");
           setInitialActiveQuestion(activeQuestion);
           refetch({ programId: appUser.currentProgram });
         }
