@@ -71,7 +71,7 @@ export type EditQuestionsAction =
   | {
       type: "EDIT_QUESTION_TYPE";
       index: number;
-      questionType: string;
+      questionType: QuestionType;
     }
   | {
       type: "REQUIRED_TOGGLE";

@@ -59,7 +59,6 @@ const OptionNameInput = styled(InputBase)`
     max-height: 48px;
     position: absolute;
     bottom: 0px;
-    left: 56px;
   }
   textarea {
     font-size: 14px;
@@ -70,16 +69,21 @@ const OptionNameInput = styled(InputBase)`
 const GreyRadio = withStyles({
   root: {
     color: "rgba(0, 0, 0, 0.38)",
-    paddingLeft: "24px",
-    paddingBottom: "5px"
+    paddingBottom: "5px",
+    paddingLeft: "20px"
   }
 })((props) => <Radio color="default" disabled checked={false} {...props} />);
 
-function CreateEditMultipleChoice({ data }) {
+function CreateEditMultipleChoice({
+  submission = false,
+  multiSelect,
+  validations,
+  onChange
+}) {
   const styles = useStyles();
 
   // options is a string array
-  const [options, setOptions] = useState(data);
+  const [options, setOptions] = useState([]);
   const [hoveredOption, setHoveredOption] = useState(-1);
 
   const onAddOption = (event) => {

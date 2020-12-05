@@ -172,6 +172,7 @@ function FormSection({
     //Every question change updates the active section
 
     if (activeQuestion !== questionKey) {
+      console.log("moving");
       window.requestAnimationFrame(() => {
         const element = document.getElementById(
           "question_" + questionKey + "_" + sectionKey
@@ -184,8 +185,8 @@ function FormSection({
         }
       });
       setActiveQuestion(questionKey);
+      updateActiveSection(sectionKey);
     }
-    updateActiveSection(sectionKey);
   }
 
   function setSectionAsActive(sectionKey) {

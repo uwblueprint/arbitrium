@@ -5,7 +5,7 @@ import { AuthContext } from "../../../Authentication/Auth.js";
 import * as FORM from "../../../requests/forms.js";
 import usePromise from "../../../Hooks/usePromise";
 import CreateEditFormHeader from "./SubmissionFormHeader";
-import { defaultFormState } from "./SubmissionFormStateManagement";
+import { defaultFormState } from "./../CreateEditFormStateManagement";
 import customFormSectionsReducer from "../../../Reducers/CustomFormSectionsReducer";
 import Button from "@material-ui/core/Button";
 import { makeStyles, withStyles } from "@material-ui/core/styles";

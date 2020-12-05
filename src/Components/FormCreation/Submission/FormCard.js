@@ -4,8 +4,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CreateEditMultipleChoice from "../CreateEditMultipleChoice";
 import CreateEditCheckbox from "../CreateEditCheckbox";
-import CreateEditShortAnswer from "../CreateEditShortAnswer";
-import CreateEditParagraph from "../CreateEditParagraph";
+import TextQuestion from "./../CardComponents/TextQuestion";
 import styled from "styled-components";
 
 const useStyles = makeStyles({
@@ -118,10 +117,10 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
             <CreateEditMultipleChoice data={card.options} submission={true} />
           ) : null}
           {card && card.type === "SHORT_ANSWER" ? (
-            <CreateEditShortAnswer submission={true} />
+            <TextQuestion short_answer={true} />
           ) : null}
           {card && card.type === "PARAGRAPHS" ? (
-            <CreateEditParagraph submission={true} />
+            <TextQuestion short_answer={false} />
           ) : null}
           {card && card.type === "CHECKBOXES" ? (
             <CreateEditCheckbox data={card.options} submission={true} />

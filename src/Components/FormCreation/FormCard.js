@@ -10,8 +10,7 @@ import { Switch } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import CreateEditMultipleChoice from "./CreateEditMultipleChoice";
 import CreateEditCheckbox from "./CreateEditCheckbox";
-import CreateEditShortAnswer from "./CreateEditShortAnswer";
-import CreateEditParagraph from "./CreateEditParagraph";
+import TextQuestion from "./CardComponents/TextQuestion";
 import TextField from "@material-ui/core/TextField";
 import InputBase from "@material-ui/core/InputBase";
 import Menu from "@material-ui/core/Menu";
@@ -185,6 +184,51 @@ function FormCard({
   const [description, setDescription] = useState(card.description);
   const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
 
+  const questionTypes = [
+    {
+      name: "IDENTIFIER",
+      value: "Identifier",
+      icon: <StarsOutlinedIcon className={classes.action_menu_icon} />,
+      style: classes.action_menu_item,
+      isDeletable: false
+    },
+    {
+      name: "SHORT_ANSWER",
+      value: "Short Answer",
+      icon: <ShortTextIcon className={classes.action_menu_icon} />,
+      style: classes.action_menu_item2,
+      isDeletable: true
+    },
+    {
+      name: "PARAGRAPHS",
+      value: "Paragraphs",
+      icon: <SubjectIcon className={classes.action_menu_icon} />,
+      style: classes.action_menu_item,
+      isDeletable: true
+    },
+    {
+      name: "CHECKBOXES",
+      value: "checkboxes",
+      icon: <CheckBoxIcon className={classes.action_menu_icon} />,
+      style: classes.action_menu_item2,
+      isDeletable: true
+    },
+    {
+      name: "MULTIPLE_CHOICE",
+      value: "Multiple Choice",
+      icon: <RadioButtonCheckedIcon className={classes.action_menu_icon} />,
+      style: classes.action_menu_item,
+      isDeletable: true
+    },
+    {
+      name: "FILE_UPLOAD",
+      value: "File Upload",
+      icon: <CloudUploadOutlinedIcon className={classes.action_menu_icon} />,
+      style: classes.action_menu_item2,
+      isDeletable: true
+    }
+  ];
+
   return (
     <div>
       <Draggable draggableId={String(card._id)} index={questionKey}>
@@ -223,60 +267,25 @@ function FormCard({
                     {active ? (
                       <div>
                         <Button
+                          disabled={!card || card.type === "IDENTIFIER"}
                           className={classes.questionTypeMenu}
                           variant="outlined"
                           onClick={(event) =>
                             setQuestionMenuAnchor(event.currentTarget)
                           }
                         >
-                          {card && card.type === "IDENTIFIER" ? (
-                            <div style={{ display: "flex" }}>
-                              <StarsOutlinedIcon
-                                className={classes.action_menu_icon}
-                              />
-                              {"Identifier"}
-                            </div>
-                          ) : null}
-                          {card && card.type === "PARAGRAPHS" ? (
-                            <div style={{ display: "flex" }}>
-                              <SubjectIcon
-                                className={classes.action_menu_icon}
-                              />
-                              {"Paragraph"}
-                            </div>
-                          ) : null}
-                          {card && card.type === "SHORT_ANSWER" ? (
-                            <div style={{ display: "flex" }}>
-                              <ShortTextIcon
-                                className={classes.action_menu_icon}
-                              />
-                              {"Short Answer"}
-                            </div>
-                          ) : null}
-                          {card && card.type === "MULTIPLE_CHOICE" ? (
-                            <div style={{ display: "flex" }}>
-                              <RadioButtonCheckedIcon
-                                className={classes.action_menu_icon}
-                              />
-                              {"Multiple Choice"}
-                            </div>
-                          ) : null}
-                          {card && card.type === "CHECKBOXES" ? (
-                            <div style={{ display: "flex" }}>
-                              <CheckBoxIcon
-                                className={classes.action_menu_icon}
-                              />
-                              {"Checkboxes"}
-                            </div>
-                          ) : null}
-                          {card && card.type === "FILE_UPLOAD" ? (
-                            <div style={{ display: "flex" }}>
-                              <CloudUploadOutlinedIcon
-                                className={classes.action_menu_icon}
-                              />
-                              {"File Upload"}
-                            </div>
-                          ) : null}
+                          {card
+                            ? questionTypes
+                                .filter((type) => type.name == card.type)
+                                .map((button) => {
+                                  return (
+                                    <div style={{ display: "flex" }}>
+                                      {button.icon}
+                                      {button.value}
+                                    </div>
+                                  );
+                                })
+                            : null}
                         </Button>
                         <Menu
                           anchorEl={questionMenuAnchor}
@@ -285,66 +294,31 @@ function FormCard({
                           classes={{
                             paper: classes.menu_paper
                           }}
-                          style={{ marginTop: 55 }}
+                          style={{ marginTop: 50 }}
                           keepMounted
                           open={Boolean(questionMenuAnchor)}
                           onClose={() => setQuestionMenuAnchor(null)}
                         >
-                          <MenuItem
-                            classes={{
-                              root: classes.action_menu_item2
-                            }}
-                            onClick={() =>
-                              handleQuestionTypeUpdate("SHORT_ANSWER")
+                          {questionTypes.map((button) => {
+                            if (button.isDeletable) {
+                              return (
+                                <MenuItem
+                                  classes={{
+                                    root: button.style
+                                  }}
+                                  onClick={() => {
+                                    handleQuestionTypeUpdate(button.name);
+                                    setQuestionMenuAnchor(null);
+                                  }}
+                                >
+                                  {button.icon}
+                                  {button.value}
+                                </MenuItem>
+                              );
+                            } else {
+                              return null;
                             }
-                          >
-                            <ShortTextIcon
-                              className={classes.action_menu_icon}
-                            />{" "}
-                            {"Short Answer"}
-                          </MenuItem>
-                          <MenuItem
-                            classes={{ root: classes.action_menu_item }}
-                            onClick={() =>
-                              handleQuestionTypeUpdate("PARAGRAPHS")
-                            }
-                          >
-                            <SubjectIcon className={classes.action_menu_icon} />{" "}
-                            {"Paragraph"}
-                          </MenuItem>
-                          <MenuItem
-                            classes={{ root: classes.action_menu_item2 }}
-                            onClick={() =>
-                              handleQuestionTypeUpdate("MULTIPLE_CHOICE")
-                            }
-                          >
-                            <RadioButtonCheckedIcon
-                              className={classes.action_menu_icon}
-                            />{" "}
-                            {"Multiple Choice"}
-                          </MenuItem>
-                          <MenuItem
-                            classes={{ root: classes.action_menu_item }}
-                            onClick={() =>
-                              handleQuestionTypeUpdate("CHECKBOXES")
-                            }
-                          >
-                            <CheckBoxIcon
-                              className={classes.action_menu_icon}
-                            />{" "}
-                            {"Checkboxes"}
-                          </MenuItem>
-                          <MenuItem
-                            classes={{ root: classes.action_menu_item2 }}
-                            onClick={() =>
-                              handleQuestionTypeUpdate("FILE_UPLOAD")
-                            }
-                          >
-                            <CloudUploadOutlinedIcon
-                              className={classes.action_menu_icon}
-                            />{" "}
-                            {"File Upload"}
-                          </MenuItem>
+                          })}
                         </Menu>
                       </div>
                     ) : null}
@@ -366,11 +340,14 @@ function FormCard({
                       {card && card.type === "MULTIPLE_CHOICE" ? (
                         <CreateEditMultipleChoice data={card.options} />
                       ) : null}
+                      {card && card.type === "IDENTIFIER" ? (
+                        <TextQuestion short_answer={true} />
+                      ) : null}
                       {card && card.type === "SHORT_ANSWER" ? (
-                        <CreateEditShortAnswer />
+                        <TextQuestion short_answer={true} />
                       ) : null}
                       {card && card.type === "PARAGRAPHS" ? (
-                        <CreateEditParagraph />
+                        <TextQuestion short_answer={false} />
                       ) : null}
                       {card && card.type === "CHECKBOXES" ? (
                         <CreateEditCheckbox data={card.options} />

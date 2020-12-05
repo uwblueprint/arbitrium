@@ -348,6 +348,7 @@ function CreateEditForm() {
   }
 
   const onDragEnd = (result) => {
+    console.log(result);
     const { source, destination } = result;
     if (!destination) return; // return if item was dropped outside
 
