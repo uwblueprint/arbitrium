@@ -74,6 +74,8 @@ function CreateEditForm() {
   const [showMoveSectionsDialog, setShowMoveSectionsDialog] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const programId = appUser.currentProgram;
+
+  //Only GET and UPDATE form uses programId, every other form update uses formId
   const [loadForm, refetch] = usePromise(FORM.getForm, {
     programId: appUser.currentProgram
   });
@@ -81,6 +83,12 @@ function CreateEditForm() {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+
+  //1. Used when a drag finishes to indiate which question should be active
+  //2. For the purposes of drag and drop, the child section can set its inital active question
+  //   And then call the parent to refetch the entire form (so it has all the question changes including _ids)
+  //   Without this, adding a question and then moving it creates un-intended behavior
+  const [initialActiveQuestion, setInitialActiveQuestion] = useState(0);
 
   const [
     showDeleteSectionConfirmation,
@@ -168,11 +176,16 @@ function CreateEditForm() {
       setDeletedSection(null);
     }
 
+    if (sectionKey == activeSection) {
+      return;
+    }
+
     //Scroll to the new active section
     window.requestAnimationFrame(() => {
       const element = document.getElementById("section_" + sectionKey);
 
       //If the element is the first section; scroll to the top instead of center
+      console.log("Section Scrolling");
       if (element) {
         if (sectionKey === 0) {
           element.scrollIntoView({
@@ -316,6 +329,10 @@ function CreateEditForm() {
     setShowDeleteSectionConfirmation(true);
   }
 
+  //----------------------------------------------------------------------------
+  //DRAG/DROP QUESTIONS
+  //----------------------------------------------------------------------------
+
   async function reorderQuestion(
     sectionIndex,
     sectionTargetIndex,
@@ -344,6 +361,9 @@ function CreateEditForm() {
       type: "LOAD",
       sections: sectionsCopy
     });
+    //refetch({ programId: programId });
+    //Set the updated active section/question after moving
+    setInitialActiveQuestion(questionTargetIndex);
     updateActiveSection(sectionTargetIndex);
   }
 
@@ -391,6 +411,10 @@ function CreateEditForm() {
 
   console.log("Sections Re-render");
 
+  sections.forEach((section) => {
+    console.log(section.questions);
+  });
+
   return (
     <div>
       <CreateEditFormHeader
@@ -417,10 +441,13 @@ function CreateEditForm() {
                   key={key + "_section"}
                   formId={loadForm.value._id}
                   numSections={sections.length}
+                  refetch={refetch}
                   sectionNum={key + 1}
                   sectionData={section}
                   questionData={section.questions}
                   updateActiveSection={updateActiveSection}
+                  setInitialActiveQuestion={setInitialActiveQuestion}
+                  initialActiveQuestion={initialActiveQuestion}
                   active={activeSection === key}
                   handleAddSection={handleAddSection}
                   handleTitleUpdate={handleTitleUpdate}

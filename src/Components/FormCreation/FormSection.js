@@ -135,12 +135,15 @@ function FormSection({
   handleSectionTypeUpdate,
   handleDeleteSection,
   setShowMoveSectionsDialog,
-  formId
+  formId,
+  initialActiveQuestion,
+  refetch,
+  setInitialActiveQuestion
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
-  const [activeQuestion, setActiveQuestion] = useState(0);
+  const [activeQuestion, setActiveQuestion] = useState(initialActiveQuestion);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
     questionData
@@ -199,6 +202,12 @@ function FormSection({
   function handleAddQuestion() {
     //When a question is added we update the DB with the new question
     //TODO: Post the question to mongo and then reload
+
+    // const newForm = await FORM.createQuestion(formId, sectionData._id,, {
+    //   section: defaultNewQuestion,
+    //   index: activeQuestion + 1
+    // });
+
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
       index: activeQuestion
@@ -217,7 +226,7 @@ function FormSection({
 
   function handleDeleteQuestion(questionKey) {
     deleteQuestion(
-      { formId: appUser.currentProgram },
+      { formId: formId },
       sectionData._id,
       questions[questionKey]._id
     );
@@ -265,17 +274,25 @@ function FormSection({
   }
 
   //When the questions changes we will update the form.
-  //1. When an input on the question card itself changes focus OR
-  //2. The question changes focus in general
+  //1. When anything in the card changes focus
+  //2. When we Add/Delete/Duplicate a question (will save and create ids)
   useEffect(() => {
-    if (questions && sectionData._id && formId && questions != questionData) {
-      console.log(questions);
-      console.log("Saving questions");
-      FORM.updateQuestions(formId, sectionData._id, questions);
+    async function save() {
+      if (questions && sectionData._id && formId && questions != questionData) {
+        console.log(questions);
+        console.log("Saving questions");
+        await FORM.updateQuestions(formId, sectionData._id, questions);
+        if (questions.length != questionData.length) {
+          setInitialActiveQuestion(activeQuestion);
+          refetch({ programId: appUser.currentProgram });
+        }
+      }
     }
+    save();
   }, [questions]);
 
   console.log("Questions Re-render");
+  console.log(activeQuestion);
 
   return (
     <div>
@@ -413,7 +430,7 @@ function FormSection({
           />
         ) : null}
       </CardWrapper>
-      <Droppable droppableId={String(sectionNum - 1)}>
+      <Droppable droppableId={String(sectionNum - 1)} on>
         {(provided, snapshot) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             {questions.map((question, questionKey) => (
