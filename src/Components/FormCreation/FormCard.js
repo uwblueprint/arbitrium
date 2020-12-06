@@ -11,6 +11,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import SelectQuestion from "./CardComponents/SelectQuestion";
 import TextQuestion from "./CardComponents/TextQuestion";
 import TextField from "@material-ui/core/TextField";
+import FileQuestion from "./CardComponents/FileQuestion";
 import InputBase from "@material-ui/core/InputBase";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -196,7 +197,11 @@ function FormCard({
       //todo
     }
     if (card.type === "FILE_UPLOAD") {
-      //todo
+      const opt = {
+        xoptions: [options],
+        yoptions: null
+      };
+      handleQuestionContentUpdate(opt);
     }
   };
 
@@ -208,7 +213,7 @@ function FormCard({
       style: classes.action_menu_item,
       isDeletable: false,
       render: <TextQuestion short_answer={true} />,
-      onChange: { onQuestionUpdate }
+      renderInactive: card.type
     },
     {
       name: "SHORT_ANSWER",
@@ -217,7 +222,7 @@ function FormCard({
       style: classes.action_menu_item2,
       isDeletable: true,
       render: <TextQuestion short_answer={true} />,
-      onChange: { onQuestionUpdate }
+      renderInactive: card.type
     },
     {
       name: "PARAGRAPHS",
@@ -226,7 +231,7 @@ function FormCard({
       style: classes.action_menu_item,
       isDeletable: true,
       render: <TextQuestion short_answer={false} />,
-      onChange: { onQuestionUpdate }
+      renderInactive: card.type
     },
     {
       name: "CHECKBOXES",
@@ -241,7 +246,8 @@ function FormCard({
           initialOptions={card && card.x_options.map((option) => [option])}
           multiSelect={true}
         />
-      )
+      ),
+      renderInactive: card.type
     },
     {
       name: "MULTIPLE_CHOICE",
@@ -256,7 +262,8 @@ function FormCard({
           initialOptions={card && card.x_options.map((option) => [option])}
           multiSelect={false}
         />
-      )
+      ),
+      renderInactive: card.type
     },
     {
       name: "FILE_UPLOAD",
@@ -264,8 +271,22 @@ function FormCard({
       icon: <CloudUploadOutlinedIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item2,
       isDeletable: true,
-      render: <TextQuestion short_answer={true} />,
-      onChange: { onQuestionUpdate }
+      render: (
+        <FileQuestion
+          active={true}
+          onChange={onQuestionUpdate}
+          submission={false}
+          initialNumFiles={card && card.x_options[0]}
+        />
+      ),
+      renderInactive: (
+        <FileQuestion
+          active={false}
+          onChange={onQuestionUpdate}
+          submission={true}
+          initialNumFiles={1}
+        />
+      )
     }
   ];
 
@@ -395,8 +416,17 @@ function FormCard({
                     </div>
                   ) : (
                     <div>
-                      {" "}
-                      {card.type}
+                      {card
+                        ? questionTypes
+                            .filter((type) => type.name === card.type)
+                            .map((question) => {
+                              return (
+                                <div key={card._id + "_QuestionContent"}>
+                                  {question.renderInactive}
+                                </div>
+                              );
+                            })
+                        : null}
                       <Divider />
                     </div>
                   )}

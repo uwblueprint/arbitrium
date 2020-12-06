@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
+import Button from "@material-ui/core/Button";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import Select from "@material-ui/core/Select";
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -12,38 +14,60 @@ type Props = {
   submission: Boolean;
   short_answer: Boolean;
   validation?: any;
-  onBlur: () => void;
+  onChange: (options: any) => void;
+  active: boolean;
+  initialNumFiles?: number;
 };
 
 //TODO: Add Response Validation
 function FileQuestion({
-  submission = false,
-  short_answer,
+  submission,
+  active,
   validation,
-  onBlur
+  onChange,
+  initialNumFiles
 }: Props) {
-  const [text, setText] = useState("");
-  const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [numFiles, setnumFiles] = useState(initialNumFiles || 1);
+  const handleNumFileChange = (value: any) => {
     //Check validations here and update the error prop accordingly
-    setText(event.target.value);
+    setnumFiles(value as number);
+    onChange(numFiles);
   };
+
+  const numFileOptions = [1, 2, 3, 5, 10];
 
   return (
     <Wrapper>
-      <TextField
-        disabled={!submission}
-        error={false}
-        placeholder={short_answer ? "Short answer text" : "Long answer text"}
-        size="medium"
-        value={text}
-        onBlur={onBlur}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-          handleTextChange(event)
-        }
-        multiline
-        rowsMax={short_answer ? 2 : 4}
-        fullWidth={true}
-      ></TextField>
+      {active ? (
+        <div style={{ display: "flex" }}>
+          <p style={{ fontWeight: 500, marginRight: 185 }}>
+            {" "}
+            Maximum number of files{" "}
+          </p>
+          <Select
+            value={numFiles}
+            onChange={(event) => handleNumFileChange(event.target.value)}
+          >
+            {numFileOptions.map((opt) => {
+              return <option value={opt}>{opt}</option>;
+            })}
+          </Select>
+        </div>
+      ) : (
+        <div>
+          <Button
+            variant="outlined"
+            component="label"
+            color="primary"
+            disabled={!submission}
+          >
+            <CloudUploadIcon />
+            <div style={{ width: "15px" }}></div>
+            Upload File
+            <input type="file" style={{ display: "none" }} />
+          </Button>{" "}
+        </div>
+      )}
     </Wrapper>
   );
 }
