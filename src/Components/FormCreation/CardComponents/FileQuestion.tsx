@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Select from "@material-ui/core/Select";
+import * as FILE from "../../../requests/file";
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -11,8 +12,8 @@ const Wrapper = styled.div`
 `;
 
 type Props = {
-  submission: Boolean;
-  short_answer: Boolean;
+  submission: boolean;
+  short_answer: boolean;
   validation?: any;
   onChange: (options: any) => void;
   active: boolean;
@@ -35,6 +36,14 @@ function FileQuestion({
   };
 
   const numFileOptions = [1, 2, 3, 5, 10];
+
+  async function handleFile(event: any) {
+    let file = event.target.files[0]; //access the file
+    const formData = new FormData();
+    formData.append("file", file); // appending file
+    //res will be a link to the file, which we should save to our DB
+    let res = await FILE.fileUpload("arbitrium", file.name, formData);
+  }
 
   return (
     <Wrapper>
@@ -64,7 +73,11 @@ function FileQuestion({
             <CloudUploadIcon />
             <div style={{ width: "15px" }}></div>
             Upload File
-            <input type="file" style={{ display: "none" }} />
+            <input
+              type="file"
+              onChange={(event) => handleFile(event)}
+              style={{ display: "none" }}
+            />
           </Button>{" "}
         </div>
       )}

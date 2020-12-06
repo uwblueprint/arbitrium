@@ -283,8 +283,8 @@ function FormCard({
         <FileQuestion
           active={false}
           onChange={onQuestionUpdate}
-          submission={true}
-          initialNumFiles={1}
+          submission={false}
+          initialNumFiles={card && card.x_options[0]}
         />
       )
     }
