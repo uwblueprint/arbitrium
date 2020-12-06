@@ -1,4 +1,10 @@
-import React, { useReducer, useState, useEffect, useContext } from "react";
+import React, {
+  useReducer,
+  useState,
+  useEffect,
+  useContext,
+  useCallback
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
@@ -175,7 +181,6 @@ function FormSection({
     //Every question change updates the active section
 
     if (activeQuestion !== questionKey) {
-      console.log("moving");
       window.requestAnimationFrame(() => {
         const element = document.getElementById(
           "question_" + questionKey + "_" + sectionKey
@@ -257,7 +262,6 @@ function FormSection({
   }
 
   function handleRequiredToggle() {
-    console.log("Toggle");
     dispatchQuestionsUpdate({
       type: "REQUIRED_TOGGLE",
       index: activeQuestion
@@ -265,7 +269,6 @@ function FormSection({
   }
 
   function handleQuestionTypeUpdate(questionType) {
-    console.log("Changing question type");
     dispatchQuestionsUpdate({
       type: "EDIT_QUESTION_TYPE",
       index: activeQuestion,
@@ -273,27 +276,57 @@ function FormSection({
     });
   }
 
+  function handleQuestionContentUpdate(options) {
+    dispatchQuestionsUpdate({
+      type: "EDIT_CONTENT",
+      index: activeQuestion,
+      xoptions: options.xoptions,
+      yoptions: options.yoptions
+    });
+  }
+
+  // TODO: Implement
+  function handleQuestionValidationsUpdate() {
+    dispatchQuestionsUpdate({
+      type: "EDIT_VALIDATION",
+      index: activeQuestion,
+      xoptions: null,
+      yoptions: null
+    });
+  }
+
+  const updateParent = useCallback(() => {
+    setInitialActiveQuestion(activeQuestion);
+    refetch({ programId: appUser.currentProgram });
+  }, [
+    activeQuestion,
+    refetch,
+    appUser.currentProgram,
+    setInitialActiveQuestion
+  ]);
+
   //When the questions changes we will update the form.
   //1. When anything in the card changes focus
   //2. When we Add/Delete/Duplicate a question (will save and create ids)
   useEffect(() => {
     async function save() {
-      if (questions && sectionData._id && formId && questions != questionData) {
-        console.log(questions);
-        console.log("Saving questions");
+      if (
+        questions &&
+        sectionData._id &&
+        formId &&
+        questions !== questionData
+      ) {
         await FORM.updateQuestions(formId, sectionData._id, questions);
-        if (questions.length != questionData.length) {
-          console.log("We are updating the parent!!!!");
-          setInitialActiveQuestion(activeQuestion);
-          refetch({ programId: appUser.currentProgram });
+
+        //The length changes when a question is added/deleted
+        //The parent needs to know so it can properly drag/drop
+        if (questions.length !== questionData.length) {
+          updateParent();
         }
       }
     }
     save();
-  }, [questions]);
-
-  console.log("Questions Re-render");
-  console.log(activeQuestion);
+  }, [questions, formId, sectionData, updateParent, questionData]);
 
   return (
     <div>
@@ -454,6 +487,10 @@ function FormSection({
                     handleQuestionDescriptionUpdate
                   }
                   handleRequiredToggle={handleRequiredToggle}
+                  handleQuestionContentUpdate={handleQuestionContentUpdate}
+                  handleQuestionValidationsUpdate={
+                    handleQuestionValidationsUpdate
+                  }
                 />
                 <div style={{ marginLeft: snapshot.isDraggingOver ? 820 : 0 }}>
                   {active && activeQuestion === questionKey ? (

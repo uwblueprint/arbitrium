@@ -22,10 +22,7 @@ function TextQuestion({
   validation,
   onBlur
 }: Props) {
-  const [text, setText] = useState(
-    short_answer ? "Short answer text" : "Long answer text"
-  );
-
+  const [text, setText] = useState("");
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //Check validations here and update the error prop accordingly
     setText(event.target.value);
@@ -38,6 +35,7 @@ function TextQuestion({
         error={false}
         placeholder={short_answer ? "Short answer text" : "Long answer text"}
         size="medium"
+        value={text}
         onBlur={onBlur}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           handleTextChange(event)

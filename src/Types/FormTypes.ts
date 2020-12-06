@@ -76,6 +76,17 @@ export type EditQuestionsAction =
   | {
       type: "REQUIRED_TOGGLE";
       index: number;
+    }
+  | {
+      type: "EDIT_CONTENT";
+      index: number;
+      xoptions: any[];
+      yoptions: any[];
+    }
+  | {
+      type: "EDIT_VALIDATION";
+      index: number;
+      validations: any[];
     };
 
 export type FormContext = {
@@ -88,7 +99,9 @@ export type QuestionCard = {
   description: string;
   type: QuestionType;
   question: string;
-  options?: Array<string>;
+  x_options: any[];
+  y_options: any[];
+  validations: any[];
   required: boolean;
 };
 

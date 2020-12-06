@@ -176,7 +176,7 @@ function CreateEditForm() {
       setDeletedSection(null);
     }
 
-    if (sectionKey == activeSection) {
+    if (sectionKey === activeSection) {
       return;
     }
 
@@ -185,7 +185,6 @@ function CreateEditForm() {
       const element = document.getElementById("section_" + sectionKey);
 
       //If the element is the first section; scroll to the top instead of center
-      console.log("Section Scrolling");
       if (element) {
         if (sectionKey === 0) {
           element.scrollIntoView({
@@ -368,7 +367,6 @@ function CreateEditForm() {
   }
 
   const onDragEnd = (result) => {
-    console.log(result);
     const { source, destination } = result;
     if (!destination) return; // return if item was dropped outside
 
@@ -408,14 +406,6 @@ function CreateEditForm() {
       uniquekey += question._id;
     });
   });
-
-  console.log("Sections Re-render");
-
-  sections.forEach((section) => {
-    console.log(section.questions);
-  });
-
-  console.log(activeSection);
 
   return (
     <div>

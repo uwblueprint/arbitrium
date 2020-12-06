@@ -24,10 +24,32 @@ function customFormQuestionsReducer(
         break;
       case "EDIT_QUESTION_TYPE":
         draftState[action.index].type = action.questionType;
+        //If the question type is unchanged; don't update it
+        //If the question type change is between MULTIPLE_CHOICE and CHECKBOXES then don't erase options
+        //Otherwise erase options
+        if (
+          ((state[action.index].type === "CHECKBOXES" ||
+            state[action.index].type === "MULTIPLE_CHOICE") &&
+            (action.questionType === "MULTIPLE_CHOICE" ||
+              action.questionType === "CHECKBOXES")) ||
+          action.questionType === state[action.index].type
+        ) {
+          //do nothing
+        } else {
+          draftState[action.index].x_options = [];
+          draftState[action.index].y_options = [];
+          draftState[action.index].validations = [];
+        }
         break;
       case "REQUIRED_TOGGLE":
-        console.log("Here");
         draftState[action.index].required = !state[action.index].required;
+        break;
+      case "EDIT_CONTENT":
+        draftState[action.index].x_options = action.xoptions;
+        draftState[action.index].y_options = action.yoptions;
+        break;
+      case "EDIT_VALIDATION":
+        draftState[action.index].validations = action.validations;
         break;
       case "DUPLICATE_QUESTION": {
         //It is important to not duplicate the question _id

@@ -8,8 +8,7 @@ import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import { Switch } from "@material-ui/core";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import CreateEditMultipleChoice from "./CreateEditMultipleChoice";
-import CreateEditCheckbox from "./CreateEditCheckbox";
+import SelectQuestion from "./CardComponents/SelectQuestion";
 import TextQuestion from "./CardComponents/TextQuestion";
 import TextField from "@material-ui/core/TextField";
 import InputBase from "@material-ui/core/InputBase";
@@ -164,7 +163,7 @@ const StyledSwitch = withStyles({
   }
 })(Switch);
 
-//Other props { numCards, card, type, question, options, required }
+//Other props { numCards, card, type, question, options, required, handleQuestionValidationsUpdate }
 //commented due to lint error
 function FormCard({
   card,
@@ -177,6 +176,7 @@ function FormCard({
   handleQuestionDescriptionUpdate,
   handleQuestionTitleUpdate,
   handleQuestionTypeUpdate,
+  handleQuestionContentUpdate,
   handleRequiredToggle
 }) {
   const classes = useStyles();
@@ -184,48 +184,88 @@ function FormCard({
   const [description, setDescription] = useState(card.description);
   const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
 
+  const onQuestionUpdate = (options) => {
+    if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
+      const opt = {
+        xoptions: options.map((option) => option[0]),
+        yoptions: null
+      };
+      handleQuestionContentUpdate(opt);
+    }
+    if (card.type === "CHECKBOX_GRID") {
+      //todo
+    }
+    if (card.type === "FILE_UPLOAD") {
+      //todo
+    }
+  };
+
   const questionTypes = [
     {
       name: "IDENTIFIER",
       value: "Identifier",
       icon: <StarsOutlinedIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item,
-      isDeletable: false
+      isDeletable: false,
+      render: <TextQuestion short_answer={true} />,
+      onChange: { onQuestionUpdate }
     },
     {
       name: "SHORT_ANSWER",
       value: "Short Answer",
       icon: <ShortTextIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item2,
-      isDeletable: true
+      isDeletable: true,
+      render: <TextQuestion short_answer={true} />,
+      onChange: { onQuestionUpdate }
     },
     {
       name: "PARAGRAPHS",
       value: "Paragraphs",
       icon: <SubjectIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item,
-      isDeletable: true
+      isDeletable: true,
+      render: <TextQuestion short_answer={false} />,
+      onChange: { onQuestionUpdate }
     },
     {
       name: "CHECKBOXES",
       value: "checkboxes",
       icon: <CheckBoxIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item2,
-      isDeletable: true
+      isDeletable: true,
+      render: (
+        <SelectQuestion
+          data={card.options}
+          onChange={onQuestionUpdate}
+          initialOptions={card && card.x_options.map((option) => [option])}
+          multiSelect={true}
+        />
+      )
     },
     {
       name: "MULTIPLE_CHOICE",
       value: "Multiple Choice",
       icon: <RadioButtonCheckedIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item,
-      isDeletable: true
+      isDeletable: true,
+      render: (
+        <SelectQuestion
+          data={card.options}
+          onChange={onQuestionUpdate}
+          initialOptions={card && card.x_options.map((option) => [option])}
+          multiSelect={false}
+        />
+      )
     },
     {
       name: "FILE_UPLOAD",
       value: "File Upload",
       icon: <CloudUploadOutlinedIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item2,
-      isDeletable: true
+      isDeletable: true,
+      render: <TextQuestion short_answer={true} />,
+      onChange: { onQuestionUpdate }
     }
   ];
 
@@ -276,10 +316,13 @@ function FormCard({
                         >
                           {card
                             ? questionTypes
-                                .filter((type) => type.name == card.type)
+                                .filter((type) => type.name === card.type)
                                 .map((button) => {
                                   return (
-                                    <div style={{ display: "flex" }}>
+                                    <div
+                                      key={card._id + "_MenuButton"}
+                                      style={{ display: "flex" }}
+                                    >
                                       {button.icon}
                                       {button.value}
                                     </div>
@@ -337,27 +380,17 @@ function FormCard({
                         rowsMax={10}
                         type="string"
                       ></TextField>
-                      {card && card.type === "MULTIPLE_CHOICE" ? (
-                        <CreateEditMultipleChoice data={card.options} />
-                      ) : null}
-                      {card && card.type === "IDENTIFIER" ? (
-                        <TextQuestion short_answer={true} />
-                      ) : null}
-                      {card && card.type === "SHORT_ANSWER" ? (
-                        <TextQuestion short_answer={true} />
-                      ) : null}
-                      {card && card.type === "PARAGRAPHS" ? (
-                        <TextQuestion short_answer={false} />
-                      ) : null}
-                      {card && card.type === "CHECKBOXES" ? (
-                        <CreateEditCheckbox data={card.options} />
-                      ) : null}
-                      {card && card.type === "FILE_UPLOAD" ? (
-                        <div>todo</div>
-                      ) : null}
-                      {card && card.type === "CHECKBOX_GRID" ? (
-                        <div>todo</div>
-                      ) : null}
+                      {card
+                        ? questionTypes
+                            .filter((type) => type.name === card.type)
+                            .map((question) => {
+                              return (
+                                <div key={card._id + "_QuestionContent"}>
+                                  {question.render}
+                                </div>
+                              );
+                            })
+                        : null}
                       <Divider />
                     </div>
                   ) : (
@@ -371,6 +404,7 @@ function FormCard({
                     <div className={classes.buttonRow}>
                       <div className={classes.buttonContainer}>
                         <Button
+                          disabled={card && card.type === "IDENTIFIER"}
                           size="small"
                           className={classes.button}
                           onClick={() => {
@@ -383,6 +417,7 @@ function FormCard({
                       </div>
                       <div className={classes.buttonContainer}>
                         <Button
+                          disabled={card && card.type === "IDENTIFIER"}
                           size="small"
                           className={classes.button}
                           onClick={() => handleDuplicate(questionKey)}
@@ -404,6 +439,7 @@ function FormCard({
                         <FormControlLabel
                           control={
                             <StyledSwitch
+                              disabled={card && card.type === "IDENTIFIER"}
                               size="small"
                               checked={card.required}
                               color="primary"

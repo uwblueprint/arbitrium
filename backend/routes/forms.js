@@ -214,6 +214,7 @@ router.patch("/:formId/sections/:sectionId/questions", (req, res) => {
         console.error(
           `Error updating questions in section with ID = ${req.params.sectionId} in form with ID = ${req.params.formId}`
         );
+        console.error(error);
         res.status(500).send(error);
       } else {
         res.status(200).json(result);

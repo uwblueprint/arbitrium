@@ -7,8 +7,9 @@ import InputBase from "@material-ui/core/InputBase";
 import Radio from "@material-ui/core/Radio";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
+import Checkbox from "@material-ui/core/Checkbox";
 
-import { reorder } from "../../Utils/dragAndDropUtils";
+import { reorder } from "../../../Utils/dragAndDropUtils";
 
 const useStyles = makeStyles({
   closeRoot: {
@@ -74,16 +75,26 @@ const GreyRadio = withStyles({
   }
 })((props) => <Radio color="default" disabled checked={false} {...props} />);
 
-function CreateEditMultipleChoice({
+const GreyCheckbox = withStyles({
+  root: {
+    color: "rgba(0, 0, 0, 0.38)",
+    paddingLeft: "24px",
+    paddingBottom: "5px"
+  }
+})((props) => <Checkbox color="default" disabled checked={false} {...props} />);
+
+function SelectQuestion({
   submission = false,
   multiSelect,
   validations,
-  onChange
+  onChange,
+  initialOptions
 }) {
+  console.log(multiSelect);
   const styles = useStyles();
 
   // options is a string array
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState(initialOptions || []);
   const [hoveredOption, setHoveredOption] = useState(-1);
 
   const onAddOption = (event) => {
@@ -91,7 +102,9 @@ function CreateEditMultipleChoice({
     event.target.blur();
   };
 
+  console.log(options);
   const onEditOption = (index, value) => {
+    console.log("Editing Value");
     const newOptions = [
       ...options.slice(0, index),
       [value],
@@ -121,6 +134,7 @@ function CreateEditMultipleChoice({
     );
 
     setOptions(reorderedOptions);
+    onChange(reorderedOptions);
   };
 
   const onBeforeDragStart = () => {
@@ -161,7 +175,7 @@ function CreateEditMultipleChoice({
                                   : styles.dragIndicatorHidden
                               }`}
                             />
-                            <GreyRadio />
+                            {multiSelect ? <GreyCheckbox /> : <GreyRadio />}
                             <OptionNameInput
                               className={
                                 hoveredOption === index || snapshot.isDragging
@@ -170,6 +184,9 @@ function CreateEditMultipleChoice({
                               }
                               classes={{ focused: styles.inputFocused }}
                               autoFocus={true}
+                              onBlur={() => {
+                                onChange(options);
+                              }}
                               placeholder="Option..."
                               value={data}
                               onChange={(event) =>
@@ -199,7 +216,7 @@ function CreateEditMultipleChoice({
         <DragIndicatorIcon
           className={`${styles.dragIndicator} ${styles.dragIndicatorHidden}`}
         />
-        <GreyRadio />
+        {multiSelect ? <GreyCheckbox /> : <GreyRadio />}
         <OptionNameInput
           placeholder="Add option"
           onFocus={onAddOption}
@@ -210,4 +227,4 @@ function CreateEditMultipleChoice({
   );
 }
 
-export default CreateEditMultipleChoice;
+export default SelectQuestion;
