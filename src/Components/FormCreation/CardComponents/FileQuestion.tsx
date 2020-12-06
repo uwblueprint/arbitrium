@@ -39,6 +39,7 @@ function FileQuestion({
 
   async function handleFile(event: any) {
     let file = event.target.files[0]; //access the file
+    //todo: check if the file extension is valid (on submission)
     const formData = new FormData();
     formData.append("file", file); // appending file
     //res will be a link to the file, which we should save to our DB
