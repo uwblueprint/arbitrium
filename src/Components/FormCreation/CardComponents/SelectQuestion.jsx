@@ -90,7 +90,6 @@ function SelectQuestion({
   onChange,
   initialOptions
 }) {
-  console.log(multiSelect);
   const styles = useStyles();
 
   // options is a string array
@@ -102,7 +101,6 @@ function SelectQuestion({
     event.target.blur();
   };
 
-  console.log(options);
   const onEditOption = (index, value) => {
     console.log("Editing Value");
     const newOptions = [
