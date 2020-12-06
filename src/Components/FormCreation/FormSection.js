@@ -205,14 +205,6 @@ function FormSection({
   }
 
   function handleAddQuestion() {
-    //When a question is added we update the DB with the new question
-    //TODO: Post the question to mongo and then reload
-
-    // const newForm = await FORM.createQuestion(formId, sectionData._id,, {
-    //   section: defaultNewQuestion,
-    //   index: activeQuestion + 1
-    // });
-
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
       index: activeQuestion

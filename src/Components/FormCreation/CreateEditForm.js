@@ -84,10 +84,11 @@ function CreateEditForm() {
     description: defaultFormState.description
   });
 
-  //1. Used when a drag finishes to indiate which question should be active
+  //1. Used when a drag finishes to indiate which question should be active afterwards
   //2. For the purposes of drag and drop, the child section can set its inital active question
   //   And then call the parent to refetch the entire form (so it has all the question changes including _ids)
   //   Without this, adding a question and then moving it creates un-intended behavior
+  //   (A child only calls this when a question is added/deleted so the parent can update itself with changes only made in the child)
   const [initialActiveQuestion, setInitialActiveQuestion] = useState(0);
 
   const [
@@ -360,7 +361,7 @@ function CreateEditForm() {
       type: "LOAD",
       sections: sectionsCopy
     });
-    //refetch({ programId: programId });
+
     //Set the updated active section/question after moving
     setInitialActiveQuestion(questionTargetIndex);
     updateActiveSection(sectionTargetIndex);
