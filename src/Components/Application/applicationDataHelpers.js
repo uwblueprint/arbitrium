@@ -10,6 +10,11 @@ import * as Gos from "./column_gos";
 import * as ProgramProject from "./column_project.js";
 import * as Demo from "./demo_categories";
 
+import * as CommunityFund from "./community_fund";
+import * as GOS2 from "./gos2";
+import * as CommunityFundS from "./community_fundS";
+import * as GOS2S from "./gos2S";
+
 export function createReview(user, appId) {
   let review = {};
   const comments = [];
@@ -82,6 +87,18 @@ export function transpileCategoryData(application, program) {
   if (program === "5fab02657cf3c7788fc00d1f") {
     adminCategories = Demo.adminCategories;
   }
+  if (program === "5fc16f3c7cf3c7788f3105fc") {
+    adminCategories = CommunityFund.adminCategories;
+  }
+  if (program === "5fc16ec77cf3c7788f30e5b1") {
+    adminCategories = GOS2.adminCategories;
+  }
+  if (program === "5fc16f497cf3c7788f310a26") {
+    adminCategories = CommunityFundS.adminCategories;
+  }
+  if (program === "5fc16f267cf3c7788f310143") {
+    adminCategories = GOS2S.adminCategories;
+  }
 
   return {
     admin: Object.keys(adminCategories.contact).map((adminCategory) => ({
@@ -134,6 +151,18 @@ export function transpileFileData(application, program) {
   if (program === "5fab02657cf3c7788fc00d1f") {
     fileCategories = Demo.fileCategories;
   }
+  if (program === "5fc16f3c7cf3c7788f3105fc") {
+    fileCategories = CommunityFund.fileCategories;
+  }
+  if (program === "5fc16ec77cf3c7788f30e5b1") {
+    fileCategories = GOS2.fileCategories;
+  }
+  if (program === "5fc16f497cf3c7788f310a26") {
+    fileCategories = CommunityFundS.fileCategories;
+  }
+  if (program === "5fc16f267cf3c7788f310143") {
+    fileCategories = GOS2S.fileCategories;
+  }
 
   const files = Object.keys(fileCategories).map((fileCategory, index) => ({
     name: fileCategory,
@@ -181,6 +210,18 @@ export function transpileLongAnswerData(application, program) {
   if (program === "5fab02657cf3c7788fc00d1f") {
     longAnswerCategories = Demo.longAnswerCategories;
   }
+  if (program === "5fc16f3c7cf3c7788f3105fc") {
+    longAnswerCategories = CommunityFund.longAnswerCategories;
+  }
+  if (program === "5fc16ec77cf3c7788f30e5b1") {
+    longAnswerCategories = GOS2.longAnswerCategories;
+  }
+  if (program === "5fc16f497cf3c7788f310a26") {
+    longAnswerCategories = CommunityFundS.longAnswerCategories;
+  }
+  if (program === "5fc16f267cf3c7788f310143") {
+    longAnswerCategories = GOS2S.longAnswerCategories;
+  }
 
   let canvasData = [];
   if (program === "5f54b04d9971a3dd4f741a9e") {
@@ -203,6 +244,18 @@ export function transpileLongAnswerData(application, program) {
   }
   if (program === "5fab02657cf3c7788fc00d1f") {
     canvasData = Demo.canvasData;
+  }
+  if (program === "5fc16f3c7cf3c7788f3105fc") {
+    canvasData = CommunityFund.canvasData;
+  }
+  if (program === "5fc16ec77cf3c7788f30e5b1") {
+    canvasData = GOS2.canvasData;
+  }
+  if (program === "5fc16f497cf3c7788f310a26") {
+    canvasData = CommunityFundS.canvasData;
+  }
+  if (program === "5fc16f267cf3c7788f310143") {
+    canvasData = GOS2S.canvasData;
   }
 
   const answers = Object.keys(longAnswerCategories).map(

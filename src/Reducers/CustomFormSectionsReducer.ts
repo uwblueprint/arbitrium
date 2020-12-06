@@ -12,6 +12,15 @@ function customFormSectionsReducer(
       case "DELETE_SECTION":
         draftState.splice(action.index, 1);
         break;
+      case "EDIT_TITLE":
+        draftState[action.index].name = action.title;
+        break;
+      case "EDIT_DESCRIPTION":
+        draftState[action.index].description = action.description;
+        break;
+      case "EDIT_SECTION_TYPE":
+        draftState[action.index].sectionType = action.sectionType;
+        break;
       default:
         break;
     }

@@ -4,7 +4,7 @@ import {
   QuestionType,
   FormContext,
   FormSectionBase
-} from "../../Types/FormTypes";
+} from "../../../Types/FormTypes";
 
 export const sectionsStarter: FormSectionBase[] = [
   {
@@ -77,15 +77,15 @@ export const defaultFormState: DefaultFormState = {
   sections: sectionsStarter
 };
 
-export const CreateEditFormContext = createContext<FormContext | undefined>(
+export const SubmissionFormContext = createContext<FormContext | undefined>(
   undefined
 );
 
 export function useFormContext(): FormContext {
-  const state = useContext(CreateEditFormContext);
+  const state = useContext(SubmissionFormContext);
   if (state === undefined) {
     throw new Error(
-      "useFormState must be used within a CreateEditFormContext provider"
+      "useFormState must be used within a SubmissionFormContext provider"
     );
   }
   return state;

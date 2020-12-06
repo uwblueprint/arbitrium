@@ -8,16 +8,16 @@ const Wrapper = styled.div`
   width: 816px;
 `;
 
-function CreateEditShortAnswer() {
+function CreateEditShortAnswer({ submission = false }) {
   return (
     <Wrapper>
       <TextField
-        disabled
+        disabled={!submission}
         placeholder="Short answer text"
         size="medium"
         multiline
         rowsMax={2}
-        fullWidth="true"
+        fullWidth={true}
       ></TextField>
     </Wrapper>
   );

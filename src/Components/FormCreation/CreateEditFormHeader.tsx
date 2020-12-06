@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -74,7 +74,7 @@ type Props = {
   name: string;
   description: string;
   previewLink: string;
-  onChange: (data: HeaderData) => void;
+  onChange: (name: string, description: string) => void;
 };
 
 function CreateEditFormHeader({
@@ -83,20 +83,16 @@ function CreateEditFormHeader({
   previewLink,
   onChange
 }: Props): React.ReactElement<typeof Header> {
-  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({
-      name: e.target.value,
-      description,
-      previewLink
-    });
-  };
+  const [formTitle, setFormTitle] = useState(name);
+  const [formDescription, setFormDescription] = useState(description);
 
-  const onDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange({
-      name,
-      description: e.target.value,
-      previewLink
-    });
+  useEffect(() => {
+    setFormTitle(name);
+    setFormDescription(description);
+  }, [name, description]);
+
+  const updateHeader = () => {
+    onChange(formTitle, formDescription);
   };
 
   const [showPreviewLink, setShowPreviewLink] = useState(false);
@@ -123,15 +119,25 @@ function CreateEditFormHeader({
       <InputWrapper>
         <NameInput
           placeholder="Form name"
-          value={name}
-          onChange={onNameChange}
+          value={formTitle}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setFormTitle(e.target.value)
+          }
+          onBlur={() => {
+            updateHeader();
+          }}
         />
         <DescriptionInput
           multiline
           placeholder="Form description..."
-          value={description}
-          onChange={onDescriptionChange}
-        />
+          value={formDescription}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setFormDescription(e.target.value)
+          }
+          onBlur={() => {
+            updateHeader();
+          }}
+        ></DescriptionInput>
       </InputWrapper>
       <ButtonWrapper>
         <Button
