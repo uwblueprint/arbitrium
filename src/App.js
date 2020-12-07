@@ -14,11 +14,11 @@ import ProgramContextProvider from "./Contexts/ProgramContext";
 const AppWrapper = styled.div`
   background-color: #ffffff;
   min-height: 10vh;
+  min-width: 960px;
   display: flex;
   flex-direction: column;
   /*align-items: center;*/
   justify-content: center;
-  font-size: calc(0.3vh + 0.5vw + 10px);
   p {
     color: black;
   }

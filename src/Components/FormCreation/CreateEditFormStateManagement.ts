@@ -1,60 +1,66 @@
 import { createContext, useContext } from "react";
-import { FormState, QuestionType, FormContext } from "../../Types/FormTypes";
+import {
+  DefaultFormState,
+  QuestionType,
+  FormContext,
+  FormSectionBase
+} from "../../Types/FormTypes";
 
-export const sectionsStarter = [
+let defaultQuestion = {
+  name: "Untitled",
+  description: "",
+  type: "SHORT_ANSWER" as QuestionType,
+  question: "Untitled Question",
+  x_options: [],
+  y_options: [],
+  validations: [],
+  required: true
+};
+
+export const sectionsStarter: FormSectionBase[] = [
   {
     name: "About Your Charity",
-    description: "Section Type: Admin Info",
+    description:
+      "This section is used to uniquely identify each applicant (Change me)",
+    deleted: 0,
+    sectionType: "Admin Info",
+    required: true,
     questions: [
       {
-        name: "Test",
+        name: "Organization Name",
+        description: "",
         type: "IDENTIFIER" as QuestionType,
         question: "What is the name of your charity?",
+        x_options: [],
+        y_options: [],
+        validations: [],
         required: true
       },
-      {
-        name: "Test 2",
-        type: "SHORT_ANSWER" as QuestionType,
-        question: "What is the name of your charity?",
-        required: false
-      }
+      defaultQuestion
     ]
   },
   {
-    name: "Untitled Section",
-    description: "Section Type: Decision Criteria",
-    questions: [
-      {
-        type: "MULTIPLE_CHOICE" as QuestionType,
-        question: "Untitled Question",
-        options: ["Option 1"],
-        required: false
-      }
-    ]
+    name: "Untitled Section2",
+    description: "",
+    deleted: 0,
+    required: false,
+    sectionType: "Decision Criteria",
+    questions: [defaultQuestion]
   }
 ];
 
-export const defaultNewSection = {
+export const defaultNewSection: FormSectionBase = {
   name: "Untitled Section",
-  description: "Section Type: Decision Criteria",
-  questions: [
-    {
-      type: "SHORT_ANSWER" as QuestionType,
-      question: "Untitled Question",
-      options: ["Option 1"],
-      required: false
-    }
-  ]
+  description: "",
+  deleted: 0,
+  sectionType: "Decision Criteria",
+  required: false,
+  questions: [defaultQuestion]
 };
 
-export const defaultNewQuestion = {
-  type: "SHORT_ANSWER" as QuestionType,
-  question: "Untitled Question",
-  options: ["Option 1"],
-  required: false
-};
+export const defaultNewQuestion = defaultQuestion;
 
-export const defaultFormState: FormState = {
+export const defaultFormState: DefaultFormState = {
   name: "Untitled Form",
   description: "",
   sections: sectionsStarter

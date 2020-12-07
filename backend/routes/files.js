@@ -26,13 +26,13 @@ router.get("/listBuckets", async function(req, res) {
   }
 });
 
-router.get("/listFiles/:id", async function(req, res) {
-  if (!req.params.id) {
-    res.status(400).send("Bad Request. Missing id for 'bucketname'");
+router.get("/listFiles/:bucketname", async function(req, res) {
+  if (!req.params.bucketname) {
+    res.status(400).send("Bad Request. Missing param 'bucketname'");
   }
   // Create the parameters for calling listObjects
   const bucketParams = {
-    Bucket: req.params.id
+    Bucket: req.params.bucketname
   };
   try {
     s3.listObjects(bucketParams, function(err, data) {
@@ -50,12 +50,12 @@ router.get("/listFiles/:id", async function(req, res) {
   }
 });
 
-router.post("/createBucket/:id", async function(req, res) {
-  if (!req.params.id) {
-    res.status(400).send("Bad Request. Missing header 'bucketname'");
+router.post("/createBucket/:bucketname", async function(req, res) {
+  if (!req.params.bucketname) {
+    res.status(400).send("Bad Request. Missing param 'bucketname'");
   }
   const bucketParams = {
-    Bucket: req.params.id
+    Bucket: req.params.bucketname
   };
   try {
     s3.createBucket(bucketParams, function(err, data) {
@@ -73,9 +73,12 @@ router.post("/createBucket/:id", async function(req, res) {
   }
 });
 
-router.delete("/deleteBucket/:id", async function(req, res) {
+router.delete("/deleteBucket/:bucketname", async function(req, res) {
+  if (!req.params.bucketname) {
+    res.status(400).send("Bad Request. Missing param 'bucketname'");
+  }
   const bucketParams = {
-    Bucket: req.params.id
+    Bucket: req.params.bucketname
   };
   try {
     s3.deleteBucket(bucketParams, function(err, data) {
@@ -94,19 +97,20 @@ router.delete("/deleteBucket/:id", async function(req, res) {
 });
 
 router.post(
-  "/upload/:bucketId/:filename",
+  "/upload/:bucketname/:filename",
   multer().single("file"),
   async function(req, res) {
-    if (!req.params.bucketId) {
-      res.status(400).send("Bad Request. Missing id for 'bucketname'");
+    console.info(req.file);
+    if (!req.params.bucketname) {
+      res.status(400).send("Bad Request. Missing param 'bucketname'");
     }
     if (!req.params.filename) {
-      res.status(400).send("Bad Request. Missing id for 'filename'");
+      res.status(400).send("Bad Request. Missing param 'filename'");
     }
 
     // Configure the file stream and obtain the upload parameters
     const uploadParams = {
-      Bucket: req.params.bucketId,
+      Bucket: req.params.bucketname,
       Key: req.params.filename,
       Body: ""
     };

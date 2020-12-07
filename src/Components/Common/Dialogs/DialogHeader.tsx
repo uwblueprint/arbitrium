@@ -19,11 +19,22 @@ const Header = styled.div`
     margin: 0;
     font-weight: normal;
     font-size: 16px;
+    font-weight: 500;
     display: inline-block;
   }
 `;
 
-function DialogHeader({ title, showClose, onClose }) {
+type Props = {
+  title?: string;
+  showClose?: boolean;
+  onClose?: () => void;
+};
+
+function DialogHeader({
+  title,
+  showClose,
+  onClose
+}: Props): React.ReactElement<typeof Header> {
   const styles = useStyles();
   const _showClose = showClose != null ? showClose : true;
 

@@ -9,12 +9,12 @@ import createContainer from "../Components/Container/Container";
 import { connect } from "react-redux";
 import routes from "../appRoutes";
 
+//PrivateRoute handles routing based on user permissions
 function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   const { isLoading, currentUser: user, appUser } = useContext(AuthContext);
   const { isLoading: programDataIsLoading } = useContext(ProgramContext);
 
-  //The user only has access if they are logged in and are in the proper user group
-  //This is mainly for admin access
+  //Check if the user is in the proper roles & logged in
   const roleAccess =
     user != null &&
     (route.groups.length === 0 ||
@@ -38,7 +38,11 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
     return false;
   });
 
-  //Access to programs and organizations should also be decided here
+  //TODO: Check if the URL contains a programID and redirect/update the user accordingly
+  //TODO: Check if the user has access to currentProgram (Admin removes their permission).
+  //TODO: Check if the user has access to an organization (Are they admin?)
+
+  //TODO: Redirect to pages based on error instead of just "/login"
   return isLoading || programDataIsLoading ? (
     <LoadingOverlay
       show

@@ -89,12 +89,12 @@ app.get("/", function(req, res) {
 app.use("/api/programs", programRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/organizations", organizationRoutes);
+app.use("/api/forms", formsRoutes);
 
 app.use("/api/applications", applicationRoutes);
 app.use("/api/ratings", ratingsRoutes);
 app.use("/api/stackings", stackedRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/forms", formsRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/files", filesRoutes);
