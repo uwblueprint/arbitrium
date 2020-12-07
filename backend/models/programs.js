@@ -21,6 +21,21 @@ const timeframe = new mongoose.Schema({
   }
 });
 
+const userRole = new mongoose.Schema({
+  user: {
+    type: mongoose.SchemaTypes.ObjectId,
+  },
+  role: {
+    type: String,
+    enum: [
+      "ADMIN",
+      "ADMIN_REVIEWER",
+      "REVIEWER",
+      "GUEST",
+    ]
+  },
+})
+
 //CreatedBy is a userId
 //App Version corresponds to the release version on github
 const programSchema = new mongoose.Schema(
@@ -45,6 +60,9 @@ const programSchema = new mongoose.Schema(
     },
     appVersion: {
       type: Number
+    },
+    users: {
+      type: [userRole]
     }
   },
   { collection: "programs" }
