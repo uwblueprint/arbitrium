@@ -3,27 +3,27 @@ const mongoose = require("mongoose");
 const user = new mongoose.Schema({
   id: {
     type: mongoose.SchemaTypes.ObjectId,
-    unique: true,
+    unique: true
   }
 })
 
 const program = new mongoose.Schema({
   id: {
     type: mongoose.SchemaTypes.ObjectId,
-    unique: true,
+    unique: true
   }
 });
 
 const organizationSchema = new mongoose.Schema(
   {
     admins: {
-      type: [user],
+      type: [user]
     },
     programs: {
-      type: [program],
+      type: [program]
     },
     deleted: {
-      type: Boolean,
+      type: Boolean
     }
   },
   { collection: "organizations" }

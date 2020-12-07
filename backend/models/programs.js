@@ -31,10 +31,10 @@ const userRole = new mongoose.Schema({
       "ADMIN",
       "ADMIN_REVIEWER",
       "REVIEWER",
-      "GUEST",
+      "GUEST"
     ]
   },
-})
+});
 
 //CreatedBy is a userId
 //App Version corresponds to the release version on github
