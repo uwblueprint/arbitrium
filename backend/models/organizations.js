@@ -5,7 +5,7 @@ const user = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     unique: true
   }
-})
+});
 
 const program = new mongoose.Schema({
   id: {
