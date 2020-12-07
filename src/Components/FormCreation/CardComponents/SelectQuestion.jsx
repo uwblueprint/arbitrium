@@ -4,11 +4,12 @@ import Close from "@material-ui/icons/Close";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import IconButton from "@material-ui/core/IconButton";
 import InputBase from "@material-ui/core/InputBase";
-import Checkbox from "@material-ui/core/Checkbox";
+import Radio from "@material-ui/core/Radio";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
+import Checkbox from "@material-ui/core/Checkbox";
 
-import { reorder } from "../../Utils/dragAndDropUtils";
+import { reorder } from "../../../Utils/dragAndDropUtils";
 
 const useStyles = makeStyles({
   closeRoot: {
@@ -52,20 +53,27 @@ const OptionWrapper = styled.div`
 
 const OptionNameInput = styled(InputBase)`
   && {
-    width: 716px;
+    width: 616px;
     display: inline-block;
     line-height: 21px;
     overflow-y: auto;
     max-height: 48px;
     position: absolute;
     bottom: 0px;
-    left: 56px;
   }
   textarea {
     font-size: 14px;
     color: #888888;
   }
 `;
+
+const GreyRadio = withStyles({
+  root: {
+    color: "rgba(0, 0, 0, 0.38)",
+    paddingBottom: "5px",
+    paddingLeft: "20px"
+  }
+})((props) => <Radio color="default" disabled checked={false} {...props} />);
 
 const GreyCheckbox = withStyles({
   root: {
@@ -75,11 +83,17 @@ const GreyCheckbox = withStyles({
   }
 })((props) => <Checkbox color="default" disabled checked={false} {...props} />);
 
-function CreateEditCheckbox({ data }) {
+function SelectQuestion({
+  submission = false,
+  multiSelect,
+  validations,
+  onChange,
+  initialOptions
+}) {
   const styles = useStyles();
 
   // options is a string array
-  const [options, setOptions] = useState(data);
+  const [options, setOptions] = useState(initialOptions || []);
   const [hoveredOption, setHoveredOption] = useState(-1);
 
   const onAddOption = (event) => {
@@ -117,6 +131,7 @@ function CreateEditCheckbox({ data }) {
     );
 
     setOptions(reorderedOptions);
+    onChange(reorderedOptions);
   };
 
   const onBeforeDragStart = () => {
@@ -132,53 +147,62 @@ function CreateEditCheckbox({ data }) {
         <Droppable droppableId="droppable">
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
-              {options.map((data, index) => (
-                <Draggable draggableId={`${index}`} index={index} key={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      onMouseEnter={() => setHoveredOption(index)}
-                      onMouseLeave={() => setHoveredOption(-1)}
-                      className={styles.droppableSection}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
+              {options
+                ? options.map((data, index) => (
+                    <Draggable
+                      draggableId={`${index}`}
+                      index={index}
+                      key={index}
                     >
-                      <OptionWrapper key={index}>
-                        <DragIndicatorIcon
-                          className={`${styles.dragIndicator} 
-                            ${
-                              hoveredOption === index || snapshot.isDragging
-                                ? styles.dragIndicatorVisible
-                                : styles.dragIndicatorHidden
-                            }`}
-                        />
-                        <GreyCheckbox />
-                        <OptionNameInput
-                          className={
-                            hoveredOption === index || snapshot.isDragging
-                              ? styles.inputHovered
-                              : ""
-                          }
-                          classes={{ focused: styles.inputFocused }}
-                          autoFocus={true}
-                          placeholder="Option..."
-                          value={data}
-                          onChange={(event) =>
-                            onEditOption(index, event.target.value)
-                          }
-                        />
-                        <IconButton
-                          onClick={() => onDeleteOption(index)}
-                          classes={{ root: styles.closeRoot }}
-                          size="small"
+                      {(provided, snapshot) => (
+                        <div
+                          onMouseEnter={() => setHoveredOption(index)}
+                          onMouseLeave={() => setHoveredOption(-1)}
+                          className={styles.droppableSection}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
                         >
-                          <Close />
-                        </IconButton>
-                      </OptionWrapper>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+                          <OptionWrapper key={index}>
+                            <DragIndicatorIcon
+                              className={`${styles.dragIndicator}
+                              ${
+                                hoveredOption === index || snapshot.isDragging
+                                  ? styles.dragIndicatorVisible
+                                  : styles.dragIndicatorHidden
+                              }`}
+                            />
+                            {multiSelect ? <GreyCheckbox /> : <GreyRadio />}
+                            <OptionNameInput
+                              className={
+                                hoveredOption === index || snapshot.isDragging
+                                  ? styles.inputHovered
+                                  : ""
+                              }
+                              classes={{ focused: styles.inputFocused }}
+                              autoFocus={true}
+                              onBlur={() => {
+                                onChange(options);
+                              }}
+                              placeholder="Option..."
+                              value={data}
+                              onChange={(event) =>
+                                onEditOption(index, event.target.value)
+                              }
+                            />
+                            <IconButton
+                              onClick={() => onDeleteOption(index)}
+                              classes={{ root: styles.closeRoot }}
+                              size="small"
+                            >
+                              <Close />
+                            </IconButton>
+                          </OptionWrapper>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))
+                : null}
               {provided.placeholder}
             </div>
           )}
@@ -189,7 +213,7 @@ function CreateEditCheckbox({ data }) {
         <DragIndicatorIcon
           className={`${styles.dragIndicator} ${styles.dragIndicatorHidden}`}
         />
-        <GreyCheckbox />
+        {multiSelect ? <GreyCheckbox /> : <GreyRadio />}
         <OptionNameInput
           placeholder="Add option"
           onFocus={onAddOption}
@@ -200,4 +224,4 @@ function CreateEditCheckbox({ data }) {
   );
 }
 
-export default CreateEditCheckbox;
+export default SelectQuestion;

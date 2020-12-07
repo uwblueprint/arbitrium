@@ -15,10 +15,11 @@ const answer = new mongoose.Schema({
     enum: [
       "SHORT_ANSWER", //Yoptions.length = 0 | Xoptions.length = 1
       "PARAGRAPHS", //Yoptions.length = 0 | Xoptions.length = 1
-      "MULTIPLE_CHOICE", //Yoptions.length = # of MC | Xoptions.length = 1
-      "CHECKBOXES", //Yoptions.length = # of boxes | Xoptions.length = 1
+      "MULTIPLE_CHOICE", //Yoptions.length = 0 | Xoptions.length = # of MC
+      "CHECKBOXES", //Yoptions.length = 0 | Xoptions.length = # of boxes
       "FILE_UPLOAD", //Yoptions.length = 0 | Xoptions.length = 1
-      "CHECKBOX_GRID" //(Y|X)options.length = # of choices
+      "CHECKBOX_GRID", //(Y|X)options.length = # of choices
+      "IDENTIFIER"
     ]
   },
   // SHORT_ANSWER

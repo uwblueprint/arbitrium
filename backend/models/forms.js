@@ -6,25 +6,21 @@ const mongoose = require("mongoose");
 //file type
 //checkbox grid?
 
-const option = new mongoose.Schema({
-  min: {
-    type: Number
-  },
-  max: {
-    type: Number
-  },
-  opt: {
+const validation = new mongoose.Schema({
+  type: {
     type: String,
-    default: null
-  }
-});
-
-const regularExpressions = new mongoose.Schema({
-  name: {
-    type: String
+    enum: ["CHECKBOX", "EMAIL", "LINK"]
   },
   expression: {
     type: String
+  },
+  min: {
+    type: Number,
+    default: 0
+  },
+  max: {
+    type: Number,
+    default: 0
   }
 });
 
@@ -67,24 +63,26 @@ const question = new mongoose.Schema({
   type: {
     type: String,
     enum: [
-      "SHORT_ANSWER",
-      "PARAGRAPHS",
-      "MULTIPLE_CHOICE",
-      "CHECKBOXES",
-      "FILE_UPLOAD",
-      "CHECKBOX_GRID",
+      "SHORT_ANSWER", //Yoptions.length = 0 | Xoptions.length = 1
+      "PARAGRAPHS", //Yoptions.length = 0 | Xoptions.length = 1
+      "MULTIPLE_CHOICE", //Yoptions.length = 0 | Xoptions.length = # of MC
+      "CHECKBOXES", //Yoptions.length = 0 | Xoptions.length = # of boxes
+      "FILE_UPLOAD", //Yoptions.length = 0 | Xoptions.length = 1
+      "CHECKBOX_GRID", //(Y|X)options.length = # of choices
       "IDENTIFIER"
-    ]
+    ],
+    default: "SHORT_ANSWER"
   },
   validations: {
-    type: [regularExpressions],
+    type: [validation],
     default: null
   },
-  y_options: {
-    type: [option]
-  },
   x_options: {
-    type: [option]
+    type: [String]
+  },
+  //y_options is only used for grid type questions
+  y_options: {
+    type: [String]
   }
 });
 

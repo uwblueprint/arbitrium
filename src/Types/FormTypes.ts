@@ -31,6 +31,15 @@ export type EditSectionsAction =
       sectionType: string;
     };
 
+export type QuestionType =
+  | "SHORT_ANSWER"
+  | "MULTIPLE_CHOICE"
+  | "PARAGRAPHS"
+  | "CHECKBOXES"
+  | "FILE_UPLOAD"
+  | "CHECKBOX_GRID"
+  | "IDENTIFIER";
+
 export type EditQuestionsAction =
   | {
       type: "LOAD";
@@ -48,16 +57,37 @@ export type EditQuestionsAction =
       type: "DUPLICATE_QUESTION";
       index: number;
       targetIndex: number;
+    }
+  | {
+      type: "EDIT_TITLE";
+      index: number;
+      title: string;
+    }
+  | {
+      type: "EDIT_DESCRIPTION";
+      index: number;
+      description: string;
+    }
+  | {
+      type: "EDIT_QUESTION_TYPE";
+      index: number;
+      questionType: QuestionType;
+    }
+  | {
+      type: "REQUIRED_TOGGLE";
+      index: number;
+    }
+  | {
+      type: "EDIT_CONTENT";
+      index: number;
+      xoptions: any[];
+      yoptions: any[];
+    }
+  | {
+      type: "EDIT_VALIDATION";
+      index: number;
+      validations: any[];
     };
-
-export type QuestionType =
-  | "SHORT_ANSWER"
-  | "MULTIPLE_CHOICE"
-  | "PARAGRAPHS"
-  | "CHECKBOXES"
-  | "FILE_UPLOAD"
-  | "CHECKBOX_GRID"
-  | "IDENTIFIER";
 
 export type FormContext = {
   formId: string;
@@ -66,9 +96,12 @@ export type FormContext = {
 export type QuestionCard = {
   _id?: string;
   name: string;
+  description: string;
   type: QuestionType;
   question: string;
-  options?: Array<string>;
+  x_options: any[];
+  y_options: any[];
+  validations: any[];
   required: boolean;
 };
 

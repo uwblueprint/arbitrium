@@ -1,4 +1,10 @@
-import React, { useReducer, useState, useEffect, useContext } from "react";
+import React, {
+  useReducer,
+  useState,
+  useEffect,
+  useContext,
+  useCallback
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
@@ -20,6 +26,7 @@ import FormControl from "@material-ui/core/FormControl";
 import { Divider } from "@material-ui/core";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 import { Droppable } from "react-beautiful-dnd";
+import * as FORM from "../../requests/forms.js";
 
 const useStyles = makeStyles({
   //Wraps the card
@@ -133,12 +140,16 @@ function FormSection({
   handleDescriptionUpdate,
   handleSectionTypeUpdate,
   handleDeleteSection,
-  setShowMoveSectionsDialog
+  setShowMoveSectionsDialog,
+  formId,
+  initialActiveQuestion,
+  refetch,
+  setInitialActiveQuestion
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
-  const [activeQuestion, setActiveQuestion] = useState(0);
+  const [activeQuestion, setActiveQuestion] = useState(initialActiveQuestion);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
     questionData
@@ -166,13 +177,10 @@ function FormSection({
   }, [questions, dispatchQuestionsUpdate]);
 
   function updateActiveQuestion(sectionKey, questionKey) {
-    //Saving is done on focus change and is handled at the section level
-    //Every question change updates the active section and saves the changes
+    //Saving is done on focus change
+    //Every question change updates the active section
 
-    // handleUpdateQuestion(sectionKey, questionKey);
-    updateActiveSection(sectionKey);
     if (activeQuestion !== questionKey) {
-      setActiveQuestion(questionKey);
       window.requestAnimationFrame(() => {
         const element = document.getElementById(
           "question_" + questionKey + "_" + sectionKey
@@ -184,7 +192,9 @@ function FormSection({
           });
         }
       });
+      setActiveQuestion(questionKey);
     }
+    updateActiveSection(sectionKey);
   }
 
   function setSectionAsActive(sectionKey) {
@@ -195,8 +205,6 @@ function FormSection({
   }
 
   function handleAddQuestion() {
-    //When a question is added we update the DB with the new question
-    //TODO: Post the question to mongo and then reload
     dispatchQuestionsUpdate({
       type: "ADD_QUESTION",
       index: activeQuestion
@@ -215,7 +223,7 @@ function FormSection({
 
   function handleDeleteQuestion(questionKey) {
     deleteQuestion(
-      { formId: appUser.currentProgram },
+      { formId: formId },
       sectionData._id,
       questions[questionKey]._id
     );
@@ -224,6 +232,93 @@ function FormSection({
       setActiveQuestion(questionKey - 1);
     }
   }
+
+  //----------------------------------------------------------------------------
+  //UPDATE CARD CONTENTS
+  //----------------------------------------------------------------------------
+
+  function handleQuestionTitleUpdate(title) {
+    dispatchQuestionsUpdate({
+      type: "EDIT_TITLE",
+      index: activeQuestion,
+      title: title
+    });
+  }
+
+  function handleQuestionDescriptionUpdate(description) {
+    dispatchQuestionsUpdate({
+      type: "EDIT_DESCRIPTION",
+      index: activeQuestion,
+      description: description
+    });
+  }
+
+  function handleRequiredToggle() {
+    dispatchQuestionsUpdate({
+      type: "REQUIRED_TOGGLE",
+      index: activeQuestion
+    });
+  }
+
+  function handleQuestionTypeUpdate(questionType) {
+    dispatchQuestionsUpdate({
+      type: "EDIT_QUESTION_TYPE",
+      index: activeQuestion,
+      questionType: questionType
+    });
+  }
+
+  function handleQuestionContentUpdate(options) {
+    dispatchQuestionsUpdate({
+      type: "EDIT_CONTENT",
+      index: activeQuestion,
+      xoptions: options.xoptions,
+      yoptions: options.yoptions
+    });
+  }
+
+  // TODO: Implement
+  function handleQuestionValidationsUpdate() {
+    dispatchQuestionsUpdate({
+      type: "EDIT_VALIDATION",
+      index: activeQuestion,
+      xoptions: null,
+      yoptions: null
+    });
+  }
+
+  const updateParent = useCallback(() => {
+    setInitialActiveQuestion(activeQuestion);
+    refetch({ programId: appUser.currentProgram });
+  }, [
+    activeQuestion,
+    refetch,
+    appUser.currentProgram,
+    setInitialActiveQuestion
+  ]);
+
+  //When the questions changes we will update the form.
+  //1. When anything in the card changes focus
+  //2. When we Add/Delete/Duplicate a question (will save and create ids)
+  useEffect(() => {
+    async function save() {
+      if (
+        questions &&
+        sectionData._id &&
+        formId &&
+        questions !== questionData
+      ) {
+        await FORM.updateQuestions(formId, sectionData._id, questions);
+
+        //The length changes when a question is added/deleted
+        //The parent needs to know so it can properly drag/drop
+        if (questions.length !== questionData.length) {
+          updateParent();
+        }
+      }
+    }
+    save();
+  }, [questions, formId, sectionData, updateParent, questionData]);
 
   return (
     <div>
@@ -361,7 +456,7 @@ function FormSection({
           />
         ) : null}
       </CardWrapper>
-      <Droppable droppableId={String(sectionNum - 1)}>
+      <Droppable droppableId={String(sectionNum - 1)} on>
         {(provided, snapshot) => (
           <div {...provided.droppableProps} ref={provided.innerRef}>
             {questions.map((question, questionKey) => (
@@ -378,6 +473,16 @@ function FormSection({
                   handleDelete={handleDeleteQuestion}
                   sectionKey={sectionNum - 1}
                   questionKey={questionKey}
+                  handleQuestionTitleUpdate={handleQuestionTitleUpdate}
+                  handleQuestionTypeUpdate={handleQuestionTypeUpdate}
+                  handleQuestionDescriptionUpdate={
+                    handleQuestionDescriptionUpdate
+                  }
+                  handleRequiredToggle={handleRequiredToggle}
+                  handleQuestionContentUpdate={handleQuestionContentUpdate}
+                  handleQuestionValidationsUpdate={
+                    handleQuestionValidationsUpdate
+                  }
                 />
                 <div style={{ marginLeft: snapshot.isDraggingOver ? 820 : 0 }}>
                   {active && activeQuestion === questionKey ? (
