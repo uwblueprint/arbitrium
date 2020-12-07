@@ -102,9 +102,7 @@ function SelectQuestion({
     event.target.blur();
   };
 
-  console.log(options);
   const onEditOption = (index, value) => {
-    console.log("Editing Value");
     const newOptions = [
       ...options.slice(0, index),
       [value],
