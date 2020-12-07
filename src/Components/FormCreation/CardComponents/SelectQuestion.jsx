@@ -90,7 +90,6 @@ function SelectQuestion({
   onChange,
   initialOptions
 }) {
-  console.log(multiSelect);
   const styles = useStyles();
 
   // options is a string array

@@ -12,7 +12,7 @@ type Props = {
   submission: Boolean;
   short_answer: Boolean;
   validation?: any;
-  onBlur: () => void;
+  onBlur: (text: string) => void;
 };
 
 //TODO: Add Response Validation
@@ -20,7 +20,7 @@ function TextQuestion({
   submission = false,
   short_answer,
   validation,
-  onBlur
+  onBlur //Could change this to be onChange if that makes more sense
 }: Props) {
   const [text, setText] = useState("");
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +36,7 @@ function TextQuestion({
         placeholder={short_answer ? "Short answer text" : "Long answer text"}
         size="medium"
         value={text}
-        onBlur={onBlur}
+        onBlur={() => onBlur(text)}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           handleTextChange(event)
         }
