@@ -27,33 +27,36 @@ const MENU_BUTTON_HEIGHT = 40;
 const useStyles = makeStyles({
   //Wraps the card
   content: {
-    marginBottom: 8,
-    marginLeft: 24,
-    marginTop: 24,
-    marginRight: 16
+    marginBottom: 16,
+    marginLeft: 16,
+    marginTop: 16,
+    marginRight: 16,
+    "&:last-child": {
+      paddingBottom: 16
+    }
   },
 
   //CSS for the card component
   root: {
     fontSize: 14,
-    borderRadius: 0,
-    boxShadow: "0 2px 3px 1px #cccccc",
+    borderRadius: 4,
+    boxShadow: "0 2px 3px 1px #00000033",
     marginBottom: 20,
     width: 816
   },
   rootActive: {
     fontSize: 14,
-    borderRadius: 0,
+    borderRadius: 4,
     borderLeft: "4px solid #2261AD",
-    boxShadow: "0 2px 3px 1px #cccccc",
+    boxShadow: "0 2px 3px 1px #00000033",
     marginBottom: 20,
-    width: 816
+    width: 812
   },
 
   //Question Title and Menu Wrapper
   questionTitleAndMenuWrapperActive: {
     display: "flex",
-    paddingBottom: 24
+    paddingBottom: 16
   },
   questionTitleAndMenuWrapper: {
     display: "flex",
@@ -94,7 +97,7 @@ const useStyles = makeStyles({
 
   //Question Description
   questionDescription: {
-    width: 764,
+    width: 744,
     height: 21,
     marginBottom: 24
   },
@@ -123,7 +126,7 @@ const useStyles = makeStyles({
     fontFamily: "Roboto",
     fontStyle: "normal",
     fontWeight: "normal",
-    fontSize: 12,
+    fontSize: 14,
     letterSpacing: 0.4
   },
 
@@ -235,7 +238,7 @@ function FormCard({
     },
     {
       name: "CHECKBOXES",
-      value: "checkboxes",
+      value: "Checkboxes",
       icon: <CheckBoxIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item2,
       isDeletable: true,
