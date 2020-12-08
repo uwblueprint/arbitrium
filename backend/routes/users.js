@@ -21,6 +21,30 @@ router.get("/all", function(req, res) {
     });
 });
 
+router.get("/program", function(req, res) {
+  db["Authentication"].users
+    .find({
+      programs: {
+        $elemMatch: {
+          id: req.body.programId
+        }
+      }
+    },
+    {
+      userId: 1,
+      email: 1,
+      name: 1,
+      programs: 1
+    }
+    )
+    .then(function(found) {
+      res.json(found);
+    })
+    .catch(function(err) {
+      res.send(err);
+    });
+});
+
 router.get("/:userid", function(req, res) {
   //If user doesn't exist, create one and return it
   db["Authentication"].users

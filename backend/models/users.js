@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
-const program = new mongoose.Schema({
+const programRole = new mongoose.Schema({
   id: {
-    type: mongoose.SchemaTypes.ObjectId,
+    // TODO: enable after migrating
+    // type: mongoose.SchemaTypes.ObjectId
+    type: String
   },
   role: {
     type: String,
@@ -35,9 +37,9 @@ const userSchema = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId
     },
     programs: {
-      type: [program]
+      type: [programRole]
     },
-    adminOfOrganizations: {
+    adminOrganizations: {
       type: [mongoose.SchemaTypes.ObjectId]
     },
     isSuperAdmin: {
