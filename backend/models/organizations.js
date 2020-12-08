@@ -1,12 +1,5 @@
 const mongoose = require("mongoose");
 
-const user = new mongoose.Schema({
-  id: {
-    type: mongoose.SchemaTypes.ObjectId,
-    unique: true
-  }
-});
-
 const program = new mongoose.Schema({
   id: {
     type: mongoose.SchemaTypes.ObjectId,
@@ -16,8 +9,8 @@ const program = new mongoose.Schema({
 
 const organizationSchema = new mongoose.Schema(
   {
-    admins: {
-      type: [user]
+    name: {
+      type: String
     },
     programs: {
       type: [program]
