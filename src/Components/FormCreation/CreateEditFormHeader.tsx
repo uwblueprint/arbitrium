@@ -205,7 +205,9 @@ function CreateEditFormHeader({
         }}
         message={"Copied to clipboard."}
       />
-      <Button startIcon={<FormSettingsOutlineIcon />}>Form Settngs</Button>
+      <Button color="primary" startIcon={<FormSettingsOutlineIcon />}>
+        Form Settngs
+      </Button>
     </Header>
   );
 }
