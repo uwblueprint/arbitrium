@@ -11,12 +11,11 @@ function createRandomPassword(length) {
   return pass;
 }
 
-async function createFirebaseUser(user) {
+async function createFirebaseUser(email) {
   const password = createRandomPassword(Math.floor(Math.random() * 5 + 8));
   try {
     const userRecord = await firebaseAdmin.auth().createUser({
-      displayName: user.name,
-      email: user.email,
+      email: email,
       password
     });
     return userRecord;

@@ -35,6 +35,7 @@ router.get("/:userId/programs", function(req, res) {
     }, {
       // TODO: remove stage after migrating
       $project: {
+        role: 1,
         programId: {
           $toObjectId: '$programs.id'
         }
@@ -47,22 +48,26 @@ router.get("/:userId/programs", function(req, res) {
         as: "program"
       }
     }, {
+      $project: {
+        _id: 0,
+        role: 1,
+        programId: {$arrayElemAt: ['$program._id', 0]},
+        programName: {$arrayElemAt: ['$program.displayName', 0]}
+      }
+    }, {
       $group: {
-        _id: "$id", 
+        _id: "$_id", 
         root: {
           $mergeObjects: "$$ROOT"
         }, 
         programs: {
-          $push: {
-            $arrayElemAt: [ "$program", 0 ]
-          }
+          $push: "$$ROOT"
         }
       }
     }, {
       $project: {
         _id: 0,
-        "programs._id": 1, 
-        "programs.displayName": 1
+        root: 0
       }
     }
   ])
@@ -155,11 +160,12 @@ router.delete("/:userId", function(req, res) {
   );
 });
 
+// TODO: remove when frotend is updated
 // Create a new user in firebase and mongodb
 // Sends welcome email to user on creation
 router.post("/create-user", async function(req, res) {
   try {
-    const userRecord = await createFirebaseUser(req.body);
+    const userRecord = await createFirebaseUser(req.body.email);
     // Insert record into mongodb
     const mongoUserRecord = {
       userId: userRecord.uid,
@@ -193,7 +199,7 @@ router.post("/create-user", async function(req, res) {
         .auth()
         .generatePasswordResetLink(userRecord.email);
       try {
-        await sendWelcomeEmail(mongoUserRecord, link);
+        await sendWelcomeEmail(mongoUserRecord.email, link);
       } catch (e) {
         throw {
           type: "Mailer",
