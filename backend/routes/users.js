@@ -21,28 +21,57 @@ router.get("/all", function(req, res) {
     });
 });
 
-router.get("/program", function(req, res) {
+router.get("/:userId/programs", function(req, res) {
   db["Authentication"].users
-    .find({
-      programs: {
-        $elemMatch: {
-          id: req.body.programId
+  .aggregate([
+    {
+      $match: {
+        userId: req.params.userId
+      }
+    }, {
+      $unwind: {
+        path: "$programs"
+      }
+    }, {
+      // TODO: remove stage after migrating
+      $project: {
+        programId: {
+          $toObjectId: '$programs.id'
         }
       }
-    },
-    {
-      userId: 1,
-      email: 1,
-      name: 1,
-      programs: 1
+    }, {
+      $lookup: {
+        from: "programs", 
+        localField: "programId", 
+        foreignField: "_id", 
+        as: "program"
+      }
+    }, {
+      $group: {
+        _id: "$id", 
+        root: {
+          $mergeObjects: "$$ROOT"
+        }, 
+        programs: {
+          $push: {
+            $arrayElemAt: [ "$program", 0 ]
+          }
+        }
+      }
+    }, {
+      $project: {
+        _id: 0,
+        "programs._id": 1, 
+        "programs.displayName": 1
+      }
     }
-    )
-    .then(function(found) {
-      res.json(found);
-    })
-    .catch(function(err) {
-      res.send(err);
-    });
+  ])
+  .then(function(found) {
+    res.json(found[0]["programs"]);
+  })
+  .catch(function(err) {
+    res.send(err);
+  });
 });
 
 router.get("/:userid", function(req, res) {
