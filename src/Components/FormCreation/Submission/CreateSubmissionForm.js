@@ -6,7 +6,6 @@ import * as FORM from "../../../requests/forms.js";
 import usePromise from "../../../Hooks/usePromise";
 import { defaultFormState } from "./../CreateEditFormStateManagement";
 import SubmissionFormHeader from "./SubmissionFormHeader";
-import ConfirmSubmission from "./ConfirmSubmission";
 import customFormSectionsReducer from "../../../Reducers/CustomFormSectionsReducer";
 import Button from "@material-ui/core/Button";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
