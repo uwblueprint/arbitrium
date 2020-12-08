@@ -109,8 +109,8 @@ function CreateSubmissionForm() {
             ) : null}
             {page === sections.length - 1 ? (
               <div style={{ marginTop: 10 }}>
-                By clicking "Submit", your application will be submitted to the
-                owner of this form.
+                By clicking &quot;Submit&quot;, your application will be
+                submitted to the owner of this form.{" "}
               </div>
             ) : (
               <div></div>
