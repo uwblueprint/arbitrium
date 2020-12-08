@@ -17,6 +17,58 @@ router.get("/all", function(req, res) {
     });
 });
 
+router.get("/user/:userId", function(req, res) {
+  db["Authentication"].users
+  .aggregate([
+    {
+      $match: {
+        userId: req.params.userId
+      }
+    }, {
+      $unwind: {
+        path: "$programs"
+      }
+    }, {
+      $project: {
+        programId: {
+          $toObjectId: '$programs.id'
+        }
+      }
+    }, {
+      $lookup: {
+        from: "programs", 
+        localField: "programId", 
+        foreignField: "_id", 
+        as: "program"
+      }
+    }, {
+      $group: {
+        _id: "$id", 
+        root: {
+          $mergeObjects: "$$ROOT"
+        }, 
+        programs: {
+          $push: {
+            $arrayElemAt: [ "$program", 0 ]
+          }
+        }
+      }
+    }, {
+      $project: {
+        "_id": 1,
+        "programs._id": 1, 
+        "programs.displayName": 1
+      }
+    }
+  ])
+  .then(function(found) {
+    res.json(found[0]["programs"]);
+  })
+  .catch(function(err) {
+    res.send(err);
+  });
+});
+
 router.post("/", function(req, res) {
   db["Authentication"].programs
     .updateOne(
