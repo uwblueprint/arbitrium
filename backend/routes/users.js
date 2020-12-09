@@ -7,7 +7,6 @@ const router = express.Router();
 const db = require("../mongo.js");
 
 const { sendWelcomeEmail } = require("../nodemailer");
-const userUtils = require("./userUtils");
 const { createFirebaseUser } = require("./userUtils");
 const { deleteFirebaseUser } = require("./userUtils");
 
@@ -25,7 +24,61 @@ router.get("/all", function(req, res) {
 // Get a user's programs
 // Returns an array of programs: [{programId, programName, role}]
 router.get("/:userId/programs", async function(req, res) {
-  userUtils.getUserPrograms(req.params.userId)
+  db["Authentication"].users
+    .aggregate([
+      {
+        $match: {
+          userId: req.params.userId
+        }
+      },
+      {
+        $unwind: {
+          path: "$programs"
+        }
+      },
+      {
+        // TODO: remove stage after migrating
+        $project: {
+          role: "$programs.role",
+          programId: {
+            $toObjectId: "$programs.id"
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "programs",
+          localField: "programId",
+          foreignField: "_id",
+          as: "program"
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          role: 1,
+          id: { $arrayElemAt: ["$program._id", 0] },
+          name: { $arrayElemAt: ["$program.displayName", 0] }
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          root: {
+            $mergeObjects: "$$ROOT"
+          },
+          programs: {
+            $push: "$$ROOT"
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          root: 0
+        }
+      }
+    ])
     .then(function(data) {
       res.json(data[0].programs);
     })

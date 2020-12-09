@@ -1,4 +1,3 @@
-const db = require("../mongo.js");
 const firebaseAdmin = require("../firebaseAdmin");
 
 function createRandomPassword(length) {
@@ -41,65 +40,7 @@ function deleteFirebaseUser(userId) {
   });
 }
 
-function getUserPrograms(userId) {
-  return db["Authentication"].users.aggregate([
-    {
-      $match: {
-        userId: userId
-      }
-    },
-    {
-      $unwind: {
-        path: "$programs"
-      }
-    },
-    {
-      // TODO: remove stage after migrating
-      $project: {
-        role: "$programs.role",
-        programId: {
-          $toObjectId: "$programs.id"
-        }
-      }
-    },
-    {
-      $lookup: {
-        from: "programs",
-        localField: "programId",
-        foreignField: "_id",
-        as: "program"
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        role: 1,
-        id: { $arrayElemAt: ["$program._id", 0] },
-        name: { $arrayElemAt: ["$program.displayName", 0] }
-      }
-    },
-    {
-      $group: {
-        _id: "$_id",
-        root: {
-          $mergeObjects: "$$ROOT"
-        },
-        programs: {
-          $push: "$$ROOT"
-        }
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        root: 0
-      }
-    }
-  ]);
-}
-
 module.exports = {
   createFirebaseUser,
-  deleteFirebaseUser,
-  getUserPrograms
+  deleteFirebaseUser
 };

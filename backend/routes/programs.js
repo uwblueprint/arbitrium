@@ -87,16 +87,24 @@ router.get("/:programId/users", function(req, res) {
     });
 });
 
-// Add a user to the program with the specified role
+// Add a user to the program with the specified role, if they are not yet in the program
 router.post("/:programId/user", async function(req, res) {
-  let userData = {
+  const userData = {
     email: req.body.email,
     role: req.body.role
   };
   try {
     const result = await db["Authentication"].users.findOneAndUpdate(
       {
-        email: userData.email
+        email: userData.email,
+        // If the user is already in the program, this will try to upsert and throw a DuplicateKey error
+        programs: {
+          $not: {
+            $elemMatch: {
+              id: req.params.programId
+            }
+          }
+        }
       },
       {
         $addToSet: {
@@ -170,6 +178,9 @@ router.post("/:programId/user", async function(req, res) {
     }
     res.status(201).json(userData);
   } catch (e) {
+    if (e.code == 11000) {
+      res.status(400).send("User is already in program.");
+    }
     res.status(400).send(e);
   }
 });
