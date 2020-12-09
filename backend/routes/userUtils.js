@@ -56,7 +56,7 @@ function getUserPrograms(userId) {
     {
       // TODO: remove stage after migrating
       $project: {
-        role: 1,
+        role: "$programs.role",
         programId: {
           $toObjectId: "$programs.id"
         }
@@ -74,8 +74,8 @@ function getUserPrograms(userId) {
       $project: {
         _id: 0,
         role: 1,
-        programId: { $arrayElemAt: ["$program._id", 0] },
-        programName: { $arrayElemAt: ["$program.displayName", 0] }
+        id: { $arrayElemAt: ["$program._id", 0] },
+        name: { $arrayElemAt: ["$program.displayName", 0] }
       }
     },
     {

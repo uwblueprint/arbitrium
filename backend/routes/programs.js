@@ -88,7 +88,7 @@ router.get("/:programId/users", function(req, res) {
 });
 
 // Add a user to the program with the specified role
-router.post("/:programId/users", async function(req, res) {
+router.post("/:programId/user", async function(req, res) {
   let userData = {
     email: req.body.email,
     role: req.body.role
