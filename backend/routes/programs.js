@@ -87,7 +87,7 @@ router.get("/:programId/users", function(req, res) {
     });
 });
 
-// Add a user to the program
+// Add a user to the program with the specified role
 router.post("/:programId/users", async function(req, res) {
   let userData = {
     email: req.body.email,
@@ -107,6 +107,8 @@ router.post("/:programId/users", async function(req, res) {
         }
       },
       {
+        useFindAndModify: false,
+        runValidators: true,
         rawResult: true,
         upsert: true
       }
@@ -185,6 +187,8 @@ router.patch("/:programId/users/:userId", function(req, res) {
       }
     },
     {
+      useFindAndModify: true,
+      runValidators: true,
       new: true,
       projection: {
         _id: 0,
