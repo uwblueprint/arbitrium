@@ -86,34 +86,42 @@ router.get("/:programId/users", function(req, res) {
 
 // Add a user to the program
 router.post("/:programId/users", async function(req, res) {
-  const email = req.body.email
+  let userData = {
+    email: req.body.email,
+    role: req.body.role
+  }
   try {
-    const result = await db["Authentication"].users.updateOne(
+    const result = await db["Authentication"].users.findOneAndUpdate(
       {
-        email: email
+        email: userData.email
       }, {
         $addToSet: {
           programs: {
             id: req.params.programId,
-            role: req.body.role
+            role: userData.role
           }
         }
       },
       {
+        rawResult: true,
         upsert: true
       }
     )
-    // If this is a new user, create the Firebase user and send a welcome email
-    if (result.upserted) {
+    if (result.lastErrorObject.updatedExisting) {
+      userData.userId = result.value.userId;
+      userData.name = result.value.name;
+    } else {
+      // If this is a new user, create the Firebase user and send a welcome email
       try {
-        const firebaseUser = await createFirebaseUser(email);
+        const firebaseUser = await createFirebaseUser(userData.email);
         try {
           await db["Authentication"].users.updateOne(
-            { email: email },
+            { email: userData.email },
             { userId: firebaseUser.uid }
           )
+          userData.userId = firebaseUser.uid;
         } catch (e) {
-          await db["Authentication"].users.deleteOne({ email: email })
+          await db["Authentication"].users.deleteOne({ email: userData.email })
           await deleteFirebaseUser(firebaseUser.uid)
           throw {
             type: "Database",
@@ -125,9 +133,9 @@ router.post("/:programId/users", async function(req, res) {
         try {
           const link = await firebaseAdmin
             .auth()
-            .generatePasswordResetLink(email);
+            .generatePasswordResetLink(userData.email);
           try {
-            await sendWelcomeEmail(email, link);
+            await sendWelcomeEmail(userData.email, link);
           } catch (e) {
             throw {
               type: "Mailer",
@@ -144,9 +152,8 @@ router.post("/:programId/users", async function(req, res) {
             error: e
           };
         }
-        res.status(201).json(firebaseUser);
       } catch (e) {
-        await db["Authentication"].users.deleteOne({ email: email })
+        await db["Authentication"].users.deleteOne({ email: userData.email })
         throw {
           type: "Auth",
           code: e.code,
@@ -155,6 +162,7 @@ router.post("/:programId/users", async function(req, res) {
         };
       }
     }
+    res.status(201).json(userData);
   } catch (e) {
     res.status(400).send(e);
   }
