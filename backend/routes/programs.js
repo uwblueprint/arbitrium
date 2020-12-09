@@ -45,20 +45,37 @@ router.post("/", function(req, res) {
 
 module.exports = router;
 
+// Get all the users of a program
+// Returns an array of users: [{userId, email, name, role}]
 router.get("/:programId/users", function(req, res) {
   db["Authentication"].users
-    .find({
-      programs: {
-        $elemMatch: {
-          id: req.params.programId
+    .aggregate([
+      {
+        $match: {
+          programs: {
+            $elemMatch: {
+              id: req.params.programId
+            }
+          }
+        }
+      }, {
+        $unwind: {
+          path: '$programs'
+        }
+      }, {
+        $match: {
+          'programs.id': req.params.programId
+        }
+      }, {
+        $project: {
+          _id: 0,
+          userId: 1, 
+          email: 1, 
+          name: 1, 
+          role: '$programs.role'
         }
       }
-    },
-    {
-      userId: 1,
-      email: 1,
-      name: 1,
-    })
+    ])
     .then(function(found) {
       res.json(found);
     })
@@ -67,25 +84,25 @@ router.get("/:programId/users", function(req, res) {
     });
 });
 
+// Add a user to the program
 router.post("/:programId/users", async function(req, res) {
   const email = req.body.email
   try {
-    const result = await db["Authentication"].users
-      .updateOne(
-        {
-          email: email
-        }, {
-          $addToSet: {
-            programs: {
-              id: req.params.programId,
-              role: req.body.role
-            }
+    const result = await db["Authentication"].users.updateOne(
+      {
+        email: email
+      }, {
+        $addToSet: {
+          programs: {
+            id: req.params.programId,
+            role: req.body.role
           }
-        },
-        {
-          upsert: true
         }
-      )
+      },
+      {
+        upsert: true
+      }
+    )
     // If this is a new user, create the Firebase user and send a welcome email
     if (result.upserted) {
       try {
@@ -143,6 +160,42 @@ router.post("/:programId/users", async function(req, res) {
   }
 });
 
+// Update the user's role in the program
+router.patch("/:programId/users/:userId", function(req, res) {
+  db["Authentication"].users
+    .findOneAndUpdate(
+      {
+        userId: req.params.userId,
+        "programs.id": req.params.programId
+      },
+      {
+        $set: {
+          "programs.$.role": req.body.role
+        }
+      },
+      {
+        new: true,
+        projection: {
+          _id: 0,
+          userId: 1,
+          email: 1,
+          name: 1,
+        }
+      },
+      (error, result) => {
+        if (error) {
+          console.error(
+            `Error updating role of user with ID = ${req.params.userId} for program with ID = ${req.params.programId}`
+          );
+          res.status(500).send(error);
+        } else {
+          res.status(200).json(result);
+        }
+      }
+    );
+})
+
+// Remove a user from a program
 router.delete("/:programId/users/:userId", function(req, res) {
   db["Authentication"].users
     .updateOne(
