@@ -122,12 +122,15 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
                     <div key={i}>
                       <div className="questions">
                         <h4>
-                          {item.question
-                            .replace(/-/g, ".")
-                            .replace("One.Line", "One-Line")
-                            .replace("COVID.19", "COVID-19")
-                            .replaceAll("_dot_", ".")
-                            .replaceAll("_dash_", "-")}
+                          {i +
+                            1 +
+                            ". " +
+                            item.question
+                              .replace(/-/g, ".")
+                              .replace("One.Line", "One-Line")
+                              .replace("COVID.19", "COVID-19")
+                              .replaceAll("_dot_", ".")
+                              .replaceAll("_dash_", "-")}
                         </h4>
                       </div>
                       <div className="answers">
