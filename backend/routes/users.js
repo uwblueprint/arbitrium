@@ -22,7 +22,7 @@ router.get("/all", function(req, res) {
 });
 
 // Get a user's programs
-// Returns an array of programs: [{programId, programName, role}]
+// Returns an array of programs: [{id, name, role}]
 router.get("/:userId/programs", async function(req, res) {
   db["Authentication"].users
     .aggregate([
