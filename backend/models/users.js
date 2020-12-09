@@ -8,13 +8,8 @@ const programRole = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: [
-      "ADMIN",
-      "ADMIN_REVIEWER",
-      "REVIEWER",
-      "GUEST"
-    ]
-  },
+    enum: ["ADMIN", "ADMIN_REVIEWER", "REVIEWER", "GUEST"]
+  }
 });
 
 const userSchema = new mongoose.Schema(
@@ -35,7 +30,7 @@ const userSchema = new mongoose.Schema(
       unique: true
     },
     currentProgram: {
-      type: mongoose.SchemaTypes.ObjectId
+      type: String
     },
     programs: {
       type: [programRole]

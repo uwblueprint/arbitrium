@@ -23,60 +23,66 @@ router.get("/all", function(req, res) {
 
 router.get("/:userId/programs", function(req, res) {
   db["Authentication"].users
-  .aggregate([
-    {
-      $match: {
-        userId: req.params.userId
-      }
-    }, {
-      $unwind: {
-        path: "$programs"
-      }
-    }, {
-      // TODO: remove stage after migrating
-      $project: {
-        role: 1,
-        programId: {
-          $toObjectId: '$programs.id'
+    .aggregate([
+      {
+        $match: {
+          userId: req.params.userId
+        }
+      },
+      {
+        $unwind: {
+          path: "$programs"
+        }
+      },
+      {
+        // TODO: remove stage after migrating
+        $project: {
+          role: 1,
+          programId: {
+            $toObjectId: "$programs.id"
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "programs",
+          localField: "programId",
+          foreignField: "_id",
+          as: "program"
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          role: 1,
+          programId: { $arrayElemAt: ["$program._id", 0] },
+          programName: { $arrayElemAt: ["$program.displayName", 0] }
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          root: {
+            $mergeObjects: "$$ROOT"
+          },
+          programs: {
+            $push: "$$ROOT"
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          root: 0
         }
       }
-    }, {
-      $lookup: {
-        from: "programs", 
-        localField: "programId", 
-        foreignField: "_id", 
-        as: "program"
-      }
-    }, {
-      $project: {
-        _id: 0,
-        role: 1,
-        programId: {$arrayElemAt: ['$program._id', 0]},
-        programName: {$arrayElemAt: ['$program.displayName', 0]}
-      }
-    }, {
-      $group: {
-        _id: "$_id", 
-        root: {
-          $mergeObjects: "$$ROOT"
-        }, 
-        programs: {
-          $push: "$$ROOT"
-        }
-      }
-    }, {
-      $project: {
-        _id: 0,
-        root: 0
-      }
-    }
-  ])
-  .then(function(found) {
-    res.json(found[0]["programs"]);
-  })
-  .catch(function(err) {
-    res.send(err);
-  });
+    ])
+    .then(function(found) {
+      res.json(found[0]["programs"]);
+    })
+    .catch(function(err) {
+      res.send(err);
+    });
 });
 
 router.get("/:userid", function(req, res) {

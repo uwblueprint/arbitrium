@@ -58,21 +58,24 @@ router.get("/:programId/users", function(req, res) {
             }
           }
         }
-      }, {
+      },
+      {
         $unwind: {
-          path: '$programs'
+          path: "$programs"
         }
-      }, {
+      },
+      {
         $match: {
-          'programs.id': req.params.programId
+          "programs.id": req.params.programId
         }
-      }, {
+      },
+      {
         $project: {
           _id: 0,
-          userId: 1, 
-          email: 1, 
-          name: 1, 
-          role: '$programs.role'
+          userId: 1,
+          email: 1,
+          name: 1,
+          role: "$programs.role"
         }
       }
     ])
@@ -89,12 +92,13 @@ router.post("/:programId/users", async function(req, res) {
   let userData = {
     email: req.body.email,
     role: req.body.role
-  }
+  };
   try {
     const result = await db["Authentication"].users.findOneAndUpdate(
       {
         email: userData.email
-      }, {
+      },
+      {
         $addToSet: {
           programs: {
             id: req.params.programId,
@@ -106,7 +110,7 @@ router.post("/:programId/users", async function(req, res) {
         rawResult: true,
         upsert: true
       }
-    )
+    );
     if (result.lastErrorObject.updatedExisting) {
       userData.userId = result.value.userId;
       userData.name = result.value.name;
@@ -118,17 +122,17 @@ router.post("/:programId/users", async function(req, res) {
           await db["Authentication"].users.updateOne(
             { email: userData.email },
             { userId: firebaseUser.uid }
-          )
+          );
           userData.userId = firebaseUser.uid;
         } catch (e) {
-          await db["Authentication"].users.deleteOne({ email: userData.email })
-          await deleteFirebaseUser(firebaseUser.uid)
+          await db["Authentication"].users.deleteOne({ email: userData.email });
+          await deleteFirebaseUser(firebaseUser.uid);
           throw {
             type: "Database",
             code: "mongo-db",
             message: "Error updating Mongo user.",
             error: e
-          }
+          };
         }
         try {
           const link = await firebaseAdmin
@@ -153,7 +157,7 @@ router.post("/:programId/users", async function(req, res) {
           };
         }
       } catch (e) {
-        await db["Authentication"].users.deleteOne({ email: userData.email })
+        await db["Authentication"].users.deleteOne({ email: userData.email });
         throw {
           type: "Auth",
           code: e.code,
@@ -170,38 +174,37 @@ router.post("/:programId/users", async function(req, res) {
 
 // Update the user's role in the program
 router.patch("/:programId/users/:userId", function(req, res) {
-  db["Authentication"].users
-    .findOneAndUpdate(
-      {
-        userId: req.params.userId,
-        "programs.id": req.params.programId
-      },
-      {
-        $set: {
-          "programs.$.role": req.body.role
-        }
-      },
-      {
-        new: true,
-        projection: {
-          _id: 0,
-          userId: 1,
-          email: 1,
-          name: 1,
-        }
-      },
-      (error, result) => {
-        if (error) {
-          console.error(
-            `Error updating role of user with ID = ${req.params.userId} for program with ID = ${req.params.programId}`
-          );
-          res.status(500).send(error);
-        } else {
-          res.status(200).json(result);
-        }
+  db["Authentication"].users.findOneAndUpdate(
+    {
+      userId: req.params.userId,
+      "programs.id": req.params.programId
+    },
+    {
+      $set: {
+        "programs.$.role": req.body.role
       }
-    );
-})
+    },
+    {
+      new: true,
+      projection: {
+        _id: 0,
+        userId: 1,
+        email: 1,
+        name: 1
+      }
+    },
+    (error, result) => {
+      if (error) {
+        console.error(
+          `Error updating role of user with ID = ${req.params.userId} for program with ID = ${req.params.programId}`
+        );
+        res.status(500).send(error);
+      } else {
+        res.status(200).json(result);
+      }
+    }
+  );
+});
 
 // Remove a user from a program
 router.delete("/:programId/users/:userId", function(req, res) {
