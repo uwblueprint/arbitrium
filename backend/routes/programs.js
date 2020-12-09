@@ -187,7 +187,7 @@ router.post("/:programId/user", async function(req, res) {
 });
 
 // Update the user's role in the program
-router.patch("/:programId/users/:userId", function(req, res) {
+router.patch("/:programId/user/:userId", function(req, res) {
   db["Authentication"].users.findOneAndUpdate(
     {
       userId: req.params.userId,
