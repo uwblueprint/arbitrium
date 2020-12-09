@@ -180,8 +180,9 @@ router.post("/:programId/user", async function(req, res) {
   } catch (e) {
     if (e.code == 11000) {
       res.status(400).send("User is already in program.");
+    } else {
+      res.status(400).send(e);
     }
-    res.status(400).send(e);
   }
 });
 
