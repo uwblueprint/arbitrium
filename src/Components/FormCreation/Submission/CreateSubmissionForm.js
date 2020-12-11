@@ -83,7 +83,7 @@ function CreateSubmissionForm() {
   // Used to scroll to top when moving between sections
   useEffect(() => {
     window.requestAnimationFrame(() => {
-      const element = document.getElementById("section_" + page);
+      const element = document.getElementById("root");
 
       element.scrollIntoView({
         behavior: "smooth",
