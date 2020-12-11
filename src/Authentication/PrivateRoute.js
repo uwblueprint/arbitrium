@@ -8,34 +8,40 @@ import { ProgramContext } from "../Contexts/ProgramContext";
 import createContainer from "../Components/Container/Container";
 import { connect } from "react-redux";
 import routes from "../appRoutes";
+import * as GET from "../requests/get";
+import usePromise from "../Hooks/usePromise";
 
 function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   const { isLoading, currentUser: user, appUser } = useContext(AuthContext);
   const { isLoading: programDataIsLoading } = useContext(ProgramContext);
+  const userId = appUser && appUser.userId;
+
+  console.log(rest);
+
+  //TODO: Put this in a useEffect
+  const [userPrograms] = usePromise(GET.getAllUserPrograms, { userId });
+
+  console.log(userPrograms);
+  console.log(appUser);
 
   //The user only has access if they are logged in and are in the proper user group
   //This is mainly for admin access
   const roleAccess =
     user != null &&
-    (route.groups.length === 0 ||
-      (appUser && route.groups.includes(appUser.role)));
+    !userPrograms.isPending &&
+    userPrograms.value.filter(
+      (program) => program.id == (appUser && appUser.currentProgram)
+    );
+
+  const roleAccess2 =
+    roleAccess.role === route.programGroup || route.programGroup == "";
+  //Filter the list of appRoutes for routes that should NOT be displayed in the header
+  //User must have roleAccess
+  const headerRoutes = routes.filter((route) => route.header && roleAccess2);
 
   //This affects the loading of the navbar or not
   const adminRoute = route.path.includes("admin");
   const Container = createContainer(adminRoute);
-
-  //Filter the list of appRoutes for routes that should NOT be displayed in the header
-  const headerRoutes = routes.filter((route) => {
-    if (
-      route.header &&
-      user != null &&
-      (route.groups.length === 0 ||
-        (appUser && route.groups.includes(appUser.role)))
-    ) {
-      return true;
-    }
-    return false;
-  });
 
   //Access to programs and organizations should also be decided here
   return isLoading || programDataIsLoading ? (
@@ -46,7 +52,7 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
         stroke: 2
       }}
     />
-  ) : roleAccess ? (
+  ) : roleAccess2 ? (
     <>
       <Container>
         <Header

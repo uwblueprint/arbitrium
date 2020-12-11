@@ -55,8 +55,15 @@ function convertToTableData(fetched, programs) {
   }));
 }
 
-function UserManagement() {
-  const [loadUsers, reloadUsers] = usePromise(GET.getAllUsersAPI, {}, []);
+function UserManagement(props) {
+  const program = props.user.currentProgram;
+  const [loadUsers, reloadUsers] = usePromise(
+    GET.getAllProgramUsers,
+    { program },
+    [props.user.currentProgram]
+  );
+
+  console.log(loadUsers);
   const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
 
   const users = useMemo(
@@ -67,6 +74,8 @@ function UserManagement() {
       ),
     [loadUsers, programs]
   );
+
+  console.log("We're at user Managment");
 
   return (
     <Wrapper>

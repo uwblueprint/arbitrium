@@ -69,6 +69,14 @@ async function getAllProgramsAPI() {
   return GET(`/api/programs/all`);
 }
 
+async function getAllProgramUsers({ program }) {
+  console.log(program);
+  return GET(`/api/programs/${program}/users`);
+}
+async function getAllUserPrograms({ userId }) {
+  return GET(`/api/users/${userId}/programs`);
+}
+
 export {
   getAllStackingsAPI,
   getAllApplicationsAPI,
@@ -85,5 +93,7 @@ export {
   getApplicationReviewsAPI,
   getCandidateSubmissions,
   getAllProgramsAPI,
-  getAllFirebaseUsers
+  getAllFirebaseUsers,
+  getAllProgramUsers,
+  getAllUserPrograms
 };
