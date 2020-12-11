@@ -65,6 +65,7 @@ function CreateSubmissionForm() {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
@@ -85,48 +86,82 @@ function CreateSubmissionForm() {
 
   return (
     <div>
-      <FormWrapper key={page} id={"section_" + page}>
-        <SubmissionFormHeader {...headerData} />
-        {page !== -1 && sections && page < sections.length ? (
-          <FormSection
-            key={page + "_section"}
-            numSections={sections.length}
-            sectionNum={page + 1}
-            sectionData={sections[page]}
-          />
-        ) : null}
-      </FormWrapper>
-      <ButtonGroup>
-        <Button
-          variant="outlined"
-          className={classes.button}
-          disabled={page === -1}
-          color="primary"
-          onClick={() => setPage(page - 1)}
-        >
-          Back
-        </Button>
-        <Button
-          variant="outlined"
-          className={classes.button}
-          disabled={page === sections.length - 1}
-          color="primary"
-          onClick={() => setPage(page + 1)}
-        >
-          Next
-        </Button>
-        {page === -1 ? (
-          <div></div>
-        ) : (
-          <div style={{ width: 500, marginLeft: 140 }}>
-            <BorderLinearProgress
-              variant="determinate"
-              value={norm_progress(page + 1)}
+      {submitted ? (
+        <div>
+          <FormWrapper>
+            <SubmissionFormHeader
+              name={headerData.name}
+              description={"Your response has been recorded"}
             />
-            Section {page + 1} of {sections.length}
-          </div>
-        )}
-      </ButtonGroup>
+          </FormWrapper>
+        </div>
+      ) : (
+        <div>
+          <FormWrapper key={page} id={"section_" + page}>
+            <SubmissionFormHeader {...headerData} />
+            {page !== -1 && sections && page < sections.length ? (
+              <FormSection
+                key={page + "_section"}
+                numSections={sections.length}
+                sectionNum={page + 1}
+                sectionData={sections[page]}
+              />
+            ) : null}
+            {page === sections.length - 1 ? (
+              <div style={{ marginTop: 10 }}>
+                By clicking &quot;Submit&quot;, your application will be
+                submitted to the owner of this form.{" "}
+              </div>
+            ) : (
+              <div></div>
+            )}
+          </FormWrapper>
+          <ButtonGroup>
+            <Button
+              variant="outlined"
+              className={classes.button}
+              disabled={page === -1}
+              color="primary"
+              onClick={() => setPage(page - 1)}
+            >
+              Back
+            </Button>
+            {page === sections.length - 1 ? (
+              <Button
+                variant="contained"
+                className={classes.button}
+                color="primary"
+                onClick={() => {
+                  setSubmitted(true);
+                }}
+              >
+                Submit
+              </Button>
+            ) : (
+              <Button
+                variant="outlined"
+                className={classes.button}
+                disabled={page === sections.length - 1}
+                color="primary"
+                onClick={() => setPage(page + 1)}
+              >
+                Next
+              </Button>
+            )}
+            {page === -1 ? (
+              <div></div>
+            ) : (
+              <div style={{ width: 500, marginLeft: 140 }}>
+                <BorderLinearProgress
+                  variant="determinate"
+                  value={norm_progress(page + 1)}
+                />
+                Section {page + 1} of {sections.length}
+              </div>
+            )}
+          </ButtonGroup>
+        </div>
+      )}
     </div>
   );
 }
