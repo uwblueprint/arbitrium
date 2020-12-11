@@ -174,7 +174,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             onClose={() => {
               setprogramMenuAnchor(null);
             }}
-            style={{ marginTop: HEADER_HEIGHT / 2 }}
+            style={{ marginTop: HEADER_HEIGHT / 2 + 4 }}
           >
             {validPrograms ? (
               <div style={{ border: "1px solid #ccc" }}>
@@ -210,7 +210,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                 onClose={() => {
                   setAdminMenuAnchor(null);
                 }}
-                style={{ marginTop: HEADER_HEIGHT / 2 }}
+                style={{ marginTop: HEADER_HEIGHT / 2 + 4, marginLeft: -96 }}
               >
                 {routes != null ? (
                   <div style={{ border: "1px solid #ccc" }}>
