@@ -128,6 +128,18 @@ function CreateSubmissionForm({ match }) {
     //TODO: Save the response
   };
 
+  // Used to scroll to top when moving between sections
+  useEffect(() => {
+    window.requestAnimationFrame(() => {
+      const element = document.getElementById("section_" + page);
+
+      element.scrollIntoView({
+        behavior: "smooth",
+        alignToTop: true
+      });
+    });
+  }, [page]);
+
   const norm_progress = (pageNum) => {
     return (pageNum * 100) / sections.length;
   };
