@@ -7,6 +7,10 @@ const router = express.Router();
 const db = require("../mongo.js");
 const addConnection = require("../mongo.js").addConnection;
 
+const { isAuthenticated } = require("../middlewares/auth");
+
+router.use(isAuthenticated);
+
 router.get("/all", function(req, res) {
   db["Authentication"].organizations
     .find()

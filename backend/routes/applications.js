@@ -4,6 +4,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../mongo.js");
 
+const { isAuthenticated } = require("../middlewares/auth");
+
+router.use(isAuthenticated);
+
 router.get("/", function(req, res) {
   if (req.query.count) {
     db[req.headers.database].applications.countDocuments().then((count) => {

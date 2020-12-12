@@ -9,6 +9,7 @@ import styled from "styled-components";
 import LoginFieldsCard from "./logincards/loginfieldscard/LoginFieldsCard";
 import PasswordResetEmailCard from "./logincards/passwordresetemailcard/PasswordResetEmailCard";
 import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/PasswordResetResponseCard";
+import { defaultRouteAfterLogin } from "./PrivateRoute";
 
 const StyledCard = styled(Card)`
   width: 350px;
@@ -51,7 +52,7 @@ function Login({ history, initialCardType }) {
   };
 
   if (currentUser != null) {
-    return <Redirect to={"/applications"} />;
+    return <Redirect to={defaultRouteAfterLogin} />;
   }
 
   const getCardContent = () => {

@@ -124,9 +124,6 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
       programId: newProgram._id
     });
     loadProgram(newProgram._id);
-    if (!admin) {
-      history.push("/applications");
-    }
     //Load the application data into redux
   };
   const classes = useStyles();
@@ -134,15 +131,16 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
     ? []
     : allPrograms.value.filter((p) => !!myProgramsMap[p._id]);
 
-  let hasAdminAccessForCurrentProgram = false;
-  if (programsMap[program]) {
-    const userProgram = appUser.programs.find((prog) => {
-      return programsMap[program]._id === prog.id;
-    });
-    if (userProgram && userProgram.role === "admin") {
-      hasAdminAccessForCurrentProgram = true;
-    }
-  }
+  const hasAdminAccessForCurrentProgram = true;
+  //TODO: This is handled in privateRoute.js. Remove once migration is done
+  // if (programsMap[program]) {
+  //   const userProgram = appUser.programs.find((prog) => {
+  //     return programsMap[program]._id === prog.id;
+  //   });
+  //   if (userProgram && userProgram.role === "admin") {
+  //     hasAdminAccessForCurrentProgram = true;
+  //   }
+  // }
   return (
     <Container>
       <BodyWrapper>
@@ -196,48 +194,58 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
         <RightSideHeaderWrapper>
           {appUser.role === "Admin" || hasAdminAccessForCurrentProgram ? (
             <RightSideHeaderWrapper>
-              <p> {curRoute.title} </p>
-              <ArrowDropDownCircleOutlinedIcon
-                style={{ marginLeft: "4px", margin: "12px" }}
-                onClick={handleClickAdminMenu}
-              ></ArrowDropDownCircleOutlinedIcon>
-              <Menu
-                elevation={0}
-                id="simple-menu"
-                anchorEl={adminMenuAnchor}
-                keepMounted
-                open={Boolean(adminMenuAnchor)}
-                onClose={() => {
-                  setAdminMenuAnchor(null);
-                }}
-                style={{ marginTop: HEADER_HEIGHT / 2 + 4, marginLeft: -96 }}
-              >
-                {routes != null ? (
-                  <div style={{ border: "1px solid #ccc" }}>
-                    {routes.map((route, index) => {
-                      if (route.title !== curRoute.title) {
-                        return (
-                          <MenuItem
-                            key={index}
-                            onClick={() => history.push(route.path)}
-                            visible={(
-                              route.title !== curRoute.title
-                            ).toString()}
-                          >
-                            {route.title}
+              <p style={{ marginLeft: "4px", margin: "12px" }}>
+                {" "}
+                {curRoute.title}{" "}
+              </p>
+              {routes.length > 0 ? (
+                <div>
+                  <ArrowDropDownCircleOutlinedIcon
+                    style={{ marginRight: "12px" }}
+                    onClick={handleClickAdminMenu}
+                  ></ArrowDropDownCircleOutlinedIcon>
+                  <Menu
+                    elevation={0}
+                    id="simple-menu"
+                    anchorEl={adminMenuAnchor}
+                    keepMounted
+                    transformOrigin={{ vertical: "top", horizontal: "right" }}
+                    open={Boolean(adminMenuAnchor)}
+                    onClose={() => {
+                      setAdminMenuAnchor(null);
+                    }}
+                    style={{
+                      marginTop: HEADER_HEIGHT / 2 + 4
+                    }}
+                  >
+                    {routes != null ? (
+                      <div style={{ border: "1px solid #ccc" }}>
+                        {routes.map((route, index) => {
+                          if (route.title !== curRoute.title) {
+                            return (
+                              <MenuItem
+                                key={index}
+                                onClick={() => history.push(route.path)}
+                                visible={(
+                                  route.title !== curRoute.title
+                                ).toString()}
+                              >
+                                {route.title}
+                              </MenuItem>
+                            );
+                          }
+                          return null;
+                        })}
+                        {validPrograms.length === 0 ? (
+                          <MenuItem key={"None"}>
+                            You don't have access to other pages
                           </MenuItem>
-                        );
-                      }
-                      return null;
-                    })}
-                    {validPrograms.length === 0 ? (
-                      <MenuItem key={"None"}>
-                        You don't have access to other pages
-                      </MenuItem>
+                        ) : null}
+                      </div>
                     ) : null}
-                  </div>
-                ) : null}
-              </Menu>
+                  </Menu>
+                </div>
+              ) : null}
             </RightSideHeaderWrapper>
           ) : null}
           <Feedback user={currentUser} />

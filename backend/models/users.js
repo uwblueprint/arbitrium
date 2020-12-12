@@ -1,22 +1,17 @@
 const mongoose = require("mongoose");
 
-//Currently we only have one role: reviewer.
-//In the future we may want to have "spectators" for example
-const program = new mongoose.Schema({
+const programRole = new mongoose.Schema({
   id: {
-    type: String,
-    unique: true
+    // TODO: enable after migrating
+    // type: mongoose.SchemaTypes.ObjectId
+    type: String
   },
   role: {
     type: String,
-    default: "reviewer"
+    enum: ["ADMIN", "ADMIN_REVIEWER", "REVIEWER", "GUEST"]
   }
 });
 
-//Programs[] is a list of program IDs that the user has been assigned to.
-//They can only view these programs (unless admin).
-
-//Organizations[] is the organizations they have been assigned to.
 const userSchema = new mongoose.Schema(
   {
     userId: {
@@ -31,23 +26,27 @@ const userSchema = new mongoose.Schema(
       type: String
     },
     email: {
+      type: String,
+      unique: true
+    },
+    currentProgram: {
       type: String
     },
-    organizations: {
-      type: [String]
-    },
     programs: {
-      type: [program]
+      type: [programRole]
     },
-    currentProgram: String, // program id
+    adminOrganizations: {
+      type: [mongoose.SchemaTypes.ObjectId]
+    },
+    isSuperAdmin: {
+      type: Boolean,
+      default: false
+    },
     deleted: {
-      type: Boolean
-    },
-    admin: {
       type: Boolean
     }
   },
-  { collection: "users" }
+  { collection: "userstemp" }
 );
 
 module.exports = userSchema;

@@ -80,6 +80,18 @@ function CreateSubmissionForm() {
     });
   }, [loadForm, appUser, refetch]);
 
+  // Used to scroll to top when moving between sections
+  useEffect(() => {
+    window.requestAnimationFrame(() => {
+      const element = document.getElementById("root");
+
+      element.scrollIntoView({
+        behavior: "smooth",
+        alignToTop: true
+      });
+    });
+  }, [page]);
+
   const norm_progress = (pageNum) => {
     return (pageNum * 100) / sections.length;
   };
