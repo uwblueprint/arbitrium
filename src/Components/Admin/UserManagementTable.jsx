@@ -35,35 +35,6 @@ const columns = [
   { title: "Email", field: "email" },
   { title: "Role", field: "role" },
   {
-    title: "Program Access",
-    field: "programs",
-    export: false,
-    render: (rowData) => {
-      if (rowData.programAccess.length === 0) {
-        return "None";
-      }
-      if (rowData.programAccess.length > 1) {
-        return (
-          <div>
-            {rowData.programAccess[0]}
-            <OverflowTooltip
-              title={
-                <Overflow>
-                  {rowData.programAccess.slice(1).map((program, i) => (
-                    <div key={i}>{program}</div>
-                  ))}
-                </Overflow>
-              }
-            >
-              <span>{rowData.programAccess.length - 1} more</span>
-            </OverflowTooltip>
-          </div>
-        );
-      }
-      return rowData.programAccess.join(", ");
-    }
-  },
-  {
     title: "",
     field: "userLink",
     sorting: false,

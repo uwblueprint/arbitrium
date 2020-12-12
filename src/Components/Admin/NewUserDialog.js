@@ -6,7 +6,8 @@ import LoadingOverlay from "../Common/LoadingOverlay";
 import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
 import { userFormStateReducer } from "../../Reducers/UserFormStateReducer";
-import { createUserAPI } from "../../requests/update";
+import { createOrAddUserProgramAPI } from "../../requests/update";
+import * as userRoles from "../../Constants/UserRoles";
 
 const Wrapper = styled.div`
   .invitationButton {
@@ -18,12 +19,12 @@ const initialFormState = {
   name: "",
   preferredName: "",
   email: "",
-  role: "User",
+  role: userRoles.REVIEWER,
   programs: new Set()
 };
 
 // onAddNewUser: callback for when a new user is added
-function NewUserDialog({ onSubmit, close, confirm }) {
+function NewUserDialog({ onSubmit, close, confirm, program }) {
   const [formState, dispatchUpdateFormState] = useReducer(
     userFormStateReducer,
     initialFormState
@@ -35,12 +36,10 @@ function NewUserDialog({ onSubmit, close, confirm }) {
     setIsSubmitting(true);
     try {
       const data = { ...formState };
-      data.programs = Array.from(formState.programs).map((program) => ({
-        id: program,
-        role: "reviewer"
-      }));
-
-      const user = await createUserAPI(data);
+      const user = await createOrAddUserProgramAPI(program, {
+        email: data.email,
+        role: data.role
+      });
       close();
       onSubmit && onSubmit(user);
       confirm();
@@ -59,7 +58,7 @@ function NewUserDialog({ onSubmit, close, confirm }) {
   return (
     <Wrapper>
       <Dialog width="400px" paddingHorizontal={28} paddingVertical={28}>
-        <DialogHeader onClose={close} title="Create a new user" />
+        <DialogHeader onClose={close} title="Add a new user" />
         <LoadingOverlay
           show={isSubmitting}
           spinnerProps={{
@@ -70,6 +69,7 @@ function NewUserDialog({ onSubmit, close, confirm }) {
         <EditUserForm
           formState={formState}
           dispatch={dispatchUpdateFormState}
+          newUser={true}
         />
         <Button
           className="invitationButton"

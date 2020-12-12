@@ -96,6 +96,8 @@ router.post("/:programId/user", async function(req, res) {
     email: req.body.email,
     role: req.body.role
   };
+  debug(req.params.programId);
+  debug(userData);
   try {
     const result = await db["Authentication"].users.findOneAndUpdate(
       {
@@ -182,7 +184,12 @@ router.post("/:programId/user", async function(req, res) {
     res.status(201).json(userData);
   } catch (e) {
     if (e.code === 11000) {
-      res.status(400).send("User is already in program.");
+      res.status(400).send({
+        type: "DuplicateKey",
+        code: e.code,
+        message: `${userData.email} is already in this program.`,
+        error: e
+      });
     } else {
       res.status(400).send(e);
     }

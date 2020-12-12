@@ -37,10 +37,7 @@ function convertToTableData(fetched, programs) {
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
-    programAccess: (user.programs || [])
-      .filter((p) => programs.find((prog) => prog._id === p.id))
-      .map((p) => p.displayName),
-    role: user.admin ? "Admin" : "Reviewer",
+    role: user.role,
     userLink: (
       <div className="button-container">
         <DialogTriggerButton
@@ -56,22 +53,16 @@ function convertToTableData(fetched, programs) {
   }));
 }
 
-function UserManagement({ program }) {
+function UserManagementProgram({ program }) {
   const [loadUsers, reloadUsers] = usePromise(
     GET.getAllProgramUsers,
     { program },
     [program]
   );
 
-  const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
-
   const users = useMemo(
-    () =>
-      convertToTableData(
-        loadUsers.value.filter((u) => !u.deleted),
-        programs.value
-      ),
-    [loadUsers, programs]
+    () => convertToTableData(loadUsers.value.filter((u) => !u.deleted)),
+    [loadUsers]
   );
 
   return (
@@ -79,14 +70,15 @@ function UserManagement({ program }) {
       {!loadUsers.isPending ? (
         <>
           <Header>
-            <h1 style={{ color: "black" }}>User Management</h1>
+            <h1 style={{ color: "black" }}>Manage User Access</h1>
             <div className="button-container">
               <DialogTriggerButton
                 Dialog={NewUserDialog}
                 closeOnEsc={true}
                 alertParent={reloadUsers}
+                dialogProps={{ program: program }}
               >
-                Create New User
+                Add new user
               </DialogTriggerButton>
             </div>
           </Header>
@@ -106,4 +98,4 @@ const mapStateToProps = (state) => ({
   program: state.program
 });
 
-export default connect(mapStateToProps)(UserManagement);
+export default connect(mapStateToProps)(UserManagementProgram);
