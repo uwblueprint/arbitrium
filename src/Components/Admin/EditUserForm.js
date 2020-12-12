@@ -2,14 +2,8 @@ import React, { useCallback } from "react";
 import styled from "styled-components";
 import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import ProgramSelect from "./ProgramSelect";
 import UserRoleSelect from "./UserRoleSelect";
-import {
-  EDIT_NAME,
-  EDIT_EMAIL,
-  EDIT_ROLE,
-  EDIT_PROGRAMS
-} from "../../Reducers/UserFormStateReducer";
+import { EDIT_EMAIL, EDIT_ROLE } from "../../Reducers/UserFormStateReducer";
 
 const StyledLabel = styled(InputLabel)`
   margin-bottom: 4px;
@@ -20,12 +14,7 @@ const QuestionWrapper = styled.div`
 `;
 
 // onAddNewUser: callback for when a new user is added
-function EditUserForm({
-  dispatch,
-  formState,
-  newUser,
-  organizationLevel = false
-}) {
+function EditUserForm({ dispatch, formState, newUser }) {
   const dispatchEmailChange = useCallback(
     (event) => {
       dispatch({ type: EDIT_EMAIL, email: event.target.value });
@@ -40,15 +29,15 @@ function EditUserForm({
     [dispatch]
   );
 
-  const dispatchProgramsChange = useCallback(
-    (event) => {
-      dispatch({
-        type: EDIT_PROGRAMS,
-        program: event.target.name
-      });
-    },
-    [dispatch]
-  );
+  // const dispatchProgramsChange = useCallback(
+  //   (event) => {
+  //     dispatch({
+  //       type: EDIT_PROGRAMS,
+  //       program: event.target.name
+  //     });
+  //   },
+  //   [dispatch]
+  // );
 
   return (
     <div>
@@ -81,7 +70,7 @@ function EditUserForm({
           onChange={dispatchRoleChange}
         />
       </QuestionWrapper>
-      {organizationLevel && (
+      {/* {organizationLevel && (
         <QuestionWrapper>
           <StyledLabel htmlFor="role-select">
             Which program(s) are they a part of?
@@ -91,7 +80,7 @@ function EditUserForm({
             value={formState.programs}
           />
         </QuestionWrapper>
-      )}
+      )} */}
     </div>
   );
 }

@@ -1,3 +1,5 @@
+// This file isn't being used right now, but should be reusable for org-level user management
+
 import React from "react";
 import styled from "styled-components";
 import Spinner from "react-spinner-material";

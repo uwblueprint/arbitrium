@@ -33,33 +33,11 @@ const SaveWrapper = styled.div`
 `;
 
 // onAddNewUser: callback for when a new user is added
-function EditUserDialog({ close, data }) {
-  const programs = [];
-  data.programs.forEach((p) => {
-    if (p.id !== undefined) {
-      programs.push(p.id);
-    } else {
-      //Migrate
-      if (p.name === "SVP Investee Grant") {
-        programs.push("5f54b0779971a3dd4f7421f1");
-        programs.push("5f54b07f9971a3dd4f742328");
-      }
-      if (p.name === "Emergency Fund") {
-        //null
-      }
-      if (p.name === "UnitedWay") {
-        programs.push("5f54b04d9971a3dd4f741a9e");
-        programs.push("5f54af1b9971a3dd4f73e451");
-      }
-    }
-  });
-
+function EditUserDialog({ close, data, program }) {
   const initialFormState = {
     name: data.name,
-    preferredName: data.preferredName,
     email: data.email,
-    role: data.admin ? "Admin" : "Reviewer",
-    programs: new Set(programs)
+    role: data.role
   };
 
   const [formState, dispatchUpdateFormState] = useReducer(
@@ -73,18 +51,9 @@ function EditUserDialog({ close, data }) {
   function updateUser() {
     setIsSubmitting(true);
     const requestBody = {
-      userId: data.userId,
-      name: formState.name,
-      preferredName: formState.preferredName,
-      email: formState.email,
-      admin: formState.role === "Admin",
-      organization: [],
-      programs: Array.from(formState.programs).map((program) => ({
-        id: program,
-        role: "reviewer"
-      }))
+      role: formState.role
     };
-    UPDATE.updateUserAPI(requestBody)
+    UPDATE.updateUserProgramRoleAPI(program, data.userId, requestBody)
       .then(() => {
         close();
         window.location.reload();

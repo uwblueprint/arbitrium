@@ -33,7 +33,7 @@ const Header = styled.div`
 
 // convert fetched users to table format
 // fetched: array
-function convertToTableData(fetched, programs) {
+function convertToTableData(fetched, program) {
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
@@ -44,7 +44,7 @@ function convertToTableData(fetched, programs) {
           Dialog={EditUserDialog}
           closeOnEsc={true}
           variant="outlined"
-          dialogProps={{ data: user }}
+          dialogProps={{ data: user, program: program }}
         >
           Edit
         </DialogTriggerButton>
@@ -61,7 +61,11 @@ function UserManagementProgram({ program }) {
   );
 
   const users = useMemo(
-    () => convertToTableData(loadUsers.value.filter((u) => !u.deleted)),
+    () =>
+      convertToTableData(
+        loadUsers.value.filter((u) => !u.deleted),
+        program
+      ),
     [loadUsers]
   );
 

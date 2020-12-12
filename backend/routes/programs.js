@@ -96,8 +96,6 @@ router.post("/:programId/user", async function(req, res) {
     email: req.body.email,
     role: req.body.role
   };
-  debug(req.params.programId);
-  debug(userData);
   try {
     const result = await db["Authentication"].users.findOneAndUpdate(
       {

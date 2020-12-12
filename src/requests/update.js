@@ -1,4 +1,4 @@
-import { POST, PUT } from "./Helper.js";
+import { PATCH, POST, PUT } from "./Helper.js";
 
 async function createFeedbackAPI(databody) {
   return POST("/api/feedback", databody);
@@ -32,6 +32,10 @@ async function updateUserProgramAPI(databody) {
   return PUT("/api/users/set-program", databody);
 }
 
+async function updateUserProgramRoleAPI(programId, userId, databody) {
+  return PATCH(`/api/programs/${programId}/user/${userId}`, databody);
+}
+
 export {
   createFeedbackAPI,
   updateReviewAPI,
@@ -40,5 +44,6 @@ export {
   updateUserProgramAPI,
   updateUserProgramMembershipAPI,
   createOrAddUserProgramAPI,
+  updateUserProgramRoleAPI,
   sendFeedbackEmail
 };
