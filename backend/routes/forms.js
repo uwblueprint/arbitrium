@@ -142,23 +142,27 @@ router.patch("/:formId/sections", isAuthenticated, (req, res) => {
 //------------------------------------------------------------------------------
 
 // Add a question to an existing section in an existing form, returns resulting form object
-router.post("/:formId/sections/:sectionId/questions", isAuthenticated, (req, res) => {
-  db[req.headers.database].forms.findOneAndUpdate(
-    { _id: req.params.formId, "sections._id": req.params.sectionId },
-    { $push: { "sections.$.questions": req.body } },
-    { useFindAndModify: false, runValidators: true, returnOriginal: false },
-    (error, result) => {
-      if (error) {
-        console.error(
-          `Error adding question to section with ID = ${req.params.sectionId} in form with ID = ${req.params.formId}`
-        );
-        res.status(500).send(error);
-      } else {
-        res.status(200).json(result);
+router.post(
+  "/:formId/sections/:sectionId/questions",
+  isAuthenticated,
+  (req, res) => {
+    db[req.headers.database].forms.findOneAndUpdate(
+      { _id: req.params.formId, "sections._id": req.params.sectionId },
+      { $push: { "sections.$.questions": req.body } },
+      { useFindAndModify: false, runValidators: true, returnOriginal: false },
+      (error, result) => {
+        if (error) {
+          console.error(
+            `Error adding question to section with ID = ${req.params.sectionId} in form with ID = ${req.params.formId}`
+          );
+          res.status(500).send(error);
+        } else {
+          res.status(200).json(result);
+        }
       }
-    }
-  );
-});
+    );
+  }
+);
 
 // Delete a question from section in a form, returns resulting form object
 router.delete(
