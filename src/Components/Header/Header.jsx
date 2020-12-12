@@ -151,9 +151,8 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             </div>
           </Tooltip>
         </AppName>
-
         <p>
-          {" "}
+          {" • "}
           {program && programsMap[program]
             ? programsMap[program].displayName
             : "Select a program to view applications "}{" "}
@@ -168,11 +167,12 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             id="simple-menu"
             anchorEl={programMenuAnchor}
             keepMounted
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
             open={Boolean(programMenuAnchor)}
             onClose={() => {
               setprogramMenuAnchor(null);
             }}
-            style={{ marginTop: HEADER_HEIGHT / 2 }}
+            style={{ marginTop: HEADER_HEIGHT / 2 + 4 }}
           >
             {validPrograms ? (
               <div style={{ border: "1px solid #ccc" }}>
@@ -209,11 +209,14 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                     id="simple-menu"
                     anchorEl={adminMenuAnchor}
                     keepMounted
+                    transformOrigin={{ vertical: "top", horizontal: "right" }}
                     open={Boolean(adminMenuAnchor)}
                     onClose={() => {
                       setAdminMenuAnchor(null);
                     }}
-                    style={{ marginTop: HEADER_HEIGHT / 2 }}
+                    style={{
+                      marginTop: HEADER_HEIGHT / 2 + 4
+                    }}
                   >
                     {routes != null ? (
                       <div style={{ border: "1px solid #ccc" }}>

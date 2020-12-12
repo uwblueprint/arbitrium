@@ -5,7 +5,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   margin-top: 16px;
   margin-bottom: 33px;
-  width: 816px;
+  width: 744px;
 `;
 
 type Props = {

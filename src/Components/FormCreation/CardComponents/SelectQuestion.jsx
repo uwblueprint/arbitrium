@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   closeRoot: {
     display: "inline-block",
     position: "absolute",
-    left: "734px",
+    left: "724px",
     bottom: "2px"
   },
   droppableSection: {
@@ -71,7 +71,7 @@ const GreyRadio = withStyles({
   root: {
     color: "rgba(0, 0, 0, 0.38)",
     paddingBottom: "5px",
-    paddingLeft: "20px"
+    paddingLeft: "24px"
   }
 })((props) => <Radio color="default" disabled checked={false} {...props} />);
 

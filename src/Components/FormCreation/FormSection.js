@@ -35,32 +35,38 @@ const useStyles = makeStyles({
   contentActive: {
     marginBottom: 8,
     marginLeft: 24,
-    marginTop: 24,
-    marginRight: 16
+    marginTop: 0,
+    marginRight: 16,
+    "&:last-child": {
+      paddingBottom: 16
+    }
   },
   content: {
     marginBottom: 0,
     marginLeft: 24,
     marginTop: 0,
-    marginRight: 16
+    marginRight: 16,
+    "&:last-child": {
+      paddingBottom: 16
+    }
   },
 
   root: {
-    borderRadius: 0,
+    borderRadius: 4,
     borderTop: "8px solid #2261AD",
-    boxShadow: "0 2px 3px 1px #cccccc",
+    boxShadow: "0 2px 3px 0px #00000033",
     marginBottom: 20,
     minWidth: 816,
     width: 816
   },
   rootActive: {
-    borderRadius: 0,
+    borderRadius: 4,
     borderTop: "8px solid #2261AD",
     borderLeft: "4px solid #2261AD",
-    boxShadow: "0 2px 3px 1px #cccccc",
+    boxShadow: "0 2px 3px 0px #00000033",
     marginBottom: 20,
-    minWidth: 816,
-    width: 816
+    minWidth: 812,
+    width: 812
   },
 
   //Question Title and Menu Wrapper
@@ -72,22 +78,24 @@ const useStyles = makeStyles({
   section_index: {
     borderTopLeftRadius: "4px",
     borderTopRightRadius: "4px",
-    marginBottom: "0px",
+    marginBottom: "4px",
     fontSize: "14px",
     backgroundColor: "#2261AD",
     color: "white",
     width: "fit-content",
     paddingLeft: "10px",
     paddingRight: "10px",
-    paddingTop: "5px",
-    paddingBottom: "5px"
+    paddingTop: "8px",
+    paddingBottom: "8px",
+    fontWeight: "500"
   },
 
   //Section Title
   sectionTitle: {
     height: 36,
     width: 440,
-    fontSize: 24
+    fontSize: 24,
+    paddingTop: 24
   },
 
   //Section Menu
@@ -100,11 +108,11 @@ const useStyles = makeStyles({
   //Section Description
   sectionDescription: {
     height: 21,
-    width: 764
+    width: 744
   },
 
   paper: {
-    boxShadow: "0 2px 3px 1px #cccccc"
+    boxShadow: "0 2px 3px 0px #00000033"
   },
   action_menu: {
     boxShadow:
