@@ -6,7 +6,9 @@ const db = require("../mongo.js");
 
 const { isAuthenticated } = require("../middlewares/auth");
 
-router.get("/:userid", isAuthenticated, function(req, res) {
+router.use(isAuthenticated);
+
+router.get("/:userid", function(req, res) {
   try {
     if (req.query.count) {
       db[req.headers.database].ratings
@@ -27,7 +29,7 @@ router.get("/:userid", isAuthenticated, function(req, res) {
 });
 
 //For Admin stats
-router.get("/app/:appId", isAuthenticated, function(req, res) {
+router.get("/app/:appId", function(req, res) {
   try {
     db[req.headers.database].ratings
       .find({ applicationId: req.params.appId })
@@ -39,7 +41,7 @@ router.get("/app/:appId", isAuthenticated, function(req, res) {
   }
 });
 
-router.get("/", isAuthenticated, function(req, res) {
+router.get("/", function(req, res) {
   db[req.headers.database].ratings
     .aggregate([
       {
@@ -73,7 +75,7 @@ router.get("/", isAuthenticated, function(req, res) {
     });
 });
 
-router.get("/:userid/:appId", isAuthenticated, function(req, res) {
+router.get("/:userid/:appId", function(req, res) {
   db[req.headers.database].ratings
     .findOne({ applicationId: req.params.appId, userId: req.params.userid })
     .then(function(found) {
@@ -86,7 +88,7 @@ router.get("/:userid/:appId", isAuthenticated, function(req, res) {
 
 //upsert create a new document if the query did not retrieve any documents
 //satisfying the criteria. It instead does an insert.
-router.post("/", isAuthenticated, function(req, res) {
+router.post("/", function(req, res) {
   db[req.headers.database].ratings
     .updateOne(
       { userId: req.body.userId, applicationId: req.body.applicationId },

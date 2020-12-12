@@ -6,7 +6,9 @@ const db = require("../mongo.js");
 
 const { isAuthenticated } = require("../middlewares/auth");
 
-router.get("/candidate-submissions", isAuthenticated, function(req, res) {
+router.use(isAuthenticated);
+
+router.get("/candidate-submissions", function(req, res) {
   db[req.headers.database].applications
     .aggregate([
       {
@@ -45,7 +47,7 @@ router.get("/candidate-submissions", isAuthenticated, function(req, res) {
     });
 });
 
-router.get("/", isAuthenticated, function(req, res) {
+router.get("/", function(req, res) {
   //Note: Firebase only returns 1000 users at a time so you have to do it in batches
   //https://firebase.google.com/docs/auth/admin/manage-users#list_all_users
   function listAllUsers(nextPageToken) {

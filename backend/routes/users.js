@@ -34,8 +34,10 @@ router.get("/:userid", function(req, res) {
     });
 });
 
+router.use(isAuthenticated);
+
 //Update a user (Not sued for creating a new user)
-router.put("/set-program", isAuthenticated, function(req, res) {
+router.put("/set-program", function(req, res) {
   db["Authentication"].users
     .updateOne(
       { userId: req.body.userId },
@@ -51,7 +53,7 @@ router.put("/set-program", isAuthenticated, function(req, res) {
     });
 });
 
-router.put("/set-program-memberships", isAuthenticated, function(req, res) {
+router.put("/set-program-memberships", function(req, res) {
   db["Authentication"].users
     .updateOne(
       { userId: req.body.userId },
@@ -68,7 +70,7 @@ router.put("/set-program-memberships", isAuthenticated, function(req, res) {
 });
 
 //Update a user (Not sued for creating a new user)
-router.post("/", isAuthenticated, function(req, res) {
+router.post("/", function(req, res) {
   db["Authentication"].users
     .updateOne({ userId: req.body.userId }, req.body, { upsert: false })
     // status code 201 means created
@@ -80,7 +82,7 @@ router.post("/", isAuthenticated, function(req, res) {
     });
 });
 
-router.delete("/:userId", isAuthenticated, function(req, res) {
+router.delete("/:userId", function(req, res) {
   db["Authentication"].users.updateOne(
     { userId: req.params.userId },
     { $set: { deleted: true } },
@@ -105,7 +107,7 @@ router.delete("/:userId", isAuthenticated, function(req, res) {
 
 // Create a new user in firebase and mongodb
 // Sends welcome email to user on creation
-router.post("/create-user", isAuthenticated, async function(req, res) {
+router.post("/create-user", async function(req, res) {
   try {
     const userRecord = await createFirebaseUser(req.body);
     // Insert record into mongodb

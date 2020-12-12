@@ -6,7 +6,9 @@ const db = require("../mongo.js");
 
 const { isAuthenticated } = require("../middlewares/auth");
 
-router.get("/:userid", isAuthenticated, function(req, res) {
+router.use(isAuthenticated);
+
+router.get("/:userid", function(req, res) {
   db[req.headers.database].rankings
     .aggregate([
       {
@@ -99,7 +101,7 @@ router.get("/:userid", isAuthenticated, function(req, res) {
 });
 
 //Admin stats
-router.get("/", isAuthenticated, function(req, res) {
+router.get("/", function(req, res) {
   db[req.headers.database].rankings
     .find()
     .then(function(found) {
@@ -112,7 +114,7 @@ router.get("/", isAuthenticated, function(req, res) {
 
 //upsert create a new document if the query did not retrieve any documents
 //satisfying the criteria. It instead does an insert.
-router.post("/", isAuthenticated, function(req, res) {
+router.post("/", function(req, res) {
   const stacked = {
     userId: req.body.userId,
     applications: req.body.rankings

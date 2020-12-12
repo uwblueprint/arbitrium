@@ -5,7 +5,9 @@ const router = express.Router();
 const { sendFeedbackEmail } = require("../nodemailer");
 const { isAuthenticated } = require("../middlewares/auth");
 
-router.post("/", isAuthenticated, async function(req, res) {
+router.use(isAuthenticated);
+
+router.post("/", async function(req, res) {
   try {
     const response = await sendFeedbackEmail(req.body);
     res.status(201).json({

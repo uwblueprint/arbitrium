@@ -9,7 +9,9 @@ const addConnection = require("../mongo.js").addConnection;
 
 const { isAuthenticated } = require("../middlewares/auth");
 
-router.get("/all", isAuthenticated, function(req, res) {
+router.use(isAuthenticated);
+
+router.get("/all", function(req, res) {
   db["Authentication"].organizations
     .find()
     .then(function(found) {
@@ -20,7 +22,7 @@ router.get("/all", isAuthenticated, function(req, res) {
     });
 });
 
-router.post("/", isAuthenticated, function(req, res) {
+router.post("/", function(req, res) {
   db["Authentication"].organizations
     .updateOne({ name: req.body.name }, { upsert: true })
     // status code 201 means created
