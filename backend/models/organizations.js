@@ -1,19 +1,12 @@
 const mongoose = require("mongoose");
 
-const program = new mongoose.Schema({
-  id: {
-    type: mongoose.SchemaTypes.ObjectId,
-    unique: true
-  }
-});
-
 const organizationSchema = new mongoose.Schema(
   {
     name: {
       type: String
     },
     programs: {
-      type: [program]
+      type: [mongoose.SchemaTypes.ObjectId]
     },
     deleted: {
       type: Boolean
