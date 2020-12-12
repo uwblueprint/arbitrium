@@ -5,13 +5,14 @@ import Button from "@material-ui/core/Button";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { connect } from "react-redux";
 import usePromise from "../../Hooks/usePromise";
-import { HEADER_HEIGHT } from "./Header";
+import { HEADER_HEIGHT, MIN_WIDTH } from "./Header";
 import { getApplicationTableData, getReviewCountAPI } from "../../requests/get";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 const Container = styled.div`
   position: fixed;
   height: ${HEADER_HEIGHT}px;
+  min-width: ${MIN_WIDTH}px;
   left: 0;
   width: 100vw;
   z-index: 100;

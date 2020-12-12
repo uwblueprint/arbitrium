@@ -6,24 +6,29 @@ const mongoose = require("mongoose");
 //file type
 //checkbox grid?
 
-const option = new mongoose.Schema({
+const validation = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ["CHECKBOX", "EMAIL", "LINK"]
+  },
+  expression: {
+    type: String
+  },
   min: {
-    type: Number
+    type: Number,
+    default: 0
   },
   max: {
-    type: Number
-  },
-  opt: {
-    type: String,
-    default: null
+    type: Number,
+    default: 0
   }
 });
 
-const regularExpressions = new mongoose.Schema({
-  name: {
+const link = new mongoose.Schema({
+  open: {
     type: String
   },
-  expression: {
+  close: {
     type: String
   }
 });
@@ -50,7 +55,7 @@ const question = new mongoose.Schema({
   },
   required: {
     type: Boolean,
-    default: true
+    default: false
   },
   description: {
     type: String
@@ -58,24 +63,26 @@ const question = new mongoose.Schema({
   type: {
     type: String,
     enum: [
-      "SHORT_ANSWER",
-      "PARAGRAPHS",
-      "MULTIPLE_CHOICE",
-      "CHECKBOXES",
-      "FILE_UPLOAD",
-      "CHECKBOX_GRID",
+      "SHORT_ANSWER", //Yoptions.length = 0 | Xoptions.length = 1
+      "PARAGRAPHS", //Yoptions.length = 0 | Xoptions.length = 1
+      "MULTIPLE_CHOICE", //Yoptions.length = 0 | Xoptions.length = # of MC
+      "CHECKBOXES", //Yoptions.length = 0 | Xoptions.length = # of boxes
+      "FILE_UPLOAD", //Yoptions.length = 0 | Xoptions.length = 1
+      "CHECKBOX_GRID", //(Y|X)options.length = # of choices
       "IDENTIFIER"
-    ]
+    ],
+    default: "SHORT_ANSWER"
   },
   validations: {
-    type: [regularExpressions],
+    type: [validation],
     default: null
   },
-  y_options: {
-    type: [option]
-  },
   x_options: {
-    type: [option]
+    type: [String]
+  },
+  //y_options is only used for grid type questions
+  y_options: {
+    type: [String]
   }
 });
 
@@ -92,6 +99,15 @@ const section = new mongoose.Schema({
   deleted: {
     type: Number,
     default: false
+  },
+  sectionType: {
+    type: String,
+    default: "Decision Criteria",
+    enum: ["Admin Info", "Decision Criteria"]
+  },
+  required: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -107,12 +123,16 @@ const formsSchema = new mongoose.Schema(
       type: String
     },
     draft: {
-      type: Boolean
+      type: Boolean,
+      default: true
     },
     sections: {
       type: [section]
     },
-    formId: {
+    submissionLinks: {
+      type: [link]
+    },
+    programId: {
       type: String
     }
   },

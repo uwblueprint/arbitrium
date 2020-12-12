@@ -135,4 +135,21 @@ async function DELETE(url) {
   return body;
 }
 
-export { PUT, GET, POST, PATCH, DELETE, setProgram };
+async function FILE(url, databody) {
+  const response = await fetch(proxy + url, {
+    method: "POST",
+    body: databody,
+    headers: {
+      Accept: "application/json"
+    }
+  });
+
+  const body = response.json();
+  if (!response.ok) {
+    const err = await body;
+    throw Error(err.message);
+  }
+  return body;
+}
+
+export { PUT, GET, POST, PATCH, DELETE, FILE, setProgram };
