@@ -211,23 +211,27 @@ router.delete(
 // Update questions (e.g. change order), returns resulting form object
 // NOTE: The entire questions array is overwritten, req.body should include
 //       the _id for each question if _id is required to stay constant
-router.patch("/:formId/sections/:sectionId/questions", isAuthenticated, (req, res) => {
-  db["Authentication"].forms.findOneAndUpdate(
-    { _id: req.params.formId, "sections._id": req.params.sectionId },
-    { $set: { "sections.$.questions": req.body } },
-    { useFindAndModify: false, returnOriginal: false, runValidators: true },
-    (error, result) => {
-      if (error) {
-        console.error(
-          `Error updating questions in section with ID = ${req.params.sectionId} in form with ID = ${req.params.formId}`
-        );
-        console.error(error);
-        res.status(500).send(error);
-      } else {
-        res.status(200).json(result);
+router.patch(
+  "/:formId/sections/:sectionId/questions",
+  isAuthenticated,
+  (req, res) => {
+    db["Authentication"].forms.findOneAndUpdate(
+      { _id: req.params.formId, "sections._id": req.params.sectionId },
+      { $set: { "sections.$.questions": req.body } },
+      { useFindAndModify: false, returnOriginal: false, runValidators: true },
+      (error, result) => {
+        if (error) {
+          console.error(
+            `Error updating questions in section with ID = ${req.params.sectionId} in form with ID = ${req.params.formId}`
+          );
+          console.error(error);
+          res.status(500).send(error);
+        } else {
+          res.status(200).json(result);
+        }
       }
-    }
-  );
-});
+    );
+  }
+);
 
 module.exports = router;
