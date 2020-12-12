@@ -6,7 +6,9 @@ const router = express.Router();
 const db = require("../mongo.js");
 const addConnection = require("../mongo.js").addConnection;
 
-router.get("/all", function(req, res) {
+const { isAuthenticated } = require("../middlewares/auth");
+
+router.get("/all", isAuthenticated, function(req, res) {
   db["Authentication"].programs
     .find()
     .then(function(found) {
@@ -17,7 +19,7 @@ router.get("/all", function(req, res) {
     });
 });
 
-router.post("/", function(req, res) {
+router.post("/", isAuthenticated, function(req, res) {
   db["Authentication"].programs
     .updateOne(
       {

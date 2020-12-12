@@ -1,3 +1,5 @@
+import firebaseApp from "../Authentication/firebase";
+
 let proxy = "http://localhost:4000";
 if (process.env.REACT_APP_NODE_ENV === "production") {
   proxy = process.env.REACT_APP_SERVER_PROD;
@@ -14,13 +16,19 @@ function setProgram(prog) {
   program = prog;
 }
 
-async function GET(url) {
+async function GET(url, requiresAuth = true) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
+
+  let token = "";
+  if (requiresAuth) {
+    token = await firebaseApp.auth().currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
       Accept: "application/json",
       database: program
     }
@@ -36,12 +44,14 @@ async function POST(url, databody) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
   //let program = window.location.pathname.split("/")[0]
+  const token = await firebaseApp.auth().currentUser.getIdToken();
 
   const response = await fetch(proxy + url, {
     method: "POST",
     body: JSON.stringify(databody),
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
       database: program
     }
@@ -59,12 +69,14 @@ async function PUT(url, databody) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
   //let program = window.location.pathname.split("/")[0]
+  const token = await firebaseApp.auth().currentUser.getIdToken();
 
   const response = await fetch(proxy + url, {
     method: "PUT",
     body: JSON.stringify(databody),
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
       database: program
     }
@@ -81,12 +93,14 @@ async function PATCH(url, databody) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
   //let program = window.location.pathname.split("/")[0]
+  const token = await firebaseApp.auth().currentUser.getIdToken();
 
   const response = await fetch(proxy + url, {
     method: "PATCH",
     body: JSON.stringify(databody),
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
       database: program
     }
@@ -102,11 +116,13 @@ async function DELETE(url) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
   //let program = window.location.pathname.split("/")[0]
+  const token = await firebaseApp.auth().currentUser.getIdToken();
 
   const response = await fetch(proxy + url, {
     method: "DELETE",
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
       database: program
     }

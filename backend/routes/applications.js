@@ -4,7 +4,9 @@ const express = require("express");
 const router = express.Router();
 const db = require("../mongo.js");
 
-router.get("/", function(req, res) {
+const { isAuthenticated } = require("../middlewares/auth");
+
+router.get("/", isAuthenticated, function(req, res) {
   if (req.query.count) {
     db[req.headers.database].applications.countDocuments().then((count) => {
       res.json(count);
@@ -21,7 +23,7 @@ router.get("/", function(req, res) {
     });
 });
 
-router.get("/:userid", function(req, res) {
+router.get("/:userid", isAuthenticated, function(req, res) {
   db[req.headers.database].applications
     .aggregate([
       {

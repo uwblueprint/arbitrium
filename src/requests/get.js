@@ -50,7 +50,7 @@ async function getAllStackingsAPI(user) {
 }
 
 async function getUserAPI(user) {
-  return GET(`/api/users/${user.uid}`);
+  return GET(`/api/users/${user.uid}`, false);
 }
 
 async function getAllUsersAPI() {

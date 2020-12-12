@@ -33,25 +33,30 @@ Senior Developers: [Xin Hao Zhang](https://github.com/xinhaoz), [Sherry Li](http
 - $2M+ in Funding
 
 ---------------------------------------------------------------------------------------------------
-## Available Scripts
+## Local Development Setup
 
+### Frontend and backend
 In the project directory, you can run:
-
-### `npm run dev`
-
-Runs the app in the development mode.<br>
+```
+npm run dev
+```
+This runs the frontend and backend in development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The page will reload if you make edits.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+### Backend only
+To run the backend server:
+```
+cd backend
+nodemon server.js
+```
+To call any APIs that require authentication without the frontend running (ex. using curl or Postman), you'll need an access token. You can generate a token for your account this with the command:
+```
+./scripts/getFirebaseToken.sh {email} {password}
+``` 
+This script will output a JSON object – you can use the `idToken` value and provide it as a bearer token to your API calls. This token expires every hour, and you can rerun this script to generate a new one.
 
-In the backend folder run
-### `node server.js`
-
-This will start the backend
-
-
----------------------------------------------------------------------------------------------------
+## Deployment
 chmod u+x "scriptname" (This will give you execute permissions for the script)
 ### `./scripts/deploy.sh`
 
