@@ -16,28 +16,30 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   const { isLoading: programDataIsLoading } = useContext(ProgramContext);
   const userId = appUser && appUser.userId;
 
-  console.log(rest);
+  //console.log(rest); //rest.program
 
   //TODO: Put this in a useEffect
   const [userPrograms] = usePromise(GET.getAllUserPrograms, { userId });
 
-  console.log(userPrograms);
-  console.log(appUser);
+  // console.log(userPrograms);
+  // console.log(appUser);
 
   //The user only has access if they are logged in and are in the proper user group
   //This is mainly for admin access
-  const roleAccess =
+  const currentProgram =
     user != null &&
     !userPrograms.isPending &&
     userPrograms.value.filter(
       (program) => program.id == (appUser && appUser.currentProgram)
     );
 
-  const roleAccess2 =
-    roleAccess.role === route.programGroup || route.programGroup == "";
+  const hasRoleAccess =
+    (currentProgram && currentProgram.role === route.programGroup) ||
+    route.programGroup == "";
+
   //Filter the list of appRoutes for routes that should NOT be displayed in the header
   //User must have roleAccess
-  const headerRoutes = routes.filter((route) => route.header && roleAccess2);
+  const headerRoutes = routes.filter((route) => route.header && hasRoleAccess);
 
   //This affects the loading of the navbar or not
   const adminRoute = route.path.includes("admin");
@@ -52,7 +54,7 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
         stroke: 2
       }}
     />
-  ) : roleAccess2 ? (
+  ) : hasRoleAccess ? (
     <>
       <Container>
         <Header

@@ -70,7 +70,7 @@ const routes = [
   {
     path: "/admin/form/:formId",
     component: CreateEditForm,
-    title: "Create Form",
+    title: "Form Management",
     header: true,
     programGroup: "ADMIN"
   },

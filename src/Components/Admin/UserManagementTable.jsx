@@ -73,7 +73,6 @@ const columns = [
 ];
 
 function UserManagementTable(props) {
-  console.log(props);
   return (
     <div>
       <MaterialTable
