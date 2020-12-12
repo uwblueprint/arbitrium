@@ -123,6 +123,7 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
           Forgot password?
         </Button>
         <Button
+          style={{ display: "flex" }}
           className="loginButton"
           type="submit"
           disabled={!validateForm() || loading}
@@ -130,10 +131,10 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
           color="primary"
         >
           Log in
+          {loading ? (
+            <CircularProgress style={{ marginLeft: 18 }} size={25} />
+          ) : null}
         </Button>
-        {loading ? (
-          <CircularProgress show={false} style={{ marginLeft: 20 }} />
-        ) : null}
       </div>
     </CommentForm>
   );
