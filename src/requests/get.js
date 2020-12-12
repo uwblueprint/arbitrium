@@ -70,7 +70,6 @@ async function getAllProgramsAPI() {
 }
 
 async function getAllProgramUsers({ program }) {
-  console.log(program);
   return GET(`/api/programs/${program}/users`);
 }
 async function getAllUserPrograms({ userId }) {

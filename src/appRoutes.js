@@ -21,8 +21,15 @@ const routes = [
   {
     path: "/applications",
     component: AllApplications,
-    title: "Candiate Submissions",
+    title: "Candidate Submissions",
     header: true,
+    programGroup: ""
+  },
+  {
+    path: "/home",
+    component: null,
+    title: "Program Management",
+    header: false,
     programGroup: ""
   },
   {
@@ -30,7 +37,7 @@ const routes = [
     component: Application,
     title: "Applications View",
     header: false,
-    programGroup: ""
+    programGroup: "REVIEWER"
   },
   {
     path: "/admin/submissions/:organizationId",
@@ -44,7 +51,7 @@ const routes = [
     component: StackedRankings,
     title: "Stacked Rankings",
     header: false,
-    programGroup: ""
+    programGroup: "REVIEWER"
   },
   {
     path: "/admin/allcandidates",
@@ -65,7 +72,7 @@ const routes = [
     component: UserManagement,
     title: "User Management",
     header: true,
-    programGroup: ""
+    programGroup: "ADMIN"
   },
   {
     path: "/admin/form/:formId",

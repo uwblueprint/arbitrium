@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Route, Redirect } from "react-router";
 import { AuthContext } from "./Auth";
 import LoadingOverlay from "../Components/Common/LoadingOverlay";
@@ -11,41 +11,69 @@ import routes from "../appRoutes";
 import * as GET from "../requests/get";
 import usePromise from "../Hooks/usePromise";
 
+function doesRoleProvideAccess(routeRole, userRole) {
+  if (routeRole === "ADMIN") {
+    return userRole === "ADMIN" || userRole === "ADMIN_REVIEWER";
+  } else if (routeRole === "REVIEWER") {
+    return userRole === "REVIEWER" || userRole === "GUEST";
+  } else {
+    return false;
+  }
+}
+
 function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   const { isLoading, currentUser: user, appUser } = useContext(AuthContext);
-  const { isLoading: programDataIsLoading } = useContext(ProgramContext);
+  const { programDataIsLoading } = useContext(ProgramContext);
   const userId = appUser && appUser.userId;
 
-  //console.log(rest); //rest.program
-
-  //TODO: Put this in a useEffect
   const [userPrograms] = usePromise(GET.getAllUserPrograms, { userId });
+  const [hasAccess, setAccess] = useState(route.programGroup === "");
+  const [headerRoutes, setHeaderRoutes] = useState([]);
 
-  // console.log(userPrograms);
-  // console.log(appUser);
+  useEffect(() => {
+    if (
+      user == null ||
+      userPrograms.isPending ||
+      userPrograms.value == null ||
+      isLoading ||
+      programDataIsLoading ||
+      !appUser.currentProgram
+    ) {
+      return;
+    }
 
-  //The user only has access if they are logged in and are in the proper user group
-  //This is mainly for admin access
-  const currentProgram =
-    user != null &&
-    !userPrograms.isPending &&
-    userPrograms.value.filter(
-      (program) => program.id == (appUser && appUser.currentProgram)
+    //If we reach here then there exists exactly one element in userPrograms which is the users current program
+    let userCurrentProgram = userPrograms.value.filter(
+      (program) => program.id === appUser.currentProgram
     );
 
-  const hasRoleAccess =
-    (currentProgram && currentProgram.role === route.programGroup) ||
-    route.programGroup == "";
+    if (userCurrentProgram[0]) {
+      userCurrentProgram = userCurrentProgram[0];
 
-  //Filter the list of appRoutes for routes that should NOT be displayed in the header
-  //User must have roleAccess
-  const headerRoutes = routes.filter((route) => route.header && hasRoleAccess);
+      //Check if the users role lets them access the route
+      const hasRoleAccess =
+        doesRoleProvideAccess(route.programGroup, userCurrentProgram.role) ||
+        route.programGroup === "";
+      setAccess(hasRoleAccess);
+
+      //Filter the list of appRoutes for routes that should NOT be displayed in the header
+      //Allowed routes have "header==true" and the users role lets them access the route
+      const headerRoutes = routes.filter(
+        (route) =>
+          route.header &&
+          doesRoleProvideAccess(route.programGroup, userCurrentProgram.role)
+      );
+      setHeaderRoutes(headerRoutes);
+    }
+  }, [user, userPrograms, appUser, isLoading, programDataIsLoading, route]);
 
   //This affects the loading of the navbar or not
   const adminRoute = route.path.includes("admin");
   const Container = createContainer(adminRoute);
 
-  //Access to programs and organizations should also be decided here
+  //If the user or program hasn't loaded, display the spinner
+  //Else if the user has access let them access the page
+  //Else redirect to login
   return isLoading || programDataIsLoading ? (
     <LoadingOverlay
       show
@@ -54,7 +82,7 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
         stroke: 2
       }}
     />
-  ) : hasRoleAccess ? (
+  ) : hasAccess ? (
     <>
       <Container>
         <Header
