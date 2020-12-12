@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Route, Redirect } from "react-router";
 import { AuthContext } from "./Auth";
-import LoadingOverlay from "../Components/Common/LoadingOverlay";
 import { Header } from "../Components/Header/Header";
 import { NavigationHeader } from "../Components/Header/NavigationHeader";
 import { ProgramContext } from "../Contexts/ProgramContext";
