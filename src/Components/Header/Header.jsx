@@ -130,6 +130,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
     : allPrograms.value.filter((p) => !!myProgramsMap[p._id]);
 
   const hasAdminAccessForCurrentProgram = true;
+  //TODO: This is handled in privateRoute.js. Remove once migration is done
   // if (programsMap[program]) {
   //   const userProgram = appUser.programs.find((prog) => {
   //     return programsMap[program]._id === prog.id;

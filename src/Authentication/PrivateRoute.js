@@ -80,7 +80,6 @@ function PrivateRoute({
           route.header &&
           doesRoleProvideAccess(route.programGroup, userCurrentProgram.role)
       );
-      console.log(userCurrentProgram);
       setAccess(hasRoleAccess);
       setHeaderRoutes(headerRoutes);
     }
@@ -101,9 +100,6 @@ function PrivateRoute({
   //If the user or program hasn't loaded, display the spinner
   //Else if the user has access let them access the page
   //Else redirect to login
-  console.log(isLoading);
-  console.log(hasAccess);
-  console.log(appUser);
   return isLoading ||
     programDataIsLoading ||
     hasAccess == null ? null : appUser && hasAccess ? (
