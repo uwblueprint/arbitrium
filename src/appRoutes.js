@@ -87,7 +87,7 @@ const routes = [
     component: CreateSubmissionForm,
     title: "Form Submission",
     header: false,
-    groups: ["Admin"]
+    programGroup: ""
   },
   {
     path: "/form/:formId",
