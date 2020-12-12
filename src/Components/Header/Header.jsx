@@ -106,7 +106,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
     const programMap = {};
     appUser.programs.forEach((p) => (programMap[p.id] = p));
     return programMap;
-  }, [appUser, appUser.programs]);
+  }, [appUser.programs]);
 
   const handleClickProgramMenu = (event) => {
     setprogramMenuAnchor(event.currentTarget);
