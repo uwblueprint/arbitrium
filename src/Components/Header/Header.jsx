@@ -16,11 +16,13 @@ import usePromise from "../../Hooks/usePromise";
 import { loadProgram } from "../../Actions/index.js";
 
 export const HEADER_HEIGHT = 56;
+export const MIN_WIDTH = 960;
 
 const Container = styled.div`
   position: sticky;
   display: flex;
   height: ${HEADER_HEIGHT}px;
+  min-width: ${MIN_WIDTH}px;
   top: 0;
   left: 0;
   width: 100vw;

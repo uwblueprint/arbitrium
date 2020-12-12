@@ -5,6 +5,7 @@ import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
 import CreateEditForm from "./Components/FormCreation/CreateEditForm";
+import CreateSubmissionForm from "./Components/FormCreation/Submission/CreateSubmissionForm";
 
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
@@ -75,11 +76,18 @@ const routes = [
     programGroup: "ADMIN"
   },
   {
-    path: "/admin/form/:formId",
+    path: "/admin/form/:programId",
     component: CreateEditForm,
     title: "Form Management",
     header: true,
     programGroup: "ADMIN"
+  },
+  {
+    path: "/admin/form-submission/:formId",
+    component: CreateSubmissionForm,
+    title: "Form Submission",
+    header: false,
+    groups: ["Admin"]
   },
   {
     path: "/form/:formId",

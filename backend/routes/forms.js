@@ -9,11 +9,14 @@ const db = require("../mongo.js");
 // Form
 //------------------------------------------------------------------------------
 
+//Programs and Forms have a 1:1 relationship.
+//Create/Get a form is done by programId and everything else is done by formId
+
 // Create a new form (use upsert to avoid duplication)
 router.post("/", (req, res) => {
-  db[req.headers.database].forms.updateOne(
+  db["Authentication"].forms.updateOne(
     {
-      formId: req.body.formId
+      programId: req.body.programId
     },
     req.body,
     { upsert: true },
@@ -30,7 +33,7 @@ router.post("/", (req, res) => {
 
 // Delete a form
 router.delete("/:formId", (req, res) => {
-  db[req.headers.database].forms.deleteOne(
+  db["Authentication"].forms.deleteOne(
     { _id: req.params.formId },
     (error, result) => {
       if (error || !result || (result && result.n !== 1)) {
@@ -43,10 +46,10 @@ router.delete("/:formId", (req, res) => {
   );
 });
 
-// Get form with formId
-router.get("/:formId", (req, res) => {
-  db[req.headers.database].forms
-    .findOne({ formId: req.params.formId })
+// Get form with programId
+router.get("/:programId", (req, res) => {
+  db["Authentication"].forms
+    .findOne({ programId: req.params.programId })
     .then(function(found) {
       const result = found;
       result.sections = result.sections.filter(
@@ -55,9 +58,27 @@ router.get("/:formId", (req, res) => {
       res.status(200).json(result);
     })
     .catch(function(err) {
-      console.error(`Error getting form with ID = ${req.params.formId}`);
+      console.error(`Error getting form with ID = ${req.params.programId}`);
       res.status(500).send(err);
     });
+});
+
+//Update a form by ID
+router.patch("/:formId", (req, res) => {
+  db["Authentication"].forms.updateOne(
+    {
+      _id: req.params.formId
+    },
+    req.body,
+    (error, result) => {
+      if (error) {
+        console.error("Error updating form into MongoDB");
+        res.status(500).send(error);
+      } else {
+        res.status(201).json(result);
+      }
+    }
+  );
 });
 
 //------------------------------------------------------------------------------
@@ -66,8 +87,8 @@ router.get("/:formId", (req, res) => {
 
 // Add a section to an existing form, returns the resulting form object
 router.post("/:formId/sections", (req, res) => {
-  db[req.headers.database].forms.findOneAndUpdate(
-    { formId: req.params.formId },
+  db["Authentication"].forms.findOneAndUpdate(
+    { _id: req.params.formId },
     {
       $push: {
         sections: { $each: [req.body.section], $position: req.body.index }
@@ -93,7 +114,7 @@ router.post("/:formId/sections", (req, res) => {
 
 // Delete a section from an existing form, returns the resulting form object
 router.delete("/:formId/sections/:sectionId", (req, res) => {
-  db[req.headers.database].forms.findOneAndUpdate(
+  db["Authentication"].forms.findOneAndUpdate(
     { _id: req.params.formId, "sections._id": req.params.sectionId },
     { $bit: { "sections.$.deleted": { xor: 1 } } },
     { useFindAndModify: false, returnOriginal: false, runValidators: true },
@@ -114,8 +135,8 @@ router.delete("/:formId/sections/:sectionId", (req, res) => {
 // NOTE: The entire sections array is overwritten, req.body should include
 //       the _id for each section if _id is required to stay constant
 router.patch("/:formId/sections", (req, res) => {
-  db[req.headers.database].forms.findOneAndUpdate(
-    { formId: req.params.formId },
+  db["Authentication"].forms.findOneAndUpdate(
+    { _id: req.params.formId },
     { $set: { sections: req.body } },
     {
       useFindAndModify: false,
@@ -141,7 +162,7 @@ router.patch("/:formId/sections", (req, res) => {
 
 // Add a question to an existing section in an existing form, returns resulting form object
 router.post("/:formId/sections/:sectionId/questions", (req, res) => {
-  db[req.headers.database].forms.findOneAndUpdate(
+  db["Authentication"].forms.findOneAndUpdate(
     { _id: req.params.formId, "sections._id": req.params.sectionId },
     { $push: { "sections.$.questions": req.body } },
     { useFindAndModify: false, runValidators: true, returnOriginal: false },
@@ -162,7 +183,7 @@ router.post("/:formId/sections/:sectionId/questions", (req, res) => {
 router.delete(
   "/:formId/sections/:sectionId/questions/:questionId",
   (req, res) => {
-    db[req.headers.database].forms.findOneAndUpdate(
+    db["Authentication"].forms.findOneAndUpdate(
       { _id: req.params.formId, "sections._id": req.params.sectionId },
       { $pull: { "sections.$.questions": { _id: req.params.questionId } } },
       { useFindAndModify: false, returnOriginal: false },
@@ -184,7 +205,7 @@ router.delete(
 // NOTE: The entire questions array is overwritten, req.body should include
 //       the _id for each question if _id is required to stay constant
 router.patch("/:formId/sections/:sectionId/questions", (req, res) => {
-  db[req.headers.database].forms.findOneAndUpdate(
+  db["Authentication"].forms.findOneAndUpdate(
     { _id: req.params.formId, "sections._id": req.params.sectionId },
     { $set: { "sections.$.questions": req.body } },
     { useFindAndModify: false, returnOriginal: false, runValidators: true },
@@ -193,6 +214,7 @@ router.patch("/:formId/sections/:sectionId/questions", (req, res) => {
         console.error(
           `Error updating questions in section with ID = ${req.params.sectionId} in form with ID = ${req.params.formId}`
         );
+        console.error(error);
         res.status(500).send(error);
       } else {
         res.status(200).json(result);

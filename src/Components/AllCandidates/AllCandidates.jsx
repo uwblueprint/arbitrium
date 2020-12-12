@@ -7,9 +7,7 @@ import AllCandidatesTable from "./AllCandidatesTable";
 import { CSVLink } from "react-csv";
 import moment from "moment";
 import usePromise from "../../Hooks/usePromise";
-import { createForm } from "../../requests/forms";
 import { AuthContext } from "../../Authentication/Auth.js";
-import { defaultFormState } from "../FormCreation/CreateEditFormStateManagement";
 
 import {
   getCandidateSubmissions,
@@ -57,6 +55,9 @@ const Wrapper = styled.div`
   }
   table.MuiTable-root {
     border: 1px solid #cccccc;
+  }
+  a {
+    text-decoration: none;
   }
   button {
     max-width: 200px;
@@ -194,21 +195,6 @@ function AllCandidates({ history, program }) {
     appsDownloadLink.current.link.click();
   }
 
-  async function initiateForm() {
-    const data = {
-      formId: program,
-      name: defaultFormState.name,
-      description: defaultFormState.description,
-      createdBy: appUser.userId,
-      draft: true,
-      sections: defaultFormState.sections
-    };
-    const res = await createForm(data);
-    if (res) {
-      history.push("/admin/form/" + program);
-    }
-  }
-
   const dataReady = !(applications.isPending || allUsers.isPending);
   const applicationsCSVFilename = `Ratings and Rankings - ${moment().format(
     "DD-MM-YYYY hh-mm-ss"
@@ -223,18 +209,7 @@ function AllCandidates({ history, program }) {
         <div>
           <Header>
             <h1 style={{ color: "black" }}>All Candidates</h1>
-            <div className="button-container">
-              <Button
-                variant="contained"
-                color="primary"
-                target="_blank"
-                value="CreateForm"
-                style={{ width: "250px", maxWidth: "250px" }}
-                onClick={initiateForm}
-              >
-                Create form
-              </Button>
-            </div>
+
             <div className="button-container">
               <Button
                 variant="contained"
