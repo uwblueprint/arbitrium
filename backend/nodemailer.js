@@ -4,13 +4,12 @@ const transporter = nodemailer.createTransport(NODEMAILER_CONFIG.module);
 
 const EMAIL_FROM = `"Arbitrium" <arbitrium@uwblueprint.org>`;
 
-function newAccountEmailTemplate(appName, user, passwordLink) {
+function newAccountEmailTemplate(email, passwordLink) {
   const appLink = "https://arbitrium.web.app";
-  const name = user.preferredName || user.name;
   return `
-  Hi there${name ? " " + name : ""},
+  Hi there,
   <br><br>
-  Welcome to ${appName}! Your account username is <strong>${user.email}</strong>
+  Welcome to Arbitrium! Your account username is <strong>${email}</strong>
   To set up your password, <a href="${passwordLink}">please follow the instructions here</a>.
   <br><br>
   Password setup link expired? <a href="${appLink}/reset-password">Please click here</a> and we'll email you a new link shortly.
@@ -22,16 +21,16 @@ function newAccountEmailTemplate(appName, user, passwordLink) {
   <br><br>
   Thanks,
   <br>
-  Your ${appName} team`;
+  Your Arbitrium team`;
 }
 
-async function sendNewAccountEmail(user, passwordLink, appName) {
+async function sendNewAccountEmail(email, passwordLink) {
   const mailOptions = {
     from: EMAIL_FROM,
-    to: user.email,
-    subject: `Welcome to ${appName}`,
+    to: email,
+    subject: `Welcome to Arbitrium`,
     bcc: "arbitrium@uwblueprint.org",
-    html: newAccountEmailTemplate(appName, user, passwordLink)
+    html: newAccountEmailTemplate(email, passwordLink)
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -64,8 +63,8 @@ async function sendFeedbackEmail(feedback) {
   });
 }
 
-module.exports.sendWelcomeEmail = (user, link) => {
-  return sendNewAccountEmail(user, link, "Arbitrium");
+module.exports.sendWelcomeEmail = (email, link) => {
+  return sendNewAccountEmail(email, link);
 };
 
 module.exports.sendFeedbackEmail = (feedback) => {
