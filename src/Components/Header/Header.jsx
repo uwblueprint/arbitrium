@@ -46,6 +46,7 @@ const BodyWrapper = styled.div`
 const AppName = styled.div`
   display: inline-block;
   margin-left: 16px;
+  margin-right: 16px;
 
   /* H5/ Roboto Regular 24 */
   font-family: Roboto;
@@ -110,6 +111,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
   }, [appUser.programs]);
 
   const handleClickProgramMenu = (event) => {
+    console.log(event.currentTarget);
     setprogramMenuAnchor(event.currentTarget);
   };
   const handleClickAdminMenu = (event) => {
@@ -152,6 +154,12 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             </div>
           </Tooltip>
         </AppName>
+        <p>
+          {" • "}
+          {program && programsMap[program]
+            ? programsMap[program].displayName
+            : "Select a program to view applications "}{" "}
+        </p>
         <div>
           <ArrowDropDownCircleOutlinedIcon
             style={{ marginLeft: "4px", margin: "12px" }}
@@ -162,6 +170,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             id="simple-menu"
             anchorEl={programMenuAnchor}
             keepMounted
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
             open={Boolean(programMenuAnchor)}
             onClose={() => {
               setprogramMenuAnchor(null);
@@ -185,12 +194,6 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             ) : null}
           </Menu>
         </div>
-        <p>
-          {" • "}
-          {program && programsMap[program]
-            ? programsMap[program].displayName
-            : "Select a program to view applications "}{" "}
-        </p>
         <RightSideHeaderWrapper>
           {appUser.role === "Admin" || hasAdminAccessForCurrentProgram ? (
             <RightSideHeaderWrapper>
