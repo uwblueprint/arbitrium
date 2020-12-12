@@ -16,7 +16,7 @@ const { isAuthenticated } = require("../middlewares/auth");
 
 // Create a new form (use upsert to avoid duplication)
 router.post("/", isAuthenticated, (req, res) => {
-  db[req.headers.database].forms.updateOne(
+  db["Authentication"].forms.updateOne(
     {
       programId: req.body.programId
     },
@@ -35,7 +35,7 @@ router.post("/", isAuthenticated, (req, res) => {
 
 // Delete a form
 router.delete("/:formId", isAuthenticated, (req, res) => {
-  db[req.headers.database].forms.deleteOne(
+  db["Authentication"].forms.deleteOne(
     { _id: req.params.formId },
     (error, result) => {
       if (error || !result || (result && result.n !== 1)) {
@@ -89,7 +89,7 @@ router.patch("/:formId", isAuthenticated, (req, res) => {
 
 // Add a section to an existing form, returns the resulting form object
 router.post("/:formId/sections", isAuthenticated, (req, res) => {
-  db[req.headers.database].forms.findOneAndUpdate(
+  db["Authentication"].forms.findOneAndUpdate(
     { formId: req.params.formId },
     {
       $push: {
@@ -116,7 +116,7 @@ router.post("/:formId/sections", isAuthenticated, (req, res) => {
 
 // Delete a section from an existing form, returns the resulting form object
 router.delete("/:formId/sections/:sectionId", isAuthenticated, (req, res) => {
-  db[req.headers.database].forms.findOneAndUpdate(
+  db["Authentication"].forms.findOneAndUpdate(
     { _id: req.params.formId, "sections._id": req.params.sectionId },
     { $bit: { "sections.$.deleted": { xor: 1 } } },
     { useFindAndModify: false, returnOriginal: false, runValidators: true },
@@ -137,7 +137,7 @@ router.delete("/:formId/sections/:sectionId", isAuthenticated, (req, res) => {
 // NOTE: The entire sections array is overwritten, req.body should include
 //       the _id for each section if _id is required to stay constant
 router.patch("/:formId/sections", isAuthenticated, (req, res) => {
-  db[req.headers.database].forms.findOneAndUpdate(
+  db["Authentication"].forms.findOneAndUpdate(
     { formId: req.params.formId },
     { $set: { sections: req.body } },
     {
@@ -167,7 +167,7 @@ router.post(
   "/:formId/sections/:sectionId/questions",
   isAuthenticated,
   (req, res) => {
-    db[req.headers.database].forms.findOneAndUpdate(
+    db["Authentication"].forms.findOneAndUpdate(
       { _id: req.params.formId, "sections._id": req.params.sectionId },
       { $push: { "sections.$.questions": req.body } },
       { useFindAndModify: false, runValidators: true, returnOriginal: false },
