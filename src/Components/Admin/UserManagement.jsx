@@ -63,7 +63,6 @@ function UserManagement({ program }) {
     [program]
   );
 
-  console.log(loadUsers);
   const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
 
   const users = useMemo(
@@ -74,8 +73,6 @@ function UserManagement({ program }) {
       ),
     [loadUsers, programs]
   );
-
-  console.log("We're at user Managment");
 
   return (
     <Wrapper>
