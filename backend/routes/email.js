@@ -3,6 +3,9 @@ const express = require("express");
 // allows routes to be sent out
 const router = express.Router();
 const { sendFeedbackEmail } = require("../nodemailer");
+const { isAuthenticated } = require("../middlewares/auth");
+
+router.use(isAuthenticated);
 
 router.post("/", async function(req, res) {
   try {

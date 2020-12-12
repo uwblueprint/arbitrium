@@ -4,6 +4,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../mongo.js");
 
+const { isAuthenticated } = require("../middlewares/auth");
+
+router.use(isAuthenticated);
+
 router.get("/:userid", function(req, res) {
   try {
     if (req.query.count) {

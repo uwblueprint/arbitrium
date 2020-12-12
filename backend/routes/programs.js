@@ -10,6 +10,9 @@ const addConnection = require("../mongo.js").addConnection;
 const { sendWelcomeEmail } = require("../nodemailer");
 const { createFirebaseUser } = require("./userUtils");
 const { deleteFirebaseUser } = require("./userUtils");
+const { isAuthenticated } = require("../middlewares/auth");
+
+router.use(isAuthenticated);
 
 router.get("/all", function(req, res) {
   db["Authentication"].programs

@@ -6,11 +6,12 @@ const router = express.Router();
 //Database connections: returns object of connections (connections["item"])
 const db = require("../mongo.js");
 
+const { isAuthenticated } = require("../middlewares/auth");
 const { sendWelcomeEmail } = require("../nodemailer");
 const { createFirebaseUser } = require("./userUtils");
 const { deleteFirebaseUser } = require("./userUtils");
 
-router.get("/all", function(req, res) {
+router.get("/all", isAuthenticated, function(req, res) {
   db["Authentication"].users
     .find()
     .then(function(found) {
@@ -98,6 +99,8 @@ router.get("/:userid", function(req, res) {
       res.send(err);
     });
 });
+
+router.use(isAuthenticated);
 
 //Update a user (Not sued for creating a new user)
 router.put("/set-program", function(req, res) {
