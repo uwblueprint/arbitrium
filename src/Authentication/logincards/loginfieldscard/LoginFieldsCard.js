@@ -5,6 +5,8 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import React, { useCallback, useState } from "react";
 import firebaseApp from "../../firebase.js";
+import { defaultRouteAfterLogin } from "../../PrivateRoute";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import styled from "styled-components";
 
@@ -52,6 +54,7 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
     errorEmail: false,
     errorPassword: false
   });
+  const [loading, setLoading] = useState(false);
 
   const errorEmailMessage = "Couldn't find your account";
   const errorPasswordMessage =
@@ -59,13 +62,14 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
 
   const handleLogin = useCallback(
     async (event) => {
+      setLoading(true);
       event.preventDefault();
       const { email, password } = event.target.elements;
       try {
         await firebaseApp
           .auth()
           .signInWithEmailAndPassword(email.value, password.value);
-        history.push("/applications");
+        history.push(defaultRouteAfterLogin);
       } catch (error) {
         alert("Wrong user name or password!");
         console.error(error); //We should really get a logging system going
@@ -121,12 +125,15 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
         <Button
           className="loginButton"
           type="submit"
-          disabled={!validateForm()}
+          disabled={!validateForm() || loading}
           variant="contained"
           color="primary"
         >
           Log in
         </Button>
+        {loading ? (
+          <CircularProgress show={false} style={{ marginLeft: 20 }} />
+        ) : null}
       </div>
     </CommentForm>
   );

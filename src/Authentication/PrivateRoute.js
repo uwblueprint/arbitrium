@@ -11,40 +11,58 @@ import routes from "../appRoutes";
 import * as GET from "../requests/get";
 import usePromise from "../Hooks/usePromise";
 
+//This route must only require the user to be logged in. (no groups needed)
+export const defaultRouteAfterLogin = "/home";
+
 function doesRoleProvideAccess(routeRole, userRole) {
   if (routeRole === "ADMIN") {
     return userRole === "ADMIN" || userRole === "ADMIN_REVIEWER";
   } else if (routeRole === "REVIEWER") {
-    return userRole === "REVIEWER" || userRole === "GUEST";
+    return (
+      userRole === "REVIEWER" ||
+      userRole === "GUEST" ||
+      userRole === "ADMIN" ||
+      userRole === "ADMIN_REVIEWER"
+    );
   } else {
-    return false;
+    return userRole === "";
   }
 }
 
-function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
+function PrivateRoute({
+  component: RouteComponent,
+  route,
+  history,
+  program,
+  ...rest
+}) {
   const { isLoading, currentUser: user, appUser } = useContext(AuthContext);
   const { programDataIsLoading } = useContext(ProgramContext);
   const userId = appUser && appUser.userId;
 
   const [userPrograms] = usePromise(GET.getAllUserPrograms, { userId });
-  const [hasAccess, setAccess] = useState(route.programGroup === "");
+  const [hasAccess, setAccess] = useState(null);
   const [headerRoutes, setHeaderRoutes] = useState([]);
-
   useEffect(() => {
+    //User is not logged in
+    if (!isLoading && !appUser) {
+      setAccess(false);
+      return;
+    }
+
+    //Waiting for data to load before proceeding
     if (
-      user == null ||
+      isLoading ||
       userPrograms.isPending ||
       userPrograms.value == null ||
-      isLoading ||
-      programDataIsLoading ||
-      !appUser.currentProgram
+      programDataIsLoading
     ) {
       return;
     }
 
     //If we reach here then there exists exactly one element in userPrograms which is the users current program
     let userCurrentProgram = userPrograms.value.filter(
-      (program) => program.id === appUser.currentProgram
+      (userProgram) => userProgram.id === program
     );
 
     if (userCurrentProgram[0]) {
@@ -54,7 +72,6 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
       const hasRoleAccess =
         doesRoleProvideAccess(route.programGroup, userCurrentProgram.role) ||
         route.programGroup === "";
-      setAccess(hasRoleAccess);
 
       //Filter the list of appRoutes for routes that should NOT be displayed in the header
       //Allowed routes have "header==true" and the users role lets them access the route
@@ -63,9 +80,19 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
           route.header &&
           doesRoleProvideAccess(route.programGroup, userCurrentProgram.role)
       );
+      console.log(userCurrentProgram);
+      setAccess(hasRoleAccess);
       setHeaderRoutes(headerRoutes);
     }
-  }, [user, userPrograms, appUser, isLoading, programDataIsLoading, route]);
+  }, [
+    user,
+    userPrograms,
+    appUser,
+    isLoading,
+    programDataIsLoading,
+    route,
+    program
+  ]);
 
   //This affects the loading of the navbar or not
   const adminRoute = route.path.includes("admin");
@@ -74,15 +101,12 @@ function PrivateRoute({ component: RouteComponent, route, history, ...rest }) {
   //If the user or program hasn't loaded, display the spinner
   //Else if the user has access let them access the page
   //Else redirect to login
-  return isLoading || programDataIsLoading ? (
-    <LoadingOverlay
-      show
-      spinnerProps={{
-        radius: 220,
-        stroke: 2
-      }}
-    />
-  ) : hasAccess ? (
+  console.log(isLoading);
+  console.log(hasAccess);
+  console.log(appUser);
+  return isLoading ||
+    programDataIsLoading ||
+    hasAccess == null ? null : appUser && hasAccess ? (
     <>
       <Container>
         <Header

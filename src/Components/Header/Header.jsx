@@ -106,7 +106,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
     const programMap = {};
     appUser.programs.forEach((p) => (programMap[p.id] = p));
     return programMap;
-  }, [appUser.programs]);
+  }, [appUser, appUser.programs]);
 
   const handleClickProgramMenu = (event) => {
     setprogramMenuAnchor(event.currentTarget);
@@ -191,48 +191,55 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
         <RightSideHeaderWrapper>
           {appUser.role === "Admin" || hasAdminAccessForCurrentProgram ? (
             <RightSideHeaderWrapper>
-              <p> {curRoute.title} </p>
-              <ArrowDropDownCircleOutlinedIcon
-                style={{ marginLeft: "4px", margin: "12px" }}
-                onClick={handleClickAdminMenu}
-              ></ArrowDropDownCircleOutlinedIcon>
-              <Menu
-                elevation={0}
-                id="simple-menu"
-                anchorEl={adminMenuAnchor}
-                keepMounted
-                open={Boolean(adminMenuAnchor)}
-                onClose={() => {
-                  setAdminMenuAnchor(null);
-                }}
-                style={{ marginTop: HEADER_HEIGHT / 2 }}
-              >
-                {routes != null ? (
-                  <div style={{ border: "1px solid #ccc" }}>
-                    {routes.map((route, index) => {
-                      if (route.title !== curRoute.title) {
-                        return (
-                          <MenuItem
-                            key={index}
-                            onClick={() => history.push(route.path)}
-                            visible={(
-                              route.title !== curRoute.title
-                            ).toString()}
-                          >
-                            {route.title}
+              <p style={{ marginLeft: "4px", margin: "12px" }}>
+                {" "}
+                {curRoute.title}{" "}
+              </p>
+              {routes.length > 0 ? (
+                <div>
+                  <ArrowDropDownCircleOutlinedIcon
+                    style={{ marginRight: "12px" }}
+                    onClick={handleClickAdminMenu}
+                  ></ArrowDropDownCircleOutlinedIcon>
+                  <Menu
+                    elevation={0}
+                    id="simple-menu"
+                    anchorEl={adminMenuAnchor}
+                    keepMounted
+                    open={Boolean(adminMenuAnchor)}
+                    onClose={() => {
+                      setAdminMenuAnchor(null);
+                    }}
+                    style={{ marginTop: HEADER_HEIGHT / 2 }}
+                  >
+                    {routes != null ? (
+                      <div style={{ border: "1px solid #ccc" }}>
+                        {routes.map((route, index) => {
+                          if (route.title !== curRoute.title) {
+                            return (
+                              <MenuItem
+                                key={index}
+                                onClick={() => history.push(route.path)}
+                                visible={(
+                                  route.title !== curRoute.title
+                                ).toString()}
+                              >
+                                {route.title}
+                              </MenuItem>
+                            );
+                          }
+                          return null;
+                        })}
+                        {validPrograms.length === 0 ? (
+                          <MenuItem key={"None"}>
+                            You don't have access to other pages
                           </MenuItem>
-                        );
-                      }
-                      return null;
-                    })}
-                    {validPrograms.length === 0 ? (
-                      <MenuItem key={"None"}>
-                        You don't have access to other pages
-                      </MenuItem>
+                        ) : null}
+                      </div>
                     ) : null}
-                  </div>
-                ) : null}
-              </Menu>
+                  </Menu>
+                </div>
+              ) : null}
             </RightSideHeaderWrapper>
           ) : null}
           <Feedback user={currentUser} />
