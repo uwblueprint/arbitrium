@@ -111,7 +111,6 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
   }, [appUser.programs]);
 
   const handleClickProgramMenu = (event) => {
-    console.log(event.currentTarget);
     setprogramMenuAnchor(event.currentTarget);
   };
   const handleClickAdminMenu = (event) => {
