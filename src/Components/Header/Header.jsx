@@ -153,9 +153,8 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             </div>
           </Tooltip>
         </AppName>
-
         <p>
-          {" "}
+          {" • "}
           {program && programsMap[program]
             ? programsMap[program].displayName
             : "Select a program to view applications "}{" "}
@@ -170,6 +169,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             id="simple-menu"
             anchorEl={programMenuAnchor}
             keepMounted
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
             open={Boolean(programMenuAnchor)}
             onClose={() => {
               setprogramMenuAnchor(null);
