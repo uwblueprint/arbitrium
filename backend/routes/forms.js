@@ -90,7 +90,7 @@ router.patch("/:formId", isAuthenticated, (req, res) => {
 // Add a section to an existing form, returns the resulting form object
 router.post("/:formId/sections", isAuthenticated, (req, res) => {
   db["Authentication"].forms.findOneAndUpdate(
-    { formId: req.params.formId },
+    { _id: req.params.formId },
     {
       $push: {
         sections: { $each: [req.body.section], $position: req.body.index }
@@ -138,7 +138,7 @@ router.delete("/:formId/sections/:sectionId", isAuthenticated, (req, res) => {
 //       the _id for each section if _id is required to stay constant
 router.patch("/:formId/sections", isAuthenticated, (req, res) => {
   db["Authentication"].forms.findOneAndUpdate(
-    { formId: req.params.formId },
+    { _id: req.params.formId },
     { $set: { sections: req.body } },
     {
       useFindAndModify: false,
