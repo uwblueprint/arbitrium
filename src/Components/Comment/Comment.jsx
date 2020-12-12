@@ -61,7 +61,6 @@ const Comment = ({ comment }) => (
           .substring(4, 16)}
       </span>
     </div>
-    {/* <p className="comment-text">{comment.value}</p> */}
     <p className="comment-text">
       {comment.value.split("\n").map((item, key) => {
         return (
