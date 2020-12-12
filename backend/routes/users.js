@@ -22,6 +22,72 @@ router.get("/all", isAuthenticated, function(req, res) {
     });
 });
 
+// Get a user's programs
+// Returns an array of programs: [{id, name, role}]
+router.get("/:userId/programs", async function(req, res) {
+  db["Authentication"].users
+    .aggregate([
+      {
+        $match: {
+          userId: req.params.userId
+        }
+      },
+      {
+        $unwind: {
+          path: "$programs"
+        }
+      },
+      {
+        // TODO: remove stage after migrating
+        $project: {
+          role: "$programs.role",
+          programId: {
+            $toObjectId: "$programs.id"
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "programs",
+          localField: "programId",
+          foreignField: "_id",
+          as: "program"
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          role: 1,
+          id: { $arrayElemAt: ["$program._id", 0] },
+          name: { $arrayElemAt: ["$program.displayName", 0] }
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          root: {
+            $mergeObjects: "$$ROOT"
+          },
+          programs: {
+            $push: "$$ROOT"
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          root: 0
+        }
+      }
+    ])
+    .then(function(data) {
+      res.json(data[0].programs);
+    })
+    .catch(function(err) {
+      res.send(err);
+    });
+});
+
 router.get("/:userid", function(req, res) {
   //If user doesn't exist, create one and return it
   db["Authentication"].users
@@ -105,11 +171,12 @@ router.delete("/:userId", function(req, res) {
   );
 });
 
+// TODO: remove when frotend is updated
 // Create a new user in firebase and mongodb
 // Sends welcome email to user on creation
 router.post("/create-user", async function(req, res) {
   try {
-    const userRecord = await createFirebaseUser(req.body);
+    const userRecord = await createFirebaseUser(req.body.email);
     // Insert record into mongodb
     const mongoUserRecord = {
       userId: userRecord.uid,
@@ -143,7 +210,7 @@ router.post("/create-user", async function(req, res) {
         .auth()
         .generatePasswordResetLink(userRecord.email);
       try {
-        await sendWelcomeEmail(mongoUserRecord, link);
+        await sendWelcomeEmail(mongoUserRecord.email, link);
       } catch (e) {
         throw {
           type: "Mailer",
