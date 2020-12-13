@@ -9,7 +9,7 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "react-spinner-material";
 import usePromise from "../../Hooks/usePromise";
 import {
-  getAllUsersAPI,
+  getAllProgramUsersAPI,
   getApplicationCount,
   getReviewCountAPI
 } from "../../requests/get";
@@ -101,13 +101,11 @@ function convertToTableData(fetched) {
 }
 
 async function fetchCommitteeData(program) {
-  const users = await getAllUsersAPI();
+  const users = await getAllProgramUsersAPI(program);
 
-  // TODO: Filter the users based on their committee, schema might change
+  // TODO: remove filtering when dev permissions are created
   const appUsers = users.filter(
     (user) =>
-      Array.isArray(user.programs) &&
-      user.programs.some((p) => p.id === program.program) &&
       !user.email.includes("uwblueprint.org") &&
       !user.email.includes("test.com")
   );
@@ -126,7 +124,7 @@ async function fetchCommitteeData(program) {
 
 function CommitteeReview({ history, program }) {
   const [appCount] = usePromise(getApplicationCount, {}, -1);
-  const [committeeState] = usePromise(fetchCommitteeData, { program });
+  const [committeeState] = usePromise(fetchCommitteeData, program);
 
   const goBack = () => {
     history.push("/admin/allcandidates");

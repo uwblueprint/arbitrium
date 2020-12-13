@@ -44,7 +44,7 @@ const UserDisplay = () => {
       <div>
         <Signout>
           <button color="primary" onClick={handleClickProfileMenu}>
-            {appUser.name.substring(0, 1)}
+            {appUser.name ? appUser.name.substring(0, 1) : ""}
           </button>
         </Signout>
 

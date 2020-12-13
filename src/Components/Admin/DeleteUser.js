@@ -30,12 +30,18 @@ const QuestionWrapper = styled.div`
   }
 `;
 
-function DeleteUser({ close, userId, setShowSaveFailure, setIsSubmitting }) {
+function DeleteUser({
+  close,
+  userId,
+  setShowSaveFailure,
+  setIsSubmitting,
+  programId
+}) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   function deleteUser(userId) {
     setIsSubmitting(true);
-    DELETE.deleteUserAPI(userId)
+    DELETE.deleteUserProgramAPI(programId, userId)
       .then(() => {
         close();
         window.location.reload();
@@ -54,10 +60,11 @@ function DeleteUser({ close, userId, setShowSaveFailure, setIsSubmitting }) {
   return (
     <QuestionWrapper>
       <hr />
-      <StyledLabel>Delete user?</StyledLabel>
+      <StyledLabel>Remove user from this program?</StyledLabel>
       <WarningMessage>
         <p>
-          Careful, you will delete the user and all associated data forever.
+          If they have conducted any reviews, they will continue to show in
+          reports and the Committee Review page.
         </p>
       </WarningMessage>
       <ClickAwayListener onClickAway={handleDeleteClickAway}>
@@ -75,7 +82,7 @@ function DeleteUser({ close, userId, setShowSaveFailure, setIsSubmitting }) {
             color: "#FFFFFF"
           }}
         >
-          {showDeleteConfirmation ? "Please confirm deletion" : "Delete user"}
+          {showDeleteConfirmation ? "Please confirm removal" : "Remove access"}
         </Button>
       </ClickAwayListener>
       <hr />

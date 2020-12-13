@@ -1,7 +1,7 @@
 import { DELETE } from "./Helper";
 
-async function deleteUserAPI(userId) {
-  DELETE(`/api/users/${userId}`);
+async function deleteUserProgramAPI(programId, userId) {
+  DELETE(`/api/programs/${programId}/user/${userId}`);
 }
 
-export { deleteUserAPI };
+export { deleteUserProgramAPI };
