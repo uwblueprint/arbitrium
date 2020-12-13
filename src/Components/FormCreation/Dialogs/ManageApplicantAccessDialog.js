@@ -110,7 +110,13 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-function GetFormDialog({ close, link, copyLinkToClipboard }) {
+function GetFormDialog({
+  close,
+  link,
+  copyLinkToClipboard,
+  publish = false,
+  handlePublish = null
+}) {
   const dialogRef = React.createRef();
 
   useEffect(() => {
