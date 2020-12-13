@@ -10,13 +10,12 @@ import UserManagementTable from "./UserManagementTable";
 import { connect } from "react-redux";
 import * as userRoles from "../../Constants/UserRoles";
 
-// TODO: map these in the table
-// const roles = [
-//   { name: "Admin", id: userRoles.ADMIN },
-//   { name: "Admin & Reviewer", id: userRoles.ADMIN_REVIEWER },
-//   { name: "Reviewer", id: userRoles.REVIEWER },
-//   { name: "Guest", id: userRoles.GUEST }
-// ];
+const rolesMap = {
+  ADMIN: "Admin",
+  ADMIN_REVIEWER: "Admin and Reviewer",
+  REVIEWER: "Reviewer",
+  GUEST: "Guest"
+};
 
 const Wrapper = styled.div`
   margin-top: 50px;
