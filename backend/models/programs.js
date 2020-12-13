@@ -29,6 +29,9 @@ const programSchema = new mongoose.Schema(
       type: String,
       default: null
     },
+    organization: {
+      type: mongoose.SchemaTypes.ObjectId
+    },
     databaseName: {
       type: String
     },

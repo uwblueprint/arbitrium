@@ -5,9 +5,6 @@ const organizationSchema = new mongoose.Schema(
     name: {
       type: String
     },
-    programs: {
-      type: [mongoose.SchemaTypes.ObjectId]
-    },
     deleted: {
       type: Boolean
     }

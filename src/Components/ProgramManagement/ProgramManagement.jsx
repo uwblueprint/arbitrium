@@ -57,7 +57,12 @@ const useStyles = makeStyles({
 
 function ProgramManagement() {
   const { currentUser, appUser } = useContext(AuthContext);
-  const [programs, reloadPrograms] = usePromise(GET.getAllProgramsAPI, {}, []);
+  const userId = appUser.userId;
+  const [programs, reloadPrograms] = usePromise(
+    GET.getAllUserProgramsAPI,
+    { userId },
+    []
+  );
   const [organizations, reloadOrganizations] = usePromise(
     GET.getAllOrganizationsAPI,
     {},
@@ -72,11 +77,7 @@ function ProgramManagement() {
         appUser,
         //Filter the programs the user doesn't have access to, deleted or archived
         programs.value.filter((program) => {
-          return (
-            !program.deleted &&
-            appUser.programs.find((p) => p.id === program._id) &&
-            !program.archived
-          );
+          return !program.deleted && !program.archived;
         }),
         organizations.value
       ),
@@ -108,14 +109,11 @@ function ProgramManagement() {
   // convert fetched users to table format
   // fetched: array
   function convertToTableData(user, programs, organizations) {
-    console.log(programs);
     return programs.map((program) => {
       return {
-        name: program.displayName,
-        organization: organizations.find((org) =>
-          org.programs.includes(program)
-        ),
-        role: user.programs.find((p) => p.id === program._id).role,
+        name: program.name,
+        organization: program.organization,
+        role: program.role,
         archived: program.archived,
         status: "To Do",
         link: (

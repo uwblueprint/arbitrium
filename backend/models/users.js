@@ -35,8 +35,8 @@ const userSchema = new mongoose.Schema(
     programs: {
       type: [programRole]
     },
-    adminOrganizations: {
-      type: [mongoose.SchemaTypes.ObjectId]
+    adminOrganization: {
+      type: mongoose.SchemaTypes.ObjectId
     },
     isSuperAdmin: {
       type: Boolean,

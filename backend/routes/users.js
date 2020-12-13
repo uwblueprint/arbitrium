@@ -40,8 +40,23 @@ router.get("/:userId/programs", isAuthenticated, async function(req, res) {
         $project: {
           _id: 0,
           role: 1,
-          id: { $arrayElemAt: ["$program._id", 0] },
-          name: { $arrayElemAt: ["$program.displayName", 0] }
+          program: { $arrayElemAt: ["$program", 0] }
+        }
+      },
+      {
+        $lookup: {
+          from: 'organizations',
+          localField: 'program.organization',
+          foreignField: '_id',
+          as: 'organization'
+        }
+      },
+      {
+        $project: {
+          role: 1,
+          id: "$program._id",
+          name: "$program.displayName",
+          organization: { $arrayElemAt: ["$organization.name", 0] }
         }
       },
       {
