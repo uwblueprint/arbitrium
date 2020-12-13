@@ -29,16 +29,6 @@ function EditUserForm({ dispatch, formState, newUser }) {
     [dispatch]
   );
 
-  // const dispatchProgramsChange = useCallback(
-  //   (event) => {
-  //     dispatch({
-  //       type: EDIT_PROGRAMS,
-  //       program: event.target.name
-  //     });
-  //   },
-  //   [dispatch]
-  // );
-
   return (
     <div>
       {!newUser && (
@@ -70,17 +60,6 @@ function EditUserForm({ dispatch, formState, newUser }) {
           onChange={dispatchRoleChange}
         />
       </QuestionWrapper>
-      {/* {organizationLevel && (
-        <QuestionWrapper>
-          <StyledLabel htmlFor="role-select">
-            Which program(s) are they a part of?
-          </StyledLabel>
-          <ProgramSelect
-            onChange={dispatchProgramsChange}
-            value={formState.programs}
-          />
-        </QuestionWrapper>
-      )} */}
     </div>
   );
 }

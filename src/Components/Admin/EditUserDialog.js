@@ -33,7 +33,7 @@ const SaveWrapper = styled.div`
 `;
 
 // onAddNewUser: callback for when a new user is added
-function EditUserDialog({ close, data, program }) {
+function EditUserDialog({ close, data, programId }) {
   const initialFormState = {
     name: data.name,
     email: data.email,
@@ -53,7 +53,7 @@ function EditUserDialog({ close, data, program }) {
     const requestBody = {
       role: formState.role
     };
-    UPDATE.updateUserProgramRoleAPI(program, data.userId, requestBody)
+    UPDATE.updateUserProgramRoleAPI(programId, data.userId, requestBody)
       .then(() => {
         close();
         window.location.reload();
@@ -75,7 +75,7 @@ function EditUserDialog({ close, data, program }) {
       paddingHorizontal={28}
       paddingVertical={28}
     >
-      <DialogHeader onClose={close} title="Edit existing user" />
+      <DialogHeader onClose={close} title="Edit user" />
       <LoadingOverlay
         show={isSubmitting}
         spinnerProps={{
@@ -89,6 +89,7 @@ function EditUserDialog({ close, data, program }) {
         userId={data.userId}
         setShowSaveFailure={setShowSaveFailure}
         setIsSubmitting={setIsSubmitting}
+        programId={programId}
       />
       <SaveWrapper>
         <Button

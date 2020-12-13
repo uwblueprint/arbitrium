@@ -8,6 +8,14 @@ import EditUserDialog from "./EditUserDialog";
 import NewUserDialog from "./NewUserDialog";
 import UserManagementTable from "./UserManagementTable";
 import { connect } from "react-redux";
+import * as userRoles from "../../Constants/UserRoles";
+
+const roles = [
+  { name: "Admin", id: userRoles.ADMIN },
+  { name: "Admin & Reviewer", id: userRoles.ADMIN_REVIEWER },
+  { name: "Reviewer", id: userRoles.REVIEWER },
+  { name: "Guest", id: userRoles.GUEST }
+];
 
 const Wrapper = styled.div`
   margin-top: 50px;
@@ -33,7 +41,7 @@ const Header = styled.div`
 
 // convert fetched users to table format
 // fetched: array
-function convertToTableData(fetched, program) {
+function convertToTableData(fetched, programId) {
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
@@ -44,7 +52,7 @@ function convertToTableData(fetched, program) {
           Dialog={EditUserDialog}
           closeOnEsc={true}
           variant="outlined"
-          dialogProps={{ data: user, program: program }}
+          dialogProps={{ data: user, programId: programId }}
         >
           Edit
         </DialogTriggerButton>
@@ -53,20 +61,20 @@ function convertToTableData(fetched, program) {
   }));
 }
 
-function UserManagementProgram({ program }) {
+function UserManagementProgram({ programId }) {
   const [loadUsers, reloadUsers] = usePromise(
     GET.getAllProgramUsers,
-    { program },
-    [program]
+    { programId },
+    [programId]
   );
 
   const users = useMemo(
     () =>
       convertToTableData(
         loadUsers.value.filter((u) => !u.deleted),
-        program
+        programId
       ),
-    [loadUsers]
+    [loadUsers, programId]
   );
 
   return (
@@ -80,7 +88,7 @@ function UserManagementProgram({ program }) {
                 Dialog={NewUserDialog}
                 closeOnEsc={true}
                 alertParent={reloadUsers}
-                dialogProps={{ program: program }}
+                dialogProps={{ programId: programId }}
               >
                 Add new user
               </DialogTriggerButton>
@@ -99,7 +107,7 @@ function UserManagementProgram({ program }) {
 }
 
 const mapStateToProps = (state) => ({
-  program: state.program
+  programId: state.program
 });
 
 export default connect(mapStateToProps)(UserManagementProgram);

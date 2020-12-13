@@ -42,14 +42,11 @@ function DialogTriggerButton({
         onClick={onClick}
         color={color || "primary"}
         variant={variant || "contained"}
-        style={
-          customBgColor
-            ? {
-                backgroundColor: `${customBgColor}`,
-                color: "#FFFFFF"
-              }
-            : {}
-        }
+        style={{
+          backgroundColor: customBgColor && `${customBgColor}`,
+          color: customBgColor && "#FFFFFF",
+          textTransform: "none"
+        }}
       >
         {children}
       </Button>

@@ -19,12 +19,11 @@ const initialFormState = {
   name: "",
   preferredName: "",
   email: "",
-  role: userRoles.REVIEWER,
-  programs: new Set()
+  role: userRoles.REVIEWER
 };
 
 // onAddNewUser: callback for when a new user is added
-function NewUserDialog({ onSubmit, close, confirm, program }) {
+function NewUserDialog({ onSubmit, close, confirm, programId }) {
   const [formState, dispatchUpdateFormState] = useReducer(
     userFormStateReducer,
     initialFormState
@@ -36,7 +35,7 @@ function NewUserDialog({ onSubmit, close, confirm, program }) {
     setIsSubmitting(true);
     try {
       const data = { ...formState };
-      const user = await createOrAddUserProgramAPI(program, {
+      const user = await createOrAddUserProgramAPI(programId, {
         email: data.email,
         role: data.role
       });
