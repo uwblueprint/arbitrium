@@ -45,7 +45,7 @@ function convertToTableData(fetched, programId) {
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
-    role: user.role,
+    role: rolesMap[user.role],
     userLink: (
       <div className="button-container">
         <DialogTriggerButton
