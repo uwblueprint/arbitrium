@@ -179,7 +179,7 @@ function CreateEditForm() {
 
     //Set the active form to be the first one
     //updateActiveSection(0);
-  }, [loadForm, appUser, initiateForm]);
+  }, [loadForm, appUser, initiateForm, submissionLink]);
 
   //When the sections changes we will update the form.
   //1. When an input on the section card itself changes focus OR
@@ -444,8 +444,6 @@ function CreateEditForm() {
     <div>
       {isPublished ? (
         <PublishedFormHeader
-          {...headerData}
-          onChange={updateHeader}
           submissionLink={applicantLink}
           handlePublish={publishForm}
           id={"header_" + 1}

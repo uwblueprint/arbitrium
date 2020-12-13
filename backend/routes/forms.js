@@ -45,7 +45,6 @@ router.get("/preview/:previewId", (req, res) => {
       "previewLink._id": req.params.previewId
     })
     .then(function(found) {
-      console.log(found);
       const result = found;
       result.sections = result.sections.filter(
         (section) => section.deleted !== 1
@@ -53,7 +52,6 @@ router.get("/preview/:previewId", (req, res) => {
       res.status(200).json(result);
     })
     .catch(function(err) {
-      console.log(err);
       console.error(
         `Error getting form with form ID = ${req.params.previewId}`
       );

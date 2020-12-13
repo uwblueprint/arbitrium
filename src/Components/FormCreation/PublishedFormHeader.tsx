@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import InputBase from "@material-ui/core/InputBase";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
@@ -54,23 +53,9 @@ type Props = {
 };
 
 function PublishedFormHeader({
-  name,
   description,
-  submissionLink,
-  onChange
+  submissionLink
 }: Props): React.ReactElement<typeof Header> {
-  const [formTitle, setFormTitle] = useState(name);
-  const [formDescription, setFormDescription] = useState(description);
-
-  useEffect(() => {
-    setFormTitle(name);
-    setFormDescription(description);
-  }, [name, description]);
-
-  const updateHeader = () => {
-    onChange(formTitle, formDescription);
-  };
-
   const [showPublishedFormDialog, setshowPublishedFormDialog] = useState(false);
   const [showManageAccessDialog, setshowManageAccessDialog] = useState(false);
   const [copiedsubmissionLink, setCopiedsubmissionLink] = useState(false);

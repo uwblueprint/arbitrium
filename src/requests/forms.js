@@ -20,7 +20,6 @@ async function getFormBySubmission({ id }) {
 
 //The second paramater of GET is a boolean if the endpoint requires Authorization
 async function getFormByPreview({ id }) {
-  console.log(id);
   return GET(`/api/forms/preview/${id}`, false);
 }
 

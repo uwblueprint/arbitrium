@@ -1,7 +1,6 @@
-import React, { useReducer, useEffect, useState, useContext } from "react";
+import React, { useReducer, useEffect, useState } from "react";
 import styled from "styled-components";
 import FormSection from "./FormSection";
-import { AuthContext } from "../../../Authentication/Auth.js";
 import * as FORM from "../../../requests/forms.js";
 import usePromise from "../../../Hooks/usePromise";
 import { defaultFormState } from "./../CreateEditFormStateManagement";
@@ -55,11 +54,9 @@ function CreateSubmissionForm({ match }) {
 
   //Check to see if this is a preview link or not
   let preview = true;
-  if (match.path == "/form/:formId") {
+  if (match.path === "/form/:formId") {
     preview = false;
   }
-
-  const submissionId = match.params.formId;
 
   const [sections, dispatchSectionsUpdate] = useReducer(
     customFormSectionsReducer,
@@ -80,7 +77,6 @@ function CreateSubmissionForm({ match }) {
   });
   const [submitted, setSubmitted] = useState(false);
   const [validLink, setValidLink] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
@@ -94,17 +90,13 @@ function CreateSubmissionForm({ match }) {
       description: loadForm.value.description
     });
 
-    console.log(preview);
     if (preview) {
-      console.log("Here");
-      console.log(!moment(loadForm.value.previewLink.close).isBefore(moment()));
       //Has the form closed? AND is it a draft?
       setValidLink(
         !moment(loadForm.value.previewLink.close).isBefore(moment()) &&
           loadForm.value.draft
       );
     } else {
-      console.log("Here2");
       const link = loadForm.value.submissionLinks.find(
         (link) => link._id === match.params.formId
       );
@@ -113,7 +105,7 @@ function CreateSubmissionForm({ match }) {
         !moment(link.close).isBefore(moment()) && !loadForm.value.draft
       );
     }
-  }, [loadForm, refetch]);
+  }, [loadForm, refetch, match.params.formId, preview]);
 
   // Used to scroll to top when moving between sections
   useEffect(() => {
