@@ -38,10 +38,12 @@ function NewUserDialog({ onSubmit, close, confirm, programId }) {
       const user = await createOrAddUserProgramAPI(programId, {
         email: data.email,
         role: data.role
+      }).then(() => {
+        close();
+        window.location.reload();
+        onSubmit && onSubmit(user);
+        confirm();
       });
-      close();
-      onSubmit && onSubmit(user);
-      confirm();
     } catch (e) {
       console.error(e);
       if (e.message) {

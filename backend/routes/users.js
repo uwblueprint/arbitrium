@@ -11,20 +11,9 @@ const { sendWelcomeEmail } = require("../nodemailer");
 const { createFirebaseUser } = require("./userUtils");
 const { deleteFirebaseUser } = require("./userUtils");
 
-router.get("/all", isAuthenticated, function(req, res) {
-  db["Authentication"].users
-    .find()
-    .then(function(found) {
-      res.json(found);
-    })
-    .catch(function(err) {
-      res.send(err);
-    });
-});
-
 // Get a user's programs
 // Returns an array of programs: [{id, name, role}]
-router.get("/:userId/programs", async function(req, res) {
+router.get("/:userId/programs", isAuthenticated, async function(req, res) {
   db["Authentication"].users
     .aggregate([
       {

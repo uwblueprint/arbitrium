@@ -61,10 +61,10 @@ function convertToTableData(fetched, programId) {
   }));
 }
 
-function UserManagementProgram({ programId }) {
+function UserManagement({ programId }) {
   const [loadUsers, reloadUsers] = usePromise(
-    GET.getAllProgramUsers,
-    { programId },
+    GET.getAllProgramUsersAPI,
+    programId,
     [programId]
   );
 
@@ -110,4 +110,4 @@ const mapStateToProps = (state) => ({
   programId: state.program
 });
 
-export default connect(mapStateToProps)(UserManagementProgram);
+export default connect(mapStateToProps)(UserManagement);
