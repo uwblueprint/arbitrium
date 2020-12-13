@@ -43,7 +43,6 @@ const Header = styled.div`
 // convert fetched users to table format
 // fetched: array
 function convertToTableData(fetched, programId) {
-  console.log(fetched);
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
