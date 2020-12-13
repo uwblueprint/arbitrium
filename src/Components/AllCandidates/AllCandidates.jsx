@@ -185,7 +185,7 @@ function AllCandidates({ history, program }) {
           !user.email.includes("uwblueprint.org") &&
           !user.email.includes("test.com")
       ).length,
-    [allUsers, program]
+    [allUsers]
   );
 
   function exportAllData() {
