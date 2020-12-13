@@ -105,10 +105,9 @@ export type QuestionCard = {
   required: boolean;
 };
 
-type Link = {
+export type Link = {
   open: moment.Moment | null;
   close: moment.Moment | null;
-  preview: boolean;
 };
 
 export interface FormSectionBase {

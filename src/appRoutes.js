@@ -83,10 +83,11 @@ const routes = [
     programGroup: "ADMIN"
   },
   {
-    path: "/admin/form-submission/:formId",
+    path: "/form-preview/:formId",
     component: CreateSubmissionForm,
     title: "Preview Form Submission",
     header: true,
+    loginRequired: false,
     programGroup: ""
   },
   {
@@ -94,6 +95,7 @@ const routes = [
     component: CreateSubmissionForm,
     header: false,
     title: "Submit Response",
+    loginRequired: false,
     programGroup: ""
   }
 ];

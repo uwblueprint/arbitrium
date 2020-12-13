@@ -49,17 +49,17 @@ const BorderLinearProgress = withStyles((theme) => ({
   }
 }))(LinearProgress);
 
-function CreateSubmissionForm() {
+function CreateSubmissionForm({ match }) {
   const classes = useStyles();
 
-  const { appUser } = useContext(AuthContext);
+  const submissionId = match.params.formId;
   const [sections, dispatchSectionsUpdate] = useReducer(
     customFormSectionsReducer,
     []
   );
   const [page, setPage] = useState(-1);
-  const [loadForm, refetch] = usePromise(FORM.getForm, {
-    programId: appUser.currentProgram
+  const [loadForm, refetch] = usePromise(FORM.getFormBySubmission, {
+    submissionId: match.params.formId
   });
   const [headerData, setHeaderData] = useState({
     name: defaultFormState.name,
@@ -68,6 +68,7 @@ function CreateSubmissionForm() {
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
+    console.log(loadForm);
     if (loadForm.isPending || !loadForm.value) return;
     // Get form from database using programID
     dispatchSectionsUpdate({
@@ -78,7 +79,7 @@ function CreateSubmissionForm() {
       name: loadForm.value.name,
       description: loadForm.value.description
     });
-  }, [loadForm, appUser, refetch]);
+  }, [loadForm, refetch]);
 
   // Used to scroll to top when moving between sections
   useEffect(() => {

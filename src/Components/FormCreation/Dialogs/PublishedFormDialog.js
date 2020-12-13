@@ -17,11 +17,11 @@ const Header = styled.div`
   padding-top: 6px;
 `;
 
-const WarningMessage = styled.div`
+const SuccessMessage = styled.div`
   display: flex;
   padding-bottom: 16px;
   color: rgba(0, 0, 0, 0.87);
-  background-color: #ffc27a;
+  background-color: rgba(85, 169, 78, 0.57);
   margin: auto;
   width: 100%;
   padding-top: 6px;
@@ -37,7 +37,6 @@ const WarningMessageText = styled.div`
   position: absolute;
   left: 11.65%;
   right: 25.12%;
-  top: 106px;
   font-family: Roboto;
   font-size: 14px;
   font-style: normal;
@@ -56,7 +55,7 @@ const WarningMessageText = styled.div`
   }
 `;
 
-const PreviewLinkWrapper = styled.div`
+const ApplicantLinkWrapper = styled.div`
   position: absolute;
   left: 2.91%;
   right: 53.3%;
@@ -110,13 +109,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-function GetFormDialog({
-  close,
-  link,
-  copyLinkToClipboard,
-  publish = false,
-  handlePublish = null
-}) {
+function PublishedFormDialog({ close, link, copyLinkToClipboard }) {
   const dialogRef = React.createRef();
 
   useEffect(() => {
@@ -162,7 +155,7 @@ function GetFormDialog({
       <Header
         style={{ lineHeight: "36px", fontSize: "24px", fontWeight: "400" }}
       >
-        Get Preview Link
+        Get Link for Applicants
         <IconButton
           onClick={close}
           style={{
@@ -174,7 +167,7 @@ function GetFormDialog({
           <Close />
         </IconButton>
       </Header>
-      <WarningMessage>
+      <SuccessMessage>
         <svg
           style={{
             position: "absolute",
@@ -196,50 +189,32 @@ function GetFormDialog({
             fillOpacity="0.54"
           />
         </svg>
-        {publish ? (
-          <WarningMessageText>
-            Please review the form <b>before</b> sending to applicants Changes
-            to the form <b>after publishing</b> will require assitance from
-            Arbitrium support.
-          </WarningMessageText>
-        ) : (
-          <WarningMessageText>
-            These links are meant for reviewing the form <b>before</b> allowing
-            applicants to apply. Response submitted with this link{" "}
-            <b>will not</b> be saved.
-          </WarningMessageText>
-        )}
-      </WarningMessage>
-      {publish ? (
-        <div>
+
+        <WarningMessageText>
           <p>
-            {" "}
-            Previewing in a new window is meant for reviewing the form{" "}
-            <b>before</b> allowing applicants to apply. Responses submitted with
-            this link <b>will not</b> be saved.{" "}
+            <b>Your form has been published</b>
           </p>
-          <p style={{ fontSize: 16, fontWeight: 500 }}>
-            {" "}
-            If the form will not require any further changes, you are ready to
-            publish.
+          <p>
+            If you need any changes made to the form, please contact Arbitrium
+            support.
           </p>
-        </div>
-      ) : (
-        <PreviewLinkWrapper>
-          <p>Preview Link</p>
-          <input value={link} onClick={handleFocus} />
-          <div
-            style={{
-              left: "0%",
-              right: "0%",
-              top: "-nan%",
-              bottom: "-nan%",
-              width: "776px",
-              border: "0.25px solid rgba(0, 0, 0, 0.33)"
-            }}
-          />
-        </PreviewLinkWrapper>
-      )}
+        </WarningMessageText>
+      </SuccessMessage>
+
+      <ApplicantLinkWrapper>
+        <p>Applicant Link</p>
+        <input value={link} onClick={handleFocus} />
+        <div
+          style={{
+            left: "0%",
+            right: "0%",
+            top: "-nan%",
+            bottom: "-nan%",
+            width: "776px",
+            border: "0.25px solid rgba(0, 0, 0, 0.33)"
+          }}
+        />
+      </ApplicantLinkWrapper>
       <ButtonWrapper>
         <Button
           onClick={() => {
@@ -247,38 +222,25 @@ function GetFormDialog({
           }}
           href="#text-buttons"
           color="primary"
-          style={
-            !publish
-              ? {
-                  fontWeight: "500",
-                  lineHeight: "16px",
-                  letterSpacing: "1.25px",
-                  textTransform: "capitalize",
-                  color: "#2261AD"
-                }
-              : {
-                  fontWeight: "500",
-                  lineHeight: "16px",
-                  letterSpacing: "1.25px",
-                  textTransform: "capitalize",
-                  color: "#2261AD",
-                  border: "1px solid rgba(0, 0, 0, 0.33)",
-                  boxSizing: "border-box",
-                  height: "36px"
-                }
-          }
+          style={{
+            fontWeight: "500",
+            lineHeight: "16px",
+            letterSpacing: "1.25px",
+            textTransform: "capitalize",
+            color: "#2261AD"
+          }}
         >
-          {publish ? "Preview in New Window" : "Open In New Window"}
+          Open In New Window
         </Button>
         <Button
-          onClick={publish ? handlePublish : copyLinkToClipboard}
+          onClick={copyLinkToClipboard}
           href="#text-buttons"
           variant="outlined"
           color="primary"
           style={{
             marginLeft: "23px",
             height: "36px",
-            backgroundColor: publish ? "#2261AD" : "#C1E0FF",
+            backgroundColor: "#C1E0FF",
             fontSize: "14px",
             border: "1px solid rgba(0, 0, 0, 0.33)",
             boxSizing: "border-box",
@@ -287,14 +249,14 @@ function GetFormDialog({
             lineHeight: "16px",
             letterSpacing: "1.25px",
             textTransform: "capitalize",
-            color: publish ? "#FFFFFF" : "#2261AD"
+            color: "#2261AD"
           }}
         >
-          {publish ? "Publish" : "Copy Link"}
+          Copy Link
         </Button>
       </ButtonWrapper>
     </Dialog>
   );
 }
 
-export default GetFormDialog;
+export default PublishedFormDialog;

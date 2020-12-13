@@ -32,10 +32,6 @@ const link = new mongoose.Schema({
   close: {
     type: String,
     default: new Date().getTime()
-  },
-  preview: {
-    type: Boolean,
-    default: false
   }
 });
 

@@ -2,10 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 const db = require("../mongo.js");
+const ObjectId = require("mongodb").ObjectID;
 
 const { isAuthenticated } = require("../middlewares/auth");
-
-router.use(isAuthenticated);
 
 // Base URL: /api/forms
 
@@ -15,6 +14,32 @@ router.use(isAuthenticated);
 
 //Programs and Forms have a 1:1 relationship.
 //Create/Get a form is done by programId and everything else is done by formId
+
+// Get form with submissionID (no auth required)
+router.get("/submission/:submissionId", (req, res) => {
+  db["Authentication"].forms
+    .findOne({
+      submissionLinks: {
+        $elemMatch: { _id: ObjectId(req.params.submissionId) }
+      }
+    })
+    .then(function(found) {
+      console.log(found);
+      const result = found;
+      result.sections = result.sections.filter(
+        (section) => section.deleted !== 1
+      );
+      res.status(200).json(result);
+    })
+    .catch(function(err) {
+      console.error(
+        `Error getting form with submission ID = ${req.params.submissionId}`
+      );
+      res.status(500).send(err);
+    });
+});
+
+router.use(isAuthenticated);
 
 // Create a new form (use upsert to avoid duplication)
 router.post("/", (req, res) => {

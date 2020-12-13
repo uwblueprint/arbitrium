@@ -85,14 +85,15 @@ function CreateEditForm() {
     description: defaultFormState.description
   });
   const [isPublished, setPublished] = useState(false);
-  const [previewLink, setPreviewLink] = useState("Loading Link");
+  const [previewLink, setPreviewLink] = useState(
+    "Loading Link... Please wait..."
+  );
+  const [applicantLink, setApplicantLink] = useState(
+    "Loading Link... Please wait"
+  );
   console.log(window.location.host);
   console.log(window.location);
-  const submissionLink =
-    window.location.protocol +
-    "//" +
-    window.location.host +
-    "/admin/form-submission/";
+  const submissionLink = window.location.protocol + "//" + window.location.host;
 
   //1. Used when a drag finishes to indiate which question should be active afterwards
   //2. For the purposes of drag and drop, the child section can set its inital active question
@@ -137,7 +138,7 @@ function CreateEditForm() {
         draft: true,
         sections: defaultFormState.sections,
         previewLink: defaultFormState.previewLink,
-        submisionsLinks: defaultFormState.submisionsLink
+        submissionLinks: defaultFormState.submissionLinks
       };
 
       await FORM.createForm(data);
@@ -168,7 +169,12 @@ function CreateEditForm() {
     });
 
     setPublished(!loadForm.value.draft);
-    setPreviewLink(submissionLink + loadForm.value.previewLink._id);
+    setPreviewLink(
+      submissionLink + "/form-preview/" + loadForm.value.previewLink._id
+    );
+    setApplicantLink(
+      submissionLink + "/form/" + loadForm.value.submissionLinks[0]._id
+    );
 
     //Set the active form to be the first one
     //updateActiveSection(0);
@@ -442,7 +448,7 @@ function CreateEditForm() {
         <PublishedFormHeader
           {...headerData}
           onChange={updateHeader}
-          previewLink={previewLink}
+          submissionLink={applicantLink}
           handlePublish={publishForm}
           id={"header_" + 1}
           key={1}

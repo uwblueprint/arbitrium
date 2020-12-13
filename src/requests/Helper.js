@@ -19,7 +19,9 @@ function setProgram(prog) {
 async function GET(url, requiresAuth = true) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
-
+  console.log("requiresAuth");
+  console.log(requiresAuth);
+  console.log(url);
   let token = "";
   if (requiresAuth) {
     token = await firebaseApp.auth().currentUser.getIdToken();

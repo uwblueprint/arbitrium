@@ -3,47 +3,10 @@ import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
-import GetFormDialog from "./Dialogs/GetFormDialog";
+import PublishedFormDialog from "./Dialogs/PublishedFormDialog";
+import ManageApplicantAccessDialog from "./Dialogs/ManageApplicantAccessDialog";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import SettingsIcon from "@material-ui/icons/Settings";
-
-const NameInput = styled(InputBase)`
-  input {
-    font-size: 24px;
-  }
-  && {
-    width: 526px;
-    margin-bottom: 16px;
-    line-height: 36px;
-  }
-`;
-
-const DescriptionInput = styled(InputBase)`
-  && {
-    width: 526px;
-    display: block;
-    line-height: 21px;
-    overflow-y: auto;
-    max-height: 48px;
-  }
-  textarea {
-    font-size: 14px;
-    color: #888888;
-  }
-`;
-
-const InputWrapper = styled.div`
-  padding: 48px 100px;
-  padding-left: 15%;
-  padding-right: 0px;
-`;
-
-const ButtonWrapper = styled.div`
-  padding: 48px 0px;
-  padding-left: 32px;
-  align-items: center;
-  justify-content: center;
-`;
 
 const DialogOverlay = styled.div`
   position: fixed;
@@ -83,23 +46,17 @@ const TextWrapper = styled.div`
   line-height: 24px;
 `;
 
-type HeaderData = {
-  name: string;
-  description: string;
-  previewLink: string;
-};
-
 type Props = {
   name: string;
   description: string;
-  previewLink: string;
+  submissionLink: string;
   onChange: (name: string, description: string) => void;
 };
 
 function PublishedFormHeader({
   name,
   description,
-  previewLink,
+  submissionLink,
   onChange
 }: Props): React.ReactElement<typeof Header> {
   const [formTitle, setFormTitle] = useState(name);
@@ -114,25 +71,25 @@ function PublishedFormHeader({
     onChange(formTitle, formDescription);
   };
 
-  const [showPreviewLink, setShowPreviewLink] = useState(false);
-  const [showPublishDialog, setShowPublishDialog] = useState(false);
-  const [copiedPreviewLink, setCopiedPreviewLink] = useState(false);
+  const [showPublishedFormDialog, setshowPublishedFormDialog] = useState(false);
+  const [showManageAccessDialog, setshowManageAccessDialog] = useState(false);
+  const [copiedsubmissionLink, setCopiedsubmissionLink] = useState(false);
 
   function closeDialog() {
-    setShowPreviewLink(false);
-    setShowPublishDialog(false);
+    setshowPublishedFormDialog(false);
+    setshowManageAccessDialog(false);
   }
 
   const copyLinkToClipboard = () => {
-    navigator.clipboard.writeText(previewLink);
+    navigator.clipboard.writeText(submissionLink);
     var dummy = document.createElement("input");
-    dummy.innerText = previewLink;
+    dummy.innerText = submissionLink;
     document.body.appendChild(dummy);
     dummy.setAttribute("id", "dummy_id");
     dummy.select();
     document.execCommand("copy");
     dummy.remove();
-    setCopiedPreviewLink(true);
+    setCopiedsubmissionLink(true);
   };
 
   return (
@@ -192,7 +149,7 @@ function PublishedFormHeader({
             <Button
               variant="contained"
               onClick={() => {
-                setShowPublishDialog(true);
+                setshowManageAccessDialog(true);
               }}
               href="#text-buttons"
               color="primary"
@@ -212,7 +169,7 @@ function PublishedFormHeader({
             <Button
               variant="outlined"
               onClick={() => {
-                setShowPreviewLink(true);
+                setshowPublishedFormDialog(true);
               }}
               href="#text-buttons"
               color="primary"
@@ -234,22 +191,21 @@ function PublishedFormHeader({
           </div>
         </TextWrapper>
       </Header>
-      {showPreviewLink && (
+      {showPublishedFormDialog && (
         <>
           <DialogOverlay />
-          <GetFormDialog
-            link={previewLink}
+          <PublishedFormDialog
+            link={submissionLink}
             close={closeDialog}
             copyLinkToClipboard={copyLinkToClipboard}
-            handlePublish={null}
           />
         </>
       )}
-      {showPublishDialog && (
+      {showManageAccessDialog && (
         <>
           <DialogOverlay />
-          <GetFormDialog
-            link={previewLink}
+          <ManageApplicantAccessDialog
+            link={submissionLink}
             close={closeDialog}
             copyLinkToClipboard={copyLinkToClipboard}
             publish={true}
@@ -258,7 +214,7 @@ function PublishedFormHeader({
         </>
       )}
       <Snackbar
-        open={copiedPreviewLink}
+        open={copiedsubmissionLink}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left"
@@ -266,7 +222,7 @@ function PublishedFormHeader({
         autoHideDuration={5000}
         resumeHideDuration={5000}
         onClose={() => {
-          setCopiedPreviewLink(false);
+          setCopiedsubmissionLink(false);
         }}
         message={"Copied to clipboard."}
       />
