@@ -105,6 +105,12 @@ export type QuestionCard = {
   required: boolean;
 };
 
+type Link = {
+  open: moment.Moment | null;
+  close: moment.Moment | null;
+  preview: boolean;
+};
+
 export interface FormSectionBase {
   name: string;
   description: string;
@@ -124,6 +130,8 @@ export interface FormStateBase {
 }
 export interface DefaultFormState extends FormStateBase {
   sections: Array<FormSectionBase>;
+  previewLink: Link;
+  submissionLinks: Array<Link>;
 }
 
 export interface FormState extends FormStateBase {

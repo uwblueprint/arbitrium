@@ -5,6 +5,7 @@ import {
   FormContext,
   FormSectionBase
 } from "../../Types/FormTypes";
+import moment from "moment";
 
 let defaultQuestion = {
   name: "Untitled",
@@ -60,10 +61,18 @@ export const defaultNewSection: FormSectionBase = {
 
 export const defaultNewQuestion = defaultQuestion;
 
+const defaultLink = {
+  open: moment(),
+  close: null,
+  preview: true
+};
+
 export const defaultFormState: DefaultFormState = {
   name: "Untitled Form",
   description: "",
-  sections: sectionsStarter
+  sections: sectionsStarter,
+  previewLink: defaultLink,
+  submissionLinks: []
 };
 
 export const CreateEditFormContext = createContext<FormContext | undefined>(

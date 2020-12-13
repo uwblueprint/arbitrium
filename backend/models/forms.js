@@ -26,10 +26,16 @@ const validation = new mongoose.Schema({
 
 const link = new mongoose.Schema({
   open: {
-    type: String
+    type: String,
+    default: new Date().getTime()
   },
   close: {
-    type: String
+    type: String,
+    default: new Date().getTime()
+  },
+  preview: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -131,6 +137,9 @@ const formsSchema = new mongoose.Schema(
     },
     submissionLinks: {
       type: [link]
+    },
+    previewLink: {
+      type: link
     },
     programId: {
       type: String

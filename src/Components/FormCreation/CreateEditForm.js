@@ -83,6 +83,13 @@ function CreateEditForm() {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+  console.log(window.location.host);
+  console.log(window.location);
+  const submissionLink =
+    window.location.protocol +
+    "//" +
+    window.location.host +
+    "/admin/form-submission/";
 
   //1. Used when a drag finishes to indiate which question should be active afterwards
   //2. For the purposes of drag and drop, the child section can set its inital active question
@@ -125,7 +132,9 @@ function CreateEditForm() {
         description: defaultFormState.description,
         createdBy: appUser.userId,
         draft: true,
-        sections: defaultFormState.sections
+        sections: defaultFormState.sections,
+        previewLink: defaultFormState.previewLink,
+        submisionsLinks: defaultFormState.submisionsLink
       };
 
       await FORM.createForm(data);
@@ -165,6 +174,10 @@ function CreateEditForm() {
   useEffect(() => {
     saveForm();
   }, [sections, saveForm]);
+
+  //----------------------------------------------------------------------------
+  //Links
+  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //UPDATE/ADD/MOVE SECTION
@@ -407,12 +420,15 @@ function CreateEditForm() {
       uniquekey += question._id;
     });
   });
-
+  console.log(sections);
   return (
     <div>
       <CreateEditFormHeader
         {...headerData}
         onChange={updateHeader}
+        previewLink={
+          !loadForm.isPending && submissionLink + loadForm.value.previewLink._id
+        }
         id={"header_" + 1}
         key={1}
       />
