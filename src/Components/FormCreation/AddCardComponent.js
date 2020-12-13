@@ -13,11 +13,10 @@ const useStyles = makeStyles({
   root: {
     fontSize: 14,
     borderRadius: 0,
-    boxShadow: "0 2px 3px 1px #cccccc",
-    marginBottom: 20,
+    boxShadow: "0 2px 3px 0px #00000033",
     marginLeft: 30,
     width: 150,
-    height: 55,
+    height: 90,
     display: "flex"
   },
   text: {
@@ -26,7 +25,8 @@ const useStyles = makeStyles({
     margin: 5,
     fontFamily: "Roboto",
     fontStyle: "normal",
-    fontWeight: "normal"
+    fontWeight: "normal",
+    padding: "8px"
   },
   icon: {
     height: "15px",

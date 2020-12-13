@@ -50,7 +50,7 @@ async function getAllStackingsAPI(user) {
 }
 
 async function getUserAPI(user) {
-  return GET(`/api/users/${user.uid}`);
+  return GET(`/api/users/${user.uid}`, false);
 }
 
 async function getAllUsersAPI() {
@@ -73,6 +73,13 @@ async function getAllOrganizationsAPI() {
   return GET(`/api/organizations/all`);
 }
 
+async function getAllProgramUsers({ program }) {
+  return GET(`/api/programs/${program}/users`);
+}
+async function getAllUserPrograms({ userId }) {
+  return GET(`/api/users/${userId}/programs`);
+}
+
 export {
   getAllStackingsAPI,
   getAllApplicationsAPI,
@@ -90,5 +97,7 @@ export {
   getCandidateSubmissions,
   getAllProgramsAPI,
   getAllFirebaseUsers,
-  getAllOrganizationsAPI
+  getAllOrganizationsAPI,
+  getAllProgramUsers,
+  getAllUserPrograms
 };

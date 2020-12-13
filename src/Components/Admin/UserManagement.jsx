@@ -7,6 +7,7 @@ import DialogTriggerButton from "../Common/Dialogs/DialogTriggerButton";
 import EditUserDialog from "./EditUserDialog";
 import NewUserDialog from "./NewUserDialog";
 import UserManagementTable from "./UserManagementTable";
+import { connect } from "react-redux";
 
 const Wrapper = styled.div`
   margin-top: 50px;
@@ -59,8 +60,13 @@ function convertToTableData(fetched, programs) {
   });
 }
 
-function UserManagement() {
-  const [loadUsers, reloadUsers] = usePromise(GET.getAllUsersAPI, {}, []);
+function UserManagement({ program }) {
+  const [loadUsers, reloadUsers] = usePromise(
+    GET.getAllProgramUsers,
+    { program },
+    [program]
+  );
+
   const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
 
   const users = useMemo(
@@ -100,4 +106,8 @@ function UserManagement() {
   );
 }
 
-export default UserManagement;
+const mapStateToProps = (state) => ({
+  program: state.program
+});
+
+export default connect(mapStateToProps)(UserManagement);

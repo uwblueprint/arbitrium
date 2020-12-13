@@ -7,7 +7,7 @@ const CommentForm = styled.form`
   margin-top: 20px;
   position: relative;
   display: block;
-  input[name="comment"] {
+  textarea[name="comment"] {
     box-sizing: border-box;
     padding: 18px 16px;
     border: 1px solid #cccccc;
@@ -43,7 +43,7 @@ function AddComment({ placeholder, primaryLabel, secondaryLabel, update, id }) {
 
   return (
     <CommentForm>
-      <input
+      <textarea
         type="text"
         name="comment"
         value={text}

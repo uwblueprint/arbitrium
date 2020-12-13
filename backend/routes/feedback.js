@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const Feedback = require("../models/feedback");
 
+const { isAuthenticated } = require("../middlewares/auth");
+
+router.use(isAuthenticated);
+
 router.post("/", function(req, res) {
   const feedback = new Feedback({
     _id: new mongoose.Types.ObjectId(),
