@@ -10,6 +10,7 @@ import UserManagementTable from "./UserManagementTable";
 import { connect } from "react-redux";
 import * as userRoles from "../../Constants/UserRoles";
 
+// TODO: map these in the table
 const roles = [
   { name: "Admin", id: userRoles.ADMIN },
   { name: "Admin & Reviewer", id: userRoles.ADMIN_REVIEWER },
@@ -42,6 +43,7 @@ const Header = styled.div`
 // convert fetched users to table format
 // fetched: array
 function convertToTableData(fetched, programId) {
+  console.log(fetched);
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,

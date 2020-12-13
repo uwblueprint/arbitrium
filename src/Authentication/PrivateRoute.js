@@ -42,7 +42,7 @@ function PrivateRoute({
   const { programDataIsLoading } = useContext(ProgramContext);
   const userId = appUser && appUser.userId;
 
-  const [userPrograms] = usePromise(GET.getAllUserPrograms, { userId });
+  const [userPrograms] = usePromise(GET.getAllUserProgramsAPI, { userId });
   const [hasAccess, setAccess] = useState(null);
   const [headerRoutes, setHeaderRoutes] = useState([]);
   useEffect(() => {

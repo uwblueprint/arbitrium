@@ -68,7 +68,7 @@ async function getAllProgramsAPI() {
 async function getAllProgramUsersAPI(programId) {
   return GET(`/api/programs/${programId}/users`);
 }
-async function getAllUserPrograms({ userId }) {
+async function getAllUserProgramsAPI({ userId }) {
   return GET(`/api/users/${userId}/programs`);
 }
 
@@ -89,5 +89,5 @@ export {
   getAllProgramsAPI,
   getAllFirebaseUsers,
   getAllProgramUsersAPI,
-  getAllUserPrograms
+  getAllUserProgramsAPI
 };

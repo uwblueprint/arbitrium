@@ -16,8 +16,6 @@ const Wrapper = styled.div`
 `;
 
 const initialFormState = {
-  name: "",
-  preferredName: "",
   email: "",
   role: userRoles.REVIEWER
 };
