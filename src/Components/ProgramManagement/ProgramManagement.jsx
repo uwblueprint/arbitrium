@@ -114,7 +114,7 @@ function ProgramManagement() {
       return {
         name: program.displayName,
         organization: organizations.find((org) =>
-          org.programs.contains(program)
+          org.programs.includes(program)
         ),
         role: user.programs.find((p) => p.id === program._id).role,
         archived: program.archived,
