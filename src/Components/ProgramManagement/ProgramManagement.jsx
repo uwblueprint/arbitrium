@@ -10,6 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
+import { rolesMap } from "../../Constants/UserRoles";
 
 const Wrapper = styled.div`
   margin-top: 50px;
@@ -63,42 +64,27 @@ function ProgramManagement() {
     { userId },
     []
   );
-  const [organizations, reloadOrganizations] = usePromise(
-    GET.getAllOrganizationsAPI,
-    {},
-    []
-  );
   const [programMenuAnchorEl, setProgramMenuAnchorEl] = useState(null);
   const classes = useStyles();
 
   const programsData = useMemo(
     () =>
       convertToTableData(
-        appUser,
-        //Filter the programs the user doesn't have access to, deleted or archived
         programs.value.filter((program) => {
-          return !program.deleted && !program.archived;
-        }),
-        organizations.value
+          return !program.archived;
+        })
       ),
-    [programs, organizations, appUser]
+    [programs]
   );
 
   const archivedProgramsData = useMemo(
     () =>
       convertToTableData(
-        appUser,
-        //Filter the programs the user doesn't have access to, deleted or archived
         programs.value.filter((program) => {
-          return (
-            !program.deleted &&
-            appUser.programs.find((p) => p.id === program._id) &&
-            program.archived
-          );
-        }),
-        organizations.value
+          return program.archived;
+        })
       ),
-    [programs, organizations]
+    [programs]
   );
 
   const handleAnchorClick = (event) => {
@@ -108,14 +94,14 @@ function ProgramManagement() {
 
   // convert fetched users to table format
   // fetched: array
-  function convertToTableData(user, programs, organizations) {
+  function convertToTableData(programs) {
     return programs.map((program) => {
       return {
         name: program.name,
         organization: program.organization,
-        role: program.role,
+        role: rolesMap[program.role],
         archived: program.archived,
-        status: "To Do",
+        // status: "To Do",
         link: (
           <div className="button-container">
             {/*}

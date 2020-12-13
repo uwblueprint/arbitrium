@@ -4,8 +4,9 @@ const db = require("../mongo.js");
 
 const { isAuthenticated } = require("../middlewares/auth");
 
-// Get a user's programs
-// Returns an array of programs: [{id, name, role}]
+// Get a user's programs that are not deleted
+// Returns an array of programs:
+//   [{id: ObjectId, name: String, role: String, organization, String, archived, Boolean}]
 router.get("/:userId/programs", isAuthenticated, async function(req, res) {
   db["Authentication"].users
     .aggregate([
@@ -44,11 +45,16 @@ router.get("/:userId/programs", isAuthenticated, async function(req, res) {
         }
       },
       {
+        $match: {
+          "program.deleted": { $ne: true }
+        }
+      },
+      {
         $lookup: {
-          from: 'organizations',
-          localField: 'program.organization',
-          foreignField: '_id',
-          as: 'organization'
+          from: "organizations",
+          localField: "program.organization",
+          foreignField: "_id",
+          as: "organization"
         }
       },
       {
@@ -56,7 +62,8 @@ router.get("/:userId/programs", isAuthenticated, async function(req, res) {
           role: 1,
           id: "$program._id",
           name: "$program.displayName",
-          organization: { $arrayElemAt: ["$organization.name", 0] }
+          organization: { $arrayElemAt: ["$organization.name", 0] },
+          archived: "$program.archived"
         }
       },
       {

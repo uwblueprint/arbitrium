@@ -2,27 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import MaterialTable from "material-table";
 import TableIcons from "../Common/TableIcons";
-import { Paper, Tooltip } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 
 const Container = styled(Paper)`
   table {
     border: 1px solid #cccccc;
-  }
-`;
-
-const OverflowTooltip = styled(Tooltip)`
-  color: #2261ad;
-  margin: 0 1em;
-  .MuiTooltip-popper {
-    padding: 16px;
-  }
-`;
-
-const Overflow = styled.div`
-  font-size: 12px;
-  padding: 16px;
-  div {
-    margin-bottom: 0.4em;
   }
 `;
 
@@ -42,7 +26,7 @@ const columns = [
   },
   { title: "Organization", field: "organization" },
   { title: "Role", field: "role" },
-  { title: "Status", field: "status" },
+  // { title: "Status", field: "status" },
   {
     title: "",
     field: "link",
