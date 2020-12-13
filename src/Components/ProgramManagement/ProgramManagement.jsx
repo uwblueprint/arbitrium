@@ -57,7 +57,6 @@ const useStyles = makeStyles({
 
 function ProgramManagement() {
   const { currentUser, appUser } = useContext(AuthContext);
-  const [loadUsers, reloadUsers] = usePromise(GET.getAllUsersAPI, {}, []);
   const [programs, reloadPrograms] = usePromise(GET.getAllProgramsAPI, {}, []);
   const [organizations, reloadOrganizations] = usePromise(
     GET.getAllOrganizationsAPI,
@@ -148,7 +147,7 @@ function ProgramManagement() {
   return (
     <div>
       <Wrapper>
-        {!loadUsers.isPending ? (
+        {!programs.isPending ? (
           <>
             <Header>
               <h1 style={{ color: "black" }}>Programs</h1>
