@@ -39,8 +39,8 @@ const routes = [
     path: "/programs",
     component: ProgramManagement,
     header: false,
-    title: "Programs",
-    groups: []
+    title: "Program Management",
+    programGroup: ""
   },
   {
     path: "/submissions/:organizationId",
@@ -97,13 +97,6 @@ const routes = [
     title: "Form Submission",
     header: false,
     programGroup: ""
-  },
-  {
-    path: "/admin/forms",
-    component: FormPlayground,
-    title: "Form Operations and Testing",
-    header: false,
-    groups: ["Admin"]
   },
   {
     path: "/form/:formId",
