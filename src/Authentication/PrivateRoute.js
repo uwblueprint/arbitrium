@@ -97,9 +97,6 @@ function PrivateRoute({
   const Container = createContainer(adminRoute);
   const applicantRoute = route.loginRequired === false;
 
-  //If the user or program hasn't loaded, display the spinner
-  //Else if the user has access let them access the page
-  //Else redirect to login
   if (applicantRoute) {
     return (
       <Container>
@@ -113,6 +110,9 @@ function PrivateRoute({
     );
   }
 
+  //If the user or program hasn't loaded, display the spinner
+  //Else if the user has access let them access the page
+  //Else redirect to login
   return isLoading ||
     programDataIsLoading ||
     hasAccess == null ? null : appUser && hasAccess ? (

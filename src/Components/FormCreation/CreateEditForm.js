@@ -92,8 +92,7 @@ function CreateEditForm() {
   const [applicantLink, setApplicantLink] = useState(
     "Loading Link... Please wait"
   );
-  console.log(window.location.host);
-  console.log(window.location);
+
   const submissionLink = window.location.protocol + "//" + window.location.host;
 
   //1. Used when a drag finishes to indiate which question should be active afterwards
@@ -438,8 +437,6 @@ function CreateEditForm() {
       uniquekey += question._id;
     });
   });
-  console.log(sections);
-  console.log(loadForm.value);
   return (
     <div>
       {isPublished ? (
