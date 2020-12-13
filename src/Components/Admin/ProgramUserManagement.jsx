@@ -8,7 +8,6 @@ import EditUserDialog from "./EditUserDialog";
 import NewUserDialog from "./NewUserDialog";
 import UserManagementTable from "./UserManagementTable";
 import { connect } from "react-redux";
-import * as userRoles from "../../Constants/UserRoles";
 
 const rolesMap = {
   ADMIN: "Admin",
