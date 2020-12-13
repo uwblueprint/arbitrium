@@ -160,7 +160,10 @@ function Application({
     <PageWrapper>
       <LoadingOverlay show={!review} />
       <BodyWrapper>
-        <Button className="all-applicants" onClick={() => history.goBack()}>
+        <Button
+          className="all-applicants"
+          onClick={() => history.push("/applications")}
+        >
           &lt; Back to list of applications
         </Button>
         <ApplicationSelector>
