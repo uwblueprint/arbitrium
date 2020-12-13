@@ -14,8 +14,14 @@ async function getForm({ programId }) {
 }
 
 //The second paramater of GET is a boolean if the endpoint requires Authorization
-async function getFormBySubmission({ submissionId }) {
-  return GET(`/api/forms/submission/${submissionId}`, false);
+async function getFormBySubmission({ id }) {
+  return GET(`/api/forms/submission/${id}`, false);
+}
+
+//The second paramater of GET is a boolean if the endpoint requires Authorization
+async function getFormByPreview({ id }) {
+  console.log(id);
+  return GET(`/api/forms/preview/${id}`, false);
 }
 
 async function deleteForm(formId) {
@@ -59,6 +65,7 @@ async function updateQuestions(formId, sectionId, databody) {
 export {
   getForm,
   getFormBySubmission,
+  getFormByPreview,
   createForm,
   deleteForm,
   updateForm,

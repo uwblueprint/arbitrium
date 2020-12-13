@@ -24,6 +24,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CreateEditFormMoveSectionDialog from "./CreateEditFormMoveSectionDialog";
 import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
 import { DragDropContext } from "react-beautiful-dnd";
+import moment from "moment";
 
 const useStyles = makeStyles({
   snackbar: {
@@ -186,10 +187,6 @@ function CreateEditForm() {
   useEffect(() => {
     saveForm();
   }, [sections, saveForm]);
-
-  //----------------------------------------------------------------------------
-  //Links
-  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
   //UPDATE/ADD/MOVE SECTION
@@ -425,6 +422,7 @@ function CreateEditForm() {
     const newForm = loadForm.value;
     newForm.sections = sections;
     newForm.draft = false;
+    newForm.previewLink.close = moment();
     await FORM.updateForm(loadForm.value._id, newForm);
     refetch({ programId: programId });
   }

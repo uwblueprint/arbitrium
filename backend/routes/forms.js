@@ -24,7 +24,6 @@ router.get("/submission/:submissionId", (req, res) => {
       }
     })
     .then(function(found) {
-      console.log(found);
       const result = found;
       result.sections = result.sections.filter(
         (section) => section.deleted !== 1
@@ -34,6 +33,29 @@ router.get("/submission/:submissionId", (req, res) => {
     .catch(function(err) {
       console.error(
         `Error getting form with submission ID = ${req.params.submissionId}`
+      );
+      res.status(500).send(err);
+    });
+});
+
+// Get form with previewID (no auth required)
+router.get("/preview/:previewId", (req, res) => {
+  db["Authentication"].forms
+    .findOne({
+      "previewLink._id": req.params.previewId
+    })
+    .then(function(found) {
+      console.log(found);
+      const result = found;
+      result.sections = result.sections.filter(
+        (section) => section.deleted !== 1
+      );
+      res.status(200).json(result);
+    })
+    .catch(function(err) {
+      console.log(err);
+      console.error(
+        `Error getting form with form ID = ${req.params.previewId}`
       );
       res.status(500).send(err);
     });
