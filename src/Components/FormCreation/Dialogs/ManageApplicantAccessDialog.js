@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import Dialog from "../Common/Dialogs/Dialog";
+import Dialog from "../../Common/Dialogs/Dialog";
 import Close from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 

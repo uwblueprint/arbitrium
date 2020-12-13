@@ -72,7 +72,7 @@ export const defaultFormState: DefaultFormState = {
   description: "",
   sections: sectionsStarter,
   previewLink: defaultLink,
-  submissionLinks: []
+  submissionLinks: [defaultLink]
 };
 
 export const CreateEditFormContext = createContext<FormContext | undefined>(

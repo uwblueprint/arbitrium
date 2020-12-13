@@ -12,6 +12,7 @@ import { AuthContext } from "../../Authentication/Auth.js";
 import * as FORM from "../../requests/forms.js";
 import usePromise from "../../Hooks/usePromise";
 import CreateEditFormHeader from "./CreateEditFormHeader";
+import PublishedFormHeader from "./PublishedFormHeader";
 import {
   defaultFormState,
   defaultNewSection
@@ -83,6 +84,8 @@ function CreateEditForm() {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+  const [isPublished, setPublished] = useState(false);
+  const [previewLink, setPreviewLink] = useState("Loading Link");
   console.log(window.location.host);
   console.log(window.location);
   const submissionLink =
@@ -163,6 +166,9 @@ function CreateEditForm() {
       name: loadForm.value.name,
       description: loadForm.value.description
     });
+
+    setPublished(!loadForm.value.draft);
+    setPreviewLink(submissionLink + loadForm.value.previewLink._id);
 
     //Set the active form to be the first one
     //updateActiveSection(0);
@@ -409,6 +415,14 @@ function CreateEditForm() {
     await FORM.updateForm(loadForm.value._id, newForm);
   }
 
+  async function publishForm() {
+    const newForm = loadForm.value;
+    newForm.sections = sections;
+    newForm.draft = false;
+    await FORM.updateForm(loadForm.value._id, newForm);
+    refetch({ programId: programId });
+  }
+
   //TODO: Add header customization here
 
   //When we move a question/section this uniquekey string will be changed
@@ -421,17 +435,28 @@ function CreateEditForm() {
     });
   });
   console.log(sections);
+  console.log(loadForm.value);
   return (
     <div>
-      <CreateEditFormHeader
-        {...headerData}
-        onChange={updateHeader}
-        previewLink={
-          !loadForm.isPending && submissionLink + loadForm.value.previewLink._id
-        }
-        id={"header_" + 1}
-        key={1}
-      />
+      {isPublished ? (
+        <PublishedFormHeader
+          {...headerData}
+          onChange={updateHeader}
+          previewLink={previewLink}
+          handlePublish={publishForm}
+          id={"header_" + 1}
+          key={1}
+        />
+      ) : (
+        <CreateEditFormHeader
+          {...headerData}
+          onChange={updateHeader}
+          previewLink={previewLink}
+          handlePublish={publishForm}
+          id={"header_" + 1}
+          key={1}
+        />
+      )}
       <ControlledDialogTrigger
         showDialog={showMoveSectionsDialog}
         Dialog={CreateEditFormMoveSectionDialog}
