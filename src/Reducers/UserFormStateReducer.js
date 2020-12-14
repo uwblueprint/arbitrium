@@ -2,8 +2,6 @@ import { produce, enableMapSet } from "immer";
 
 enableMapSet();
 
-export const EDIT_NAME = "EDIT_NAME";
-export const EDIT_PREFERRED_NAME = "EDIT_PREFERRED_NAME";
 export const EDIT_EMAIL = "EDIT_EMAIL";
 export const EDIT_ROLE = "EDIT_ROLE";
 export const EDIT_PROGRAMS = "EDIT_PROGRAMS";
@@ -11,12 +9,6 @@ export const EDIT_PROGRAMS = "EDIT_PROGRAMS";
 export function userFormStateReducer(formState, action) {
   return produce(formState, (draftFormState) => {
     switch (action.type) {
-      case EDIT_NAME:
-        draftFormState.name = action.name;
-        break;
-      case EDIT_PREFERRED_NAME:
-        draftFormState.preferredName = action.name;
-        break;
       case EDIT_EMAIL:
         draftFormState.email = action.email;
         break;

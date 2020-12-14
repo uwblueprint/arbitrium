@@ -9,6 +9,13 @@ import NewUserDialog from "./NewUserDialog";
 import UserManagementTable from "./UserManagementTable";
 import { connect } from "react-redux";
 
+const rolesMap = {
+  ADMIN: "Admin",
+  ADMIN_REVIEWER: "Admin and Reviewer",
+  REVIEWER: "Reviewer",
+  GUEST: "Guest"
+};
+
 const Wrapper = styled.div`
   margin-top: 50px;
   text-align: left;
@@ -33,21 +40,18 @@ const Header = styled.div`
 
 // convert fetched users to table format
 // fetched: array
-function convertToTableData(fetched, programs) {
+function convertToTableData(fetched, programId) {
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
-    programAccess: (user.programs || [])
-      .filter((p) => programs.find((prog) => prog._id === p.id))
-      .map((p) => p.displayName),
-    role: user.admin ? "Admin" : "Reviewer",
+    role: rolesMap[user.role],
     userLink: (
       <div className="button-container">
         <DialogTriggerButton
           Dialog={EditUserDialog}
           closeOnEsc={true}
           variant="outlined"
-          dialogProps={{ data: user }}
+          dialogProps={{ data: user, programId: programId }}
         >
           Edit
         </DialogTriggerButton>
@@ -56,22 +60,20 @@ function convertToTableData(fetched, programs) {
   }));
 }
 
-function UserManagement({ program }) {
+function UserManagement({ programId }) {
   const [loadUsers, reloadUsers] = usePromise(
-    GET.getAllProgramUsers,
-    { program },
-    [program]
+    GET.getAllProgramUsersAPI,
+    programId,
+    [programId]
   );
-
-  const [programs] = usePromise(GET.getAllProgramsAPI, {}, []);
 
   const users = useMemo(
     () =>
       convertToTableData(
         loadUsers.value.filter((u) => !u.deleted),
-        programs.value
+        programId
       ),
-    [loadUsers, programs]
+    [loadUsers, programId]
   );
 
   return (
@@ -79,14 +81,15 @@ function UserManagement({ program }) {
       {!loadUsers.isPending ? (
         <>
           <Header>
-            <h1 style={{ color: "black" }}>User Management</h1>
+            <h1 style={{ color: "black" }}>Manage User Access</h1>
             <div className="button-container">
               <DialogTriggerButton
                 Dialog={NewUserDialog}
                 closeOnEsc={true}
                 alertParent={reloadUsers}
+                dialogProps={{ programId: programId }}
               >
-                Create New User
+                Add new user
               </DialogTriggerButton>
             </div>
           </Header>
@@ -103,7 +106,7 @@ function UserManagement({ program }) {
 }
 
 const mapStateToProps = (state) => ({
-  program: state.program
+  programId: state.program
 });
 
 export default connect(mapStateToProps)(UserManagement);

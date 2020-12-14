@@ -11,7 +11,7 @@ import { AuthContext } from "../../Authentication/Auth.js";
 
 import {
   getCandidateSubmissions,
-  getAllUsersAPI,
+  getAllProgramUsersAPI,
   getAllRankingsAPI,
   getAllReviewsAPI
 } from "../../requests/get";
@@ -168,7 +168,7 @@ function AllCandidates({ history, program }) {
   // eslint-disable-next-line no-unused-vars
   const { currentUser, appUser } = useContext(AuthContext);
   const [applications] = usePromise(getCandidateSubmissionInfo, {}, []);
-  const [allUsers] = usePromise(getAllUsersAPI, {}, []);
+  const [allUsers] = usePromise(getAllProgramUsersAPI, program, []);
   const [comments] = usePromise(
     getComments,
     { applications: applications.value, allUsers: allUsers.value },
@@ -177,17 +177,15 @@ function AllCandidates({ history, program }) {
   const commentsDownloadLink = useRef();
   const appsDownloadLink = useRef();
 
+  // TODO: remove filtering when dev permissions are created
   const totalReviewers = useMemo(
     () =>
       allUsers.value.filter(
         (user) =>
-          Array.isArray(user.programs) &&
-          program &&
-          user.programs.some((p) => p.id === program) &&
           !user.email.includes("uwblueprint.org") &&
           !user.email.includes("test.com")
       ).length,
-    [allUsers, program]
+    [allUsers]
   );
 
   function exportAllData() {

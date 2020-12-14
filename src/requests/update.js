@@ -1,4 +1,4 @@
-import { POST, PUT } from "./Helper.js";
+import { PATCH, POST, PUT } from "./Helper.js";
 
 async function createFeedbackAPI(databody) {
   return POST("/api/feedback", databody);
@@ -20,6 +20,10 @@ async function updateUserAPI(databody) {
   return POST("/api/users", databody);
 }
 
+async function createOrAddUserProgramAPI(programId, databody) {
+  return POST(`/api/programs/${programId}/user`, databody);
+}
+
 async function updateUserProgramMembershipAPI(databody) {
   return PUT("/api/users/set-program-memberships", databody);
 }
@@ -28,8 +32,8 @@ async function updateUserProgramAPI(databody) {
   return PUT("/api/users/set-program", databody);
 }
 
-async function createUserAPI(databody) {
-  return POST("/api/users/create-user", databody);
+async function updateUserProgramRoleAPI(programId, userId, databody) {
+  return PATCH(`/api/programs/${programId}/user/${userId}`, databody);
 }
 
 export {
@@ -37,8 +41,9 @@ export {
   updateReviewAPI,
   updateStackedAPI,
   updateUserAPI,
-  createUserAPI,
   updateUserProgramAPI,
   updateUserProgramMembershipAPI,
+  createOrAddUserProgramAPI,
+  updateUserProgramRoleAPI,
   sendFeedbackEmail
 };

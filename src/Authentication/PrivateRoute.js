@@ -9,19 +9,22 @@ import { connect } from "react-redux";
 import routes from "../appRoutes";
 import * as GET from "../requests/get";
 import usePromise from "../Hooks/usePromise";
+import * as userRoles from "../Constants/UserRoles";
 
 //This route must only require the user to be logged in. (no groups needed)
 export const defaultRouteAfterLogin = "/home";
 
 function doesRoleProvideAccess(routeRole, userRole) {
-  if (routeRole === "ADMIN") {
-    return userRole === "ADMIN" || userRole === "ADMIN_REVIEWER";
-  } else if (routeRole === "REVIEWER") {
+  if (routeRole === userRoles.ADMIN) {
     return (
-      userRole === "REVIEWER" ||
-      userRole === "GUEST" ||
-      userRole === "ADMIN" ||
-      userRole === "ADMIN_REVIEWER"
+      userRole === userRoles.ADMIN || userRole === userRoles.ADMIN_REVIEWER
+    );
+  } else if (routeRole === userRoles.REVIEWER) {
+    return (
+      userRole === userRoles.REVIEWER ||
+      userRole === userRoles.GUEST ||
+      userRole === userRoles.ADMIN ||
+      userRole === userRoles.ADMIN_REVIEWER
     );
   } else {
     return userRole === "";
@@ -39,7 +42,7 @@ function PrivateRoute({
   const { programDataIsLoading } = useContext(ProgramContext);
   const userId = appUser && appUser.userId;
 
-  const [userPrograms] = usePromise(GET.getAllUserPrograms, { userId });
+  const [userPrograms] = usePromise(GET.getAllUserProgramsAPI, { userId });
   const [hasAccess, setAccess] = useState(null);
   const [headerRoutes, setHeaderRoutes] = useState([]);
   useEffect(() => {

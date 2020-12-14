@@ -91,6 +91,7 @@ router.get("/:programId/users", function(req, res) {
 });
 
 // Add a user to the program with the specified role, if they are not yet in the program
+// Requires that the users collection has a unique index on the email field
 router.post("/:programId/user", async function(req, res) {
   const userData = {
     email: req.body.email,
@@ -182,7 +183,12 @@ router.post("/:programId/user", async function(req, res) {
     res.status(201).json(userData);
   } catch (e) {
     if (e.code === 11000) {
-      res.status(400).send("User is already in program.");
+      res.status(400).send({
+        type: "DuplicateKey",
+        code: e.code,
+        message: `${userData.email} is already in this program.`,
+        error: e
+      });
     } else {
       res.status(400).send(e);
     }
@@ -226,7 +232,7 @@ router.patch("/:programId/user/:userId", function(req, res) {
 });
 
 // Remove a user from a program
-router.delete("/:programId/users/:userId", function(req, res) {
+router.delete("/:programId/user/:userId", function(req, res) {
   db["Authentication"].users
     .updateOne(
       { userId: req.params.userId },
