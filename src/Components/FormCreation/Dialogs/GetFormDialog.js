@@ -36,7 +36,7 @@ const WarningMessage = styled.div`
 const WarningMessageText = styled.div`
   position: absolute;
   left: 11.65%;
-  right: 25.12%;
+  right: 20.12%;
   top: 106px;
   font-family: Roboto;
   font-size: 14px;
@@ -198,13 +198,13 @@ function GetFormDialog({
         </svg>
         {publish ? (
           <WarningMessageText>
-            <p>
+            <div>
               Please review the form <b>before</b> sending to applicants.
-            </p>
-            <p>
-              Changes to the form <b>after publishing</b> will require
-              assistance from Arbitrium support.
-            </p>
+              <div>
+                Changes to the form <b>after publishing</b> will require
+                assistance from Arbitrium support.
+              </div>
+            </div>
           </WarningMessageText>
         ) : (
           <WarningMessageText>
