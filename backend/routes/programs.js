@@ -32,6 +32,9 @@ router.get("/all", function(req, res) {
 //This route will be used for all update actions for a program.
 //Inlcuding Deletes, which will always be soft
 router.post("/", function(req, res) {
+  // create a program
+  // add all org admins to the program with role "ADMIN"
+  // create an S3 bucket
   db["Authentication"].programs
     .updateOne(
       {

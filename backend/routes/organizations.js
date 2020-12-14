@@ -1,26 +1,12 @@
 const express = require("express");
 
-//Allows api routes to be posted
 const router = express.Router();
-
-//Database connections: returns object of connections (connections["item"])
 const db = require("../mongo.js");
 const addConnection = require("../mongo.js").addConnection;
 
 const { isAuthenticated } = require("../middlewares/auth");
 
 router.use(isAuthenticated);
-
-router.get("/all", function(req, res) {
-  db["Authentication"].organizations
-    .find()
-    .then(function(found) {
-      res.json(found);
-    })
-    .catch(function(err) {
-      res.send(err);
-    });
-});
 
 router.post("/", function(req, res) {
   db["Authentication"].organizations

@@ -4,9 +4,12 @@ import styled from "styled-components";
 import usePromise from "../../Hooks/usePromise";
 import * as GET from "../../requests/get";
 import ProgramManagementTable from "./ProgramManagementTable";
+import DialogTriggerButton from "../Common/Dialogs/DialogTriggerButton";
+import NewProgramDialog from "./NewProgramDialog";
 import { AuthContext } from "../../Authentication/Auth";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
@@ -102,19 +105,19 @@ function ProgramManagement() {
         role: rolesMap[program.role],
         archived: program.archived,
         // status: "To Do",
+        // TODO: update user's currentProgram
         link: (
           <div className="button-container">
-            {/*}
-              <DialogTriggerButton
-                Dialog={EditUserDialog}
-                closeOnEsc={true}
-                variant="outlined"
-                dialogProps={{ data: user }}
+            <a href={"/admin/applications"}>
+              <Button
+                variant="contained"
+                color="primary"
+                target="_blank"
+                value="OpenApplication"
               >
-                Edit
-              </DialogTriggerButton>
-              */}
-            Hello
+                View
+              </Button>
+            </a>
             <IconButton
               aria-label="actions"
               aria-controls="actions-menu"
@@ -135,17 +138,20 @@ function ProgramManagement() {
           <>
             <Header>
               <h1 style={{ color: "black" }}>Programs</h1>
-              <div className="button-container">
-                {/*}
-              <DialogTriggerButton
-                Dialog={}
-                closeOnEsc={true}
-                alertParent={reloadUsers}
-              >
-                Add New
-              </DialogTriggerButton>
-              */}
-              </div>
+              {appUser.adminOrganization && (
+                <div className="button-container">
+                  <DialogTriggerButton
+                    Dialog={NewProgramDialog}
+                    dialogProps={{
+                      userId: userId,
+                      orgId: appUser.adminOrganization
+                    }}
+                    closeOnEsc={true}
+                  >
+                    Add New
+                  </DialogTriggerButton>
+                </div>
+              )}
             </Header>
             <ProgramManagementTable
               data={programsData}

@@ -73,10 +73,6 @@ async function getAllUserProgramsAPI({ userId }) {
   return GET(`/api/users/${userId}/programs`);
 }
 
-async function getAllOrganizationsAPI() {
-  return GET(`/api/organizations/all`);
-}
-
 export {
   getAllStackingsAPI,
   getAllApplicationsAPI,
@@ -94,6 +90,5 @@ export {
   getAllProgramsAPI,
   getAllFirebaseUsers,
   getAllProgramUsersAPI,
-  getAllUserProgramsAPI,
-  getAllOrganizationsAPI
+  getAllUserProgramsAPI
 };

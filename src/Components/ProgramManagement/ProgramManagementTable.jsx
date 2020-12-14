@@ -66,8 +66,7 @@ function ProgramManagementTable({ archived, ...props }) {
           columnStyle: columnStyle,
           search: true,
           showTitle: false,
-          exportButton: true,
-          exportAllData: true
+          paging: false
         }}
       />
     </div>
