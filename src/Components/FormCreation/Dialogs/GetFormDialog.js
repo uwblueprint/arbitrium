@@ -198,14 +198,18 @@ function GetFormDialog({
         </svg>
         {publish ? (
           <WarningMessageText>
-            Please review the form <b>before</b> sending to applicants Changes
-            to the form <b>after publishing</b> will require assitance from
-            Arbitrium support.
+            <p>
+              Please review the form <b>before</b> sending to applicants.
+            </p>
+            <p>
+              Changes to the form <b>after publishing</b> will require
+              assistance from Arbitrium support.
+            </p>
           </WarningMessageText>
         ) : (
           <WarningMessageText>
             These links are meant for reviewing the form <b>before</b> allowing
-            applicants to apply. Response submitted with this link{" "}
+            applicants to apply. Responses submitted with this link{" "}
             <b>will not</b> be saved.
           </WarningMessageText>
         )}

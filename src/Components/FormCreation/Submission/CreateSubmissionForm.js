@@ -100,7 +100,7 @@ function CreateSubmissionForm({ match }) {
       const link = loadForm.value.submissionLinks.find(
         (link) => link._id === match.params.formId
       );
-      //Has the form closed? AND is it a draft?
+      //Has the form closed? AND is it not a draft?
       setValidLink(
         !moment(link.close).isBefore(moment()) && !loadForm.value.draft
       );

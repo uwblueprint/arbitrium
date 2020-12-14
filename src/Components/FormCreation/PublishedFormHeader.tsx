@@ -46,14 +46,10 @@ const TextWrapper = styled.div`
 `;
 
 type Props = {
-  name: string;
-  description: string;
   submissionLink: string;
-  onChange: (name: string, description: string) => void;
 };
 
 function PublishedFormHeader({
-  description,
   submissionLink
 }: Props): React.ReactElement<typeof Header> {
   const [showPublishedFormDialog, setshowPublishedFormDialog] = useState(false);
@@ -97,8 +93,8 @@ function PublishedFormHeader({
           </div>
           <p style={{ color: "white" }}>
             {" "}
-            If you published the form erroneously, make a copy of this form to
-            keep editing.{" "}
+            If you published the form erroneously, make a copy of this program
+            to keep editing.{" "}
           </p>
           <p style={{ color: "white" }}>
             {" "}

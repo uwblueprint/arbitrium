@@ -16,11 +16,11 @@ const { isAuthenticated } = require("../middlewares/auth");
 //Create/Get a form is done by programId and everything else is done by formId
 
 // Get form with submissionID (no auth required)
-router.get("/submission/:submissionId", (req, res) => {
+router.get("/submit/:submissionLinkID", (req, res) => {
   db["Authentication"].forms
     .findOne({
       submissionLinks: {
-        $elemMatch: { _id: ObjectId(req.params.submissionId) }
+        $elemMatch: { _id: ObjectId(req.params.submissionLinkID) }
       }
     })
     .then(function(found) {
@@ -32,7 +32,7 @@ router.get("/submission/:submissionId", (req, res) => {
     })
     .catch(function(err) {
       console.error(
-        `Error getting form with submission ID = ${req.params.submissionId}`
+        `Error getting form with submission ID = ${req.params.submissionLinkID}`
       );
       res.status(500).send(err);
     });

@@ -192,7 +192,7 @@ function PublishedFormDialog({ close, link, copyLinkToClipboard }) {
 
         <WarningMessageText>
           <p>
-            <b>Your form has been published</b>
+            <b>Your form has been published!</b>
           </p>
           <p>
             If you need any changes made to the form, please contact Arbitrium
