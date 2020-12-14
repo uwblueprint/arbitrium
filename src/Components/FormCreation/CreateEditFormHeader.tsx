@@ -68,24 +68,20 @@ const FormSettingsOutlineIcon = styled(SettingsOutlinedIcon)`
   color: #2261ad;
 `;
 
-type HeaderData = {
-  name: string;
-  description: string;
-  previewLink: string;
-};
-
 type Props = {
   name: string;
   description: string;
   previewLink: string;
   onChange: (name: string, description: string) => void;
+  onFormSettingsClick: () => void;
 };
 
 function CreateEditFormHeader({
   name,
   description,
   previewLink,
-  onChange
+  onChange,
+  onFormSettingsClick
 }: Props): React.ReactElement<typeof Header> {
   const [formTitle, setFormTitle] = useState(name);
   const [formDescription, setFormDescription] = useState(description);
@@ -127,9 +123,7 @@ function CreateEditFormHeader({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFormTitle(e.target.value)
           }
-          onBlur={() => {
-            updateHeader();
-          }}
+          onBlur={updateHeader}
         />
         <DescriptionInput
           multiline
@@ -138,9 +132,7 @@ function CreateEditFormHeader({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setFormDescription(e.target.value)
           }
-          onBlur={() => {
-            updateHeader();
-          }}
+          onBlur={updateHeader}
         ></DescriptionInput>
       </InputWrapper>
       <ButtonWrapper>
@@ -205,8 +197,12 @@ function CreateEditFormHeader({
         }}
         message={"Copied to clipboard."}
       />
-      <Button color="primary" startIcon={<FormSettingsOutlineIcon />}>
-        Form Settngs
+      <Button
+        color="primary"
+        startIcon={<FormSettingsOutlineIcon />}
+        onClick={onFormSettingsClick}
+      >
+        Form Settings
       </Button>
     </Header>
   );

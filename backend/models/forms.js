@@ -33,6 +33,25 @@ const link = new mongoose.Schema({
   }
 });
 
+const formSettings = new mongoose.Schema({
+  colour: {
+    type: String,
+    default: "2261AD"
+  },
+  banner: {
+    data: {
+      type: Buffer
+    },
+    contentType: {
+      type: String
+    }
+  },
+  confirmationMessage: {
+    type: String,
+    default: "Your response has been recorded."
+  }
+});
+
 //Yoptions and Xoptions explained:
 //Each Xoption is a collumn and ech Yoption is a row
 //Each option contains a string and a min/max for validations.
@@ -134,6 +153,9 @@ const formsSchema = new mongoose.Schema(
     },
     programId: {
       type: String
+    },
+    settings: {
+      type: formSettings
     }
   },
   { collection: "Forms" }

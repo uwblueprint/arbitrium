@@ -27,6 +27,7 @@ import { Divider } from "@material-ui/core";
 import customFormQuestionsReducer from "../../Reducers/CustomFormQuestionsReducer";
 import { Droppable } from "react-beautiful-dnd";
 import * as FORM from "../../requests/forms.js";
+import FormSettingsContext from "./FormSettingsContext";
 
 const useStyles = makeStyles({
   //Wraps the card
@@ -51,43 +52,9 @@ const useStyles = makeStyles({
     }
   },
 
-  root: {
-    borderRadius: 4,
-    borderTop: "8px solid #2261AD",
-    boxShadow: "0 2px 3px 0px #00000033",
-    marginBottom: 20,
-    minWidth: 816,
-    width: 816
-  },
-  rootActive: {
-    borderRadius: 4,
-    borderTop: "8px solid #2261AD",
-    borderLeft: "4px solid #2261AD",
-    boxShadow: "0 2px 3px 0px #00000033",
-    marginBottom: 20,
-    minWidth: 812,
-    width: 812
-  },
-
   //Question Title and Menu Wrapper
   sectionTitleAndMenuWrapper: {
     display: "flex"
-  },
-
-  //Display for "Section 1 of 2"
-  section_index: {
-    borderTopLeftRadius: "4px",
-    borderTopRightRadius: "4px",
-    marginBottom: "4px",
-    fontSize: "14px",
-    backgroundColor: "#2261AD",
-    color: "white",
-    width: "fit-content",
-    paddingLeft: "10px",
-    paddingRight: "10px",
-    paddingTop: "8px",
-    paddingBottom: "8px",
-    fontWeight: "500"
   },
 
   //Section Title
@@ -136,11 +103,38 @@ const CardWrapper = styled.div`
   display: flex;
 `;
 
+//Display for "Section 1 of 2"
+const SectionTab = styled.span`
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  margin-bottom: 0px;
+  font-size: 14px;
+  background-color: ${(props) => `#${props.themeColour}`};
+  color: white;
+  width: fit-content;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+`;
+
+const SectionCard = styled(Card)`
+  && {
+    border-radius: 4px;
+    border-top: ${(props) => `8px solid #${props.themeColour}`};
+    border-left: ${(props) =>
+      props.isActive ? `4px solid #${props.themeColour}` : "none"};
+    box-shadow: 0 2px 3px 0px #00000033;
+    margin-bottom: 20px;
+    min-width: 816px;
+    width: 816px;
+  }
+`;
+
 function FormSection({
   numSections,
   sectionNum,
   sectionData,
-  questionData,
   updateActiveSection,
   active,
   handleAddSection,
@@ -160,8 +154,9 @@ function FormSection({
   const [activeQuestion, setActiveQuestion] = useState(initialActiveQuestion);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
-    questionData
+    sectionData ? sectionData.questions : []
   );
+  const { themeColour } = useContext(FormSettingsContext);
 
   //States to manage content of section card
   const [title, setTitle] = useState(sectionData.name);
@@ -330,14 +325,13 @@ function FormSection({
 
   return (
     <div>
-      <span className={classes.section_index}>
+      <SectionTab themeColour={themeColour}>
         Section {sectionNum} of {numSections}
-      </span>
+      </SectionTab>
       <CardWrapper>
-        <Card
-          className={
-            active && activeQuestion === -1 ? classes.rootActive : classes.root
-          }
+        <SectionCard
+          themeColour={themeColour}
+          isActive={active && activeQuestion === -1}
           onClick={() => setSectionAsActive(sectionNum - 1)}
         >
           <CardContent
@@ -456,7 +450,7 @@ function FormSection({
               </p>
             </CardContent>
           )}
-        </Card>
+        </SectionCard>
         {active && activeQuestion === -1 ? (
           <AddCardComponent
             handleAddSection={handleAddSection}
@@ -491,6 +485,7 @@ function FormSection({
                   handleQuestionValidationsUpdate={
                     handleQuestionValidationsUpdate
                   }
+                  themeColour={themeColour}
                 />
                 <div style={{ marginLeft: snapshot.isDraggingOver ? 820 : 0 }}>
                   {active && activeQuestion === questionKey ? (

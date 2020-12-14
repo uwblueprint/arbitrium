@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { Button, Divider, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -34,23 +35,6 @@ const useStyles = makeStyles({
     "&:last-child": {
       paddingBottom: 16
     }
-  },
-
-  //CSS for the card component
-  root: {
-    fontSize: 14,
-    borderRadius: 4,
-    boxShadow: "0 2px 3px 1px #00000033",
-    marginBottom: 20,
-    width: 816
-  },
-  rootActive: {
-    fontSize: 14,
-    borderRadius: 4,
-    borderLeft: "4px solid #2261AD",
-    boxShadow: "0 2px 3px 1px #00000033",
-    marginBottom: 20,
-    width: 812
   },
 
   //Question Title and Menu Wrapper
@@ -161,6 +145,19 @@ const useStyles = makeStyles({
   }
 });
 
+//CSS for the card component
+const QuestionCard = styled(Card)`
+  && {
+    font-size: 14px;
+    border-radius: 0;
+    border-left: ${(props) =>
+      props.isActive ? `4px solid #${props.themeColour}` : "none"};
+    box-shadow: 0 2px 3px 1px #cccccc;
+    margin-bottom: 20px;
+    width: 816px;
+  }
+`;
+
 const StyledSwitch = withStyles({
   switchBase: {
     color: "#48484a"
@@ -181,7 +178,8 @@ function FormCard({
   handleQuestionTitleUpdate,
   handleQuestionTypeUpdate,
   handleQuestionContentUpdate,
-  handleRequiredToggle
+  handleRequiredToggle,
+  themeColour
 }) {
   const classes = useStyles();
   const [title, setTitle] = useState(card.name);
@@ -303,9 +301,10 @@ function FormCard({
             {...provided.dragHandleProps}
           >
             <div className={classes.container}>
-              <Card
+              <QuestionCard
+                themeColour={themeColour}
                 onClick={() => handleActive(sectionKey, questionKey)}
-                className={active ? classes.rootActive : classes.root}
+                isActive={active}
               >
                 <CardContent className={classes.content}>
                   <div
@@ -489,7 +488,7 @@ function FormCard({
                     </div>
                   ) : null}
                 </CardContent>
-              </Card>
+              </QuestionCard>
             </div>
           </div>
         )}

@@ -23,6 +23,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CreateEditFormMoveSectionDialog from "./CreateEditFormMoveSectionDialog";
 import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
 import { DragDropContext } from "react-beautiful-dnd";
+import FormSettingsDrawer from "./FormSettingsDrawer";
+import FormSettingsContext from "./FormSettingsContext";
 
 const useStyles = makeStyles({
   snackbar: {
@@ -44,19 +46,6 @@ const FormWrapper = styled.div`
   padding-left: 15%;
 `;
 
-const DialogOverlay = styled.div`
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 150%;
-  width: 100vw;
-  z-index: 110;
-  background: rgba(0, 0, 0, 0.5);
-  .dialogButton {
-    text-transform: none;
-  }
-`;
-
 //Users can access this page in two ways
 //1. By clicking on the form from within a table
 //TODO: 2. By pasting the url with the programId in it
@@ -71,6 +60,14 @@ function CreateEditForm() {
     customFormSectionsReducer,
     []
   );
+
+  const [formSettings, setFormSettings] = useState({
+    themeColour: "2261AD",
+    headerImage: null,
+    confirmationMessage: "Your response has been recorded."
+  });
+
+  const [showFormSettings, setShowFormSettings] = useState(false);
   const [showMoveSectionsDialog, setShowMoveSectionsDialog] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
   const programId = appUser.currentProgram;
@@ -97,12 +94,26 @@ function CreateEditForm() {
   ] = useState(false);
   const [deletedSection, setDeletedSection] = useState(null);
 
+  /*****************************************************************************
+   * Form customization
+   *****************************************************************************/
+
+  const onFormSettingsSave = useCallback((newSettings) => {
+    setFormSettings(newSettings);
+  }, []);
+
+  const handleOpenFormSettings = useCallback(() => {
+    setShowFormSettings(true);
+  }, []);
+
+  const handleCloseFormSettings = useCallback(() => {
+    setShowFormSettings(false);
+  }, []);
+
   //----------------------------------------------------------------------------
   //FORM INIT/SAVE FUNCTIONS
   //----------------------------------------------------------------------------
 
-  //usecallback prevents functions from being re-created on every render.
-  //This is useful when a function is a dependency of useEffect (otherwise you get infinite renders)
   const saveForm = useCallback(() => {
     if (
       !loadForm.isPending &&
@@ -396,8 +407,6 @@ function CreateEditForm() {
     await FORM.updateForm(loadForm.value._id, newForm);
   }
 
-  //TODO: Add header customization here
-
   //When we move a question/section this uniquekey string will be changed
   //which will cause a complete re-render of the formSections
   let uniquekey = "";
@@ -410,85 +419,88 @@ function CreateEditForm() {
 
   return (
     <div>
-      <CreateEditFormHeader
-        {...headerData}
-        onChange={updateHeader}
-        id={"header_" + 1}
-        key={1}
-      />
-      <ControlledDialogTrigger
-        showDialog={showMoveSectionsDialog}
-        Dialog={CreateEditFormMoveSectionDialog}
-        dialogProps={{
-          onClose: closeMoveSectionDialog,
-          onSubmit: handleMoveSection,
-          initSections: sections
-        }}
-      />
-      <DragDropContext onDragEnd={onDragEnd}>
-        {sections &&
-          sections.map((section, key) => (
-            <div key={uniquekey + section._id}>
-              <FormWrapper key={section._id} id={"section_" + key}>
-                <FormSection
-                  key={key + "_section"}
-                  formId={loadForm.value._id}
-                  numSections={sections.length}
-                  refetch={refetch}
-                  sectionNum={key + 1}
-                  sectionData={section}
-                  questionData={section.questions}
-                  updateActiveSection={updateActiveSection}
-                  setInitialActiveQuestion={setInitialActiveQuestion}
-                  initialActiveQuestion={initialActiveQuestion}
-                  active={activeSection === key}
-                  handleAddSection={handleAddSection}
-                  handleTitleUpdate={handleTitleUpdate}
-                  handleDescriptionUpdate={handleDescriptionUpdate}
-                  handleSectionTypeUpdate={handleSectionTypeUpdate}
-                  handleMoveSection={handleMoveSection}
-                  handleDeleteSection={handleDeleteSection}
-                  setShowMoveSectionsDialog={setShowMoveSectionsDialog}
-                />
-              </FormWrapper>
-            </div>
-          ))}
-      </DragDropContext>
-      {showDeleteSectionConfirmation && (
-        <>
-          <DialogOverlay />
-          <DeleteSectionConfirmation
-            confirm={deleteSection}
-            close={closeDeleteSectionConfirmation}
-            sectionName={sections[activeSection].name}
-            questionCount={sections[activeSection].questions.length}
-          />
-        </>
-      )}
-      {deletedSection && (
-        <Snackbar
-          ContentProps={{ classes: { root: classes.snackbar } }}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
-          }}
-          open={deletedSection}
-          message={
-            deletedSection ? '"' + deletedSection.name + '" deleted' : ""
-          }
-          action={
-            <React.Fragment>
-              <Button
-                classes={{ label: classes.snackbar_button_label }}
-                size="small"
-                onClick={undoDeleteSection}
-              >
-                UNDO
-              </Button>
-            </React.Fragment>
-          }
+      <FormSettingsContext.Provider value={formSettings}>
+        <CreateEditFormHeader
+          {...headerData}
+          onChange={updateHeader}
+          id={"header_" + 1}
+          key={1}
+          onFormSettingsClick={handleOpenFormSettings}
         />
-      )}
+        <FormSettingsDrawer
+          open={showFormSettings}
+          handleCloseFormSettings={handleCloseFormSettings}
+          onSave={setFormSettings}
+        />
+        <ControlledDialogTrigger
+          showDialog={showMoveSectionsDialog}
+          Dialog={CreateEditFormMoveSectionDialog}
+          dialogProps={{
+            onClose: closeMoveSectionDialog,
+            onSubmit: handleMoveSection,
+            initSections: sections
+          }}
+        />
+        <DragDropContext onDragEnd={onDragEnd}>
+          {sections &&
+            sections.map((section, key) => (
+              <div key={uniquekey + section._id}>
+                <FormWrapper key={section._id} id={"section_" + key}>
+                  <FormSection
+                    key={key + "_section"}
+                    numSections={sections.length}
+                    sectionNum={key + 1}
+                    sectionData={section}
+                    updateActiveSection={updateActiveSection}
+                    active={activeSection === key}
+                    handleAddSection={handleAddSection}
+                    handleTitleUpdate={handleTitleUpdate}
+                    handleDescriptionUpdate={handleDescriptionUpdate}
+                    handleSectionTypeUpdate={handleSectionTypeUpdate}
+                    handleMoveSection={handleMoveSection}
+                    handleDeleteSection={handleDeleteSection}
+                    setShowMoveSectionsDialog={setShowMoveSectionsDialog}
+                  />
+                </FormWrapper>
+              </div>
+            ))}
+        </DragDropContext>
+        <ControlledDialogTrigger
+          showDialog={showDeleteSectionConfirmation}
+          Dialog={DeleteSectionConfirmation}
+          dialogProps={{
+            confirm: deleteSection,
+            close: closeDeleteSectionConfirmation,
+            sectionName: sections.length && sections[activeSection].name,
+            questionCount:
+              sections.length && sections[activeSection].questions.length
+          }}
+        />
+        {deletedSection && (
+          <Snackbar
+            ContentProps={{ classes: { root: classes.snackbar } }}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left"
+            }}
+            open={deletedSection}
+            message={
+              deletedSection ? '"' + deletedSection.name + '" deleted' : ""
+            }
+            action={
+              <React.Fragment>
+                <Button
+                  classes={{ label: classes.snackbar_button_label }}
+                  size="small"
+                  onClick={undoDeleteSection}
+                >
+                  UNDO
+                </Button>
+              </React.Fragment>
+            }
+          />
+        )}
+      </FormSettingsContext.Provider>
     </div>
   );
 }
