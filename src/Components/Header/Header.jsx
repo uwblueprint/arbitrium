@@ -225,7 +225,11 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                             return (
                               <MenuItem
                                 key={index}
-                                onClick={() => history.push(route.path)}
+                                onClick={() =>
+                                  history.push(
+                                    route.path.replace(":programId", program)
+                                  )
+                                }
                                 visible={(
                                   route.title !== curRoute.title
                                 ).toString()}

@@ -12,6 +12,7 @@ import { AuthContext } from "../../Authentication/Auth.js";
 import * as FORM from "../../requests/forms.js";
 import usePromise from "../../Hooks/usePromise";
 import CreateEditFormHeader from "./CreateEditFormHeader";
+import PublishedFormHeader from "./PublishedFormHeader";
 import {
   defaultFormState,
   defaultNewSection
@@ -23,6 +24,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CreateEditFormMoveSectionDialog from "./CreateEditFormMoveSectionDialog";
 import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
 import { DragDropContext } from "react-beautiful-dnd";
+import moment from "moment";
 
 const useStyles = makeStyles({
   snackbar: {
@@ -83,6 +85,15 @@ function CreateEditForm() {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+  const [isPublished, setPublished] = useState(false);
+  const [previewLink, setPreviewLink] = useState(
+    "Loading Link... Please wait..."
+  );
+  const [applicantLink, setApplicantLink] = useState(
+    "Loading Link... Please wait"
+  );
+
+  const submissionLink = window.location.protocol + "//" + window.location.host;
 
   //1. Used when a drag finishes to indiate which question should be active afterwards
   //2. For the purposes of drag and drop, the child section can set its inital active question
@@ -125,7 +136,9 @@ function CreateEditForm() {
         description: defaultFormState.description,
         createdBy: appUser.userId,
         draft: true,
-        sections: defaultFormState.sections
+        sections: defaultFormState.sections,
+        previewLink: defaultFormState.previewLink,
+        submissionLinks: defaultFormState.submissionLinks
       };
 
       await FORM.createForm(data);
@@ -155,9 +168,17 @@ function CreateEditForm() {
       description: loadForm.value.description
     });
 
+    setPublished(!loadForm.value.draft);
+    setPreviewLink(
+      submissionLink + "/form-preview/" + loadForm.value.previewLink._id
+    );
+    setApplicantLink(
+      submissionLink + "/form/" + loadForm.value.submissionLinks[0]._id
+    );
+
     //Set the active form to be the first one
     //updateActiveSection(0);
-  }, [loadForm, appUser, initiateForm]);
+  }, [loadForm, appUser, initiateForm, submissionLink]);
 
   //When the sections changes we will update the form.
   //1. When an input on the section card itself changes focus OR
@@ -396,6 +417,15 @@ function CreateEditForm() {
     await FORM.updateForm(loadForm.value._id, newForm);
   }
 
+  async function publishForm() {
+    const newForm = loadForm.value;
+    newForm.sections = sections;
+    newForm.draft = false;
+    newForm.previewLink.close = moment();
+    await FORM.updateForm(loadForm.value._id, newForm);
+    refetch({ programId: programId });
+  }
+
   //TODO: Add header customization here
 
   //When we move a question/section this uniquekey string will be changed
@@ -407,15 +437,25 @@ function CreateEditForm() {
       uniquekey += question._id;
     });
   });
-
   return (
     <div>
-      <CreateEditFormHeader
-        {...headerData}
-        onChange={updateHeader}
-        id={"header_" + 1}
-        key={1}
-      />
+      {isPublished ? (
+        <PublishedFormHeader
+          submissionLink={applicantLink}
+          handlePublish={publishForm}
+          id={"header_" + 1}
+          key={1}
+        />
+      ) : (
+        <CreateEditFormHeader
+          {...headerData}
+          onChange={updateHeader}
+          previewLink={previewLink}
+          handlePublish={publishForm}
+          id={"header_" + 1}
+          key={1}
+        />
+      )}
       <ControlledDialogTrigger
         showDialog={showMoveSectionsDialog}
         Dialog={CreateEditFormMoveSectionDialog}

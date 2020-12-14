@@ -13,6 +13,16 @@ async function getForm({ programId }) {
   return GET(`/api/forms/${programId}`);
 }
 
+//The second paramater of GET is a boolean if the endpoint requires Authorization
+async function getFormBySubmission({ id }) {
+  return GET(`/api/forms/submit/${id}`, false);
+}
+
+//The second paramater of GET is a boolean if the endpoint requires Authorization
+async function getFormByPreview({ id }) {
+  return GET(`/api/forms/preview/${id}`, false);
+}
+
 async function deleteForm(formId) {
   return DELETE(`/api/forms/${formId.formId}`);
 }
@@ -53,6 +63,8 @@ async function updateQuestions(formId, sectionId, databody) {
 
 export {
   getForm,
+  getFormBySubmission,
+  getFormByPreview,
   createForm,
   deleteForm,
   updateForm,

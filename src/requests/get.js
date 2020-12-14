@@ -49,6 +49,7 @@ async function getAllStackingsAPI(user) {
   return GET(`/api/stackings/${user.user.userId}`);
 }
 
+//The second paramater of GET is a boolean if the endpoint requires Authorization
 async function getUserAPI(user) {
   return GET(`/api/users/${user.uid}`, false);
 }

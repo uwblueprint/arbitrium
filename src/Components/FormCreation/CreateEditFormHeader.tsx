@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import GetPreviewLinkDialog from "./GetPreviewLinkDialog";
+import GetFormDialog from "./Dialogs/GetFormDialog";
 import Snackbar from "@material-ui/core/Snackbar";
 
 const Header = styled.div`
@@ -75,16 +75,22 @@ type Props = {
   description: string;
   previewLink: string;
   onChange: (name: string, description: string) => void;
+  handlePublish: () => void;
 };
 
 function CreateEditFormHeader({
   name,
   description,
   previewLink,
-  onChange
+  onChange,
+  handlePublish
 }: Props): React.ReactElement<typeof Header> {
   const [formTitle, setFormTitle] = useState(name);
   const [formDescription, setFormDescription] = useState(description);
+
+  const [showPreviewLink, setShowPreviewLink] = useState(false);
+  const [showPublishDialog, setShowPublishDialog] = useState(false);
+  const [copiedPreviewLink, setCopiedPreviewLink] = useState(false);
 
   useEffect(() => {
     setFormTitle(name);
@@ -95,11 +101,14 @@ function CreateEditFormHeader({
     onChange(formTitle, formDescription);
   };
 
-  const [showPreviewLink, setShowPreviewLink] = useState(false);
-  const [copiedPreviewLink, setCopiedPreviewLink] = useState(false);
+  const publish = () => {
+    handlePublish();
+    setShowPublishDialog(false);
+  };
 
-  function closePreviewLinkDialog() {
+  function closeDialog() {
     setShowPreviewLink(false);
+    setShowPublishDialog(false);
   }
 
   const copyLinkToClipboard = () => {
@@ -162,7 +171,9 @@ function CreateEditFormHeader({
         </Button>
         <Button
           variant="contained"
-          onClick={() => {}}
+          onClick={() => {
+            setShowPublishDialog(true);
+          }}
           href="#text-buttons"
           color="primary"
           style={{
@@ -181,10 +192,22 @@ function CreateEditFormHeader({
       {showPreviewLink && (
         <>
           <DialogOverlay />
-          <GetPreviewLinkDialog
+          <GetFormDialog
             link={previewLink}
-            close={closePreviewLinkDialog}
+            close={closeDialog}
             copyLinkToClipboard={copyLinkToClipboard}
+          />
+        </>
+      )}
+      {showPublishDialog && (
+        <>
+          <DialogOverlay />
+          <GetFormDialog
+            link={previewLink}
+            close={closeDialog}
+            copyLinkToClipboard={copyLinkToClipboard}
+            publish={true}
+            handlePublish={publish}
           />
         </>
       )}

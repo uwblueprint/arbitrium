@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import Dialog from "../Common/Dialogs/Dialog";
+import Dialog from "../../Common/Dialogs/Dialog";
 import Close from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 
@@ -61,6 +61,7 @@ const PreviewLinkWrapper = styled.div`
   left: 2.91%;
   right: 53.3%;
   top: 188px;
+  width: 776px;
   align-items: left;
   margin: auto;
   display: block;
@@ -109,7 +110,13 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-function GetPreviewLinkDialog({ close, link, copyLinkToClipboard }) {
+function GetFormDialog({
+  close,
+  link,
+  copyLinkToClipboard,
+  publish = false,
+  handlePublish = null
+}) {
   const dialogRef = React.createRef();
 
   useEffect(() => {
@@ -189,26 +196,50 @@ function GetPreviewLinkDialog({ close, link, copyLinkToClipboard }) {
             fillOpacity="0.54"
           />
         </svg>
-        <WarningMessageText>
-          These links are meant for reviewing the form <b>before</b> allowing
-          applicants to apply. Response submitted with this link <b>will not</b>{" "}
-          be saved.
-        </WarningMessageText>
+        {publish ? (
+          <WarningMessageText>
+            Please review the form <b>before</b> sending to applicants Changes
+            to the form <b>after publishing</b> will require assitance from
+            Arbitrium support.
+          </WarningMessageText>
+        ) : (
+          <WarningMessageText>
+            These links are meant for reviewing the form <b>before</b> allowing
+            applicants to apply. Response submitted with this link{" "}
+            <b>will not</b> be saved.
+          </WarningMessageText>
+        )}
       </WarningMessage>
-      <PreviewLinkWrapper>
-        <p>Preview Link</p>
-        <input value={link} onClick={handleFocus} />
-        <div
-          style={{
-            left: "0%",
-            right: "0%",
-            top: "-nan%",
-            bottom: "-nan%",
-            width: "776px",
-            border: "0.25px solid rgba(0, 0, 0, 0.33)"
-          }}
-        />
-      </PreviewLinkWrapper>
+      {publish ? (
+        <div>
+          <p>
+            {" "}
+            Previewing in a new window is meant for reviewing the form{" "}
+            <b>before</b> allowing applicants to apply. Responses submitted with
+            this link <b>will not</b> be saved.{" "}
+          </p>
+          <p style={{ fontSize: 16, fontWeight: 500 }}>
+            {" "}
+            If the form will not require any further changes, you are ready to
+            publish.
+          </p>
+        </div>
+      ) : (
+        <PreviewLinkWrapper>
+          <p>Preview Link</p>
+          <input value={link} onClick={handleFocus} />
+          <div
+            style={{
+              left: "0%",
+              right: "0%",
+              top: "-nan%",
+              bottom: "-nan%",
+              width: "776px",
+              border: "0.25px solid rgba(0, 0, 0, 0.33)"
+            }}
+          />
+        </PreviewLinkWrapper>
+      )}
       <ButtonWrapper>
         <Button
           onClick={() => {
@@ -216,44 +247,54 @@ function GetPreviewLinkDialog({ close, link, copyLinkToClipboard }) {
           }}
           href="#text-buttons"
           color="primary"
-          style={{
-            fontFamily: "Roboto",
-            fontStyle: "normal",
-            fontWeight: "500",
-            fontSize: "14px",
-            lineHeight: "16px",
-            letterSpacing: "1.25px",
-            textTransform: "capitalize",
-            color: "#2261AD"
-          }}
+          style={
+            !publish
+              ? {
+                  fontWeight: "500",
+                  lineHeight: "16px",
+                  letterSpacing: "1.25px",
+                  textTransform: "capitalize",
+                  color: "#2261AD"
+                }
+              : {
+                  fontWeight: "500",
+                  lineHeight: "16px",
+                  letterSpacing: "1.25px",
+                  textTransform: "capitalize",
+                  color: "#2261AD",
+                  border: "1px solid rgba(0, 0, 0, 0.33)",
+                  boxSizing: "border-box",
+                  height: "36px"
+                }
+          }
         >
-          Open In New Window
+          {publish ? "Preview in New Window" : "Open In New Window"}
         </Button>
         <Button
-          onClick={copyLinkToClipboard}
+          onClick={publish ? handlePublish : copyLinkToClipboard}
           href="#text-buttons"
           variant="outlined"
           color="primary"
           style={{
             marginLeft: "23px",
+            height: "36px",
+            backgroundColor: publish ? "#2261AD" : "#C1E0FF",
+            fontSize: "14px",
             border: "1px solid rgba(0, 0, 0, 0.33)",
             boxSizing: "border-box",
             borderRadius: "4px",
-            fontFamily: "Roboto",
-            fontStyle: "normal",
             fontWeight: "500",
-            fontSize: "14px",
             lineHeight: "16px",
             letterSpacing: "1.25px",
             textTransform: "capitalize",
-            color: "#2261AD"
+            color: publish ? "#FFFFFF" : "#2261AD"
           }}
         >
-          Copy Link
+          {publish ? "Publish" : "Copy Link"}
         </Button>
       </ButtonWrapper>
     </Dialog>
   );
 }
 
-export default GetPreviewLinkDialog;
+export default GetFormDialog;
