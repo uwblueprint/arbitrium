@@ -15,7 +15,7 @@ async function getForm({ programId }) {
 
 //The second paramater of GET is a boolean if the endpoint requires Authorization
 async function getFormBySubmission({ id }) {
-  return GET(`/api/forms/submission/${id}`, false);
+  return GET(`/api/forms/submit/${id}`, false);
 }
 
 //The second paramater of GET is a boolean if the endpoint requires Authorization

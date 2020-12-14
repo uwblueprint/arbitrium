@@ -39,10 +39,10 @@ router.get("/submit/:submissionLinkID", (req, res) => {
 });
 
 // Get form with previewID (no auth required)
-router.get("/preview/:previewId", (req, res) => {
+router.get("/preview/:previewLinkId", (req, res) => {
   db["Authentication"].forms
     .findOne({
-      "previewLink._id": req.params.previewId
+      "previewLink._id": req.params.previewLinkId
     })
     .then(function(found) {
       const result = found;
@@ -53,7 +53,7 @@ router.get("/preview/:previewId", (req, res) => {
     })
     .catch(function(err) {
       console.error(
-        `Error getting form with form ID = ${req.params.previewId}`
+        `Error getting form with form ID = ${req.params.previewLinkId}`
       );
       res.status(500).send(err);
     });
