@@ -94,9 +94,6 @@ function FormSettingsDrawer({
   const [themeColour, setThemeColour] = useState<string>(
     settingsInit.themeColour
   );
-  const [headerImage, setHeaderImage] = useState<string>(
-    settingsInit.headerImage || ""
-  );
   const [confirmationMessage, setConfirmationMessage] = useState(
     settingsInit.confirmationMessage
   );
@@ -105,7 +102,7 @@ function FormSettingsDrawer({
     handleCloseFormSettings();
     onSave({
       themeColour,
-      headerImage,
+      headerImage: null,
       confirmationMessage
     });
   }
@@ -154,6 +151,9 @@ function FormSettingsDrawer({
           </FormSettingsHeading>
         </div>
         <TextField
+          onChange={(e) => {
+            setConfirmationMessage(e.target.value);
+          }}
           className={classes.response}
           placeholder="Your response has been recorded."
           defaultValue="Your response has been recorded."

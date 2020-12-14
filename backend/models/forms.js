@@ -34,11 +34,10 @@ const link = new mongoose.Schema({
 });
 
 const formSettings = new mongoose.Schema({
-  colour: {
-    type: String,
-    default: "2261AD"
+  themeColour: {
+    type: String
   },
-  banner: {
+  headerImage: {
     data: {
       type: Buffer
     },
@@ -47,8 +46,7 @@ const formSettings = new mongoose.Schema({
     }
   },
   confirmationMessage: {
-    type: String,
-    default: "Your response has been recorded."
+    type: String
   }
 });
 
@@ -155,7 +153,11 @@ const formsSchema = new mongoose.Schema(
       type: String
     },
     settings: {
-      type: formSettings
+      type: formSettings,
+      default: {
+        themeColour: "2261AD",
+        confirmationMessage: "Your response has been recorded."
+      }
     }
   },
   { collection: "Forms" }

@@ -162,6 +162,7 @@ function FormSection({
   const [title, setTitle] = useState(sectionData.name);
   const [description, setDescription] = useState(sectionData.description);
   const [sectionType, setSectionType] = useState(sectionData.sectionType);
+  const questionData = sectionData ? sectionData.questions : [];
 
   //Menu open/close
   const handleAnchorClick = (event) => {

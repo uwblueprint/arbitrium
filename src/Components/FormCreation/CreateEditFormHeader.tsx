@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import GetPreviewLinkDialog from "./GetPreviewLinkDialog";
 import Snackbar from "@material-ui/core/Snackbar";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
+import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
 
 const Header = styled.div`
   box-sizing: border-box;
@@ -15,11 +16,11 @@ const Header = styled.div`
 `;
 
 const NameInput = styled(InputBase)`
-  input {
-    font-size: 24px;
-  }
   && {
-    width: 526px;
+    input {
+      font-size: 24px;
+    }
+    width: 100%;
     margin-bottom: 16px;
     line-height: 36px;
   }
@@ -27,40 +28,58 @@ const NameInput = styled(InputBase)`
 
 const DescriptionInput = styled(InputBase)`
   && {
-    width: 846px;
+    width: 100%;
     line-height: 21px;
     overflow-y: auto;
     max-height: 48px;
-  }
-  textarea {
-    font-size: 14px;
-    color: #888888;
+    textarea {
+      font-size: 14px;
+      color: #888888;
+    }
   }
 `;
 
 const InputWrapper = styled.div`
+  width: 526px;
+  display: inline-block;
   padding: 48px 100px;
   padding-left: 15%;
   padding-right: 0px;
+  margin-right: 32px;
 `;
 
 const ButtonWrapper = styled.div`
-  padding: 48px 0px;
-  padding-left: 32px;
-  align-items: center;
+  display: flex;
   justify-content: center;
+  flex-direction: column;
 `;
 
-const DialogOverlay = styled.div`
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 150%;
-  width: 100vw;
-  z-index: 110;
-  background: rgba(0, 0, 0, 0.5);
-  .dialogButton {
+const LinkPreviewButton = styled(Button)`
+  && {
+    color: #2261ad;
+    margin-right: 16px;
+    margin-bottom: 8px;
     text-transform: none;
+    letter-spacing: 1.25px;
+    line-height: 16px;
+    padding: 10px 12px 10px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.33);
+  }
+`;
+
+const PublishButton = styled(Button)`
+  && {
+    backgroundcolor: #2261ad;
+    text-transform: none;
+    letter-spacing: 1.25px;
+    line-height: 16px;
+    padding: 10px 12px 10px 12px;
+  }
+`;
+
+const SettingsButton = styled(Button)`
+  && {
+    margin-left: auto;
   }
 `;
 
@@ -136,54 +155,37 @@ function CreateEditFormHeader({
         ></DescriptionInput>
       </InputWrapper>
       <ButtonWrapper>
-        <Button
-          variant="outlined"
-          onClick={() => {
-            setShowPreviewLink(true);
-          }}
-          href="#text-buttons"
+        <div>
+          <LinkPreviewButton
+            variant="outlined"
+            onClick={() => {
+              setShowPreviewLink(true);
+            }}
+            color="primary"
+          >
+            Get Preview Link
+          </LinkPreviewButton>
+          <PublishButton variant="contained" onClick={() => {}} color="primary">
+            Publish
+          </PublishButton>
+        </div>
+        <SettingsButton
           color="primary"
-          style={{
-            color: "#2261AD",
-            marginRight: "16px",
-            marginBottom: "8px",
-            textTransform: "none",
-            letterSpacing: "1.25px",
-            lineHeight: "16px",
-            padding: "10px 12px 10px 12px",
-            border: "1px solid rgba(0, 0, 0, 0.33)"
-          }}
+          startIcon={<FormSettingsOutlineIcon />}
+          onClick={onFormSettingsClick}
         >
-          Get Preview Link
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => {}}
-          href="#text-buttons"
-          color="primary"
-          style={{
-            backgroundColor: "#2261AD",
-            marginLeft: "0px",
-            marginBottom: "8px",
-            textTransform: "none",
-            letterSpacing: "1.25px",
-            lineHeight: "16px",
-            padding: "10px 12px 10px 12px"
-          }}
-        >
-          Publish
-        </Button>
+          Form Settings
+        </SettingsButton>
       </ButtonWrapper>
-      {showPreviewLink && (
-        <>
-          <DialogOverlay />
-          <GetPreviewLinkDialog
-            link={previewLink}
-            close={closePreviewLinkDialog}
-            copyLinkToClipboard={copyLinkToClipboard}
-          />
-        </>
-      )}
+      <ControlledDialogTrigger
+        showDialog={showPreviewLink}
+        Dialog={GetPreviewLinkDialog}
+        dialogProps={{
+          link: previewLink,
+          close: closePreviewLinkDialog,
+          copyLinkToClipboard: copyLinkToClipboard
+        }}
+      />
       <Snackbar
         open={copiedPreviewLink}
         anchorOrigin={{
@@ -197,13 +199,6 @@ function CreateEditFormHeader({
         }}
         message={"Copied to clipboard."}
       />
-      <Button
-        color="primary"
-        startIcon={<FormSettingsOutlineIcon />}
-        onClick={onFormSettingsClick}
-      >
-        Form Settings
-      </Button>
     </Header>
   );
 }

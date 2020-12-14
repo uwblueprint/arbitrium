@@ -61,12 +61,6 @@ function CreateEditForm() {
     []
   );
 
-  const [formSettings, setFormSettings] = useState({
-    themeColour: "2261AD",
-    headerImage: null,
-    confirmationMessage: "Your response has been recorded."
-  });
-
   const [showFormSettings, setShowFormSettings] = useState(false);
   const [showMoveSectionsDialog, setShowMoveSectionsDialog] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
@@ -81,34 +75,17 @@ function CreateEditForm() {
     description: defaultFormState.description
   });
 
-  //1. Used when a drag finishes to indiate which question should be active afterwards
-  //2. For the purposes of drag and drop, the child section can set its inital active question
-  //   And then call the parent to refetch the entire form (so it has all the question changes including _ids)
-  //   Without this, adding a question and then moving it creates un-intended behavior
-  //   (A child only calls this when a question is added/deleted so the parent can update itself with changes only made in the child)
-  const [initialActiveQuestion, setInitialActiveQuestion] = useState(0);
+  const [formSettings, setFormSettings] = useState({
+    themeColour: "2261AD",
+    headerImage: null,
+    confirmationMessage: "Your response has been recorded."
+  });
 
   const [
     showDeleteSectionConfirmation,
     setShowDeleteSectionConfirmation
   ] = useState(false);
   const [deletedSection, setDeletedSection] = useState(null);
-
-  /*****************************************************************************
-   * Form customization
-   *****************************************************************************/
-
-  const onFormSettingsSave = useCallback((newSettings) => {
-    setFormSettings(newSettings);
-  }, []);
-
-  const handleOpenFormSettings = useCallback(() => {
-    setShowFormSettings(true);
-  }, []);
-
-  const handleCloseFormSettings = useCallback(() => {
-    setShowFormSettings(false);
-  }, []);
 
   //----------------------------------------------------------------------------
   //FORM INIT/SAVE FUNCTIONS
@@ -136,7 +113,11 @@ function CreateEditForm() {
         description: defaultFormState.description,
         createdBy: appUser.userId,
         draft: true,
-        sections: defaultFormState.sections
+        sections: defaultFormState.sections,
+        settings: {
+          themeColour: "2261AD",
+          confirmationMessage: "Your response has been recorded."
+        }
       };
 
       await FORM.createForm(data);
@@ -165,6 +146,7 @@ function CreateEditForm() {
       name: loadForm.value.name,
       description: loadForm.value.description
     });
+    setFormSettings(loadForm.value.settings);
 
     //Set the active form to be the first one
     //updateActiveSection(0);
@@ -176,6 +158,30 @@ function CreateEditForm() {
   useEffect(() => {
     saveForm();
   }, [sections, saveForm]);
+
+  /*****************************************************************************
+   * Form customization
+   *****************************************************************************/
+
+  const onFormSettingsSave = useCallback(
+    (newSettings) => {
+      setFormSettings(newSettings);
+      const newForm = {
+        ...loadForm.value,
+        settings: newSettings
+      };
+      FORM.updateForm(loadForm.value._id, newForm);
+    },
+    [loadForm.value]
+  );
+
+  const handleOpenFormSettings = useCallback(() => {
+    setShowFormSettings(true);
+  }, []);
+
+  const handleCloseFormSettings = useCallback(() => {
+    setShowFormSettings(false);
+  }, []);
 
   //----------------------------------------------------------------------------
   //UPDATE/ADD/MOVE SECTION
@@ -373,8 +379,6 @@ function CreateEditForm() {
       sections: sectionsCopy
     });
 
-    //Set the updated active section/question after moving
-    setInitialActiveQuestion(questionTargetIndex);
     updateActiveSection(sectionTargetIndex);
   }
 
@@ -430,7 +434,7 @@ function CreateEditForm() {
         <FormSettingsDrawer
           open={showFormSettings}
           handleCloseFormSettings={handleCloseFormSettings}
-          onSave={setFormSettings}
+          onSave={onFormSettingsSave}
         />
         <ControlledDialogTrigger
           showDialog={showMoveSectionsDialog}
