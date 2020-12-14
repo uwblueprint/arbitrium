@@ -13,6 +13,7 @@ const Container = styled(Paper)`
 const rowStyle = {
   border: "1px solid #cccccc"
 };
+
 const columnStyle = {
   width: "100%"
 };
@@ -21,10 +22,13 @@ const columns = [
   {
     title: "Program Name",
     field: "name",
-    cellStyle: { width: 500, maxWidth: 800 },
-    headerStyle: { width: 500, maxWidth: 800 }
+    cellStyle: { minWidth: 500, maxHeight: 52 },
+    headerStyle: { minWidth: 500 }
   },
-  { title: "Organization", field: "organization" },
+  {
+    title: "Organization",
+    field: "organization"
+  },
   { title: "Role", field: "role" },
   // { title: "Status", field: "status" },
   {
@@ -32,7 +36,11 @@ const columns = [
     field: "link",
     sorting: false,
     searchable: false,
-    export: false
+    export: false,
+    cellStyle: {
+      textAlign: "right",
+      minWidth: 148
+    }
   }
 ];
 

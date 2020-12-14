@@ -30,7 +30,6 @@ router.get("/all", function(req, res) {
 //DatabaseName is unique
 
 //This route will be used for all update actions for a program.
-//Inlcuding Deletes, which will always be soft
 router.post("/", function(req, res) {
   // create a program
   // add all org admins to the program with role "ADMIN"
@@ -54,7 +53,16 @@ router.post("/", function(req, res) {
     });
 });
 
-module.exports = router;
+router.delete("/:programId", function(req, res) {
+  db["Authentication"].programs
+    .updateOne({ _id: req.params.programId }, { deleted: true })
+    .then(function(result) {
+      res.status(204).json(result);
+    })
+    .catch(function(err) {
+      res.send(err);
+    });
+});
 
 // Get all the users of a program
 // Returns an array of users: [{userId, email, name, role}]

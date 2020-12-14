@@ -5,7 +5,8 @@ import usePromise from "../../Hooks/usePromise";
 import * as GET from "../../requests/get";
 import ProgramManagementTable from "./ProgramManagementTable";
 import DialogTriggerButton from "../Common/Dialogs/DialogTriggerButton";
-import NewProgramDialog from "./NewProgramDialog";
+import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
+import EditProgramDialog from "./EditProgramDialog";
 import { AuthContext } from "../../Authentication/Auth";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -67,8 +68,21 @@ function ProgramManagement() {
     { userId },
     []
   );
-  const [programMenuAnchorEl, setProgramMenuAnchorEl] = useState(null);
+  const [showEditProgramDialog, setShowEditProgramDialog] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
+
+  const handleAnchorClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleAnchorClose = () => {
+    setAnchorEl(null);
+  };
+
+  function closeEditProgramDialog() {
+    setShowEditProgramDialog(false);
+  }
 
   const programsData = useMemo(
     () =>
@@ -89,11 +103,6 @@ function ProgramManagement() {
       ),
     [programs]
   );
-
-  const handleAnchorClick = (event) => {
-    console.log(event.currentTarget);
-    setProgramMenuAnchorEl(event.currentTarget);
-  };
 
   // convert fetched users to table format
   // fetched: array
@@ -130,7 +139,6 @@ function ProgramManagement() {
       };
     });
   }
-  console.log(programMenuAnchorEl);
   return (
     <div>
       <Wrapper>
@@ -141,35 +149,35 @@ function ProgramManagement() {
               {appUser.adminOrganization && (
                 <div className="button-container">
                   <DialogTriggerButton
-                    Dialog={NewProgramDialog}
+                    Dialog={EditProgramDialog}
                     dialogProps={{
                       userId: userId,
                       orgId: appUser.adminOrganization
                     }}
                     closeOnEsc={true}
                   >
-                    Add New
+                    Add new
                   </DialogTriggerButton>
                 </div>
               )}
             </Header>
+            <ControlledDialogTrigger
+              showDialog={showEditProgramDialog}
+              Dialog={EditProgramDialog}
+              dialogProps={{
+                close: closeEditProgramDialog,
+                userId: userId,
+                orgId: appUser.adminOrganization,
+                newProgram: false
+              }}
+            />
             <ProgramManagementTable
               data={programsData}
               alertParent={reloadPrograms}
             />
             <Header>
               <h1 style={{ color: "black" }}>Archives</h1>
-              <div className="button-container">
-                {/*}
-              <DialogTriggerButton
-                Dialog={}
-                closeOnEsc={true}
-                alertParent={reloadUsers}
-              >
-                Add New
-              </DialogTriggerButton>
-              */}
-              </div>
+              <div className="button-container"></div>
             </Header>
             <ProgramManagementTable
               data={archivedProgramsData}
@@ -189,25 +197,40 @@ function ProgramManagement() {
           paper: classes.action_menu,
           list: classes.action_menu_content
         }}
-        anchorEl={programMenuAnchorEl}
+        anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         keepMounted
-        open={Boolean(programMenuAnchorEl)}
-        onClose={() => setProgramMenuAnchorEl(null)}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
       >
         <MenuItem
           classes={{ root: classes.action_menu_item }}
-          onClick={() => {}}
+          onClick={() => {
+            handleAnchorClose();
+            setShowEditProgramDialog(true);
+          }}
         >
-          Move section
+          Rename
         </MenuItem>
         <MenuItem
           classes={{ root: classes.action_menu_item }}
           onClick={() => {}}
         >
-          Delete section
+          Duplicate
+        </MenuItem>
+        <MenuItem
+          classes={{ root: classes.action_menu_item }}
+          onClick={() => {}}
+        >
+          Archive
+        </MenuItem>
+        <MenuItem
+          classes={{ root: classes.action_menu_item }}
+          onClick={() => {}}
+        >
+          Delete
         </MenuItem>
       </Menu>
     </div>

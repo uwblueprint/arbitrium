@@ -22,7 +22,14 @@ const Wrapper = styled.div`
 `;
 
 // onAddNewUser: callback for when a new user is added
-function NewProgramDialog({ onSubmit, close, confirm, userId, orgId }) {
+function NewProgramDialog({
+  onSubmit,
+  close,
+  confirm,
+  userId,
+  orgId,
+  newProgram = true
+}) {
   const [programName, setProgramName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,7 +50,10 @@ function NewProgramDialog({ onSubmit, close, confirm, userId, orgId }) {
   return (
     <Wrapper>
       <Dialog width="400px" paddingHorizontal={28} paddingVertical={28}>
-        <DialogHeader onClose={close} title="New program" />
+        <DialogHeader
+          onClose={close}
+          title={newProgram ? "New program" : "Rename program"}
+        />
         <LoadingOverlay
           show={isSubmitting}
           spinnerProps={{
@@ -67,7 +77,7 @@ function NewProgramDialog({ onSubmit, close, confirm, userId, orgId }) {
           color="primary"
           disabled={isSubmitting}
         >
-          Create
+          {newProgram ? "Create" : "Save"}
         </Button>
       </Dialog>
     </Wrapper>
