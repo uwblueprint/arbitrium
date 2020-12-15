@@ -36,8 +36,8 @@ async function updateUserProgramMembershipAPI(databody) {
   return PUT("/api/users/set-program-memberships", databody);
 }
 
-async function updateUserProgramAPI(databody) {
-  return PUT("/api/users/set-program", databody);
+async function updateUserProgramAPI(userId, databody) {
+  return PATCH(`/api/users/${userId}/current-program`, databody);
 }
 
 async function updateUserProgramRoleAPI(programId, userId, databody) {

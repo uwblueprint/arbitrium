@@ -7,6 +7,7 @@ import { Paper } from "@material-ui/core";
 const Container = styled(Paper)`
   table {
     border: 1px solid #cccccc;
+    margin-bottom: 48px;
   }
 `;
 

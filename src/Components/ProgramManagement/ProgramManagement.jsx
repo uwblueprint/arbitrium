@@ -2,7 +2,8 @@ import React, { useMemo, useContext, useState } from "react";
 import Spinner from "react-spinner-material";
 import styled from "styled-components";
 import usePromise from "../../Hooks/usePromise";
-import * as GET from "../../requests/get";
+import { getAllUserProgramsAPI } from "../../requests/get";
+import { updateUserProgramAPI } from "../../requests/update";
 import ProgramManagementTable from "./ProgramManagementTable";
 import DialogTriggerButton from "../Common/Dialogs/DialogTriggerButton";
 import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
@@ -31,6 +32,15 @@ const Wrapper = styled.div`
   }
 `;
 
+const ProgramMenuButtonWrapper = styled.div`
+  float: right;
+  button {
+    margin-left: 8px;
+    height: 36px;
+    width: 36px;
+  }
+`;
+
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -40,9 +50,6 @@ const Header = styled.div`
     font-size: 24px;
     display: inline-block;
     margin-right: auto;
-  }
-  .button-container {
-    display: inline-block;
   }
 }
 `;
@@ -70,10 +77,10 @@ const useStyles = makeStyles({
 });
 
 function ProgramManagement() {
-  const { currentUser, appUser } = useContext(AuthContext);
+  const { appUser } = useContext(AuthContext);
   const userId = appUser.userId;
   const [programs, reloadPrograms] = usePromise(
-    GET.getAllUserProgramsAPI,
+    getAllUserProgramsAPI,
     { userId },
     []
   );
@@ -97,6 +104,10 @@ function ProgramManagement() {
     setCurrentProgram(program);
   };
 
+  function setUserProgram(program) {
+    updateUserProgramAPI(userId, { programId: program.id });
+  }
+
   function closeEditProgramDialog() {
     setShowEditProgramDialog(false);
   }
@@ -110,8 +121,7 @@ function ProgramManagement() {
       convertToTableData(
         programs.value.filter((program) => {
           return !program.archived;
-        }),
-        false
+        })
       ),
     [programs]
   );
@@ -121,41 +131,45 @@ function ProgramManagement() {
       convertToTableData(
         programs.value.filter((program) => {
           return program.archived;
-        }),
-        true
+        })
       ),
     [programs]
   );
 
-  function convertToTableData(programs, archived) {
+  function convertToTableData(programs) {
     return programs.map((program) => {
       return {
         name: program.name,
-        organization: program.organization,
+        organization: program.orgName,
         role: rolesMap[program.role],
         archived: program.archived,
         // status: "To Do",
         link: (
-          <div className="button-container">
-            {/* TODO: route to specific program */}
-            <a href={""}>
+          <>
+            <a href={"/applications"}>
               <Button
                 variant="contained"
                 color="primary"
                 target="_blank"
                 value="OpenApplication"
+                style={{ textTransform: "none" }}
+                onClick={program && setUserProgram(program)}
               >
                 View
               </Button>
             </a>
-            <IconButton
-              aria-label="actions"
-              aria-controls={"actions-menu"}
-              onClick={(e) => openProgramMenu(e, program)}
-            >
-              <MoreVertIcon />
-            </IconButton>
-          </div>
+            <ProgramMenuButtonWrapper>
+              {appUser.adminOrganization === program.orgId && (
+                <IconButton
+                  aria-label="actions"
+                  aria-controls={"actions-menu"}
+                  onClick={(e) => openProgramMenu(e, program)}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              )}
+            </ProgramMenuButtonWrapper>
+          </>
         )
       };
     });

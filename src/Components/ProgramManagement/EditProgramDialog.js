@@ -27,15 +27,15 @@ const Wrapper = styled.div`
 
 // onAddNewUser: callback for when a new user is added
 function EditProgramDialog({
-  // onSubmit,
   close,
-  // confirm,
+  // eslint-disable-next-line no-unused-vars
   userId = "",
+  // eslint-disable-next-line no-unused-vars
   orgId = "",
   program = null,
   newProgram = false
 }) {
-  const [programName, setProgramName] = useState(program.name);
+  const [programName, setProgramName] = useState(program ? program.name : "");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const updateProgramName = () => (event) => {
@@ -45,7 +45,7 @@ function EditProgramDialog({
   async function createProgram() {
     setIsSubmitting(true);
     try {
-      console.log(`${programName} created by ${userId} for org ${orgId}`);
+      // console.log(`${programName} created by ${userId} for org ${orgId}`);
       close();
     } catch (e) {
       console.error(e);

@@ -45,7 +45,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-function ConfirmProgramActionDialog({ close, confirm, program, action }) {
+function ConfirmProgramActionDialog({ close, program, action }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function commitAction() {
