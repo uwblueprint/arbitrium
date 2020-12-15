@@ -6,10 +6,7 @@ import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
 import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import {
-  // createProgramAPI,
-  updateProgramNameAPI
-} from "../../requests/update";
+import { updateProgramNameAPI } from "../../requests/update";
 
 const StyledLabel = styled(InputLabel)`
   margin-bottom: 4px;
@@ -25,7 +22,6 @@ const Wrapper = styled.div`
   }
 `;
 
-// onAddNewUser: callback for when a new user is added
 function EditProgramDialog({
   close,
   // eslint-disable-next-line no-unused-vars
@@ -45,7 +41,7 @@ function EditProgramDialog({
   async function createProgram() {
     setIsSubmitting(true);
     try {
-      // console.log(`${programName} created by ${userId} for org ${orgId}`);
+      // TODO: Implement createProgramAPI and call it with the userId, orgId, and program name
       close();
     } catch (e) {
       console.error(e);

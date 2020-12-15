@@ -49,7 +49,7 @@ const programSchema = new mongoose.Schema(
     },
     appVersion: {
       type: Number,
-      default: 2 //1 is for google forms data, 2 is for our own data
+      default: 2 // 1 is for legacy programs, 2 is our new ones
     },
     s3bucket: {
       type: String

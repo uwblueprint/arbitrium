@@ -143,7 +143,6 @@ function ProgramManagement() {
         organization: program.orgName,
         role: rolesMap[program.role],
         archived: program.archived,
-        // status: "To Do",
         link: (
           <>
             <a href={"/applications"}>

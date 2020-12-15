@@ -73,14 +73,22 @@ router.patch("/:programId/archived", function(req, res) {
 
 // Delete a program
 router.delete("/:programId", function(req, res) {
-  db["Authentication"].programs
-    .updateOne({ _id: req.params.programId }, { deleted: true })
-    .then(function(result) {
-      res.status(204).json(result);
-    })
-    .catch(function(err) {
-      res.send(err);
-    });
+  db["Authentication"].programs.findOneAndUpdate(
+    { _id: req.params.programId },
+    { deleted: true },
+    (error, result) => {
+      if (error) {
+        console.error(
+          `Error ${
+            req.body.archived ? "archiving" : "unarchiving"
+          } program with ID = ${req.params.programId}`
+        );
+        res.status(500).send(error);
+      } else {
+        res.status(204).json(result);
+      }
+    }
+  );
 });
 
 // Get all the users of a program
