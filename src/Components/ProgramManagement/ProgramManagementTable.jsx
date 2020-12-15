@@ -31,7 +31,6 @@ const columns = [
     field: "organization"
   },
   { title: "Role", field: "role" },
-  // { title: "Status", field: "status" },
   {
     title: "",
     field: "link",
