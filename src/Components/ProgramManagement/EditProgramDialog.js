@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import LoadingOverlay from "../Common/LoadingOverlay";
@@ -6,6 +6,10 @@ import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
 import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
+import {
+  // createProgramAPI,
+  updateProgramNameAPI
+} from "../../requests/update";
 
 const StyledLabel = styled(InputLabel)`
   margin-bottom: 4px;
@@ -22,13 +26,14 @@ const Wrapper = styled.div`
 `;
 
 // onAddNewUser: callback for when a new user is added
-function NewProgramDialog({
-  onSubmit,
+function EditProgramDialog({
+  // onSubmit,
   close,
-  confirm,
-  userId,
-  orgId,
-  newProgram = true
+  // confirm,
+  userId = "",
+  orgId = "",
+  program = null,
+  newProgram = false
 }) {
   const [programName, setProgramName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,15 +42,28 @@ function NewProgramDialog({
     setProgramName(event.target.value);
   };
 
-  const createProgram = () => (event) => {
+  async function createProgram() {
     setIsSubmitting(true);
     try {
       console.log(`${programName} created by ${userId} for org ${orgId}`);
       close();
     } catch (e) {
+      console.error(e);
       setIsSubmitting(false);
     }
-  };
+  }
+
+  async function renameProgram() {
+    setIsSubmitting(true);
+    try {
+      updateProgramNameAPI(program.id, { name: programName });
+      close();
+      window.location.reload();
+    } catch (e) {
+      console.error(e);
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <Wrapper>
@@ -71,7 +89,7 @@ function NewProgramDialog({
         </QuestionWrapper>
         <Button
           className="createButton"
-          onClick={createProgram()}
+          onClick={newProgram ? createProgram : renameProgram}
           fullWidth
           variant="contained"
           color="primary"
@@ -84,4 +102,4 @@ function NewProgramDialog({
   );
 }
 
-export default NewProgramDialog;
+export default EditProgramDialog;

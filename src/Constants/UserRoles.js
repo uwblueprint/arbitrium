@@ -5,7 +5,7 @@ export const GUEST = "GUEST";
 
 export const rolesMap = {
   ADMIN: "Admin",
-  ADMIN_REVIEWER: "Admin and Reviewer",
-  REVIEWER: "Reviewer",
+  ADMIN_REVIEWER: "Admin & Committee Member",
+  REVIEWER: "Committee Member",
   GUEST: "Guest"
 };

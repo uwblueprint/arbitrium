@@ -21,29 +21,31 @@ import {
   UNARCHIVE_PROGRAM,
   DELETE_PROGRAM
 } from "../../Constants/ActionTypes";
-import { current } from "immer";
 
 const Wrapper = styled.div`
   margin-top: 50px;
   text-align: left;
   padding: 0 64px;
+  button: {
+    text-transform: none;
+  }
 `;
 
 const Header = styled.div`
-    display: flex;
-    align-items: center;
-    h1 {
-      font-size: 24px;
-      font-weight: normal;
-      font-size: 24px;
-      display: inline-block;
-      margin-right: auto;
-    }
-    .button-container {
-      display: inline-block;
-    }
+  display: flex;
+  align-items: center;
+  h1 {
+    font-size: 24px;
+    font-weight: normal;
+    font-size: 24px;
+    display: inline-block;
+    margin-right: auto;
   }
-  `;
+  .button-container {
+    display: inline-block;
+  }
+}
+`;
 
 const useStyles = makeStyles({
   content: {
@@ -125,8 +127,6 @@ function ProgramManagement() {
     [programs]
   );
 
-  // convert fetched users to table format
-  // fetched: array
   function convertToTableData(programs, archived) {
     return programs.map((program) => {
       return {
@@ -135,7 +135,6 @@ function ProgramManagement() {
         role: rolesMap[program.role],
         archived: program.archived,
         // status: "To Do",
-        // TODO: update user's currentProgram
         link: (
           <div className="button-container">
             {/* TODO: route to specific program */}
@@ -174,7 +173,8 @@ function ProgramManagement() {
                     Dialog={EditProgramDialog}
                     dialogProps={{
                       userId: userId,
-                      orgId: appUser.adminOrganization
+                      orgId: appUser.adminOrganization,
+                      newProgram: true
                     }}
                     closeOnEsc={true}
                   >
@@ -190,7 +190,7 @@ function ProgramManagement() {
                 close: closeEditProgramDialog,
                 userId: userId,
                 orgId: appUser.adminOrganization,
-                newProgram: false
+                program: currentProgram
               }}
             />
             <ControlledDialogTrigger

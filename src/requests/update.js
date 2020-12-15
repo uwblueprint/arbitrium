@@ -16,8 +16,16 @@ async function updateStackedAPI(databody) {
   return POST("/api/stackings", databody);
 }
 
-async function updateUserAPI(databody) {
-  return POST("/api/users", databody);
+async function createProgramAPI(databody) {
+  return POST("/api/programs", databody);
+}
+
+async function updateProgramNameAPI(programId, databody) {
+  return PATCH(`/api/programs/${programId}/name`, databody);
+}
+
+async function updateProgramArchivedAPI(programId, databody) {
+  return PATCH(`/api/programs/${programId}/archived`, databody);
 }
 
 async function createOrAddUserProgramAPI(programId, databody) {
@@ -36,15 +44,13 @@ async function updateUserProgramRoleAPI(programId, userId, databody) {
   return PATCH(`/api/programs/${programId}/user/${userId}`, databody);
 }
 
-async function createProgram(databody) {
-  return POST(`/api/programs`, databody);
-}
-
 export {
   createFeedbackAPI,
   updateReviewAPI,
   updateStackedAPI,
-  updateUserAPI,
+  createProgramAPI,
+  updateProgramNameAPI,
+  updateProgramArchivedAPI,
   updateUserProgramAPI,
   updateUserProgramMembershipAPI,
   createOrAddUserProgramAPI,

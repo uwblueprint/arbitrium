@@ -3,12 +3,14 @@ import styled from "styled-components";
 import Select from "@material-ui/core/Select";
 import * as userRoles from "../../Constants/UserRoles";
 
-// TODO: fetch from mongo
 const roles = [
-  { name: "Admin", id: userRoles.ADMIN },
-  { name: "Admin & Reviewer", id: userRoles.ADMIN_REVIEWER },
-  { name: "Reviewer", id: userRoles.REVIEWER },
-  { name: "Guest", id: userRoles.GUEST }
+  { id: userRoles.ADMIN, name: userRoles.rolesMap[userRoles.ADMIN] },
+  {
+    id: userRoles.ADMIN_REVIEWER,
+    name: userRoles.rolesMap[userRoles.ADMIN_REVIEWER]
+  },
+  { id: userRoles.REVIEWER, name: userRoles.rolesMap[userRoles.REVIEWER] },
+  { id: userRoles.GUEST, name: userRoles.rolesMap[userRoles.GUEST] }
 ];
 
 const StyledSelect = styled(Select)`

@@ -93,7 +93,6 @@ router.get("/:userId/programs", isAuthenticated, async function(req, res) {
 });
 
 router.get("/:userid", function(req, res) {
-  //If user doesn't exist, create one and return it
   db["Authentication"].users
     .findOne({ userId: req.params.userid })
     .then(function(found) {
@@ -133,19 +132,6 @@ router.put("/set-program-memberships", function(req, res) {
     // status code 201 means created
     .then(function(result) {
       res.status(201).json(result);
-    })
-    .catch(function(err) {
-      res.send(err);
-    });
-});
-
-//Update a user (Not sued for creating a new user)
-router.post("/", function(req, res) {
-  db["Authentication"].users
-    .updateOne({ userId: req.body.userId }, req.body, { upsert: false })
-    // status code 201 means created
-    .then(function(newSchedule) {
-      res.status(201).json(newSchedule);
     })
     .catch(function(err) {
       res.send(err);

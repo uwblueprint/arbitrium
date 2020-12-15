@@ -3,14 +3,11 @@ const express = require("express");
 //Allows api routes to be posted
 const firebaseAdmin = require("../firebaseAdmin");
 const router = express.Router();
-
-//Database connections: returns object of connections (connections["item"])
 const db = require("../mongo.js");
-const addConnection = require("../mongo.js").addConnection;
 
+// const programsServices = require("../services/programs");
 const { sendWelcomeEmail } = require("../nodemailer");
-const { createFirebaseUser } = require("./userUtils");
-const { deleteFirebaseUser } = require("./userUtils");
+const { createFirebaseUser, deleteFirebaseUser } = require("../services/users");
 const { isAuthenticated } = require("../middlewares/auth");
 
 router.use(isAuthenticated);
@@ -26,33 +23,55 @@ router.get("/all", function(req, res) {
     });
 });
 
-//Create a program / Update if already exists
-//DatabaseName is unique
-
-//This route will be used for all update actions for a program.
+// Create a program
 router.post("/", function(req, res) {
-  // create a program
-  // add all org admins to the program with role "ADMIN"
-  // create an S3 bucket
-  db["Authentication"].programs
-    .updateOne(
-      {
-        databaseName: req.body.databaseName
-      },
-      req.body,
-      { upsert: true }
-    )
-    // status code 201 means created
-    .then(function(result) {
-      //This is a helper function in mongo.js that adds another connection
-      addConnection(req.body.databaseName);
-      res.status(201).json(result);
-    })
-    .catch(function(err) {
-      res.send(err);
-    });
+  try {
+    // TODO: call programsServices.createProgram()
+    res.status(201).send();
+  } catch (e) {
+    res.send(e);
+  }
 });
 
+// Rename a program
+router.patch("/:programId/name", function(req, res) {
+  db["Authentication"].programs.findOneAndUpdate(
+    { _id: req.params.programId },
+    { displayName: req.body.name },
+    (error, result) => {
+      if (error) {
+        console.error(
+          `Error renaming program with ID = ${req.params.programId}`
+        );
+        res.status(500).send(error);
+      } else {
+        res.status(200).json(result);
+      }
+    }
+  );
+});
+
+// Archive or un-archive a program
+router.patch("/:programId/archived", function(req, res) {
+  db["Authentication"].programs.findOneAndUpdate(
+    { _id: req.params.programId },
+    { archived: req.body.archived },
+    (error, result) => {
+      if (error) {
+        console.error(
+          `Error ${
+            req.body.archived ? "archiving" : "unarchiving"
+          } program with ID = ${req.params.programId}`
+        );
+        res.status(500).send(error);
+      } else {
+        res.status(200).json(result);
+      }
+    }
+  );
+});
+
+// Delete a program
 router.delete("/:programId", function(req, res) {
   db["Authentication"].programs
     .updateOne({ _id: req.params.programId }, { deleted: true })

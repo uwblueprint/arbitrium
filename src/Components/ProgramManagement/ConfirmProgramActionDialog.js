@@ -3,7 +3,6 @@ import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
-import { DELETE } from "../../requests/Helper";
 
 const actionMap = {
   ARCHIVE_PROGRAM: (programName) => {
@@ -18,9 +17,6 @@ const actionMap = {
 };
 
 const WarningMessage = styled.div`
-  p {
-    font-size: 14px;
-  }
   margin-bottom: 32px;
 `;
 
