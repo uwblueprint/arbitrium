@@ -6,7 +6,7 @@ const { isAuthenticated } = require("../middlewares/auth");
 
 // Get a user's programs that are not deleted
 // Returns an array of programs:
-//   [{id: ObjectId, name: String, role: String, organization, String, archived, Boolean}]
+//   [{id: ObjectId, name: String, role: String, organization: String, archived: Boolean}]
 router.get("/:userId/programs", isAuthenticated, async function(req, res) {
   db["Authentication"].users
     .aggregate([

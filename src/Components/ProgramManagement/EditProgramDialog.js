@@ -35,7 +35,7 @@ function EditProgramDialog({
   program = null,
   newProgram = false
 }) {
-  const [programName, setProgramName] = useState("");
+  const [programName, setProgramName] = useState(program.name);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const updateProgramName = () => (event) => {
@@ -84,6 +84,7 @@ function EditProgramDialog({
           <OutlinedInput
             id="program-name-input"
             fullWidth
+            value={programName}
             onChange={updateProgramName()}
           />
         </QuestionWrapper>
