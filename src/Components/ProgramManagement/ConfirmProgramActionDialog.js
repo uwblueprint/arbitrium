@@ -3,12 +3,25 @@ import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
+import { DELETE } from "../../requests/Helper";
+
+const actionMap = {
+  ARCHIVE_PROGRAM: (programName) => {
+    return `You’re about to archive "${programName}". Users will still be able to access this program from the archived programs section.`;
+  },
+  UNARCHIVE_PROGRAM: (programName) => {
+    return `You’re about to un-archive "${programName}". This will allow users to edit their reviews.`;
+  },
+  DELETE_PROGRAM: (programName) => {
+    return `You’re about to permanently delete "${programName}". The form, submissions, and reviews will not be recoverable.`;
+  }
+};
 
 const WarningMessage = styled.div`
   p {
-    font-size: 12px;
+    font-size: 14px;
   }
-  margin-bottom: 16px;
+  margin-bottom: 32px;
 `;
 
 const ButtonWrapper = styled.div`
@@ -18,16 +31,12 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-function ConfirmProgramActionDialog({ close, confirm, programId }) {
+function ConfirmProgramActionDialog({ close, confirm, program, action }) {
   return (
-    <Dialog>
+    <Dialog width="400px" paddingHorizontal={28} paddingVertical={28}>
       <DialogHeader onClose={close} title="Are you sure?" />
-      <hr></hr>
       <WarningMessage>
-        <p>
-          You are about to delete a user. Once you perform this action, all data
-          associated to the account will be permanently erased.
-        </p>
+        {action && actionMap[action](program.name)}
       </WarningMessage>
       <ButtonWrapper>
         <Button
@@ -44,13 +53,10 @@ function ConfirmProgramActionDialog({ close, confirm, programId }) {
             close();
           }}
           variant="contained"
-          style={{
-            backgroundColor: "#C94031",
-            color: "#FFFFFF",
-            marginLeft: "8px"
-          }}
+          color={"primary"}
+          style={{ marginLeft: "8px" }}
         >
-          Delete user
+          Confirm
         </Button>
       </ButtonWrapper>
     </Dialog>

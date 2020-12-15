@@ -7,6 +7,7 @@ import ProgramManagementTable from "./ProgramManagementTable";
 import DialogTriggerButton from "../Common/Dialogs/DialogTriggerButton";
 import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
 import EditProgramDialog from "./EditProgramDialog";
+import ConfirmProgramActionDialog from "./ConfirmProgramActionDialog";
 import { AuthContext } from "../../Authentication/Auth";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -15,6 +16,12 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { rolesMap } from "../../Constants/UserRoles";
+import {
+  ARCHIVE_PROGRAM,
+  UNARCHIVE_PROGRAM,
+  DELETE_PROGRAM
+} from "../../Constants/ActionTypes";
+import { current } from "immer";
 
 const Wrapper = styled.div`
   margin-top: 50px;
@@ -69,6 +76,9 @@ function ProgramManagement() {
     []
   );
   const [showEditProgramDialog, setShowEditProgramDialog] = useState(false);
+  const [showConfirmActionDialog, setShowConfirmActionDialog] = useState(false);
+  const [currentProgram, setCurrentProgram] = useState(null);
+  const [programAction, setProgramAction] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
 
@@ -80,8 +90,17 @@ function ProgramManagement() {
     setAnchorEl(null);
   };
 
+  const openProgramMenu = (event, program) => {
+    handleAnchorClick(event);
+    setCurrentProgram(program);
+  };
+
   function closeEditProgramDialog() {
     setShowEditProgramDialog(false);
+  }
+
+  function closeConfirmActionDialog() {
+    setShowConfirmActionDialog(false);
   }
 
   const programsData = useMemo(
@@ -89,7 +108,8 @@ function ProgramManagement() {
       convertToTableData(
         programs.value.filter((program) => {
           return !program.archived;
-        })
+        }),
+        false
       ),
     [programs]
   );
@@ -99,14 +119,15 @@ function ProgramManagement() {
       convertToTableData(
         programs.value.filter((program) => {
           return program.archived;
-        })
+        }),
+        true
       ),
     [programs]
   );
 
   // convert fetched users to table format
   // fetched: array
-  function convertToTableData(programs) {
+  function convertToTableData(programs, archived) {
     return programs.map((program) => {
       return {
         name: program.name,
@@ -117,7 +138,8 @@ function ProgramManagement() {
         // TODO: update user's currentProgram
         link: (
           <div className="button-container">
-            <a href={"/admin/applications"}>
+            {/* TODO: route to specific program */}
+            <a href={""}>
               <Button
                 variant="contained"
                 color="primary"
@@ -129,8 +151,8 @@ function ProgramManagement() {
             </a>
             <IconButton
               aria-label="actions"
-              aria-controls="actions-menu"
-              onClick={(e) => handleAnchorClick(e)}
+              aria-controls={"actions-menu"}
+              onClick={(e) => openProgramMenu(e, program)}
             >
               <MoreVertIcon />
             </IconButton>
@@ -171,6 +193,15 @@ function ProgramManagement() {
                 newProgram: false
               }}
             />
+            <ControlledDialogTrigger
+              showDialog={showConfirmActionDialog}
+              Dialog={ConfirmProgramActionDialog}
+              dialogProps={{
+                close: closeConfirmActionDialog,
+                action: programAction,
+                program: currentProgram
+              }}
+            />
             <ProgramManagementTable
               data={programsData}
               alertParent={reloadPrograms}
@@ -203,7 +234,7 @@ function ProgramManagement() {
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
+        onClose={handleAnchorClose}
       >
         <MenuItem
           classes={{ root: classes.action_menu_item }}
@@ -216,19 +247,31 @@ function ProgramManagement() {
         </MenuItem>
         <MenuItem
           classes={{ root: classes.action_menu_item }}
-          onClick={() => {}}
+          onClick={() => {
+            handleAnchorClose();
+          }}
         >
           Duplicate
         </MenuItem>
         <MenuItem
           classes={{ root: classes.action_menu_item }}
-          onClick={() => {}}
+          onClick={() => {
+            handleAnchorClose();
+            setShowConfirmActionDialog(true);
+            setProgramAction(
+              !currentProgram.archived ? ARCHIVE_PROGRAM : UNARCHIVE_PROGRAM
+            );
+          }}
         >
-          Archive
+          {currentProgram && !currentProgram.archived ? "Archive" : "Unarchive"}
         </MenuItem>
         <MenuItem
           classes={{ root: classes.action_menu_item }}
-          onClick={() => {}}
+          onClick={() => {
+            handleAnchorClose();
+            setShowConfirmActionDialog(true);
+            setProgramAction(DELETE_PROGRAM);
+          }}
         >
           Delete
         </MenuItem>
