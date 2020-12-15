@@ -51,9 +51,6 @@ const programSchema = new mongoose.Schema(
       type: Number,
       default: 2 // 1 is for legacy programs, 2 is our new ones
     },
-    s3bucket: {
-      type: String
-    },
     deleted: {
       type: Boolean,
       default: false
@@ -61,10 +58,6 @@ const programSchema = new mongoose.Schema(
     archived: {
       type: Boolean,
       default: false
-    },
-    archivedDate: {
-      type: Date,
-      default: null
     }
   },
   { collection: "programs" }
