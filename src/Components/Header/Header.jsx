@@ -14,6 +14,7 @@ import { connect } from "react-redux";
 import { getAllProgramsAPI } from "../../requests/get";
 import usePromise from "../../Hooks/usePromise";
 import { loadProgram } from "../../Actions/index.js";
+import { Typography } from "@material-ui/core";
 
 export const HEADER_HEIGHT = 56;
 export const MIN_WIDTH = 960;
@@ -80,6 +81,10 @@ const useStyles = makeStyles({
   tooltip: {
     fontSize: "16px",
     maxWidth: "none"
+  },
+
+  padding: {
+    paddingBottom: 0
   }
 });
 
@@ -151,49 +156,71 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
             </div>
           </Tooltip>
         </AppName>
-        <p>
-          {" • "}
-          {program && programsMap[program]
-            ? programsMap[program].displayName
-            : "Select a program to view applications "}{" "}
-        </p>
-        <div>
-          <ArrowDropDownCircleOutlinedIcon
-            style={{ marginLeft: "4px", margin: "12px" }}
-            onClick={handleClickProgramMenu}
-          ></ArrowDropDownCircleOutlinedIcon>
-          <Menu
-            elevation={0}
-            id="simple-menu"
-            anchorEl={programMenuAnchor}
-            keepMounted
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-            open={Boolean(programMenuAnchor)}
-            onClose={() => {
-              setprogramMenuAnchor(null);
-            }}
-            style={{ marginTop: HEADER_HEIGHT / 2 + 4 }}
-          >
-            {validPrograms ? (
-              <div style={{ border: "1px solid #ccc" }}>
-                {validPrograms.map((p, index) => (
-                  <MenuItem key={index} onClick={() => handleSelect(p)}>
-                    {" "}
-                    {p.displayName}
-                  </MenuItem>
-                ))}
-                {validPrograms.length === 0 ? (
-                  <MenuItem key={"None"}>
-                    You don't have access to any programs
-                  </MenuItem>
-                ) : null}
-              </div>
-            ) : null}
-          </Menu>
+        <div
+          style={{
+            maxWidth: 250,
+            display: "flex",
+            justifyContent: "space-between"
+          }}
+        >
+          <p style={{ minWidth: 200 }}>
+            <Typography noWrap>
+              {program && programsMap[program]
+                ? programsMap[program].displayName
+                : "Select a program to view applications "}
+            </Typography>
+          </p>
+          <div>
+            <ArrowDropDownCircleOutlinedIcon
+              style={{ marginLeft: "4px", margin: "12px" }}
+              onClick={handleClickProgramMenu}
+            ></ArrowDropDownCircleOutlinedIcon>
+            <Menu
+              elevation={0}
+              id="simple-menu"
+              anchorEl={programMenuAnchor}
+              keepMounted
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+              open={Boolean(programMenuAnchor)}
+              onClose={() => {
+                setprogramMenuAnchor(null);
+              }}
+              style={{
+                marginTop: HEADER_HEIGHT / 2 + 4,
+                maxWidth: 250
+              }}
+              MenuListProps={{
+                classes: {
+                  padding: classes.padding
+                }
+              }}
+            >
+              {validPrograms ? (
+                <div style={{ border: "1px solid #ccc" }}>
+                  {validPrograms.map((p, index) => (
+                    <MenuItem key={index} onClick={() => handleSelect(p)}>
+                      <Typography noWrap>{p.displayName}</Typography>
+                    </MenuItem>
+                  ))}
+                  {validPrograms.length === 0 ? (
+                    <MenuItem key={"None"}>
+                      You don't have access to any programs
+                    </MenuItem>
+                  ) : null}
+                </div>
+              ) : null}
+            </Menu>
+          </div>
         </div>
         <RightSideHeaderWrapper>
           {appUser.role === "Admin" || hasAdminAccessForCurrentProgram ? (
-            <RightSideHeaderWrapper>
+            <RightSideHeaderWrapper
+              style={{
+                minWidth: 220,
+                display: "flex",
+                justifyContent: "space-between"
+              }}
+            >
               <p style={{ marginLeft: "4px", margin: "12px" }}>
                 {" "}
                 {curRoute.title}{" "}
@@ -215,7 +242,13 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                       setAdminMenuAnchor(null);
                     }}
                     style={{
-                      marginTop: HEADER_HEIGHT / 2 + 4
+                      marginTop: HEADER_HEIGHT / 2 + 4,
+                      maxWidth: 220
+                    }}
+                    MenuListProps={{
+                      classes: {
+                        padding: classes.padding
+                      }
                     }}
                   >
                     {routes != null ? (
