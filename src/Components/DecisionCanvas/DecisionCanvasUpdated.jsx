@@ -121,17 +121,7 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
                   {section.answers.map((item, i) => (
                     <div key={i}>
                       <div className="questions">
-                        <h4>
-                          {i +
-                            1 +
-                            ". " +
-                            item.question
-                              .replace(/-/g, ".")
-                              .replace("One.Line", "One-Line")
-                              .replace("COVID.19", "COVID-19")
-                              .replaceAll("_dot_", ".")
-                              .replaceAll("_dash_", "-")}
-                        </h4>
+                        <h4>{i + 1 + ". " + item.question}</h4>
                       </div>
                       <div className="answers">
                         <h4>
