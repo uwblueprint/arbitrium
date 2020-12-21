@@ -74,6 +74,7 @@ const formsRoutes = require("./routes/forms");
 const feedbackRoutes = require("./routes/feedback");
 const emailRoutes = require("./routes/email");
 const filesRoutes = require("./routes/files");
+const submissionsRoutes = require("./routes/submissions");
 
 //Allows us to access request body in a post or put
 app.use(cors(corsOptions));
@@ -90,6 +91,7 @@ app.use("/api/programs", programRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/organizations", organizationRoutes);
 app.use("/api/forms", formsRoutes);
+app.use("/api/submissions", submissionsRoutes);
 
 app.use("/api/applications", applicationRoutes);
 app.use("/api/ratings", ratingsRoutes);
