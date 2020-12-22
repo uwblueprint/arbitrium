@@ -97,6 +97,7 @@ function PrivateRoute({
 
   //This affects the loading of the navbar or not
   const adminRoute = route.path.includes("admin");
+  const programRoute = route.path.includes("program");
   const Container = createContainer(adminRoute);
   const applicantRoute = route.loginRequired === false;
 
@@ -127,7 +128,7 @@ function PrivateRoute({
           curRoute={route}
           routes={headerRoutes}
         />
-        {!adminRoute ? (
+        {!adminRoute && !programRoute ? (
           <NavigationHeader
             history={history}
             admin={adminRoute}

@@ -119,10 +119,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
 
   const handleSelect = async (newProgram) => {
     setprogramMenuAnchor(null);
-    await updateUserProgramAPI({
-      userId: currentUser.uid,
-      programId: newProgram._id
-    });
+    await updateUserProgramAPI(currentUser.uid, { programId: newProgram._id });
     loadProgram(newProgram._id);
     //Load the application data into redux
   };

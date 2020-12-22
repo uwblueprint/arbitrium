@@ -207,7 +207,6 @@ function AllCandidates({ history, program }) {
         <div>
           <Header>
             <h1 style={{ color: "black" }}>All Candidates</h1>
-
             <div className="button-container">
               <Button
                 variant="contained"

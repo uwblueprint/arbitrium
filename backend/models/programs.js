@@ -29,11 +29,15 @@ const programSchema = new mongoose.Schema(
       type: String,
       default: null
     },
+    organization: {
+      type: mongoose.SchemaTypes.ObjectId
+    },
     databaseName: {
       type: String
     },
     displayName: {
-      type: String
+      type: String,
+      default: "Untitled Program"
     },
     form: {
       type: form,
@@ -44,7 +48,16 @@ const programSchema = new mongoose.Schema(
       default: null
     },
     appVersion: {
-      type: Number
+      type: Number,
+      default: 2 // 1 is for legacy programs, 2 is our new ones
+    },
+    deleted: {
+      type: Boolean,
+      default: false
+    },
+    archived: {
+      type: Boolean,
+      default: false
     }
   },
   { collection: "programs" }

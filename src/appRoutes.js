@@ -6,6 +6,7 @@ import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
 import CreateEditForm from "./Components/FormCreation/CreateEditForm";
 import CreateSubmissionForm from "./Components/FormCreation/Submission/CreateSubmissionForm";
+import ProgramManagement from "./Components/ProgramManagement/ProgramManagement";
 
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
@@ -31,6 +32,13 @@ const routes = [
     component: null,
     title: "Program Management",
     header: false,
+    programGroup: ""
+  },
+  {
+    path: "/programs",
+    component: ProgramManagement,
+    header: false,
+    title: "Program Management",
     programGroup: ""
   },
   {

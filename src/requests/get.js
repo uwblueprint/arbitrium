@@ -69,6 +69,7 @@ async function getAllProgramsAPI() {
 async function getAllProgramUsersAPI(programId) {
   return GET(`/api/programs/${programId}/users`);
 }
+
 async function getAllUserProgramsAPI({ userId }) {
   return GET(`/api/users/${userId}/programs`);
 }

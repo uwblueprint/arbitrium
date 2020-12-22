@@ -8,13 +8,7 @@ import EditUserDialog from "./EditUserDialog";
 import NewUserDialog from "./NewUserDialog";
 import UserManagementTable from "./UserManagementTable";
 import { connect } from "react-redux";
-
-const rolesMap = {
-  ADMIN: "Admin",
-  ADMIN_REVIEWER: "Admin and Reviewer",
-  REVIEWER: "Reviewer",
-  GUEST: "Guest"
-};
+import { rolesMap } from "../../Constants/UserRoles";
 
 const Wrapper = styled.div`
   margin-top: 50px;
