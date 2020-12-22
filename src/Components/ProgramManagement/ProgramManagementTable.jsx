@@ -44,21 +44,7 @@ const columns = [
   }
 ];
 
-const columnsArchived = [
-  { title: "Program Name", field: "name" },
-  { title: "Organization", field: "organization" },
-  { title: "Role", field: "role" },
-  { title: "Archived", field: "archived" },
-  {
-    title: "",
-    field: "link",
-    sorting: false,
-    searchable: false,
-    export: false
-  }
-];
-
-function ProgramManagementTable({ archived, ...props }) {
+function ProgramManagementTable({ ...props }) {
   return (
     <div>
       <MaterialTable
@@ -66,7 +52,7 @@ function ProgramManagementTable({ archived, ...props }) {
         components={{
           Container: (props) => <Container {...props} elevation={0} />
         }}
-        columns={archived ? columnsArchived : columns}
+        columns={columns}
         {...props}
         options={{
           pageSize: Math.min(5, props.data.length),

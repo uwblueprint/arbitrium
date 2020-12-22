@@ -116,25 +116,17 @@ function ProgramManagement() {
     setShowConfirmActionDialog(false);
   }
 
-  const programsData = useMemo(
-    () =>
-      convertToTableData(
-        programs.value.filter((program) => {
-          return !program.archived;
-        })
-      ),
-    [programs]
-  );
+  function getActivePrograms() {
+    return programs.value.filter((program) => {
+      return !program.archived;
+    });
+  }
 
-  const archivedProgramsData = useMemo(
-    () =>
-      convertToTableData(
-        programs.value.filter((program) => {
-          return program.archived;
-        })
-      ),
-    [programs]
-  );
+  function getArchivedPrograms() {
+    return programs.value.filter((program) => {
+      return program.archived;
+    });
+  }
 
   function convertToTableData(programs) {
     return programs.map((program) => {
@@ -173,6 +165,7 @@ function ProgramManagement() {
       };
     });
   }
+
   return (
     <div>
       <Wrapper>
@@ -216,7 +209,7 @@ function ProgramManagement() {
               }}
             />
             <ProgramManagementTable
-              data={programsData}
+              data={convertToTableData(getActivePrograms())}
               alertParent={reloadPrograms}
             />
             <Header>
@@ -224,7 +217,7 @@ function ProgramManagement() {
               <div className="button-container"></div>
             </Header>
             <ProgramManagementTable
-              data={archivedProgramsData}
+              data={convertToTableData(getArchivedPrograms())}
               alertParent={reloadPrograms}
             />
           </>
