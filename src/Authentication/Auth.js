@@ -75,10 +75,7 @@ function AuthProvider({ loadProgram, children }) {
       let program = appUser.currentProgram;
       if (!program && validPrograms.length > 0) {
         program = validPrograms[0].id;
-        await updateUserProgramAPI({
-          userId: user.uid,
-          programId: program
-        });
+        await updateUserProgramAPI(user.uid, { programId: program });
       }
       loadProgram(program);
       setAuthState({

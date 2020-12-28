@@ -119,10 +119,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
 
   const handleSelect = async (newProgram) => {
     setprogramMenuAnchor(null);
-    await updateUserProgramAPI({
-      userId: currentUser.uid,
-      programId: newProgram._id
-    });
+    await updateUserProgramAPI(currentUser.uid, { programId: newProgram._id });
     loadProgram(newProgram._id);
     //Load the application data into redux
   };
@@ -225,7 +222,11 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                             return (
                               <MenuItem
                                 key={index}
-                                onClick={() => history.push(route.path)}
+                                onClick={() =>
+                                  history.push(
+                                    route.path.replace(":programId", program)
+                                  )
+                                }
                                 visible={(
                                   route.title !== curRoute.title
                                 ).toString()}

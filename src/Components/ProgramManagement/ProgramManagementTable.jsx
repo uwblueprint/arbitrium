@@ -7,6 +7,7 @@ import { Paper } from "@material-ui/core";
 const Container = styled(Paper)`
   table {
     border: 1px solid #cccccc;
+    margin-bottom: 48px;
   }
 `;
 
@@ -14,20 +15,36 @@ const rowStyle = {
   border: "1px solid #cccccc"
 };
 
+const columnStyle = {
+  width: "100%"
+};
+
 const columns = [
-  { title: "Name", field: "name" },
-  { title: "Email", field: "email" },
+  {
+    title: "Program name",
+    field: "name",
+    cellStyle: { minWidth: 500, maxHeight: 52 },
+    headerStyle: { minWidth: 500 }
+  },
+  {
+    title: "Organization",
+    field: "organization"
+  },
   { title: "Role", field: "role" },
   {
     title: "",
-    field: "userLink",
+    field: "link",
     sorting: false,
     searchable: false,
-    export: false
+    export: false,
+    cellStyle: {
+      textAlign: "right",
+      minWidth: 148
+    }
   }
 ];
 
-function UserManagementTable(props) {
+function ProgramManagementTable({ ...props }) {
   return (
     <div>
       <MaterialTable
@@ -38,16 +55,16 @@ function UserManagementTable(props) {
         columns={columns}
         {...props}
         options={{
-          pageSize: Math.min(10, props.data.length),
+          pageSize: Math.min(5, props.data.length),
           rowStyle: rowStyle,
+          columnStyle: columnStyle,
           search: true,
           showTitle: false,
-          exportButton: true,
-          exportAllData: true
+          paging: false
         }}
       />
     </div>
   );
 }
 
-export default UserManagementTable;
+export default ProgramManagementTable;

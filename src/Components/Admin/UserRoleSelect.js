@@ -1,12 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import * as userRoles from "../../Constants/UserRoles";
 
-// TODO: fetch from mongo
-const userRoles = [
-  { name: "Admin", id: "Admin" },
-  { name: "Reviewer", id: "User" }
+const roles = [
+  { id: userRoles.ADMIN, name: userRoles.rolesMap[userRoles.ADMIN] },
+  {
+    id: userRoles.ADMIN_REVIEWER,
+    name: userRoles.rolesMap[userRoles.ADMIN_REVIEWER]
+  },
+  { id: userRoles.REVIEWER, name: userRoles.rolesMap[userRoles.REVIEWER] },
+  { id: userRoles.GUEST, name: userRoles.rolesMap[userRoles.GUEST] }
 ];
 
 const StyledSelect = styled(Select)`
@@ -16,6 +20,7 @@ const StyledSelect = styled(Select)`
 function UserRoleSelect({ id, value, onChange }) {
   return (
     <StyledSelect
+      native
       autoWidth={false}
       id={id}
       value={value}
@@ -31,10 +36,10 @@ function UserRoleSelect({ id, value, onChange }) {
       onChange={onChange}
       variant="outlined"
     >
-      {userRoles.map((role) => (
-        <MenuItem key={role.id} value={role.id}>
+      {roles.map((role) => (
+        <option key={role.id} value={role.id}>
           {role.name}
-        </MenuItem>
+        </option>
       ))}
     </StyledSelect>
   );

@@ -1,11 +1,12 @@
 import Application from "./Components/Application/Application";
 import AllApplications from "./Components/List/ApplicationList/AllApplications";
-import UserManagement from "./Components/Admin/UserManagement";
+import UserManagement from "./Components/Admin/ProgramUserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
 import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
 import CreateEditForm from "./Components/FormCreation/CreateEditForm";
 import CreateSubmissionForm from "./Components/FormCreation/Submission/CreateSubmissionForm";
+import ProgramManagement from "./Components/ProgramManagement/ProgramManagement";
 
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
@@ -31,6 +32,13 @@ const routes = [
     component: null,
     title: "Program Management",
     header: false,
+    programGroup: ""
+  },
+  {
+    path: "/programs",
+    component: ProgramManagement,
+    header: false,
+    title: "Program Management",
     programGroup: ""
   },
   {
@@ -83,17 +91,19 @@ const routes = [
     programGroup: "ADMIN"
   },
   {
-    path: "/admin/form-submission/:formId",
+    path: "/form-preview/:formId",
     component: CreateSubmissionForm,
-    title: "Form Submission",
-    header: false,
+    title: "Preview Form Submission",
+    header: true,
+    loginRequired: false,
     programGroup: ""
   },
   {
     path: "/form/:formId",
-    component: null,
+    component: CreateSubmissionForm,
     header: false,
-    title: "Users Submission Page",
+    title: "Submit Response",
+    loginRequired: false,
     programGroup: ""
   }
 ];

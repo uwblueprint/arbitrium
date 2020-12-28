@@ -12,6 +12,7 @@ import { AuthContext } from "../../Authentication/Auth.js";
 import * as FORM from "../../requests/forms.js";
 import usePromise from "../../Hooks/usePromise";
 import CreateEditFormHeader from "./CreateEditFormHeader";
+import PublishedFormHeader from "./PublishedFormHeader";
 import {
   defaultFormState,
   defaultNewSection
@@ -25,6 +26,7 @@ import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
 import { DragDropContext } from "react-beautiful-dnd";
 import FormSettingsDrawer from "./FormSettingsDrawer";
 import FormSettingsContext from "./FormSettingsContext";
+import moment from "moment";
 
 const useStyles = makeStyles({
   snackbar: {
@@ -40,6 +42,19 @@ const useStyles = makeStyles({
     color: "#EB9546"
   }
 });
+
+const DialogOverlay = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 150%;
+  width: 100vw;
+  z-index: 110;
+  background: rgba(0, 0, 0, 0.5);
+  .dialogButton {
+    text-transform: none;
+  }
+`;
 
 const FormWrapper = styled.div`
   padding-top: 70px;
@@ -74,7 +89,22 @@ function CreateEditForm() {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+  const [isPublished, setPublished] = useState(false);
+  const [previewLink, setPreviewLink] = useState(
+    "Loading Link... Please wait..."
+  );
+  const [applicantLink, setApplicantLink] = useState(
+    "Loading Link... Please wait"
+  );
 
+  const submissionLink = window.location.protocol + "//" + window.location.host;
+
+  //1. Used when a drag finishes to indiate which question should be active afterwards
+  //2. For the purposes of drag and drop, the child section can set its inital active question
+  //   And then call the parent to refetch the entire form (so it has all the question changes including _ids)
+  //   Without this, adding a question and then moving it creates un-intended behavior
+  //   (A child only calls this when a question is added/deleted so the parent can update itself with changes only made in the child)
+  const [initialActiveQuestion, setInitialActiveQuestion] = useState(0);
   const [formSettings, setFormSettings] = useState({
     themeColour: "2261AD",
     headerImage: null,
@@ -91,6 +121,8 @@ function CreateEditForm() {
   //FORM INIT/SAVE FUNCTIONS
   //----------------------------------------------------------------------------
 
+  //usecallback prevents functions from being re-created on every render.
+  //This is useful when a function is a dependency of useEffect (otherwise you get infinite renders)
   const saveForm = useCallback(() => {
     if (
       !loadForm.isPending &&
@@ -117,7 +149,9 @@ function CreateEditForm() {
         settings: {
           themeColour: "2261AD",
           confirmationMessage: "Your response has been recorded."
-        }
+        },
+        previewLink: defaultFormState.previewLink,
+        submissionLinks: defaultFormState.submissionLinks
       };
 
       await FORM.createForm(data);
@@ -148,9 +182,17 @@ function CreateEditForm() {
     });
     setFormSettings(loadForm.value.settings);
 
+    setPublished(!loadForm.value.draft);
+    setPreviewLink(
+      submissionLink + "/form-preview/" + loadForm.value.previewLink._id
+    );
+    setApplicantLink(
+      submissionLink + "/form/" + loadForm.value.submissionLinks[0]._id
+    );
+
     //Set the active form to be the first one
     //updateActiveSection(0);
-  }, [loadForm, appUser, initiateForm]);
+  }, [loadForm, appUser, initiateForm, submissionLink]);
 
   //When the sections changes we will update the form.
   //1. When an input on the section card itself changes focus OR
@@ -411,6 +453,17 @@ function CreateEditForm() {
     await FORM.updateForm(loadForm.value._id, newForm);
   }
 
+  async function publishForm() {
+    const newForm = loadForm.value;
+    newForm.sections = sections;
+    newForm.draft = false;
+    newForm.previewLink.close = moment();
+    await FORM.updateForm(loadForm.value._id, newForm);
+    refetch({ programId: programId });
+  }
+
+  //TODO: Add header customization here
+
   //When we move a question/section this uniquekey string will be changed
   //which will cause a complete re-render of the formSections
   let uniquekey = "";
@@ -420,29 +473,90 @@ function CreateEditForm() {
       uniquekey += question._id;
     });
   });
-
   return (
     <div>
-      <FormSettingsContext.Provider value={formSettings}>
+<FormSettingsContext.Provider value={formSettings}>      
+{isPublished ? (
+        <PublishedFormHeader
+          submissionLink={applicantLink}
+          handlePublish={publishForm}
+          id={"header_" + 1}
+          key={1}
+        />
+      ) : (
+        <div>
         <CreateEditFormHeader
           {...headerData}
           onChange={updateHeader}
+          previewLink={previewLink}
+          handlePublish={publishForm}
           id={"header_" + 1}
           key={1}
           onFormSettingsClick={handleOpenFormSettings}
         />
         <FormSettingsDrawer
-          open={showFormSettings}
-          handleCloseFormSettings={handleCloseFormSettings}
-          onSave={onFormSettingsSave}
-        />
-        <ControlledDialogTrigger
-          showDialog={showMoveSectionsDialog}
-          Dialog={CreateEditFormMoveSectionDialog}
-          dialogProps={{
-            onClose: closeMoveSectionDialog,
-            onSubmit: handleMoveSection,
-            initSections: sections
+        open={showFormSettings}
+        handleCloseFormSettings={handleCloseFormSettings}
+        onSave={onFormSettingsSave}
+      />
+      </div>
+      )}
+      <ControlledDialogTrigger
+        showDialog={showMoveSectionsDialog}
+        Dialog={CreateEditFormMoveSectionDialog}
+        dialogProps={{
+          onClose: closeMoveSectionDialog,
+          onSubmit: handleMoveSection,
+          initSections: sections
+        }}
+      />
+      <DragDropContext onDragEnd={onDragEnd}>
+        {sections &&
+          sections.map((section, key) => (
+            <div key={uniquekey + section._id}>
+              <FormWrapper key={section._id} id={"section_" + key}>
+                <FormSection
+                  key={key + "_section"}
+                  formId={loadForm.value._id}
+                  numSections={sections.length}
+                  refetch={refetch}
+                  sectionNum={key + 1}
+                  sectionData={section}
+                  questionData={section.questions}
+                  updateActiveSection={updateActiveSection}
+                  setInitialActiveQuestion={setInitialActiveQuestion}
+                  initialActiveQuestion={initialActiveQuestion}
+                  active={activeSection === key}
+                  handleAddSection={handleAddSection}
+                  handleTitleUpdate={handleTitleUpdate}
+                  handleDescriptionUpdate={handleDescriptionUpdate}
+                  handleSectionTypeUpdate={handleSectionTypeUpdate}
+                  handleMoveSection={handleMoveSection}
+                  handleDeleteSection={handleDeleteSection}
+                  setShowMoveSectionsDialog={setShowMoveSectionsDialog}
+                />
+              </FormWrapper>
+            </div>
+          ))}
+      </DragDropContext>
+      {showDeleteSectionConfirmation && (
+        <>
+          <DialogOverlay />
+          <DeleteSectionConfirmation
+            confirm={deleteSection}
+            close={closeDeleteSectionConfirmation}
+            sectionName={sections[activeSection].name}
+            questionCount={sections[activeSection].questions.length}
+          />
+        </>
+      )}
+      {deletedSection && (
+        <div>
+        <Snackbar
+          ContentProps={{ classes: { root: classes.snackbar } }}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
           }}
         />
         <DragDropContext onDragEnd={onDragEnd}>
@@ -469,6 +583,7 @@ function CreateEditForm() {
               </div>
             ))}
         </DragDropContext>
+        
         <ControlledDialogTrigger
           showDialog={showDeleteSectionConfirmation}
           Dialog={DeleteSectionConfirmation}
@@ -480,6 +595,7 @@ function CreateEditForm() {
               sections.length && sections[activeSection].questions.length
           }}
         />
+        </div>)}
         {deletedSection && (
           <Snackbar
             ContentProps={{ classes: { root: classes.snackbar } }}

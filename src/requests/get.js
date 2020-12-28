@@ -49,12 +49,9 @@ async function getAllStackingsAPI(user) {
   return GET(`/api/stackings/${user.user.userId}`);
 }
 
+//The second paramater of GET is a boolean if the endpoint requires Authorization
 async function getUserAPI(user) {
   return GET(`/api/users/${user.uid}`, false);
-}
-
-async function getAllUsersAPI() {
-  return GET("/api/users/all");
 }
 
 async function getAllApplicationsAPI() {
@@ -69,10 +66,11 @@ async function getAllProgramsAPI() {
   return GET(`/api/programs/all`);
 }
 
-async function getAllProgramUsers({ program }) {
-  return GET(`/api/programs/${program}/users`);
+async function getAllProgramUsersAPI(programId) {
+  return GET(`/api/programs/${programId}/users`);
 }
-async function getAllUserPrograms({ userId }) {
+
+async function getAllUserProgramsAPI({ userId }) {
   return GET(`/api/users/${userId}/programs`);
 }
 
@@ -87,12 +85,11 @@ export {
   getReviewCountAPI,
   getUserAPI,
   getAllReviewsAPI,
-  getAllUsersAPI,
   getAllRankingsAPI,
   getApplicationReviewsAPI,
   getCandidateSubmissions,
   getAllProgramsAPI,
   getAllFirebaseUsers,
-  getAllProgramUsers,
-  getAllUserPrograms
+  getAllProgramUsersAPI,
+  getAllUserProgramsAPI
 };
