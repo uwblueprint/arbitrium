@@ -136,7 +136,7 @@ function CreateEditFormHeader({
 
   const copyLinkToClipboard = () => {
     navigator.clipboard.writeText(previewLink);
-    var dummy = document.createElement("input");
+    const dummy = document.createElement("input");
     dummy.innerText = previewLink;
     document.body.appendChild(dummy);
     dummy.setAttribute("id", "dummy_id");
