@@ -1,7 +1,12 @@
 title: Arbitrium Help Center
 description: Arbitrium Help Center
-url: uwblueprint.github.io
-baseurl: /Arbitrium
-
 remote_theme: pmarsceill/just-the-docs
 color_scheme: arbitrium
+
+aux_links:
+  "Go to Arbitrium":
+    - "//arbitrium.web.app"
+aux_links_new_tab: true
+
+search:
+  rel_url: false

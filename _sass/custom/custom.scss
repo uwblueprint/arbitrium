@@ -1,3 +1,33 @@
 .site-title {
     font-size: 18px !important;
 }
+
+img {
+    margin-top: 1rem;
+    max-width: 600px;
+}
+
+.banner {
+    @extend .code-example;
+    font-size: 90%;
+    border: none;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: 0px 2px 5px 0 rgba(33,49,60,0.1);
+}
+
+.banner-info {
+    @extend .banner;
+    background-color: #FEF7E3;
+}
+
+.banner-danger {
+    @extend .banner;
+    background-color: #fee3e3;
+}
+
+details {
+    p {
+        margin-left: 24px;
+    }
+}

@@ -1,10 +1,9 @@
 ---
 layout: default
 title: Manage user access
-parent: Program administration
-nav_order: 1
+nav_order: 3
 has_children: true
-permalink: /docs/admin/programs/users
+permalink: /docs/users
 ---
 
 # Manage user access
