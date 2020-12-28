@@ -475,88 +475,39 @@ function CreateEditForm() {
   });
   return (
     <div>
-<FormSettingsContext.Provider value={formSettings}>      
-{isPublished ? (
-        <PublishedFormHeader
-          submissionLink={applicantLink}
-          handlePublish={publishForm}
-          id={"header_" + 1}
-          key={1}
-        />
-      ) : (
-        <div>
-        <CreateEditFormHeader
-          {...headerData}
-          onChange={updateHeader}
-          previewLink={previewLink}
-          handlePublish={publishForm}
-          id={"header_" + 1}
-          key={1}
-          onFormSettingsClick={handleOpenFormSettings}
-        />
-        <FormSettingsDrawer
-        open={showFormSettings}
-        handleCloseFormSettings={handleCloseFormSettings}
-        onSave={onFormSettingsSave}
-      />
-      </div>
-      )}
-      <ControlledDialogTrigger
-        showDialog={showMoveSectionsDialog}
-        Dialog={CreateEditFormMoveSectionDialog}
-        dialogProps={{
-          onClose: closeMoveSectionDialog,
-          onSubmit: handleMoveSection,
-          initSections: sections
-        }}
-      />
-      <DragDropContext onDragEnd={onDragEnd}>
-        {sections &&
-          sections.map((section, key) => (
-            <div key={uniquekey + section._id}>
-              <FormWrapper key={section._id} id={"section_" + key}>
-                <FormSection
-                  key={key + "_section"}
-                  formId={loadForm.value._id}
-                  numSections={sections.length}
-                  refetch={refetch}
-                  sectionNum={key + 1}
-                  sectionData={section}
-                  questionData={section.questions}
-                  updateActiveSection={updateActiveSection}
-                  setInitialActiveQuestion={setInitialActiveQuestion}
-                  initialActiveQuestion={initialActiveQuestion}
-                  active={activeSection === key}
-                  handleAddSection={handleAddSection}
-                  handleTitleUpdate={handleTitleUpdate}
-                  handleDescriptionUpdate={handleDescriptionUpdate}
-                  handleSectionTypeUpdate={handleSectionTypeUpdate}
-                  handleMoveSection={handleMoveSection}
-                  handleDeleteSection={handleDeleteSection}
-                  setShowMoveSectionsDialog={setShowMoveSectionsDialog}
-                />
-              </FormWrapper>
-            </div>
-          ))}
-      </DragDropContext>
-      {showDeleteSectionConfirmation && (
-        <>
-          <DialogOverlay />
-          <DeleteSectionConfirmation
-            confirm={deleteSection}
-            close={closeDeleteSectionConfirmation}
-            sectionName={sections[activeSection].name}
-            questionCount={sections[activeSection].questions.length}
+      <FormSettingsContext.Provider value={formSettings}>
+        {isPublished ? (
+          <PublishedFormHeader
+            submissionLink={applicantLink}
+            handlePublish={publishForm}
+            id={"header_" + 1}
+            key={1}
           />
-        </>
-      )}
-      {deletedSection && (
-        <div>
-        <Snackbar
-          ContentProps={{ classes: { root: classes.snackbar } }}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left"
+        ) : (
+          <div>
+            <CreateEditFormHeader
+              {...headerData}
+              onChange={updateHeader}
+              previewLink={previewLink}
+              handlePublish={publishForm}
+              id={"header_" + 1}
+              key={1}
+              onFormSettingsClick={handleOpenFormSettings}
+            />
+            <FormSettingsDrawer
+              open={showFormSettings}
+              handleCloseFormSettings={handleCloseFormSettings}
+              onSave={onFormSettingsSave}
+            />
+          </div>
+        )}
+        <ControlledDialogTrigger
+          showDialog={showMoveSectionsDialog}
+          Dialog={CreateEditFormMoveSectionDialog}
+          dialogProps={{
+            onClose: closeMoveSectionDialog,
+            onSubmit: handleMoveSection,
+            initSections: sections
           }}
         />
         <DragDropContext onDragEnd={onDragEnd}>
@@ -566,10 +517,15 @@ function CreateEditForm() {
                 <FormWrapper key={section._id} id={"section_" + key}>
                   <FormSection
                     key={key + "_section"}
+                    formId={loadForm.value._id}
                     numSections={sections.length}
+                    refetch={refetch}
                     sectionNum={key + 1}
                     sectionData={section}
+                    questionData={section.questions}
                     updateActiveSection={updateActiveSection}
+                    setInitialActiveQuestion={setInitialActiveQuestion}
+                    initialActiveQuestion={initialActiveQuestion}
                     active={activeSection === key}
                     handleAddSection={handleAddSection}
                     handleTitleUpdate={handleTitleUpdate}
@@ -583,19 +539,64 @@ function CreateEditForm() {
               </div>
             ))}
         </DragDropContext>
-        
-        <ControlledDialogTrigger
-          showDialog={showDeleteSectionConfirmation}
-          Dialog={DeleteSectionConfirmation}
-          dialogProps={{
-            confirm: deleteSection,
-            close: closeDeleteSectionConfirmation,
-            sectionName: sections.length && sections[activeSection].name,
-            questionCount:
-              sections.length && sections[activeSection].questions.length
-          }}
-        />
-        </div>)}
+        {showDeleteSectionConfirmation && (
+          <>
+            <DialogOverlay />
+            <DeleteSectionConfirmation
+              confirm={deleteSection}
+              close={closeDeleteSectionConfirmation}
+              sectionName={sections[activeSection].name}
+              questionCount={sections[activeSection].questions.length}
+            />
+          </>
+        )}
+        {deletedSection && (
+          <div>
+            <Snackbar
+              ContentProps={{ classes: { root: classes.snackbar } }}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left"
+              }}
+            />
+            <DragDropContext onDragEnd={onDragEnd}>
+              {sections &&
+                sections.map((section, key) => (
+                  <div key={uniquekey + section._id}>
+                    <FormWrapper key={section._id} id={"section_" + key}>
+                      <FormSection
+                        key={key + "_section"}
+                        numSections={sections.length}
+                        sectionNum={key + 1}
+                        sectionData={section}
+                        updateActiveSection={updateActiveSection}
+                        active={activeSection === key}
+                        handleAddSection={handleAddSection}
+                        handleTitleUpdate={handleTitleUpdate}
+                        handleDescriptionUpdate={handleDescriptionUpdate}
+                        handleSectionTypeUpdate={handleSectionTypeUpdate}
+                        handleMoveSection={handleMoveSection}
+                        handleDeleteSection={handleDeleteSection}
+                        setShowMoveSectionsDialog={setShowMoveSectionsDialog}
+                      />
+                    </FormWrapper>
+                  </div>
+                ))}
+            </DragDropContext>
+
+            <ControlledDialogTrigger
+              showDialog={showDeleteSectionConfirmation}
+              Dialog={DeleteSectionConfirmation}
+              dialogProps={{
+                confirm: deleteSection,
+                close: closeDeleteSectionConfirmation,
+                sectionName: sections.length && sections[activeSection].name,
+                questionCount:
+                  sections.length && sections[activeSection].questions.length
+              }}
+            />
+          </div>
+        )}
         {deletedSection && (
           <Snackbar
             ContentProps={{ classes: { root: classes.snackbar } }}

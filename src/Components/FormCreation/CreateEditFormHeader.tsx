@@ -42,7 +42,6 @@ const DescriptionInput = styled(InputBase)`
   }
 `;
 
-
 const InputWrapper = styled.div`
   padding: 48px 100px;
   padding-left: 15%;
@@ -182,7 +181,7 @@ function CreateEditFormHeader({
         ></DescriptionInput>
       </InputWrapper>
       <ButtonWrapper>
-      <div>
+        <div>
           <LinkPreviewButton
             variant="outlined"
             onClick={() => {
@@ -192,43 +191,46 @@ function CreateEditFormHeader({
           >
             Get Preview Link
           </LinkPreviewButton>
-          <PublishButton variant="contained" onClick={() => {}} color="primary">
+          <PublishButton
+            variant="contained"
+            onClick={() => {
+              setShowPublishDialog(true);
+            }}
+            color="primary"
+          >
             Publish
           </PublishButton>
         </div>
         <div>
-        <SettingsButton
-          onClick={onFormSettingsClick}
-          color="primary"
-          startIcon={<FormSettingsOutlineIcon />}
-          
-        >
-          Form Settings
-        </SettingsButton>
+          <SettingsButton
+            onClick={onFormSettingsClick}
+            color="primary"
+            startIcon={<FormSettingsOutlineIcon />}
+          >
+            Form Settings
+          </SettingsButton>
         </div>
       </ButtonWrapper>
-      {showPreviewLink && (
-        <>
-          <DialogOverlay />
-          <GetFormDialog
-            link={previewLink}
-            close={closeDialog}
-            copyLinkToClipboard={copyLinkToClipboard}
-          />
-        </>
-      )}
-      {showPublishDialog && (
-        <>
-          <DialogOverlay />
-          <GetFormDialog
-            link={previewLink}
-            close={closeDialog}
-            copyLinkToClipboard={copyLinkToClipboard}
-            publish={true}
-            handlePublish={publish}
-          />
-        </>
-      )}
+      <ControlledDialogTrigger
+        showDialog={showPreviewLink}
+        Dialog={GetFormDialog}
+        dialogProps={{
+          link: previewLink,
+          close: closeDialog,
+          copyLinkToClipboard: copyLinkToClipboard
+        }}
+      />
+      <ControlledDialogTrigger
+        showDialog={showPublishDialog}
+        Dialog={GetFormDialog}
+        dialogProps={{
+          link: previewLink,
+          close: closeDialog,
+          copyLinkToClipboard: copyLinkToClipboard,
+          publish: true,
+          handlePublish: publish
+        }}
+      />
       <Snackbar
         open={copiedPreviewLink}
         anchorOrigin={{
