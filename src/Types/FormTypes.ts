@@ -136,3 +136,9 @@ export interface DefaultFormState extends FormStateBase {
 export interface FormState extends FormStateBase {
   sections: Array<FormSection>;
 }
+
+export type FormSettingsType = {
+  headerImage?: string | null;
+  themeColour: string;
+  confirmationMessage: string;
+};
