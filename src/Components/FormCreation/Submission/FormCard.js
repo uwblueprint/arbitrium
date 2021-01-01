@@ -113,13 +113,21 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
             </DescriptionField>
           </TitleWrapper>
           {card && card.type === "MULTIPLE_CHOICE" ? (
-            <SelectQuestion data={card.options} submission={true} />
+            <SelectQuestion
+              data={card.options}
+              submission={true}
+              onBlur={() => {}}
+            />
           ) : null}
           {card && card.type === "SHORT_ANSWER" ? (
-            <TextQuestion short_answer={true} />
+            <TextQuestion
+              short_answer={true}
+              submission={true}
+              onBlur={() => {}}
+            />
           ) : null}
           {card && card.type === "PARAGRAPHS" ? (
-            <TextQuestion short_answer={false} />
+            <TextQuestion short_answer={false} submission={true} />
           ) : null}
           {card && card.type === "CHECKBOXES" ? (
             <SelectQuestion data={card.options} submission={true} />

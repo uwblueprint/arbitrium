@@ -113,7 +113,7 @@ function CreateSubmissionForm({ match }) {
       const element = document.getElementById("root");
 
       element.scrollIntoView({
-        behavior: "smooth",
+        behavior: "auto",
         alignToTop: true
       });
     });

@@ -9,6 +9,7 @@ const ratingSchema = require("./models/ratings");
 const programSchema = require("./models/programs.js");
 const organizationSchema = require("./models/organizations");
 const formsSchema = require("./models/forms");
+const submissionSchema = require("./models/submission");
 
 console.info("Attempting to connect to Mongo...");
 const USERNAME = MONGO_CONFIGS.module.mongoUsername;
@@ -36,12 +37,17 @@ const organizationModel = mongoPrograms.model(
   organizationSchema
 );
 const formsModel = mongoPrograms.model("formsModel", formsSchema);
+const submissionModel = mongoPrograms.model(
+  "submissionModel",
+  submissionSchema
+);
 const newConnection = {
   mongo: mongoPrograms,
   users: userModel,
   programs: programModel,
   organizations: organizationModel,
-  forms: formsModel
+  forms: formsModel,
+  submissions: submissionModel
 };
 connections["Authentication"] = newConnection;
 
@@ -96,7 +102,8 @@ function addConnection(database) {
       users: userModel,
       applications: applicationModel,
       rankings: rankingModel,
-      ratings: ratingModel
+      ratings: ratingModel,
+      submissions: submissionModel
     };
     connections[database._id] = newConnection;
   }
