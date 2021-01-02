@@ -29,6 +29,8 @@ jobs:
       - run:
           name: Style
           command: npm run lint
+          env:
+            CI: false
   build:
     executor: node/default
     steps:
