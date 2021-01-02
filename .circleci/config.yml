@@ -1,3 +1,7 @@
+version: 2.1
+orbs:
+  node: circleci/node@3.0.0
+  
 jobs:
   install:
     working_directory: ~/mern-starter
@@ -25,6 +29,8 @@ jobs:
       - run:
           name: Style
           command: npm run lint
+          env:
+            CI: false
   build:
     executor: node/default
     steps:
@@ -35,6 +41,12 @@ jobs:
           command: npm run build
 
 workflows:
-  node-tests:
+  test:
     jobs:
-      - node/test
+      - install
+      - style:
+          requires:
+            - install
+      - build:
+          requires:
+            - install
