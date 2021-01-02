@@ -3,7 +3,7 @@ orbs:
   node: circleci/node@3.0.0
 
 jobs:
-  Install-Dependencies:
+  install:
     working_directory: ~/mern-starter
     # Reuse Docker container specification given by the node Orb
     executor: node/default
@@ -39,9 +39,12 @@ jobs:
           command: npm run build
 
 workflows:
-  style:
+  test:
     jobs:
-      - style
-  build:
-    jobs:
-      - build
+      - install
+      - style:
+          requires:
+            - install
+      - build:
+          requires:
+            - install
