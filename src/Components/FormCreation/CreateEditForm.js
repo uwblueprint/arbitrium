@@ -199,7 +199,7 @@ function CreateEditForm() {
   //2. The section changes focus in general
   useEffect(() => {
     saveForm();
-  }, []);
+  }, [sections, saveForm]);
 
   /*****************************************************************************
    * Form customization
