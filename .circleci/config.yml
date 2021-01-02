@@ -50,3 +50,4 @@ workflows:
       - build:
           requires:
             - install
+
