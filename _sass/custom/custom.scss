@@ -4,6 +4,7 @@
 
 img {
     margin-top: 1rem;
+    margin-bottom: 1rem;
     max-width: 600px;
 }
 
@@ -29,5 +30,15 @@ img {
 details {
     p {
         margin-left: 24px;
+    }
+}
+
+li {
+    ol {
+        margin-top: 0 !important;
+    }
+    p {
+        margin-top: 0;
+        margin-bottom: 0.5em;
     }
 }

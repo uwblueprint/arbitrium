@@ -12,7 +12,7 @@ A **program** is used to run a single decision process in Arbitrium. It holds yo
 
 An **organization** can contain multiple programs. Only **Organization Admins** can create and manage these programs.
 
-To add/remove your organization's admins, [email us](../../../contact).
+To add/remove your organization's admins, [email us](contact).
 {: .banner-info .mb-6 }
 
 ## On this page
@@ -23,7 +23,7 @@ To add/remove your organization's admins, [email us](../../../contact).
 
 ## Create a program
 
-When you create a program, you and the other admins of your organization are added as **Program Admins** for the program. Read more about program roles [here]().
+When you create a program, you and the other admins of your organization are added as **Program Admins** for the program. Read more about program roles [here](users/roles).
 
 1. View all of your programs.
 2. Click **Add new**.

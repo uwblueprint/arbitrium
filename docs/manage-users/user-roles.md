@@ -9,7 +9,7 @@ permalink: /docs/users/roles
 # Understanding user roles
 {: .no_toc }
 
-Arbitrium user roles define the actions a user can perform within a program. [Program Admins](#program-admin) can manage Arbitrium users and their roles from a program's [User Management page](./).
+Arbitrium user roles define the actions a user can perform within a program. [Program Admins](#program-admin) can manage Arbitrium users and their roles from a program's [User Management page](.).
 
 <!-- ## On this page
 {: .no_toc .text-delta }
@@ -23,7 +23,7 @@ Guests are granted read-only access to the candidate submissions of the program.
 
 ## Committee Member
 
-Committee Members are responsible for [reviewing the candidate submissions](../../review/review.md) of the program. They are not able to see other Committee Members' reviews.
+Committee Members are responsible for [reviewing the candidate submissions](../get-started/committee-members) of the program. They are not able to see other Committee Members' reviews.
 
 ## Program Admin
 
@@ -42,6 +42,6 @@ Organization admins have the following privileges:
 - Automatically granted Program Admin access to **all** of an organization's programs.
 - They can [create and manage the organization's programs](../manage-organization).
 
-To add/remove your organization's admins, [email us](../../../contact).
+To add/remove your organization's admins, [email us](../contact).
 {: .banner-info .mb-6 }
 
