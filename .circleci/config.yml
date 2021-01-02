@@ -35,12 +35,6 @@ jobs:
           command: npm run build
 
 workflows:
-  test:
+  node-tests:
     jobs:
-      - install
-      - style:
-          requires:
-            - install
-      - build:
-          requires:
-            - install
+      - node/test
