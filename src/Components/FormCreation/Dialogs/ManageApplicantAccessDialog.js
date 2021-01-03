@@ -101,8 +101,6 @@ const useStyles = makeStyles((theme) => ({
 
 function ManageApplicantAccessDialog({
   close,
-  link,
-  copyLinkToClipboard,
   handleSaveFormAccess,
   linkData,
   openFormWithNewLink

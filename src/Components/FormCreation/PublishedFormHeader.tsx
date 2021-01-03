@@ -71,7 +71,7 @@ function PublishedFormHeader({
 
   const copyLinkToClipboard = () => {
     navigator.clipboard.writeText(submissionLink);
-    var dummy = document.createElement("input");
+    const dummy = document.createElement("input");
     dummy.innerText = submissionLink;
     document.body.appendChild(dummy);
     dummy.setAttribute("id", "dummy_id");
@@ -198,9 +198,7 @@ function PublishedFormHeader({
           <DialogOverlay />
           <ManageApplicantAccessDialog
             linkData={linkData}
-            link={submissionLink}
             close={closeDialog}
-            copyLinkToClipboard={copyLinkToClipboard}
             handleSaveFormAccess={handleSaveFormAccess}
             openFormWithNewLink={openFormWithNewLink}
           />
