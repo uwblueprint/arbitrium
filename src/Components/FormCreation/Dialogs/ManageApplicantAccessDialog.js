@@ -142,7 +142,9 @@ function ManageApplicantAccessDialog({
         handleSaveFormAccess(null);
       }
     }
-    //save to db the new settings
+
+    //If the form is closed by user then its closing date is set to now.
+    //handleSaveFormAccess(moment()) is called when the button is clicked
   };
 
   return (
@@ -232,7 +234,6 @@ function ManageApplicantAccessDialog({
                 ></FormControlLabel>
                 <Button
                   onClick={() => {
-                    setDate(moment());
                     handleSaveFormAccess(moment());
                     close();
                   }}
