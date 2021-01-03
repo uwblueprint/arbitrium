@@ -1,9 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import Dialog from "../../Common/Dialogs/Dialog";
 import Close from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
 
 const Header = styled.div`
   display: flex;
@@ -20,12 +27,12 @@ const Header = styled.div`
 const WarningMessage = styled.div`
   display: flex;
   padding-bottom: 16px;
+  margin-bottom: 24px;
   color: rgba(0, 0, 0, 0.87);
   background-color: #ffc27a;
-  margin: auto;
   width: 100%;
   padding-top: 6px;
-  height: 72px;
+  height: 31px;
   left: 2.91%;
   right: 2.91%;
   top: 92px;
@@ -37,7 +44,7 @@ const WarningMessageText = styled.div`
   position: absolute;
   left: 11.65%;
   right: 25.12%;
-  top: 106px;
+  top: 92px;
   font-family: Roboto;
   font-size: 14px;
   font-style: normal;
@@ -56,52 +63,16 @@ const WarningMessageText = styled.div`
   }
 `;
 
-const PreviewLinkWrapper = styled.div`
-  position: absolute;
-  left: 2.91%;
-  right: 53.3%;
-  top: 188px;
-  width: 776px;
-  align-items: left;
-  margin: auto;
-  display: block;
-  p {
-    height: 24px;
-    left: 0%;
-    right: 0%;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
-    display: block;
-    align-items: center;
-    letter-spacing: 0.15px;
-  }
-  input {
-    height: 24px;
-    left: 0%;
-    right: 0%;
-    width: 100%;
-    border: 0px;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 21px;
-    display: block;
-    align-items: center;
-    letter-spacing: 0.25px;
-  }
-  input:focus {
-    outline: none;
-  }
+const OptionsWrapper = styled.div`
+  margin-left: 24px;
+  left: 100px;
 `;
 
 const ButtonWrapper = styled.div`
   position: absolute;
   bottom: 18px;
   right: 19px;
+  margin-left: 27px;
   button {
     text-transform: none;
     font-weight: 500;
@@ -110,14 +81,34 @@ const ButtonWrapper = styled.div`
   }
 `;
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexWrap: "wrap"
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 267,
+    border: "1px solid rgba(0, 0, 0, 0.33)",
+    borderRadius: "4px",
+    padding: "10px",
+    marginLeft: "32px",
+    marginTop: "16px",
+    marginBottom: "16px"
+  }
+}));
+
 function GetFormDialog({
   close,
   link,
   copyLinkToClipboard,
-  publish = false,
-  handlePublish = null
+  formOpen,
+  handleSaveFormAccess
 }) {
+  const classes = useStyles();
   const dialogRef = React.createRef();
+  const [option, setOption] = useState("manual");
 
   useEffect(() => {
     function detectEscape(event) {
@@ -138,11 +129,17 @@ function GetFormDialog({
     }
   }, [close, dialogRef]);
 
+  const handleSave = () => {
+    //save to db the new settings
+  };
+
   const handleFocus = (event) => {
     copyLinkToClipboard();
     event.preventDefault();
     event.target.select();
   };
+
+  console.log(option);
 
   return (
     <Dialog
@@ -151,8 +148,9 @@ function GetFormDialog({
       paddingHorizontal={28}
       paddingVertical={28}
       style={{
-        width: "788px",
-        height: "312px",
+        width: "824px",
+        height: "auto",
+        minHeight: "372px",
         boxShadow:
           "0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 5px 5px rgba(0, 0, 0, 0.2)",
         borderRadius: "4px",
@@ -162,7 +160,7 @@ function GetFormDialog({
       <Header
         style={{ lineHeight: "36px", fontSize: "24px", fontWeight: "400" }}
       >
-        Get Preview Link
+        Manage Applicant Access
         <IconButton
           onClick={close}
           style={{
@@ -180,7 +178,7 @@ function GetFormDialog({
             position: "absolute",
             left: "5.83%",
             right: "91.26%",
-            top: "116px"
+            top: "92"
           }}
           width="24"
           height="24"
@@ -196,50 +194,122 @@ function GetFormDialog({
             fillOpacity="0.54"
           />
         </svg>
-        {publish ? (
-          <WarningMessageText>
-            Please review the form <b>before</b> sending to applicants Changes
-            to the form <b>after publishing</b> will require assitance from
-            Arbitrium support.
-          </WarningMessageText>
-        ) : (
-          <WarningMessageText>
-            These links are meant for reviewing the form <b>before</b> allowing
-            applicants to apply. Response submitted with this link{" "}
-            <b>will not</b> be saved.
-          </WarningMessageText>
-        )}
+        <WarningMessageText>
+          {formOpen ? (
+            <div>
+              This form is current <b>accepting</b> responses.
+            </div>
+          ) : (
+            <div>
+              This form is currently <b>closed</b> to responses.
+            </div>
+          )}
+        </WarningMessageText>
       </WarningMessage>
-      {publish ? (
+      {formOpen ? (
         <div>
-          <p>
-            {" "}
-            Previewing in a new window is meant for reviewing the form{" "}
-            <b>before</b> allowing applicants to apply. Responses submitted with
-            this link <b>will not</b> be saved.{" "}
-          </p>
-          <p style={{ fontSize: 16, fontWeight: 500 }}>
-            {" "}
-            If the form will not require any further changes, you are ready to
-            publish.
-          </p>
+          <div>
+            <p style={{ fontSize: 16, fontWeight: 500 }}>
+              {" "}
+              <b>How do you want to close this form?</b>
+            </p>
+          </div>
+          <OptionsWrapper>
+            <FormControl component="fieldset">
+              <FormLabel component="legend"></FormLabel>
+              <RadioGroup
+                value={option}
+                onChange={(event) => setOption(event.target.value)}
+              >
+                <FormControlLabel
+                  value="manual"
+                  control={<Radio />}
+                  label="Manually close the form"
+                ></FormControlLabel>
+                <Button
+                  onClick={handleSave}
+                  href="#text-buttons"
+                  variant="outlined"
+                  color="primary"
+                  disabled={option !== "manual"}
+                  style={{
+                    marginLeft: "32px",
+                    marginTop: "16px",
+                    marginBottom: "16px",
+                    width: "170px",
+                    height: "36px",
+                    backgroundColor:
+                      option !== "manual" ? "#E5BAB6" : "#C94031",
+                    fontSize: "14px",
+                    border: "1px solid rgba(0, 0, 0, 0.33)",
+                    borderRadius: "4px",
+                    fontWeight: "500",
+                    lineHeight: "16px",
+                    textTransform: "capitalize",
+                    color: "#FFFFFF"
+                  }}
+                >
+                  Close the form now
+                </Button>
+
+                <FormControlLabel
+                  value="schedule"
+                  control={<Radio />}
+                  label="Schedule the a time for the form to close "
+                />
+                <TextField
+                  id="datetime-local"
+                  type="datetime-local"
+                  defaultValue="2017-05-24T10:30"
+                  disabled={option === "manual"}
+                  className={classes.textField}
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                />
+              </RadioGroup>
+            </FormControl>
+          </OptionsWrapper>
         </div>
       ) : (
-        <PreviewLinkWrapper>
-          <p>Preview Link</p>
-          <input value={link} onClick={handleFocus} />
-          <div
+        <div>
+          <div>
+            <p style={{ fontSize: 16, fontWeight: 500 }}>
+              {" "}
+              <b>How do you want to close this form?</b>
+            </p>
+          </div>
+          <p>
+            Reopening the form will generate a new link for applicants to use.
+            To get the new link, click “Get Applicant Link” after reopening the
+            form.
+          </p>
+          <Button
+            onClick={handleSave}
+            href="#text-buttons"
+            variant="outlined"
+            color="primary"
             style={{
-              left: "0%",
-              right: "0%",
-              top: "-nan%",
-              bottom: "-nan%",
-              width: "776px",
-              border: "0.25px solid rgba(0, 0, 0, 0.33)"
+              marginLeft: "32px",
+              marginTop: "16px",
+              marginBottom: "16px",
+              width: "170px",
+              height: "36px",
+              backgroundColor: "#55A94E",
+              fontSize: "14px",
+              border: "1px solid rgba(0, 0, 0, 0.33)",
+              borderRadius: "4px",
+              fontWeight: "500",
+              lineHeight: "16px",
+              textTransform: "capitalize",
+              color: "#FFFFFF"
             }}
-          />
-        </PreviewLinkWrapper>
+          >
+            Reopen form now
+          </Button>
+        </div>
       )}
+
       <ButtonWrapper>
         <Button
           onClick={() => {
@@ -247,38 +317,25 @@ function GetFormDialog({
           }}
           href="#text-buttons"
           color="primary"
-          style={
-            !publish
-              ? {
-                  fontWeight: "500",
-                  lineHeight: "16px",
-                  letterSpacing: "1.25px",
-                  textTransform: "capitalize",
-                  color: "#2261AD"
-                }
-              : {
-                  fontWeight: "500",
-                  lineHeight: "16px",
-                  letterSpacing: "1.25px",
-                  textTransform: "capitalize",
-                  color: "#2261AD",
-                  border: "1px solid rgba(0, 0, 0, 0.33)",
-                  boxSizing: "border-box",
-                  height: "36px"
-                }
-          }
+          style={{
+            fontWeight: "500",
+            lineHeight: "16px",
+            letterSpacing: "1.25px",
+            textTransform: "capitalize",
+            color: "#2261AD"
+          }}
         >
-          {publish ? "Preview in New Window" : "Open In New Window"}
+          Cancel
         </Button>
         <Button
-          onClick={publish ? handlePublish : copyLinkToClipboard}
+          onClick={handleSave}
           href="#text-buttons"
           variant="outlined"
           color="primary"
           style={{
             marginLeft: "23px",
             height: "36px",
-            backgroundColor: publish ? "#2261AD" : "#C1E0FF",
+            backgroundColor: "#2261AD",
             fontSize: "14px",
             border: "1px solid rgba(0, 0, 0, 0.33)",
             boxSizing: "border-box",
@@ -287,10 +344,10 @@ function GetFormDialog({
             lineHeight: "16px",
             letterSpacing: "1.25px",
             textTransform: "capitalize",
-            color: publish ? "#FFFFFF" : "#2261AD"
+            color: "#FFFFFF"
           }}
         >
-          {publish ? "Publish" : "Copy Link"}
+          Save Settings
         </Button>
       </ButtonWrapper>
     </Dialog>

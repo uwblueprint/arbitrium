@@ -73,6 +73,10 @@ function PublishedFormHeader({
     setCopiedsubmissionLink(true);
   };
 
+  const handleSaveFormAccess = () => {
+    //TODO
+  };
+
   return (
     <div>
       <PublishedHeader>
@@ -189,8 +193,8 @@ function PublishedFormHeader({
             link={submissionLink}
             close={closeDialog}
             copyLinkToClipboard={copyLinkToClipboard}
-            publish={true}
-            handlePublish={null}
+            formOpen={false}
+            handleSaveFormAccess={handleSaveFormAccess}
           />
         </>
       )}
