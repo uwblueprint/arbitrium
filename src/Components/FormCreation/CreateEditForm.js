@@ -473,6 +473,7 @@ function CreateEditForm() {
     newForm.sections = sections;
 
     //if date == null then the form doesn't have a closing date
+    //i.e user has selected to close it manually vs schedule
     if (date) {
       newForm.submissionLinks[
         loadForm.value.submissionLinks.length - 1
@@ -490,6 +491,7 @@ function CreateEditForm() {
   async function openFormWithNewLink() {
     const newForm = loadForm.value;
     newForm.sections = sections;
+    //defaultFormState.previewLink is a default link object
     newForm.submissionLinks.push(defaultFormState.previewLink);
     await FORM.updateForm(loadForm.value._id, newForm);
     refetch({ programId: programId });

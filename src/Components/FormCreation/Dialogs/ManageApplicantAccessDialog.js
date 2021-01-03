@@ -107,10 +107,16 @@ function ManageApplicantAccessDialog({
 }) {
   const classes = useStyles();
   const dialogRef = React.createRef();
+
+  //If the form is open what is the closing type? If close is null then it is manual and not scheduled
   const [option, setOption] = useState(
     linkData.close !== null ? "schedule" : "manual"
   );
+  //A form is open if close is null or the closing date has not passed
   const [open, setOpen] = useState(!moment(linkData.close).isBefore(moment()));
+
+  //If close is null then set a default value for schedule option of today + 1 week
+  //else load the currently scheduled date as the default date value for the schedule option
   const [date, setDate] = useState(
     linkData.close ? moment(linkData.close) : moment().add(7, "days")
   );
