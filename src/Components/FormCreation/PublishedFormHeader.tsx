@@ -6,6 +6,8 @@ import PublishedFormDialog from "./Dialogs/PublishedFormDialog";
 import ManageApplicantAccessDialog from "./Dialogs/ManageApplicantAccessDialog";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import SettingsIcon from "@material-ui/icons/Settings";
+import moment from "moment";
+import { Link } from "../../Types/FormTypes";
 
 const DialogOverlay = styled.div`
   position: fixed;
@@ -47,10 +49,16 @@ const TextWrapper = styled.div`
 
 type Props = {
   submissionLink: string;
+  handleSaveFormAccess: (date: string) => void;
+  linkData: Link;
+  openFormWithNewLink: () => void;
 };
 
 function PublishedFormHeader({
-  submissionLink
+  submissionLink,
+  handleSaveFormAccess,
+  linkData,
+  openFormWithNewLink
 }: Props): React.ReactElement<typeof Header> {
   const [showPublishedFormDialog, setshowPublishedFormDialog] = useState(false);
   const [showManageAccessDialog, setshowManageAccessDialog] = useState(false);
@@ -71,10 +79,6 @@ function PublishedFormHeader({
     document.execCommand("copy");
     dummy.remove();
     setCopiedsubmissionLink(true);
-  };
-
-  const handleSaveFormAccess = () => {
-    //TODO
   };
 
   return (
@@ -136,7 +140,6 @@ function PublishedFormHeader({
               onClick={() => {
                 setshowManageAccessDialog(true);
               }}
-              href="#text-buttons"
               color="primary"
               style={{
                 backgroundColor: "#2261AD",
@@ -152,12 +155,16 @@ function PublishedFormHeader({
               Manage Applicant Access
             </Button>
             <Button
-              variant="outlined"
+              variant={
+                moment(linkData.close).isBefore(moment())
+                  ? "contained"
+                  : "outlined"
+              }
               onClick={() => {
                 setshowPublishedFormDialog(true);
               }}
-              href="#text-buttons"
               color="primary"
+              disabled={moment(linkData.close).isBefore(moment())}
               style={{
                 marginLeft: 369,
                 color: "#2261AD",
@@ -190,11 +197,12 @@ function PublishedFormHeader({
         <>
           <DialogOverlay />
           <ManageApplicantAccessDialog
+            linkData={linkData}
             link={submissionLink}
             close={closeDialog}
             copyLinkToClipboard={copyLinkToClipboard}
-            formOpen={false}
             handleSaveFormAccess={handleSaveFormAccess}
+            openFormWithNewLink={openFormWithNewLink}
           />
         </>
       )}

@@ -11,6 +11,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
 
 const Header = styled.div`
   display: flex;
@@ -87,7 +88,6 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap"
   },
   textField: {
-    marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 267,
     border: "1px solid rgba(0, 0, 0, 0.33)",
@@ -95,20 +95,24 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
     marginLeft: "32px",
     marginTop: "16px",
-    marginBottom: "16px"
+    marginBottom: "84px"
   }
 }));
 
-function GetFormDialog({
+function ManageApplicantAccessDialog({
   close,
   link,
   copyLinkToClipboard,
-  formOpen,
-  handleSaveFormAccess
+  handleSaveFormAccess,
+  linkData,
+  openFormWithNewLink
 }) {
   const classes = useStyles();
   const dialogRef = React.createRef();
-  const [option, setOption] = useState("manual");
+  const [option, setOption] = useState(
+    linkData.close !== null ? "schedule" : "manual"
+  );
+  const [open, setOpen] = useState(!moment(linkData.close).isBefore(moment()));
 
   useEffect(() => {
     function detectEscape(event) {
@@ -129,17 +133,11 @@ function GetFormDialog({
     }
   }, [close, dialogRef]);
 
-  const handleSave = () => {
+  const handleSave = (date) => {
+    setOpen(!moment(date).isBefore(moment()));
+    handleSaveFormAccess(date);
     //save to db the new settings
   };
-
-  const handleFocus = (event) => {
-    copyLinkToClipboard();
-    event.preventDefault();
-    event.target.select();
-  };
-
-  console.log(option);
 
   return (
     <Dialog
@@ -195,7 +193,7 @@ function GetFormDialog({
           />
         </svg>
         <WarningMessageText>
-          {formOpen ? (
+          {open ? (
             <div>
               This form is current <b>accepting</b> responses.
             </div>
@@ -206,7 +204,7 @@ function GetFormDialog({
           )}
         </WarningMessageText>
       </WarningMessage>
-      {formOpen ? (
+      {open ? (
         <div>
           <div>
             <p style={{ fontSize: 16, fontWeight: 500 }}>
@@ -227,7 +225,7 @@ function GetFormDialog({
                   label="Manually close the form"
                 ></FormControlLabel>
                 <Button
-                  onClick={handleSave}
+                  onClick={() => handleSave(moment())}
                   href="#text-buttons"
                   variant="outlined"
                   color="primary"
@@ -260,9 +258,18 @@ function GetFormDialog({
                 <TextField
                   id="datetime-local"
                   type="datetime-local"
-                  defaultValue="2017-05-24T10:30"
+                  defaultValue={
+                    linkData.close
+                      ? moment(linkData.close).format("yyyy-MM-DDThh:mm")
+                      : moment()
+                          .add(7, "days")
+                          .format("yyyy-MM-DDThh:mm")
+                  }
                   disabled={option === "manual"}
                   className={classes.textField}
+                  onChange={(event) =>
+                    handleSave(moment(event.currentTarget.value))
+                  }
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -276,7 +283,7 @@ function GetFormDialog({
           <div>
             <p style={{ fontSize: 16, fontWeight: 500 }}>
               {" "}
-              <b>How do you want to close this form?</b>
+              <b>Change form status to accept responses from applicants</b>
             </p>
           </div>
           <p>
@@ -285,7 +292,10 @@ function GetFormDialog({
             form.
           </p>
           <Button
-            onClick={handleSave}
+            onClick={() => {
+              openFormWithNewLink();
+              close();
+            }}
             href="#text-buttons"
             variant="outlined"
             color="primary"
@@ -312,9 +322,7 @@ function GetFormDialog({
 
       <ButtonWrapper>
         <Button
-          onClick={() => {
-            window.open(link);
-          }}
+          onClick={close}
           href="#text-buttons"
           color="primary"
           style={{
@@ -328,7 +336,7 @@ function GetFormDialog({
           Cancel
         </Button>
         <Button
-          onClick={handleSave}
+          onClick={close}
           href="#text-buttons"
           variant="outlined"
           color="primary"
@@ -354,4 +362,4 @@ function GetFormDialog({
   );
 }
 
-export default GetFormDialog;
+export default ManageApplicantAccessDialog;
