@@ -111,6 +111,9 @@ function ManageApplicantAccessDialog({
     linkData.close !== null ? "schedule" : "manual"
   );
   const [open, setOpen] = useState(!moment(linkData.close).isBefore(moment()));
+  const [date, setDate] = useState(
+    linkData.close ? moment(linkData.close) : moment().add(7, "days")
+  );
 
   useEffect(() => {
     function detectEscape(event) {
@@ -131,9 +134,14 @@ function ManageApplicantAccessDialog({
     }
   }, [close, dialogRef]);
 
-  const handleSave = (date) => {
-    setOpen(!moment(date).isBefore(moment()));
-    handleSaveFormAccess(date);
+  const handleSave = () => {
+    if (open) {
+      if (option === "schedule") {
+        handleSaveFormAccess(date);
+      } else {
+        handleSaveFormAccess(null);
+      }
+    }
     //save to db the new settings
   };
 
@@ -223,8 +231,11 @@ function ManageApplicantAccessDialog({
                   label="Manually close the form"
                 ></FormControlLabel>
                 <Button
-                  onClick={() => handleSave(moment())}
-                  href="#text-buttons"
+                  onClick={() => {
+                    setDate(moment());
+                    handleSaveFormAccess(moment());
+                    close();
+                  }}
                   variant="outlined"
                   color="primary"
                   disabled={option !== "manual"}
@@ -256,17 +267,11 @@ function ManageApplicantAccessDialog({
                 <TextField
                   id="datetime-local"
                   type="datetime-local"
-                  defaultValue={
-                    linkData.close
-                      ? moment(linkData.close).format("yyyy-MM-DDThh:mm")
-                      : moment()
-                          .add(7, "days")
-                          .format("yyyy-MM-DDThh:mm")
-                  }
+                  defaultValue={date.format("yyyy-MM-DDThh:mm")}
                   disabled={option === "manual"}
                   className={classes.textField}
                   onChange={(event) =>
-                    handleSave(moment(event.currentTarget.value))
+                    setDate(moment(event.currentTarget.value))
                   }
                   InputLabelProps={{
                     shrink: true
@@ -291,10 +296,15 @@ function ManageApplicantAccessDialog({
           </p>
           <Button
             onClick={() => {
+              //Generate a new link (objectID of new element in submissionLinks[])
               openFormWithNewLink();
-              close();
+
+              //When opening the form immediately go to the closing options
+              //set the form to open, default to manual close and set a default date for schedule
+              setOpen(true);
+              setOption("manual");
+              setDate(moment().add(7, "days"));
             }}
-            href="#text-buttons"
             variant="outlined"
             color="primary"
             style={{
@@ -321,7 +331,6 @@ function ManageApplicantAccessDialog({
       <ButtonWrapper>
         <Button
           onClick={close}
-          href="#text-buttons"
           color="primary"
           style={{
             fontWeight: "500",
@@ -334,8 +343,10 @@ function ManageApplicantAccessDialog({
           Cancel
         </Button>
         <Button
-          onClick={close}
-          href="#text-buttons"
+          onClick={() => {
+            handleSave();
+            close();
+          }}
           variant="outlined"
           color="primary"
           style={{

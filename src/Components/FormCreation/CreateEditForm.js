@@ -471,10 +471,20 @@ function CreateEditForm() {
   async function handleSaveFormAccess(date) {
     const newForm = loadForm.value;
     newForm.sections = sections;
-    newForm.submissionLinks[
-      loadForm.value.submissionLinks.length - 1
-    ].close = moment(date);
+
+    //if date == null then the form doesn't have a closing date
+    if (date) {
+      newForm.submissionLinks[
+        loadForm.value.submissionLinks.length - 1
+      ].close = moment(date);
+    } else {
+      newForm.submissionLinks[
+        loadForm.value.submissionLinks.length - 1
+      ].close = null;
+    }
+
     await FORM.updateForm(loadForm.value._id, newForm);
+    refetch({ programId: programId });
   }
 
   async function openFormWithNewLink() {

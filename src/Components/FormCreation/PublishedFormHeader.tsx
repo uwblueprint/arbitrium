@@ -123,11 +123,22 @@ function PublishedFormHeader({
               letterSpacing: 0.25
             }}
           >
-            {" "}
-            This form is currently <b style={{ fontWeight: 700 }}>
-              accepting
-            </b>{" "}
-            responses and not scheduled to close.
+            {moment(linkData.close).isBefore(moment()) ? (
+              <div>
+                This form is currently <b style={{ fontWeight: 700 }}>closed</b>{" "}
+                to responses.
+              </div>
+            ) : (
+              <div>
+                {" "}
+                This form is currently{" "}
+                <b style={{ fontWeight: 700 }}>accepting</b> responses{" "}
+                {linkData.close == null
+                  ? "and not scheduled to close."
+                  : "and will close on " +
+                    moment(linkData.close).format("MM/DD/YYYY [at] h:mm a")}
+              </div>
+            )}
           </p>
           <p style={{ fontWeight: 400 }}>
             {" "}
