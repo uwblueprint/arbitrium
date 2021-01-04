@@ -65,7 +65,7 @@
     "eject": "react-scripts eject",
     "dev": "run-p server start",
     "lint-fix": "eslint backend src --fix && prettier --write src/**/* backend/**/*",
-    "lint": "eslint backend src && prettier -c src/**/* backend/**/*"
+    "lint": "eslint --max-warnings 0 backend src && prettier -c src/**/* backend/**/*"
   },
   "browserslist": {
     "production": [
