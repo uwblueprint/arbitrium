@@ -11,6 +11,12 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import moment from "moment";
 
+//----------------------------------------------------------------------------
+/*
+This component behaves similarly to the CreateEditForm but with signifcantly reduced functionality
+*/
+//----------------------------------------------------------------------------
+
 const useStyles = makeStyles({
   button: {
     marginRight: 11
@@ -51,36 +57,46 @@ const BorderLinearProgress = withStyles((theme) => ({
 
 function CreateSubmissionForm({ match }) {
   const classes = useStyles();
+  const [page, setPage] = useState(-1);
+  const [submitted, setSubmitted] = useState(false);
+  const [validLink, setValidLink] = useState(false);
 
-  //Check to see if this is a preview link or not
-  let preview = true;
-  if (match.path === "/form/:formId") {
-    preview = false;
-  }
+  const [headerData, setHeaderData] = useState({
+    name: defaultFormState.name,
+    description: defaultFormState.description
+  });
 
   const [sections, dispatchSectionsUpdate] = useReducer(
     customFormSectionsReducer,
     []
   );
-  const [page, setPage] = useState(-1);
 
-  //Query based on if this is a preview or not
+  //----------------------------------------------------------------------------
+  //Check to see if Preview or closed
+  //----------------------------------------------------------------------------
+
+  //Check to see if this is a preview link
+  let preview = true;
+  //preview link is "/form-preview/:formId"
+  if (match.path === "/form/:formId") {
+    preview = false;
+  }
+
+  //Query form based on if this is a preview or not
   const [loadForm, refetch] = usePromise(
     preview ? FORM.getFormByPreview : FORM.getFormBySubmission,
     {
       id: match.params.formId
     }
   );
-  const [headerData, setHeaderData] = useState({
-    name: defaultFormState.name,
-    description: defaultFormState.description
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [validLink, setValidLink] = useState(false);
+
+  //----------------------------------------------------------------------------
+  //SUBMISSION INIT/SAVE FUNCTIONS
+  //----------------------------------------------------------------------------
 
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
-    // Get form from database using programID
+
     dispatchSectionsUpdate({
       type: "LOAD",
       sections: loadForm.value.sections
@@ -90,6 +106,8 @@ function CreateSubmissionForm({ match }) {
       description: loadForm.value.description
     });
 
+    //Preview: Is Draft
+    //Submission: Not Draft
     if (preview) {
       //Has the form closed? AND is it a draft?
       setValidLink(
@@ -100,25 +118,14 @@ function CreateSubmissionForm({ match }) {
       const link = loadForm.value.submissionLinks.find(
         (link) => link._id === match.params.formId
       );
-      //Has the form closed? AND is it not a draft?
+      //Has the form closed? AND is it NOT a draft?
       setValidLink(
         !moment(link.close).isBefore(moment()) && !loadForm.value.draft
       );
     }
   }, [loadForm, refetch, match.params.formId, preview]);
 
-  // Used to scroll to top when moving between sections
-  useEffect(() => {
-    window.requestAnimationFrame(() => {
-      const element = document.getElementById("root");
-
-      element.scrollIntoView({
-        behavior: "auto",
-        alignToTop: true
-      });
-    });
-  }, [page]);
-
+  //Save the form for a final time after hitting submit
   const handleSubmit = () => {
     setSubmitted(true);
 
@@ -127,6 +134,10 @@ function CreateSubmissionForm({ match }) {
 
     //TODO: Save the response
   };
+
+  //----------------------------------------------------------------------------
+  //PAGE MOVEMENT
+  //----------------------------------------------------------------------------
 
   // Used to scroll to top when moving between sections
   useEffect(() => {
@@ -144,14 +155,28 @@ function CreateSubmissionForm({ match }) {
     return (pageNum * 100) / sections.length;
   };
 
+  //----------------------------------------------------------------------------
+  //INVALID LINK RENDERS
+  //----------------------------------------------------------------------------
+
   if (!validLink && (!loadForm.isPending || loadForm.value == null)) {
-    if (preview) {
-      return (
-        <div> Preview Link has been disabled as the form is published</div>
-      );
-    } else {
-      return <div> Form has closed!</div>;
-    }
+    return (
+      <div>
+        {" "}
+        <div>
+          <FormWrapper>
+            <SubmissionFormHeader
+              name={headerData.name}
+              description={
+                preview
+                  ? "Preview Link has been disabled as the form is published"
+                  : "This form is closed. If you think this is a mistake, please contact the publisher of this form."
+              }
+            />
+          </FormWrapper>
+        </div>
+      </div>
+    );
   }
 
   return (
