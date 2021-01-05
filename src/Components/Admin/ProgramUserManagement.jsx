@@ -35,7 +35,7 @@ const Header = styled.div`
 // convert fetched users to table format
 // fetched: array
 function convertToTableData(fetched, programId) {
-  let allRoles = [];
+  const allRoles = [];
   fetched.map((user) => allRoles.push(user.role));
 
   return fetched.map((user) => ({
