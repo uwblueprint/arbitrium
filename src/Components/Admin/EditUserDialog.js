@@ -34,7 +34,7 @@ const SaveWrapper = styled.div`
 `;
 
 // onAddNewUser: callback for when a new user is added
-function EditUserDialog({ close, data, programId }) {
+function EditUserDialog({ close, data, programId, onlyAdminUser }) {
   const initialFormState = {
     name: data.name,
     email: data.email,
@@ -85,7 +85,11 @@ function EditUserDialog({ close, data, programId }) {
           stroke: 2
         }}
       />
-      <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
+      <EditUserForm
+        formState={formState}
+        dispatch={dispatchUpdateFormState}
+        onlyAdminUser={onlyAdminUser}
+      />
       {appUser.userId !== data.userId ? (
         <DeleteUser
           close={close}

@@ -14,7 +14,7 @@ const QuestionWrapper = styled.div`
 `;
 
 // onAddNewUser: callback for when a new user is added
-function EditUserForm({ dispatch, formState, newUser }) {
+function EditUserForm({ dispatch, formState, newUser, onlyAdminUser = false }) {
   const dispatchEmailChange = useCallback(
     (event) => {
       dispatch({ type: EDIT_EMAIL, email: event.target.value });
@@ -58,6 +58,7 @@ function EditUserForm({ dispatch, formState, newUser }) {
           id="role-select"
           value={formState.role}
           onChange={dispatchRoleChange}
+          onlyAdmin={onlyAdminUser}
         />
       </QuestionWrapper>
     </div>
