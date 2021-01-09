@@ -91,7 +91,7 @@ function CreateEditForm() {
     headerImage: null,
     confirmationMessage: "Your response has been recorded."
   });
-  const [loadFile, refetchFile] = usePromise(
+  const [loadFile] = usePromise(
     FILE.downloadFile,
     {
       bucketname: "arbitrium",
@@ -222,13 +222,11 @@ function CreateEditForm() {
 
   const onFormSettingsSave = useCallback(
     (newSettings) => {
-      console.log(newSettings);
       setFormSettings(newSettings);
       const newForm = {
         ...loadForm.value,
         settings: newSettings
       };
-      console.log(newForm);
       FORM.updateForm(loadForm.value._id, newForm);
     },
     [loadForm.value]
@@ -479,7 +477,15 @@ function CreateEditForm() {
     refetch({ programId: programId });
   }
 
-  //TODO: Add header customization here
+  let link = "";
+  if (!loadFile.isPending && loadFile.value) {
+    const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
+    const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
+    link = window.URL.createObjectURL(blob);
+    document.querySelector("#image").src = link;
+  }
+
+  //----------------------------------------------------------------------------
 
   //When we move a question/section this uniquekey string will be changed
   //which will cause a complete re-render of the formSections
@@ -491,30 +497,8 @@ function CreateEditForm() {
     });
   });
 
-  console.log(formSettings.headerImage);
-  var link = "";
-  if (!loadFile.isPending && loadFile.value) {
-    const formData = new FormData();
-
-    var bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
-    var blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
-    link = window.URL.createObjectURL(blob);
-    document.querySelector("#image").src = link;
-  }
-
   return (
     <div>
-      {!loadFile.isPending ? (
-        <div>
-          <Button
-            href={link}
-            download="programs/5fab02657cf3c7788fc00d1fabout.png"
-          >
-            Download
-          </Button>
-        </div>
-      ) : null}
-
       <FormSettingsContext.Provider value={formSettings}>
         {isPublished ? (
           <PublishedFormHeader
@@ -552,12 +536,6 @@ function CreateEditForm() {
             onSubmit: handleMoveSection,
             initSections: sections
           }}
-        />
-        <img
-          style={{ display: "center", marginLeft: "25%", marginTop: "10%" }}
-          id="image"
-          width="640px"
-          height="160px"
         />
         <DragDropContext onDragEnd={onDragEnd}>
           {sections &&

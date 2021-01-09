@@ -14,8 +14,7 @@ import FormSettingsHeading from "./FormSettingsHeading";
 import FormSettingsThemePickerSection from "./FormSettingsThemePickerSection";
 import { FormSettingsType } from "../../Types/FormTypes";
 import FormSettingsContext from "./FormSettingsContext";
-import { fileUpload, downloadFile } from "../../requests/file";
-import usePromise from "../../Hooks/usePromise";
+import { fileUpload } from "../../requests/file";
 import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles({
@@ -95,7 +94,6 @@ function FormSettingsDrawer({
   programId
 }: Props): React.ReactElement<typeof Drawer> {
   const settingsInit = useContext(FormSettingsContext);
-  console.log(settingsInit);
   const classes = useStyles();
   const [themeColour, setThemeColour] = useState<string>(
     settingsInit.themeColour
@@ -123,7 +121,6 @@ function FormSettingsDrawer({
       file?.type === "image/png" ||
       file?.type === "image/jpeg"
     ) {
-      console.log("here");
       const formData = new FormData();
       formData.append("file", file); // appending file
 
@@ -133,38 +130,12 @@ function FormSettingsDrawer({
         "programs/" + programId + "/" + file.name,
         formData
       );
-      console.log(result);
       setHeaderImgLink(result);
     } else {
-      console.log("We're here");
       alert(
         "Please upload an image in .jpg, .jpeg, or .png with dimensions of at least 640px by 160px."
       );
     }
-  }
-
-  //download a file from AWS
-  const [loadFile, refetchFile] = usePromise(
-    downloadFile,
-    {
-      bucketname: "arbitrium",
-      filename: "about.png"
-    },
-    null,
-    []
-  );
-  let link = "";
-
-  //Create a link to download the file :)
-  if (!loadFile.isPending) {
-    const formData = new FormData();
-    const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
-    const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
-    link = window.URL.createObjectURL(blob);
-
-    // const headerImg = document?.querySelector<HTMLImageElement>("#image");
-    // // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    // headerImg!.src = link;
   }
 
   const getFileName = (awsFilePath: string | null | undefined) => {

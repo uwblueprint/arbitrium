@@ -77,8 +77,6 @@ const ApplicationSelector = styled.div`
 function Application({
   dispatchNavbarUpdate,
   dispatchNewReview,
-  reviewCreated,
-  navbarUpdate,
   history,
   match,
   user,

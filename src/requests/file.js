@@ -27,7 +27,6 @@ async function fileUpload(bucketname, filename, formData) {
 }
 
 async function downloadFile({ bucketname, filename }) {
-  console.log(filename);
   return GET(`/api/files/download/${bucketname}`, filename);
 }
 
