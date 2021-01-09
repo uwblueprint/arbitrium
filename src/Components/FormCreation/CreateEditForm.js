@@ -27,6 +27,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import FormSettingsDrawer from "./FormSettingsDrawer";
 import FormSettingsContext from "./FormSettingsContext";
 import moment from "moment";
+import * as FILE from "../../requests/file";
 
 const useStyles = makeStyles({
   snackbar: {
@@ -85,6 +86,23 @@ function CreateEditForm() {
   const [loadForm, refetch] = usePromise(FORM.getForm, {
     programId: appUser.currentProgram
   });
+  const [formSettings, setFormSettings] = useState({
+    themeColour: "2261AD",
+    headerImage: null,
+    confirmationMessage: "Your response has been recorded."
+  });
+  const [loadFile, refetchFile] = usePromise(
+    FILE.downloadFile,
+    {
+      bucketname: "arbitrium",
+      filename: formSettings.headerImage?.replace(
+        "https://arbitrium.s3.us-east-2.amazonaws.com/",
+        ""
+      )
+    },
+    null,
+    [loadForm]
+  );
   const [headerData, setHeaderData] = useState({
     name: defaultFormState.name,
     description: defaultFormState.description
@@ -105,11 +123,6 @@ function CreateEditForm() {
   //   Without this, adding a question and then moving it creates un-intended behavior
   //   (A child only calls this when a question is added/deleted so the parent can update itself with changes only made in the child)
   const [initialActiveQuestion, setInitialActiveQuestion] = useState(0);
-  const [formSettings, setFormSettings] = useState({
-    themeColour: "2261AD",
-    headerImage: null,
-    confirmationMessage: "Your response has been recorded."
-  });
 
   const [
     showDeleteSectionConfirmation,
@@ -148,7 +161,8 @@ function CreateEditForm() {
         sections: defaultFormState.sections,
         settings: {
           themeColour: "2261AD",
-          confirmationMessage: "Your response has been recorded."
+          confirmationMessage: "Your response has been recorded.",
+          headerImage: null
         },
         previewLink: defaultFormState.previewLink,
         submissionLinks: defaultFormState.submissionLinks
@@ -180,6 +194,7 @@ function CreateEditForm() {
       name: loadForm.value.name,
       description: loadForm.value.description
     });
+    //Load the form settings
     setFormSettings(loadForm.value.settings);
 
     setPublished(!loadForm.value.draft);
@@ -207,11 +222,13 @@ function CreateEditForm() {
 
   const onFormSettingsSave = useCallback(
     (newSettings) => {
+      console.log(newSettings);
       setFormSettings(newSettings);
       const newForm = {
         ...loadForm.value,
         settings: newSettings
       };
+      console.log(newForm);
       FORM.updateForm(loadForm.value._id, newForm);
     },
     [loadForm.value]
@@ -473,8 +490,31 @@ function CreateEditForm() {
       uniquekey += question._id;
     });
   });
+
+  console.log(formSettings.headerImage);
+  var link = "";
+  if (!loadFile.isPending && loadFile.value) {
+    const formData = new FormData();
+
+    var bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
+    var blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
+    link = window.URL.createObjectURL(blob);
+    document.querySelector("#image").src = link;
+  }
+
   return (
     <div>
+      {!loadFile.isPending ? (
+        <div>
+          <Button
+            href={link}
+            download="programs/5fab02657cf3c7788fc00d1fabout.png"
+          >
+            Download
+          </Button>
+        </div>
+      ) : null}
+
       <FormSettingsContext.Provider value={formSettings}>
         {isPublished ? (
           <PublishedFormHeader
@@ -495,9 +535,12 @@ function CreateEditForm() {
               onFormSettingsClick={handleOpenFormSettings}
             />
             <FormSettingsDrawer
+              key={formSettings.headerImage}
               open={showFormSettings}
               handleCloseFormSettings={handleCloseFormSettings}
               onSave={onFormSettingsSave}
+              headerFile={link}
+              programId={programId}
             />
           </div>
         )}
@@ -509,6 +552,12 @@ function CreateEditForm() {
             onSubmit: handleMoveSection,
             initSections: sections
           }}
+        />
+        <img
+          style={{ display: "center", marginLeft: "25%", marginTop: "10%" }}
+          id="image"
+          width="640px"
+          height="160px"
         />
         <DragDropContext onDragEnd={onDragEnd}>
           {sections &&

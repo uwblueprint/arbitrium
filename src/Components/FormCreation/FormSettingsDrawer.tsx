@@ -14,6 +14,9 @@ import FormSettingsHeading from "./FormSettingsHeading";
 import FormSettingsThemePickerSection from "./FormSettingsThemePickerSection";
 import { FormSettingsType } from "../../Types/FormTypes";
 import FormSettingsContext from "./FormSettingsContext";
+import { fileUpload, downloadFile } from "../../requests/file";
+import usePromise from "../../Hooks/usePromise";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles({
   title: {
@@ -82,14 +85,17 @@ type Props = {
   open: boolean;
   handleCloseFormSettings: () => void;
   onSave: (settings: FormSettingsType) => void;
+  programId: string;
 };
 
 function FormSettingsDrawer({
   open,
   handleCloseFormSettings,
-  onSave
+  onSave,
+  programId
 }: Props): React.ReactElement<typeof Drawer> {
   const settingsInit = useContext(FormSettingsContext);
+  console.log(settingsInit);
   const classes = useStyles();
   const [themeColour, setThemeColour] = useState<string>(
     settingsInit.themeColour
@@ -97,15 +103,83 @@ function FormSettingsDrawer({
   const [confirmationMessage, setConfirmationMessage] = useState(
     settingsInit.confirmationMessage
   );
+  const [headerImgLink, setHeaderImgLink] = useState(settingsInit.headerImage);
 
   function _onSave() {
     handleCloseFormSettings();
     onSave({
       themeColour,
-      headerImage: null,
+      headerImage: settingsInit.headerImage,
       confirmationMessage
     });
   }
+
+  async function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]; //access the file
+
+    //Check to see if it is an image with .png, .jpg or .jpeg
+    if (
+      file?.type === "image/jpeg" ||
+      file?.type === "image/png" ||
+      file?.type === "image/jpeg"
+    ) {
+      console.log("here");
+      const formData = new FormData();
+      formData.append("file", file); // appending file
+
+      //result will be a link to the file, which we will save to the DB
+      const result = await fileUpload(
+        "arbitrium",
+        "programs/" + programId + "/" + file.name,
+        formData
+      );
+      console.log(result);
+      setHeaderImgLink(result);
+    } else {
+      console.log("We're here");
+      alert(
+        "Please upload an image in .jpg, .jpeg, or .png with dimensions of at least 640px by 160px."
+      );
+    }
+  }
+
+  //download a file from AWS
+  const [loadFile, refetchFile] = usePromise(
+    downloadFile,
+    {
+      bucketname: "arbitrium",
+      filename: "about.png"
+    },
+    null,
+    []
+  );
+  let link = "";
+
+  //Create a link to download the file :)
+  if (!loadFile.isPending) {
+    const formData = new FormData();
+    const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
+    const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
+    link = window.URL.createObjectURL(blob);
+
+    // const headerImg = document?.querySelector<HTMLImageElement>("#image");
+    // // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // headerImg!.src = link;
+  }
+
+  const getFileName = (awsFilePath: string | null | undefined) => {
+    if (!awsFilePath) {
+      return null;
+    }
+    const split = awsFilePath.split("/");
+    return split[split.length - 1];
+  };
+
+  const resetSettings = () => {
+    setThemeColour(settingsInit.themeColour);
+    setHeaderImgLink(settingsInit.headerImage);
+    setConfirmationMessage(settingsInit.confirmationMessage);
+  };
 
   return (
     <StyledDrawer open={open} anchor="right">
@@ -124,10 +198,21 @@ function FormSettingsDrawer({
         <Button
           className={classes.button}
           variant="outlined"
+          component="label"
           color="primary"
           startIcon={<ImageOutlinedIconStyled />}
         >
-          Select Files
+          {getFileName(headerImgLink) || "Upload File"}
+          <input
+            type="file"
+            onChange={(event) => handleFileUpload(event)}
+            style={{ display: "none" }}
+          />
+          {getFileName(headerImgLink) ? (
+            <Button onClick={() => setHeaderImgLink(null)}>
+              <CloseIcon />
+            </Button>
+          ) : null}
         </Button>
         <Divider />
         <FormSettingsThemePickerSection
@@ -155,8 +240,7 @@ function FormSettingsDrawer({
             setConfirmationMessage(e.target.value);
           }}
           className={classes.response}
-          placeholder="Your response has been recorded."
-          defaultValue="Your response has been recorded."
+          value={confirmationMessage}
         />
         <div>
           <Button
@@ -168,7 +252,10 @@ function FormSettingsDrawer({
             Save
           </Button>
           <Button
-            onClick={handleCloseFormSettings}
+            onClick={() => {
+              handleCloseFormSettings();
+              resetSettings();
+            }}
             className={classes.button}
             color="primary"
           >

@@ -43,7 +43,7 @@ function FileQuestion({
     const formData = new FormData();
     formData.append("file", file); // appending file
     //result will be a link to the file, which we should save to our DB
-    await FILE.fileUpload("arbitrium", file.name, formData);
+    const fileURL = await FILE.fileUpload("arbitrium", file.name, formData);
   }
 
   return (

@@ -23,7 +23,12 @@ async function deleteBucket(bucketname) {
 }
 
 async function fileUpload(bucketname, filename, formData) {
-  return FILE(`/api/files/upload/${bucketname}/${filename}`, formData);
+  return FILE(`/api/files/upload/${bucketname}`, formData, filename);
+}
+
+async function downloadFile({ bucketname, filename }) {
+  console.log(filename);
+  return GET(`/api/files/download/${bucketname}`, filename);
 }
 
 export {
@@ -31,5 +36,6 @@ export {
   listFilesofBucket,
   createBucket,
   deleteBucket,
-  fileUpload
+  fileUpload,
+  downloadFile
 };
