@@ -5,6 +5,7 @@ import React, {
   useContext,
   useCallback
 } from "react";
+import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import FormSection from "./FormSection";
@@ -70,7 +71,8 @@ const FormWrapper = styled.div`
 //In case 2 we will update the program to the one in the ID, so the proper form
 //will load. In the event they don't have admin access to the program they will
 //denied access
-function CreateEditForm() {
+function CreateEditForm({ programId }) {
+  console.log(programId);
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
@@ -81,12 +83,16 @@ function CreateEditForm() {
   const [showFormSettings, setShowFormSettings] = useState(false);
   const [showMoveSectionsDialog, setShowMoveSectionsDialog] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
-  const programId = appUser.currentProgram;
+  //const programId = appUser.currentProgram;
 
   //Only GET and UPDATE form uses programId, every other form update uses formId
-  const [loadForm, refetch] = usePromise(FORM.getForm, {
-    programId: appUser.currentProgram
-  });
+  const [loadForm, refetch] = usePromise(
+    FORM.getForm,
+    {
+      programId: programId
+    },
+    [programId]
+  );
   const [formSettings, setFormSettings] = useState({
     themeColour: "2261AD",
     headerImage: null,
@@ -99,7 +105,7 @@ function CreateEditForm() {
       filename: formSettings.headerImage?.replace(process.env.REACT_APP_AWS, "")
     },
     null,
-    [loadForm]
+    [loadForm.settings]
   );
   const [headerData, setHeaderData] = useState({
     name: defaultFormState.name,
@@ -710,4 +716,8 @@ function CreateEditForm() {
   );
 }
 
-export default CreateEditForm;
+const mapStateToProps = (state) => ({
+  programId: state.program
+});
+
+export default connect(mapStateToProps)(CreateEditForm);

@@ -74,7 +74,45 @@ function FileQuestion({
 
   return (
     <Wrapper>
-      {!loadFile.isPending ? (
+      {!submission ? (
+        active ? (
+          <div style={{ display: "flex" }}>
+            <p style={{ fontWeight: 500, marginRight: 185 }}>
+              {" "}
+              Maximum number of files{" "}
+            </p>
+            <Select
+              value={numFiles}
+              onChange={(event) => handleNumFileChange(event.target.value)}
+            >
+              {numFileOptions.map((opt, index) => {
+                return (
+                  <option key={index} value={opt}>
+                    {opt}
+                  </option>
+                );
+              })}
+            </Select>
+          </div>
+        ) : (
+          <div>
+            <Button
+              variant="outlined"
+              component="label"
+              color="primary"
+              disabled={!submission}
+            >
+              <CloudUploadIcon />
+              <div style={{ width: "15px" }}></div>
+              Upload File
+              <input
+                type="file" //Display only
+                style={{ display: "none" }}
+              />
+            </Button>{" "}
+          </div>
+        )
+      ) : !loadFile.isPending ? (
         <div>
           <Button
             href={link}
@@ -84,44 +122,6 @@ function FileQuestion({
           </Button>
         </div>
       ) : null}
-      {active ? (
-        <div style={{ display: "flex" }}>
-          <p style={{ fontWeight: 500, marginRight: 185 }}>
-            {" "}
-            Maximum number of files{" "}
-          </p>
-          <Select
-            value={numFiles}
-            onChange={(event) => handleNumFileChange(event.target.value)}
-          >
-            {numFileOptions.map((opt, index) => {
-              return (
-                <option key={index} value={opt}>
-                  {opt}
-                </option>
-              );
-            })}
-          </Select>
-        </div>
-      ) : (
-        <div>
-          <Button
-            variant="outlined"
-            component="label"
-            color="primary"
-            disabled={!submission}
-          >
-            <CloudUploadIcon />
-            <div style={{ width: "15px" }}></div>
-            Upload File
-            <input
-              type="file"
-              onChange={(event) => handleFile(event)}
-              style={{ display: "none" }}
-            />
-          </Button>{" "}
-        </div>
-      )}
     </Wrapper>
   );
 }
