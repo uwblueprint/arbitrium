@@ -16,6 +16,7 @@ import { FormSettingsType } from "../../Types/FormTypes";
 import FormSettingsContext from "./FormSettingsContext";
 import { fileUpload } from "../../requests/file";
 import CloseIcon from "@material-ui/icons/Close";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles({
   title: {
@@ -102,17 +103,19 @@ function FormSettingsDrawer({
     settingsInit.confirmationMessage
   );
   const [headerImgLink, setHeaderImgLink] = useState(settingsInit.headerImage);
+  const [spinner, setSpinner] = useState(false);
 
   function _onSave() {
     handleCloseFormSettings();
     onSave({
       themeColour,
-      headerImage: settingsInit.headerImage,
+      headerImage: headerImgLink,
       confirmationMessage
     });
   }
 
   async function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    setSpinner(true);
     const file = event.target.files?.[0]; //access the file
 
     //Check to see if it is an image with .png, .jpg or .jpeg
@@ -131,10 +134,13 @@ function FormSettingsDrawer({
         formData
       );
       setHeaderImgLink(result);
+      setSpinner(false);
     } else {
-      alert(
-        "Please upload an image in .jpg, .jpeg, or .png with dimensions of at least 640px by 160px."
-      );
+      if (file) {
+        alert(
+          "Please upload an image in .jpg, .jpeg, or .png with dimensions of at least 640px by 160px."
+        );
+      }
     }
   }
 
@@ -173,18 +179,25 @@ function FormSettingsDrawer({
           color="primary"
           startIcon={<ImageOutlinedIconStyled />}
         >
-          {getFileName(headerImgLink) || "Upload File"}
+          {spinner ? (
+            <CircularProgress size={20} />
+          ) : (
+            getFileName(headerImgLink) || "Upload File"
+          )}
           <input
             type="file"
             onChange={(event) => handleFileUpload(event)}
             style={{ display: "none" }}
           />
-          {getFileName(headerImgLink) ? (
-            <Button onClick={() => setHeaderImgLink(null)}>
-              <CloseIcon />
-            </Button>
-          ) : null}
         </Button>
+        {getFileName(headerImgLink) ? (
+          <Button
+            className={classes.button}
+            onClick={() => setHeaderImgLink(null)}
+          >
+            <CloseIcon />
+          </Button>
+        ) : null}
         <Divider />
         <FormSettingsThemePickerSection
           colour={themeColour}

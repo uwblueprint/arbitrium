@@ -28,6 +28,7 @@ import FormSettingsDrawer from "./FormSettingsDrawer";
 import FormSettingsContext from "./FormSettingsContext";
 import moment from "moment";
 import * as FILE from "../../requests/file";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles({
   snackbar: {
@@ -479,7 +480,8 @@ function CreateEditForm() {
     const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
     const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
     link = window.URL.createObjectURL(blob);
-    document.querySelector("#image").src = link;
+  } else {
+    link = "";
   }
 
   //----------------------------------------------------------------------------
@@ -534,6 +536,21 @@ function CreateEditForm() {
             initSections: sections
           }}
         />
+        {formSettings.headerImage ? (
+          link !== "" ? (
+            <img
+              key={link}
+              style={{ display: "center", marginLeft: "25%", marginTop: "5%" }}
+              src={link}
+              width="640px"
+              height="160px"
+            ></img>
+          ) : (
+            <CircularProgress
+              style={{ display: "center", marginLeft: "50%", marginTop: "5%" }}
+            />
+          )
+        ) : null}
         <DragDropContext onDragEnd={onDragEnd}>
           {sections &&
             sections.map((section, key) => (

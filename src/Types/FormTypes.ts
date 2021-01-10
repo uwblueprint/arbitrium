@@ -138,7 +138,7 @@ export interface FormState extends FormStateBase {
 }
 
 export type FormSettingsType = {
-  headerImage?: string | null;
+  headerImage: string | null;
   themeColour: string;
   confirmationMessage: string;
 };

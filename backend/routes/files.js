@@ -19,6 +19,7 @@ router.get("/listBuckets", async function(req, res) {
         console.info("Error", err);
         res.status(500).send(err);
       } else {
+        console.info("Success", data.Buckets);
         res.status(200).json(data.Buckets);
       }
     });
@@ -43,6 +44,7 @@ router.get("/listFiles/:bucketname", async function(req, res) {
         console.info("Error", err);
         res.status(500).send(err);
       } else {
+        console.info("Success", data);
         res.status(200).json(data);
       }
     });
@@ -66,6 +68,7 @@ router.post("/createBucket/:bucketname", async function(req, res) {
         console.info("Error", err);
         res.status(500).send(err);
       } else {
+        console.info("Success", data.Location);
         res.status(200).json(data.Location);
       }
     });
@@ -89,6 +92,7 @@ router.delete("/deleteBucket/:bucketname", async function(req, res) {
         console.info("Error", err);
         res.status(500).send(err);
       } else {
+        console.info("Success", data.Location);
         res.status(200).json(data.Location);
       }
     });
@@ -136,6 +140,7 @@ router.post("/upload/:bucketname", multer().single("file"), async function(
         console.info("Error", err);
         res.status(500).send(err);
       } else {
+        console.info("Success", data.Location);
         res.status(200).json(data.Location);
       }
     });
@@ -165,6 +170,7 @@ router.get("/download/:bucketname", async function(req, res) {
         console.info("Error", err);
         res.status(500).send(err);
       } else {
+        console.info("Success", data);
         res.status(200).json(data);
       }
     });
