@@ -95,10 +95,7 @@ function CreateEditForm() {
     FILE.downloadFile,
     {
       bucketname: "arbitrium",
-      filename: formSettings.headerImage?.replace(
-        "https://arbitrium.s3.us-east-2.amazonaws.com/",
-        ""
-      )
+      filename: formSettings.headerImage?.replace(process.env.REACT_APP_AWS, "")
     },
     null,
     [loadForm]

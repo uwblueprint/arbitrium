@@ -137,11 +137,14 @@ async function DELETE(url) {
 }
 
 async function FILE(url, databody, filepath) {
+  const token = await firebaseApp.auth().currentUser.getIdToken();
+
   const response = await fetch(proxy + url, {
     method: "POST",
     body: databody,
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
       filepath: filepath
     }
   });
