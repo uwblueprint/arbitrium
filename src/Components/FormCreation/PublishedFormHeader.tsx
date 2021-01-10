@@ -6,6 +6,8 @@ import PublishedFormDialog from "./Dialogs/PublishedFormDialog";
 import ManageApplicantAccessDialog from "./Dialogs/ManageApplicantAccessDialog";
 import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import SettingsIcon from "@material-ui/icons/Settings";
+import moment from "moment";
+import { Link } from "../../Types/FormTypes";
 
 const DialogOverlay = styled.div`
   position: fixed;
@@ -47,10 +49,16 @@ const TextWrapper = styled.div`
 
 type Props = {
   submissionLink: string;
+  handleSaveFormAccess: (date: string) => void;
+  linkData: Link;
+  openFormWithNewLink: () => void;
 };
 
 function PublishedFormHeader({
-  submissionLink
+  submissionLink,
+  handleSaveFormAccess,
+  linkData,
+  openFormWithNewLink
 }: Props): React.ReactElement<typeof Header> {
   const [showPublishedFormDialog, setshowPublishedFormDialog] = useState(false);
   const [showManageAccessDialog, setshowManageAccessDialog] = useState(false);
@@ -63,7 +71,7 @@ function PublishedFormHeader({
 
   const copyLinkToClipboard = () => {
     navigator.clipboard.writeText(submissionLink);
-    var dummy = document.createElement("input");
+    const dummy = document.createElement("input");
     dummy.innerText = submissionLink;
     document.body.appendChild(dummy);
     dummy.setAttribute("id", "dummy_id");
@@ -115,11 +123,22 @@ function PublishedFormHeader({
               letterSpacing: 0.25
             }}
           >
-            {" "}
-            This form is currently <b style={{ fontWeight: 700 }}>
-              accepting
-            </b>{" "}
-            responses and not scheduled to close.
+            {moment(linkData.close).isBefore(moment()) ? (
+              <div>
+                This form is currently <b style={{ fontWeight: 700 }}>closed</b>{" "}
+                to responses.
+              </div>
+            ) : (
+              <div>
+                {" "}
+                This form is currently{" "}
+                <b style={{ fontWeight: 700 }}>accepting</b> responses{" "}
+                {linkData.close == null
+                  ? "and not scheduled to close."
+                  : "and will close on " +
+                    moment(linkData.close).format("MM/DD/YYYY [at] h:mm a")}
+              </div>
+            )}
           </p>
           <p style={{ fontWeight: 400 }}>
             {" "}
@@ -132,7 +151,6 @@ function PublishedFormHeader({
               onClick={() => {
                 setshowManageAccessDialog(true);
               }}
-              href="#text-buttons"
               color="primary"
               style={{
                 backgroundColor: "#2261AD",
@@ -148,12 +166,16 @@ function PublishedFormHeader({
               Manage Applicant Access
             </Button>
             <Button
-              variant="outlined"
+              variant={
+                moment(linkData.close).isBefore(moment())
+                  ? "contained"
+                  : "outlined"
+              }
               onClick={() => {
                 setshowPublishedFormDialog(true);
               }}
-              href="#text-buttons"
               color="primary"
+              disabled={moment(linkData.close).isBefore(moment())}
               style={{
                 marginLeft: 369,
                 color: "#2261AD",
@@ -186,11 +208,10 @@ function PublishedFormHeader({
         <>
           <DialogOverlay />
           <ManageApplicantAccessDialog
-            link={submissionLink}
+            linkData={linkData}
             close={closeDialog}
-            copyLinkToClipboard={copyLinkToClipboard}
-            publish={true}
-            handlePublish={null}
+            handleSaveFormAccess={handleSaveFormAccess}
+            openFormWithNewLink={openFormWithNewLink}
           />
         </>
       )}

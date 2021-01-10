@@ -16,7 +16,7 @@ function setProgram(prog) {
   program = prog;
 }
 
-async function GET(url, requiresAuth = true) {
+async function GET(url, filepath, requiresAuth = true) {
   //Get the program from the url - we will pass this in the url and the
   //backend will query the corresponding database
 
@@ -30,7 +30,8 @@ async function GET(url, requiresAuth = true) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
-      database: program
+      database: program,
+      filepath: filepath || ""
     }
   });
   const body = await response.json();
@@ -135,12 +136,16 @@ async function DELETE(url) {
   return body;
 }
 
-async function FILE(url, databody) {
+async function FILE(url, databody, filepath) {
+  const token = await firebaseApp.auth().currentUser.getIdToken();
+
   const response = await fetch(proxy + url, {
     method: "POST",
     body: databody,
     headers: {
-      Accept: "application/json"
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+      filepath: filepath
     }
   });
 

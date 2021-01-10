@@ -1,4 +1,5 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useContext } from "react";
+import { AuthContext } from "../../Authentication/Auth.js";
 import styled from "styled-components";
 import ErrorIcon from "@material-ui/icons/Error";
 import Button from "@material-ui/core/Button";
@@ -33,7 +34,7 @@ const SaveWrapper = styled.div`
 `;
 
 // onAddNewUser: callback for when a new user is added
-function EditUserDialog({ close, data, programId }) {
+function EditUserDialog({ close, data, programId, onlyAdminUser }) {
   const initialFormState = {
     name: data.name,
     email: data.email,
@@ -47,6 +48,7 @@ function EditUserDialog({ close, data, programId }) {
 
   const [showSaveFailure, setShowSaveFailure] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { appUser } = useContext(AuthContext);
 
   function updateUser() {
     setIsSubmitting(true);
@@ -83,14 +85,20 @@ function EditUserDialog({ close, data, programId }) {
           stroke: 2
         }}
       />
-      <EditUserForm formState={formState} dispatch={dispatchUpdateFormState} />
-      <DeleteUser
-        close={close}
-        userId={data.userId}
-        setShowSaveFailure={setShowSaveFailure}
-        setIsSubmitting={setIsSubmitting}
-        programId={programId}
+      <EditUserForm
+        formState={formState}
+        dispatch={dispatchUpdateFormState}
+        onlyAdminUser={onlyAdminUser}
       />
+      {appUser.userId !== data.userId ? (
+        <DeleteUser
+          close={close}
+          userId={data.userId}
+          setShowSaveFailure={setShowSaveFailure}
+          setIsSubmitting={setIsSubmitting}
+          programId={programId}
+        />
+      ) : null}
       <SaveWrapper>
         <Button
           onClick={() => updateUser()}
