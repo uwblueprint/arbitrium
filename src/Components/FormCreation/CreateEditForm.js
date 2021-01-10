@@ -199,8 +199,14 @@ function CreateEditForm() {
     setPreviewLink(
       submissionLink + "/form-preview/" + loadForm.value.previewLink._id
     );
+
+    //Submission links are stored in an array. Right now we support one open at a time which will be the last element in the array
     setApplicantLink(
-      submissionLink + "/form/" + loadForm.value.submissionLinks[0]._id
+      submissionLink +
+        "/form/" +
+        loadForm.value.submissionLinks[
+          loadForm.value.submissionLinks.length - 1
+        ]._id
     );
 
     //Set the active form to be the first one
@@ -475,6 +481,36 @@ function CreateEditForm() {
     refetch({ programId: programId });
   }
 
+  async function handleSaveFormAccess(date) {
+    const newForm = loadForm.value;
+    newForm.sections = sections;
+
+    //if date == null then the form doesn't have a closing date
+    //i.e user has selected to close it manually vs schedule
+    if (date) {
+      newForm.submissionLinks[
+        loadForm.value.submissionLinks.length - 1
+      ].close = moment(date);
+    } else {
+      newForm.submissionLinks[
+        loadForm.value.submissionLinks.length - 1
+      ].close = null;
+    }
+
+    await FORM.updateForm(loadForm.value._id, newForm);
+    refetch({ programId: programId });
+  }
+
+  async function openFormWithNewLink() {
+    const newForm = loadForm.value;
+    newForm.sections = sections;
+    //defaultFormState.previewLink is a default link object
+    newForm.submissionLinks.push(defaultFormState.previewLink);
+    await FORM.updateForm(loadForm.value._id, newForm);
+    refetch({ programId: programId });
+  }
+
+  //TODO: Add header customization here
   let link = "";
   if (!loadFile.isPending && loadFile.value) {
     const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
@@ -502,7 +538,13 @@ function CreateEditForm() {
         {isPublished ? (
           <PublishedFormHeader
             submissionLink={applicantLink}
-            handlePublish={publishForm}
+            handleSaveFormAccess={handleSaveFormAccess}
+            linkData={
+              loadForm.value.submissionLinks[
+                loadForm.value.submissionLinks.length - 1
+              ]
+            }
+            openFormWithNewLink={openFormWithNewLink}
             id={"header_" + 1}
             key={1}
           />
