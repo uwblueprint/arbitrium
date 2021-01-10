@@ -540,6 +540,7 @@ function CreateEditForm() {
           link !== "" ? (
             <img
               key={link}
+              alt="header"
               style={{ display: "center", marginLeft: "25%", marginTop: "5%" }}
               src={link}
               width="640px"
