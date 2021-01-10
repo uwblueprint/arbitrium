@@ -40,12 +40,7 @@ const formSettings = new mongoose.Schema({
     type: String
   },
   headerImage: {
-    data: {
-      type: Buffer
-    },
-    contentType: {
-      type: String
-    }
+    type: String
   },
   confirmationMessage: {
     type: String
@@ -161,7 +156,8 @@ const formsSchema = new mongoose.Schema(
       type: formSettings,
       default: {
         themeColour: "2261AD",
-        confirmationMessage: "Your response has been recorded."
+        confirmationMessage: "Your response has been recorded.",
+        headerImage: null
       }
     }
   },
