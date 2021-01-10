@@ -13,11 +13,19 @@ const roles = [
   { id: userRoles.GUEST, name: userRoles.rolesMap[userRoles.GUEST] }
 ];
 
+const onlyAdminRoles = [
+  { id: userRoles.ADMIN, name: userRoles.rolesMap[userRoles.ADMIN] },
+  {
+    id: userRoles.ADMIN_REVIEWER,
+    name: userRoles.rolesMap[userRoles.ADMIN_REVIEWER]
+  }
+];
+
 const StyledSelect = styled(Select)`
   width: 100%;
 `;
 
-function UserRoleSelect({ id, value, onChange }) {
+function UserRoleSelect({ id, value, onChange, onlyAdmin = false }) {
   return (
     <StyledSelect
       native
@@ -36,11 +44,17 @@ function UserRoleSelect({ id, value, onChange }) {
       onChange={onChange}
       variant="outlined"
     >
-      {roles.map((role) => (
-        <option key={role.id} value={role.id}>
-          {role.name}
-        </option>
-      ))}
+      {onlyAdmin
+        ? onlyAdminRoles.map((role) => (
+            <option key={role.id} value={role.id}>
+              {role.name}
+            </option>
+          ))
+        : roles.map((role) => (
+            <option key={role.id} value={role.id}>
+              {role.name}
+            </option>
+          ))}
     </StyledSelect>
   );
 }

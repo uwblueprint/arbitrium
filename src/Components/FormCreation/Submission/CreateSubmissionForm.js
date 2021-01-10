@@ -156,6 +156,13 @@ function CreateSubmissionForm({ match }) {
 
   return (
     <div>
+      <img
+        style={{ display: "center", marginLeft: "25%", marginTop: "10%" }}
+        id="image"
+        width="640px"
+        height="160px"
+        alt="header"
+      />
       {submitted ? (
         <div>
           <FormWrapper>

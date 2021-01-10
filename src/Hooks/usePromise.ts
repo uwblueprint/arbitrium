@@ -47,7 +47,9 @@ function asyncFetchReducer<T>(
 }
 
 export default function usePromise<ResultType>(
-  queryFunc: (params?: Record<string, unknown> | null) => Promise<ResultType>,
+  queryFunc: (
+    params?: Record<string, unknown> | null | any
+  ) => Promise<ResultType>,
   params?: Record<string, unknown> | null,
   defaultValue?: ResultType,
   deps = []

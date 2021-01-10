@@ -27,6 +27,8 @@ import { DragDropContext } from "react-beautiful-dnd";
 import FormSettingsDrawer from "./FormSettingsDrawer";
 import FormSettingsContext from "./FormSettingsContext";
 import moment from "moment";
+import * as FILE from "../../requests/file";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles({
   snackbar: {
@@ -85,6 +87,20 @@ function CreateEditForm() {
   const [loadForm, refetch] = usePromise(FORM.getForm, {
     programId: appUser.currentProgram
   });
+  const [formSettings, setFormSettings] = useState({
+    themeColour: "2261AD",
+    headerImage: null,
+    confirmationMessage: "Your response has been recorded."
+  });
+  const [loadFile] = usePromise(
+    FILE.downloadFile,
+    {
+      bucketname: "arbitrium",
+      filename: formSettings.headerImage?.replace(process.env.REACT_APP_AWS, "")
+    },
+    null,
+    [loadForm]
+  );
   const [headerData, setHeaderData] = useState({
     name: defaultFormState.name,
     description: defaultFormState.description
@@ -105,11 +121,6 @@ function CreateEditForm() {
   //   Without this, adding a question and then moving it creates un-intended behavior
   //   (A child only calls this when a question is added/deleted so the parent can update itself with changes only made in the child)
   const [initialActiveQuestion, setInitialActiveQuestion] = useState(0);
-  const [formSettings, setFormSettings] = useState({
-    themeColour: "2261AD",
-    headerImage: null,
-    confirmationMessage: "Your response has been recorded."
-  });
 
   const [
     showDeleteSectionConfirmation,
@@ -148,7 +159,8 @@ function CreateEditForm() {
         sections: defaultFormState.sections,
         settings: {
           themeColour: "2261AD",
-          confirmationMessage: "Your response has been recorded."
+          confirmationMessage: "Your response has been recorded.",
+          headerImage: null
         },
         previewLink: defaultFormState.previewLink,
         submissionLinks: defaultFormState.submissionLinks
@@ -180,6 +192,7 @@ function CreateEditForm() {
       name: loadForm.value.name,
       description: loadForm.value.description
     });
+    //Load the form settings
     setFormSettings(loadForm.value.settings);
 
     setPublished(!loadForm.value.draft);
@@ -498,6 +511,16 @@ function CreateEditForm() {
   }
 
   //TODO: Add header customization here
+  let link = "";
+  if (!loadFile.isPending && loadFile.value) {
+    const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
+    const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
+    link = window.URL.createObjectURL(blob);
+  } else {
+    link = "";
+  }
+
+  //----------------------------------------------------------------------------
 
   //When we move a question/section this uniquekey string will be changed
   //which will cause a complete re-render of the formSections
@@ -508,6 +531,7 @@ function CreateEditForm() {
       uniquekey += question._id;
     });
   });
+
   return (
     <div>
       <FormSettingsContext.Provider value={formSettings}>
@@ -536,9 +560,12 @@ function CreateEditForm() {
               onFormSettingsClick={handleOpenFormSettings}
             />
             <FormSettingsDrawer
+              key={formSettings.headerImage}
               open={showFormSettings}
               handleCloseFormSettings={handleCloseFormSettings}
               onSave={onFormSettingsSave}
+              headerFile={link}
+              programId={programId}
             />
           </div>
         )}
@@ -551,6 +578,22 @@ function CreateEditForm() {
             initSections: sections
           }}
         />
+        {formSettings.headerImage ? (
+          link !== "" ? (
+            <img
+              key={link}
+              alt="header"
+              style={{ display: "center", marginLeft: "25%", marginTop: "5%" }}
+              src={link}
+              width="640px"
+              height="160px"
+            ></img>
+          ) : (
+            <CircularProgress
+              style={{ display: "center", marginLeft: "50%", marginTop: "5%" }}
+            />
+          )
+        ) : null}
         <DragDropContext onDragEnd={onDragEnd}>
           {sections &&
             sections.map((section, key) => (

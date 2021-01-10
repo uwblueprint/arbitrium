@@ -35,6 +35,9 @@ const Header = styled.div`
 // convert fetched users to table format
 // fetched: array
 function convertToTableData(fetched, programId) {
+  const allRoles = [];
+  fetched.map((user) => allRoles.push(user.role));
+
   return fetched.map((user) => ({
     name: user.name,
     email: user.email,
@@ -45,7 +48,15 @@ function convertToTableData(fetched, programId) {
           Dialog={EditUserDialog}
           closeOnEsc={true}
           variant="outlined"
-          dialogProps={{ data: user, programId: programId }}
+          dialogProps={{
+            data: user,
+            programId: programId,
+            onlyAdminUser:
+              (user.role === "ADMIN" || user.role === "ADMIN_REVIEWER") &&
+              allRoles.filter(
+                (role) => role === "ADMIN" || role === "ADMIN_REVIEWER"
+              ).length <= 1
+          }}
         >
           Edit
         </DialogTriggerButton>

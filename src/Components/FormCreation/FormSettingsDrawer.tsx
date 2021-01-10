@@ -14,6 +14,9 @@ import FormSettingsHeading from "./FormSettingsHeading";
 import FormSettingsThemePickerSection from "./FormSettingsThemePickerSection";
 import { FormSettingsType } from "../../Types/FormTypes";
 import FormSettingsContext from "./FormSettingsContext";
+import { fileUpload } from "../../requests/file";
+import CloseIcon from "@material-ui/icons/Close";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles({
   title: {
@@ -82,12 +85,14 @@ type Props = {
   open: boolean;
   handleCloseFormSettings: () => void;
   onSave: (settings: FormSettingsType) => void;
+  programId: string;
 };
 
 function FormSettingsDrawer({
   open,
   handleCloseFormSettings,
-  onSave
+  onSave,
+  programId
 }: Props): React.ReactElement<typeof Drawer> {
   const settingsInit = useContext(FormSettingsContext);
   const classes = useStyles();
@@ -97,15 +102,61 @@ function FormSettingsDrawer({
   const [confirmationMessage, setConfirmationMessage] = useState(
     settingsInit.confirmationMessage
   );
+  const [headerImgLink, setHeaderImgLink] = useState(settingsInit.headerImage);
+  const [spinner, setSpinner] = useState(false);
 
   function _onSave() {
     handleCloseFormSettings();
     onSave({
       themeColour,
-      headerImage: null,
+      headerImage: headerImgLink,
       confirmationMessage
     });
   }
+
+  async function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    setSpinner(true);
+    const file = event.target.files?.[0]; //access the file
+
+    //Check to see if it is an image with .png, .jpg or .jpeg
+    if (
+      file?.type === "image/jpeg" ||
+      file?.type === "image/png" ||
+      file?.type === "image/jpeg"
+    ) {
+      const formData = new FormData();
+      formData.append("file", file); // appending file
+
+      //result will be a link to the file, which we will save to the DB
+      const result = await fileUpload(
+        "arbitrium",
+        "programs/" + programId + "/" + file.name,
+        formData
+      );
+      setHeaderImgLink(result);
+      setSpinner(false);
+    } else {
+      if (file) {
+        alert(
+          "Please upload an image in .jpg, .jpeg, or .png with dimensions of at least 640px by 160px."
+        );
+      }
+    }
+  }
+
+  const getFileName = (awsFilePath: string | null | undefined) => {
+    if (!awsFilePath) {
+      return null;
+    }
+    const split = awsFilePath.split("/");
+    return split[split.length - 1];
+  };
+
+  const resetSettings = () => {
+    setThemeColour(settingsInit.themeColour);
+    setHeaderImgLink(settingsInit.headerImage);
+    setConfirmationMessage(settingsInit.confirmationMessage);
+  };
 
   return (
     <StyledDrawer open={open} anchor="right">
@@ -124,11 +175,29 @@ function FormSettingsDrawer({
         <Button
           className={classes.button}
           variant="outlined"
+          component="label"
           color="primary"
           startIcon={<ImageOutlinedIconStyled />}
         >
-          Select Files
+          {spinner ? (
+            <CircularProgress size={20} />
+          ) : (
+            getFileName(headerImgLink) || "Upload File"
+          )}
+          <input
+            type="file"
+            onChange={(event) => handleFileUpload(event)}
+            style={{ display: "none" }}
+          />
         </Button>
+        {getFileName(headerImgLink) ? (
+          <Button
+            className={classes.button}
+            onClick={() => setHeaderImgLink(null)}
+          >
+            <CloseIcon />
+          </Button>
+        ) : null}
         <Divider />
         <FormSettingsThemePickerSection
           colour={themeColour}
@@ -155,8 +224,7 @@ function FormSettingsDrawer({
             setConfirmationMessage(e.target.value);
           }}
           className={classes.response}
-          placeholder="Your response has been recorded."
-          defaultValue="Your response has been recorded."
+          value={confirmationMessage}
         />
         <div>
           <Button
@@ -168,7 +236,10 @@ function FormSettingsDrawer({
             Save
           </Button>
           <Button
-            onClick={handleCloseFormSettings}
+            onClick={() => {
+              handleCloseFormSettings();
+              resetSettings();
+            }}
             className={classes.button}
             color="primary"
           >
