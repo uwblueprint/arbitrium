@@ -274,7 +274,7 @@ function ManageApplicantAccessDialog({
                 <TextField
                   id="datetime-local"
                   type="datetime-local"
-                  defaultValue={date.format("yyyy-MM-DDThh:mm")}
+                  defaultValue={date.format("yyyy-MM-DDTHH:MM")}
                   disabled={option === "manual"}
                   className={classes.textField}
                   onChange={(event) =>
