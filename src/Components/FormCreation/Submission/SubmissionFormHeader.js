@@ -69,13 +69,6 @@ function SubmissionFormHeader({ name, description }) {
 
   return (
     <div className={classes.container}>
-      <CardWrapper key={"title"} id={"title"}>
-        <Card className={classes.logo}>
-          <CardContent className={classes.image}>
-            <img src={OrgLogo} alt={"Organization Logo"} />
-          </CardContent>
-        </Card>
-      </CardWrapper>
       <CardWrapper key={"header"} id={"header"}>
         <Card className={classes.root}>
           <CardContent className={classes.content}>

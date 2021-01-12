@@ -27,7 +27,12 @@ async function fileUpload(bucketname, filename, formData) {
 }
 
 async function downloadFile({ bucketname, filename }) {
-  return GET(`/api/files/download/${bucketname}`, filename);
+  if (bucketname === "arbitrium-public") {
+    //This route doesn't require authentication
+    return GET(`/api/files/download/public`, filename, false);
+  } else {
+    return GET(`/api/files/download/${bucketname}`, filename);
+  }
 }
 
 export {

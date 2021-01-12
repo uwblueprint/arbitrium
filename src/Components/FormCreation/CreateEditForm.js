@@ -72,7 +72,6 @@ const FormWrapper = styled.div`
 //will load. In the event they don't have admin access to the program they will
 //denied access
 function CreateEditForm({ programId }) {
-  console.log(programId);
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
@@ -188,6 +187,7 @@ function CreateEditForm({ programId }) {
     //Check to see if it is still null after initalizing
     if (loadForm.value == null) return;
 
+    console.log(loadForm);
     //Load the sections Data
     dispatchSectionsUpdate({
       type: "LOAD",
@@ -516,7 +516,6 @@ function CreateEditForm({ programId }) {
     refetch({ programId: programId });
   }
 
-  //TODO: Add header customization here
   let link = "";
   if (!loadFile.isPending && loadFile.value) {
     const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor

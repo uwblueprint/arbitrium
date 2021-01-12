@@ -10,6 +10,8 @@ import Button from "@material-ui/core/Button";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import moment from "moment";
+import * as FILE from "../../../requests/file";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 //----------------------------------------------------------------------------
 /*
@@ -65,6 +67,11 @@ function CreateSubmissionForm({ match }) {
     name: defaultFormState.name,
     description: defaultFormState.description
   });
+  const [formSettings, setFormSettings] = useState({
+    themeColour: "2261AD",
+    headerImage: null,
+    confirmationMessage: "Your response has been recorded."
+  });
 
   const [sections, dispatchSectionsUpdate] = useReducer(
     customFormSectionsReducer,
@@ -90,10 +97,23 @@ function CreateSubmissionForm({ match }) {
     }
   );
 
+  const [loadFile] = usePromise(
+    FILE.downloadFile,
+    {
+      bucketname: "arbitrium",
+      filename: formSettings.headerImage?.replace(
+        process.env.REACT_APP_AWS,
+        ""
+      ),
+      requiresAuth: false
+    },
+    null,
+    [loadForm.settings]
+  );
+
   //----------------------------------------------------------------------------
   //SUBMISSION INIT/SAVE FUNCTIONS
   //----------------------------------------------------------------------------
-
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
 
@@ -105,6 +125,8 @@ function CreateSubmissionForm({ match }) {
       name: loadForm.value.name,
       description: loadForm.value.description
     });
+    //Load the form settings
+    setFormSettings(loadForm.value.settings);
 
     //Preview: Is Draft
     //Submission: Not Draft
@@ -179,15 +201,41 @@ function CreateSubmissionForm({ match }) {
     );
   }
 
+  //----------------------------------------------------------------------------
+  //HEADER
+  //----------------------------------------------------------------------------
+
+  let link = "";
+  if (!loadFile.isPending && loadFile.value) {
+    console.log("Here");
+    const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
+    const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
+    link = window.URL.createObjectURL(blob);
+  } else {
+    link = "";
+  }
+
+  console.log(loadFile);
+  console.log(formSettings.headerImage);
+  console.log(link);
   return (
     <div>
-      <img
-        style={{ display: "center", marginLeft: "25%", marginTop: "10%" }}
-        id="image"
-        width="640px"
-        height="160px"
-        alt="header"
-      />
+      {formSettings.headerImage ? (
+        link !== "" ? (
+          <img
+            key={link}
+            alt="header"
+            style={{ display: "center", marginLeft: "25%", marginTop: "5%" }}
+            src={link}
+            width="640px"
+            height="160px"
+          ></img>
+        ) : (
+          <CircularProgress
+            style={{ display: "center", marginLeft: "50%", marginTop: "5%" }}
+          />
+        )
+      ) : null}
       {submitted ? (
         <div>
           <FormWrapper>

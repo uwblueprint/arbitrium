@@ -15,12 +15,12 @@ async function getForm({ programId }) {
 
 //The second paramater of GET is a boolean if the endpoint requires Authorization
 async function getFormBySubmission({ id }) {
-  return GET(`/api/forms/submit/${id}`, false);
+  return GET(`/api/forms/submit/${id}`, null, false);
 }
 
 //The second paramater of GET is a boolean if the endpoint requires Authorization
 async function getFormByPreview({ id }) {
-  return GET(`/api/forms/preview/${id}`, false);
+  return GET(`/api/forms/preview/${id}`, null, false);
 }
 
 async function deleteForm(formId) {
