@@ -127,9 +127,11 @@ function FormSettingsDrawer({
       const formData = new FormData();
       formData.append("file", file); // appending file
 
+      console.log(file.name);
+
       //result will be a link to the file, which we will save to the DB
       const result = await fileUpload(
-        "arbitrium",
+        "arbitrium-public",
         "programs/" + programId + "/" + file.name,
         formData
       );
