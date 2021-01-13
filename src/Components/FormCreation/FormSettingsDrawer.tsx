@@ -127,8 +127,6 @@ function FormSettingsDrawer({
       const formData = new FormData();
       formData.append("file", file); // appending file
 
-      console.log(file.name);
-
       //result will be a link to the file, which we will save to the DB
       const result = await fileUpload(
         "arbitrium-public",
@@ -136,7 +134,6 @@ function FormSettingsDrawer({
         formData
       );
       setHeaderImgLink(result);
-      setSpinner(false);
     } else {
       if (file) {
         alert(
@@ -144,6 +141,7 @@ function FormSettingsDrawer({
         );
       }
     }
+    setSpinner(false);
   }
 
   const getFileName = (awsFilePath: string | null | undefined) => {

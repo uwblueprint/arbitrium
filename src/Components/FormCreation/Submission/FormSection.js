@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
@@ -6,46 +6,47 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import FormCard from "./FormCard";
 import customFormQuestionsReducer from "../../../Reducers/CustomFormQuestionsReducer";
+import FormSettingsContext from "../FormSettingsContext";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((props) => ({
   content: {
     marginTop: -16
   },
-  root: {
+  root: (props) => ({
     fontSize: 14,
     borderRadius: 0,
-    borderTop: "8px solid #2261AD",
+    borderTop: `8px solid #${props.themeColour}`,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
     width: 816
-  },
-  active: {
+  }),
+  active: (props) => ({
     fontSize: 14,
     borderRadius: 0,
-    borderTop: "8px solid #2261AD",
-    borderLeft: "4px solid #2261AD",
+    borderTop: `8px solid #${props.themeColour}`,
+    borderLeft: `4px solid #${props.themeColour}`,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
     width: 816
-  },
+  }),
   title: {
     color: "#000",
     fontSize: "20px",
     fontWeight: "500"
   },
-  section_title: {
+  section_title: (props) => ({
     borderTopLeftRadius: "4px",
     borderTopRightRadius: "4px",
     marginBottom: "0px",
     fontSize: "14px",
-    backgroundColor: "#2261AD",
+    backgroundColor: `#${props.themeColour}`,
     color: "white",
     width: "fit-content",
     paddingLeft: "10px",
     paddingRight: "10px",
     paddingTop: "5px",
     paddingBottom: "5px"
-  },
+  }),
   action_menu: {
     boxShadow:
       "0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 5px 5px rgba(0, 0, 0, 0.2)",
@@ -62,14 +63,15 @@ const useStyles = makeStyles({
     lineHeight: "20px",
     letterSpacing: "0.25px"
   }
-});
+}));
 
 const CardWrapper = styled.div`
   display: flex;
 `;
 
 function FormSection({ numSections, sectionNum, sectionData }) {
-  const classes = useStyles();
+  const { themeColour } = useContext(FormSettingsContext);
+  const classes = useStyles({ themeColour });
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
@@ -100,6 +102,8 @@ function FormSection({ numSections, sectionNum, sectionData }) {
     }
   }
 
+  const updateSubmission = (sectionKey, questionKey, answer) => {};
+
   return (
     <div>
       <span className={classes.section_title}>
@@ -129,6 +133,8 @@ function FormSection({ numSections, sectionNum, sectionData }) {
             handleActive={updateActiveQuestion}
             sectionKey={sectionNum - 1}
             questionKey={questionKey}
+            updateSubmission={updateSubmission}
+            themeColour={themeColour}
           />
         </CardWrapper>
       ))}

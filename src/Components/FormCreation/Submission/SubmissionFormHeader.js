@@ -1,22 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import styled from "styled-components";
-import OrgLogo from "./example_logo.png";
+import FormSettingsContext from "../FormSettingsContext";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((props) => ({
   content: {
     marginTop: -16
   },
-  root: {
+  root: (props) => ({
     fontSize: 14,
     borderRadius: 0,
-    borderTop: "14px solid #2261AD",
+    borderTop: `14px solid #${props.themeColour}`,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
     width: 816
-  },
+  }),
   logo: {
     fontSize: 14,
     borderRadius: 4,
@@ -31,7 +31,7 @@ const useStyles = makeStyles({
   image: {
     textAlign: "center"
   }
-});
+}));
 
 const TitleWrapper = styled.div`
   margin-top: 24px;
@@ -65,7 +65,8 @@ const CardWrapper = styled.div`
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
 function SubmissionFormHeader({ name, description }) {
-  const classes = useStyles();
+  const { themeColour } = useContext(FormSettingsContext);
+  const classes = useStyles({ themeColour });
 
   return (
     <div className={classes.container}>

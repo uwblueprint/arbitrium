@@ -12,6 +12,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import moment from "moment";
 import * as FILE from "../../../requests/file";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import FormSettingsContext from "../FormSettingsContext";
 
 //----------------------------------------------------------------------------
 /*
@@ -100,9 +101,9 @@ function CreateSubmissionForm({ match }) {
   const [loadFile] = usePromise(
     FILE.downloadFile,
     {
-      bucketname: "arbitrium",
+      bucketname: "arbitrium-public",
       filename: formSettings.headerImage?.replace(
-        process.env.REACT_APP_AWS,
+        process.env.REACT_APP_AWS_PUBLIC,
         ""
       ),
       requiresAuth: false
@@ -207,7 +208,6 @@ function CreateSubmissionForm({ match }) {
 
   let link = "";
   if (!loadFile.isPending && loadFile.value) {
-    console.log("Here");
     const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
     const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
     link = window.URL.createObjectURL(blob);
@@ -215,103 +215,102 @@ function CreateSubmissionForm({ match }) {
     link = "";
   }
 
-  console.log(loadFile);
-  console.log(formSettings.headerImage);
-  console.log(link);
   return (
     <div>
-      {formSettings.headerImage ? (
-        link !== "" ? (
-          <img
-            key={link}
-            alt="header"
-            style={{ display: "center", marginLeft: "25%", marginTop: "5%" }}
-            src={link}
-            width="640px"
-            height="160px"
-          ></img>
-        ) : (
-          <CircularProgress
-            style={{ display: "center", marginLeft: "50%", marginTop: "5%" }}
-          />
-        )
-      ) : null}
-      {submitted ? (
-        <div>
-          <FormWrapper>
-            <SubmissionFormHeader
-              name={headerData.name}
-              description={"Your response has been recorded"}
+      <FormSettingsContext.Provider value={formSettings}>
+        {formSettings.headerImage ? (
+          link !== "" ? (
+            <img
+              key={link}
+              alt="header"
+              style={{ display: "flex", paddingLeft: "20%", marginTop: "5%" }}
+              src={link}
+              width="640px"
+              height="160px"
+            ></img>
+          ) : (
+            <CircularProgress
+              style={{ display: "center", marginLeft: "40%", marginTop: "5%" }}
             />
-          </FormWrapper>
-        </div>
-      ) : (
-        <div>
-          <FormWrapper key={page} id={"section_" + page}>
-            <SubmissionFormHeader {...headerData} />
-            {page !== -1 && sections && page < sections.length ? (
-              <FormSection
-                key={page + "_section"}
-                numSections={sections.length}
-                sectionNum={page + 1}
-                sectionData={sections[page]}
+          )
+        ) : null}
+        {submitted ? (
+          <div>
+            <FormWrapper>
+              <SubmissionFormHeader
+                name={headerData.name}
+                description={"Your response has been recorded"}
               />
-            ) : null}
-            {page === sections.length - 1 && !loadForm.isPending ? (
-              <div style={{ marginTop: 10 }}>
-                By clicking &quot;Submit&quot;, your application will be
-                submitted to the owner of this form.{" "}
-              </div>
-            ) : (
-              <div></div>
-            )}
-          </FormWrapper>
-          <ButtonGroup>
-            <Button
-              variant="outlined"
-              className={classes.button}
-              disabled={page === -1}
-              color="primary"
-              onClick={() => setPage(page - 1)}
-            >
-              Back
-            </Button>
-            {page === sections.length - 1 ? (
-              <Button
-                variant="contained"
-                className={classes.button}
-                color="primary"
-                onClick={() => {
-                  handleSubmit();
-                }}
-              >
-                Submit
-              </Button>
-            ) : (
+            </FormWrapper>
+          </div>
+        ) : (
+          <div>
+            <FormWrapper key={page} id={"section_" + page}>
+              <SubmissionFormHeader {...headerData} />
+              {page !== -1 && sections && page < sections.length ? (
+                <FormSection
+                  key={page + "_section"}
+                  numSections={sections.length}
+                  sectionNum={page + 1}
+                  sectionData={sections[page]}
+                />
+              ) : null}
+              {page === sections.length - 1 && !loadForm.isPending ? (
+                <div style={{ marginTop: 10 }}>
+                  By clicking &quot;Submit&quot;, your application will be
+                  submitted to the owner of this form.{" "}
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </FormWrapper>
+            <ButtonGroup>
               <Button
                 variant="outlined"
                 className={classes.button}
-                disabled={page === sections.length - 1}
+                disabled={page === -1}
                 color="primary"
-                onClick={() => setPage(page + 1)}
+                onClick={() => setPage(page - 1)}
               >
-                Next
+                Back
               </Button>
-            )}
-            {page === -1 ? (
-              <div></div>
-            ) : (
-              <div style={{ width: 500, marginLeft: 140 }}>
-                <BorderLinearProgress
-                  variant="determinate"
-                  value={norm_progress(page + 1)}
-                />
-                Section {page + 1} of {sections.length}
-              </div>
-            )}
-          </ButtonGroup>
-        </div>
-      )}
+              {page === sections.length - 1 ? (
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  color="primary"
+                  onClick={() => {
+                    handleSubmit();
+                  }}
+                >
+                  Submit
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  className={classes.button}
+                  disabled={page === sections.length - 1}
+                  color="primary"
+                  onClick={() => setPage(page + 1)}
+                >
+                  Next
+                </Button>
+              )}
+              {page === -1 ? (
+                <div></div>
+              ) : (
+                <div style={{ width: 500, marginLeft: 140 }}>
+                  <BorderLinearProgress
+                    variant="determinate"
+                    value={norm_progress(page + 1)}
+                  />
+                  Section {page + 1} of {sections.length}
+                </div>
+              )}
+            </ButtonGroup>
+          </div>
+        )}
+      </FormSettingsContext.Provider>
     </div>
   );
 }

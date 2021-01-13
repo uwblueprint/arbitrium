@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import SelectQuestion from "../CardComponents/SelectQuestion";
 import TextQuestion from "./../CardComponents/TextQuestion";
 import styled from "styled-components";
+import FileQuestion from "./../CardComponents/FileQuestion";
+import FormSettingsContext from "../FormSettingsContext";
 
 const useStyles = makeStyles({
   content: {
@@ -17,14 +19,14 @@ const useStyles = makeStyles({
     marginBottom: 20,
     width: 816
   },
-  active: {
+  active: (props) => ({
     fontSize: 14,
     borderRadius: 0,
-    borderLeft: "4px solid #2261AD",
+    borderLeft: `4px solid #${props.themeColour}`,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
     width: 816
-  },
+  }),
   title: {
     color: "#000",
     fontSize: "20px",
@@ -97,7 +99,113 @@ const DescriptionField = styled.div`
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
 function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
-  const classes = useStyles();
+  const { themeColour } = useContext(FormSettingsContext);
+  const classes = useStyles({ themeColour });
+
+  const onQuestionUpdate = (data) => {
+    console.log(data);
+    if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
+    }
+  };
+
+  const questionTypes = [
+    {
+      name: "IDENTIFIER",
+      value: "Identifier",
+      style: classes.action_menu_item,
+      isDeletable: false,
+      render: (
+        <TextQuestion
+          short_answer={true}
+          submission={true}
+          onChange={onQuestionUpdate}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "SHORT_ANSWER",
+      value: "Short Answer",
+      style: classes.action_menu_item2,
+      isDeletable: true,
+      render: (
+        <TextQuestion
+          short_answer={true}
+          submission={true}
+          onChange={onQuestionUpdate}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "PARAGRAPHS",
+      value: "Paragraphs",
+      style: classes.action_menu_item,
+      isDeletable: true,
+      render: (
+        <TextQuestion
+          short_answer={false}
+          submission={true}
+          onChange={onQuestionUpdate}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "CHECKBOXES",
+      value: "Checkboxes",
+      style: classes.action_menu_item2,
+      isDeletable: true,
+      render: (
+        <SelectQuestion
+          data={card.options}
+          onChange={onQuestionUpdate}
+          initialOptions={card && card.x_options.map((option) => [option])}
+          multiSelect={true}
+          submission={true}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "MULTIPLE_CHOICE",
+      value: "Multiple Choice",
+      style: classes.action_menu_item,
+      isDeletable: true,
+      render: (
+        <SelectQuestion
+          data={card.options}
+          submission={true}
+          onChange={onQuestionUpdate}
+          initialOptions={card && card.x_options.map((option) => [option])}
+          multiSelect={false}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "FILE_UPLOAD",
+      value: "File Upload",
+      style: classes.action_menu_item2,
+      isDeletable: true,
+      render: (
+        <FileQuestion
+          active={true}
+          submission={true}
+          onChange={onQuestionUpdate}
+          initialNumFiles={card && card.x_options[0]}
+        />
+      ),
+      renderInactive: (
+        <FileQuestion
+          active={false}
+          onChange={onQuestionUpdate}
+          submission={true}
+          initialNumFiles={card && card.x_options[0]}
+        />
+      )
+    }
+  ];
 
   return (
     <div className={classes.container}>
@@ -107,33 +215,26 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
       >
         <CardContent className={classes.content}>
           <TitleWrapper>
-            <NameField>{card.name ? card.name : "Default Card Name"}</NameField>
+            <NameField style={{ display: "flex" }}>
+              {card.name ? card.name : "Default Card Name "}
+              {card.required ? <font color="red">{" *"}</font> : null}
+            </NameField>
+
             <DescriptionField>
-              {card.description ? card.description : "Default Card Description"}
+              {card.description ? card.description : ""}
             </DescriptionField>
           </TitleWrapper>
-          {card && card.type === "MULTIPLE_CHOICE" ? (
-            <SelectQuestion
-              data={card.options}
-              submission={true}
-              onBlur={() => {}}
-            />
-          ) : null}
-          {card && card.type === "SHORT_ANSWER" ? (
-            <TextQuestion
-              short_answer={true}
-              submission={true}
-              onBlur={() => {}}
-            />
-          ) : null}
-          {card && card.type === "PARAGRAPHS" ? (
-            <TextQuestion short_answer={false} submission={true} />
-          ) : null}
-          {card && card.type === "CHECKBOXES" ? (
-            <SelectQuestion data={card.options} submission={true} />
-          ) : null}
-          {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
-          {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
+          {card
+            ? questionTypes
+                .filter((type) => type.name === card.type)
+                .map((question) => {
+                  return (
+                    <div key={card._id + "_QuestionContent"}>
+                      {question.render}
+                    </div>
+                  );
+                })
+            : null}
         </CardContent>
       </Card>
     </div>

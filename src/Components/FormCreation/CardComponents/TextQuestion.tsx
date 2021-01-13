@@ -9,10 +9,10 @@ const Wrapper = styled.div`
 `;
 
 type Props = {
-  submission: Boolean;
-  short_answer: Boolean;
+  submission: boolean;
+  short_answer: boolean;
   validation?: any;
-  onBlur: (text: string) => void;
+  onChange: (text: string) => void;
 };
 
 //TODO: Add Response Validation
@@ -20,7 +20,7 @@ function TextQuestion({
   submission = false,
   short_answer,
   validation,
-  onBlur //Could change this to be onChange if that makes more sense
+  onChange
 }: Props) {
   const [text, setText] = useState("");
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +36,7 @@ function TextQuestion({
         placeholder={short_answer ? "Short answer text" : "Long answer text"}
         size="medium"
         value={text}
-        onBlur={() => onBlur(text)}
+        onBlur={() => onChange(text)}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           handleTextChange(event)
         }

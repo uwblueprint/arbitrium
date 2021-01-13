@@ -101,8 +101,11 @@ function CreateEditForm({ programId }) {
   const [loadFile] = usePromise(
     FILE.downloadFile,
     {
-      bucketname: "arbitrium",
-      filename: formSettings.headerImage?.replace(process.env.REACT_APP_AWS, "")
+      bucketname: "arbitrium-public",
+      filename: formSettings.headerImage?.replace(
+        process.env.REACT_APP_AWS_PUBLIC,
+        ""
+      )
     },
     null,
     [loadForm.settings]
@@ -188,7 +191,6 @@ function CreateEditForm({ programId }) {
     //Check to see if it is still null after initalizing
     if (loadForm.value == null) return;
 
-    console.log(loadForm);
     //Load the sections Data
     dispatchSectionsUpdate({
       type: "LOAD",
@@ -589,14 +591,14 @@ function CreateEditForm({ programId }) {
             <img
               key={link}
               alt="header"
-              style={{ display: "center", marginLeft: "25%", marginTop: "5%" }}
+              style={{ display: "flex", paddingLeft: "20%", marginTop: "5%" }}
               src={link}
               width="640px"
               height="160px"
             ></img>
           ) : (
             <CircularProgress
-              style={{ display: "center", marginLeft: "50%", marginTop: "5%" }}
+              style={{ display: "center", marginLeft: "40%", marginTop: "5%" }}
             />
           )
         ) : null}

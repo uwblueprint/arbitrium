@@ -60,7 +60,7 @@ const useStyles = makeStyles({
   },
   questionTitle: {
     height: 24,
-    width: 145,
+    width: 568,
     display: "flex",
     fontSize: 16
   },
@@ -187,6 +187,7 @@ function FormCard({
   const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
 
   const onQuestionUpdate = (options) => {
+    console.log(options);
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
       const opt = {
         xoptions: options.map((option) => option[0]),

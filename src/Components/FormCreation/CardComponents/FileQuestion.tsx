@@ -5,6 +5,8 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Select from "@material-ui/core/Select";
 import { fileUpload, downloadFile } from "../../../requests/file";
 import usePromise from "../../../Hooks/usePromise";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -21,6 +23,15 @@ type Props = {
   initialNumFiles?: number;
 };
 
+const useStyles = makeStyles({
+  button: {
+    height: 36,
+    marginTop: 16,
+    marginBottom: 24,
+    marginLeft: 16
+  }
+});
+
 //TODO: Add Response Validation
 function FileQuestion({
   submission,
@@ -30,23 +41,30 @@ function FileQuestion({
   initialNumFiles
 }: Props) {
   const [numFiles, setnumFiles] = useState(initialNumFiles || 1);
+  const classes = useStyles();
+  const [spinner, setSpinner] = useState(false);
   const handleNumFileChange = (value: any) => {
     //Check validations here and update the error prop accordingly
     setnumFiles(value as number);
-    onChange(numFiles);
+    onChange(value);
   };
+  const [files, setFiles] = useState([]);
 
   const numFileOptions = [1, 2, 3, 5, 10];
 
-  async function handleFile(event: any) {
+  async function handleFileUpload(event: any) {
+    setSpinner(true);
     const file = event.target.files[0]; //access the file
+
     //todo: check if the file extension is valid
     const formData = new FormData();
     formData.append("file", file); // appending file
 
     //returns the url to the file in aws
-    await fileUpload("arbitrium", file.name, formData);
-    //TODO Save to DB
+    const result = await fileUpload("arbitrium", file.name, formData);
+    setFiles([...files, result]);
+    setSpinner(false);
+    onChange([...files, result]);
   }
 
   //download a file from AWS
@@ -60,6 +78,7 @@ function FileQuestion({
     null,
     []
   );
+
   let link = "";
   //Create a link to download the file :)
   if (!loadFile.isPending) {
@@ -71,6 +90,14 @@ function FileQuestion({
     // // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     // headerImg!.src = link;
   }
+
+  const getFileName = (awsFilePath: string | null | undefined) => {
+    if (!awsFilePath) {
+      return null;
+    }
+    const split = awsFilePath.split("/");
+    return split[split.length - 1];
+  };
 
   return (
     <Wrapper>
@@ -115,11 +142,26 @@ function FileQuestion({
       ) : !loadFile.isPending ? (
         <div>
           <Button
-            href={link}
-            download="programs/5fab02657cf3c7788fc00d1fabout.png"
+            className={classes.button}
+            variant="outlined"
+            component="label"
+            color="primary"
+            startIcon={<CloudUploadIcon />}
           >
-            Download
+            {spinner ? <CircularProgress size={20} /> : "Upload File"}
+            <input
+              type="file"
+              onChange={(event) => handleFileUpload(event)}
+              style={{ display: "none" }}
+            />
           </Button>
+          <hr></hr>
+          {files.map((file, index) => (
+            <div key={index}>
+              {getFileName(file)}{" "}
+              {spinner ? <CircularProgress size={20} /> : null}
+            </div>
+          ))}
         </div>
       ) : null}
     </Wrapper>
