@@ -10,22 +10,33 @@ const db = require("../mongo.js");
 // Form Submission
 //------------------------------------------------------------------------------
 
-router.post("/:submissionId", (req, res) => {
-  db["Authentication"].submissions.updateOne(
-    {
-      _id: req.body.submissionId
-    },
-    req.body,
-    { upsert: true },
-    (error, result) => {
-      if (error) {
-        console.error("Error inserting new form into MongoDB");
-        res.status(500).send(error);
-      } else {
-        res.status(201).json(result);
-      }
+//Create a new submission
+router.post("/create", (req, res) => {
+  db["Authentication"].submissions.create(req.body, (error, result) => {
+    if (error) {
+      console.error("Error inserting new submission into MongoDB");
+      console.error(error);
+      res.status(500).send(error);
+    } else {
+      res.status(201).json(result);
     }
-  );
+  });
+});
+
+//Get a submission by submissionId
+router.get("/:submissionId", (req, res) => {
+  db["Authentication"].submissions
+    .findOne({ _id: req.params.submissionId })
+    .then(function(result) {
+      res.status(200).json(result);
+    })
+    .catch(function(err) {
+      console.error(
+        `Error getting submission with ID = ${req.params.submissionId}`
+      );
+      console.error(err);
+      res.status(500).send(err);
+    });
 });
 
 module.exports = router;

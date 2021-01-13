@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useState } from "react";
+import React, { useReducer, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import FormSection from "./FormSection";
 import * as FORM from "../../../requests/forms.js";
@@ -11,6 +11,7 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import moment from "moment";
 import * as FILE from "../../../requests/file";
+import * as SUBMISSION from "../../../requests/submission";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormSettingsContext from "../FormSettingsContext";
 
@@ -74,10 +75,9 @@ function CreateSubmissionForm({ match }) {
     confirmationMessage: "Your response has been recorded."
   });
 
-  const [sections, dispatchSectionsUpdate] = useReducer(
-    customFormSectionsReducer,
-    []
-  );
+  const [sections, setSections] = useState([]);
+
+  const [answers, setAnswers] = useState([]);
 
   //----------------------------------------------------------------------------
   //Check to see if Preview or closed
@@ -98,6 +98,20 @@ function CreateSubmissionForm({ match }) {
     }
   );
 
+  //Currently no way to load a submission
+  //So one will always be created
+  const [submissionId, setSubmissionId] = useState(null);
+
+  //Grab the submission
+  const [loadSubmission, refetchSubmission] = usePromise(
+    SUBMISSION.getSubmission,
+    {
+      submissionId: submissionId
+    },
+    null,
+    [submissionId]
+  );
+
   const [loadFile] = usePromise(
     FILE.downloadFile,
     {
@@ -115,13 +129,37 @@ function CreateSubmissionForm({ match }) {
   //----------------------------------------------------------------------------
   //SUBMISSION INIT/SAVE FUNCTIONS
   //----------------------------------------------------------------------------
+
+  //If a form doesn't exist then create a new one from the default template
+  const initiateSubmission = useCallback(() => {
+    async function initiate() {
+      console.log("here again");
+      const data = {
+        formId: loadForm.value._id,
+        linkId: match.params.formId,
+        SubmissionDate: null,
+        lastSaveDate: moment(),
+        answers: [],
+        identifier: ""
+      };
+
+      console.log(submissionId);
+      const result = await SUBMISSION.createSubmission(data);
+      console.log(result);
+      refetchSubmission({ submissionId: result._id });
+    }
+    console.log("here");
+    //Only create a form if this isn't a preview link
+    initiate();
+    if (!preview) {
+      initiate();
+    }
+  }, [loadForm.value, match.params.formId, refetchSubmission, preview]);
+
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
 
-    dispatchSectionsUpdate({
-      type: "LOAD",
-      sections: loadForm.value.sections
-    });
+    setSections(loadForm.value.sections);
     setHeaderData({
       name: loadForm.value.name,
       description: loadForm.value.description
@@ -147,6 +185,43 @@ function CreateSubmissionForm({ match }) {
       );
     }
   }, [loadForm, refetch, match.params.formId, preview]);
+
+  useEffect(() => {
+    console.log(loadForm);
+    if (loadSubmission.isPending || loadForm.isPending || !loadForm.value)
+      return;
+    if (!loadSubmission.value) {
+      console.log("We are here");
+      initiateSubmission();
+      return;
+    }
+
+    //Here is where we would load the submission into state
+    //Currently we don't allow this functionality
+  }, [initiateSubmission, loadSubmission, loadForm]);
+
+  //Update the submission
+  useEffect(() => {
+    console.log(answers);
+  }, [answers]);
+
+  const handleSave = (answer) => {
+    console.log(answers);
+    let curAnswer = answers.findIndex(
+      (ans) =>
+        ans.questionId === answer.questionId &&
+        ans.sectionId === answer.sectionId
+    );
+    console.log(curAnswer);
+    if (curAnswer !== -1) {
+      //replace answer
+      console.log(answers.splice(curAnswer, 1, answer));
+      setAnswers(answers.splice(curAnswer, 1, answer));
+    } else {
+      //new answer
+      setAnswers([...answers, answer]);
+    }
+  };
 
   //Save the form for a final time after hitting submit
   const handleSubmit = () => {
@@ -249,6 +324,7 @@ function CreateSubmissionForm({ match }) {
               <SubmissionFormHeader {...headerData} />
               {page !== -1 && sections && page < sections.length ? (
                 <FormSection
+                  saveAnswer={handleSave}
                   key={page + "_section"}
                   numSections={sections.length}
                   sectionNum={page + 1}

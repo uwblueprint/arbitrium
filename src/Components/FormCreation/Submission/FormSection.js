@@ -69,7 +69,7 @@ const CardWrapper = styled.div`
   display: flex;
 `;
 
-function FormSection({ numSections, sectionNum, sectionData }) {
+function FormSection({ numSections, sectionNum, sectionData, saveAnswer }) {
   const { themeColour } = useContext(FormSettingsContext);
   const classes = useStyles({ themeColour });
   const [activeQuestion, setActiveQuestion] = useState(0);
@@ -102,7 +102,21 @@ function FormSection({ numSections, sectionNum, sectionData }) {
     }
   }
 
-  const updateSubmission = (sectionKey, questionKey, answer) => {};
+  const updateSubmission = (
+    questionId,
+    questionType,
+    answerString,
+    answerArray
+  ) => {
+    saveAnswer({
+      type: questionType,
+      answerString,
+      answerArray,
+      answerMatrix: [],
+      sectionId: sectionData._id,
+      questionId: questionId
+    });
+  };
 
   return (
     <div>

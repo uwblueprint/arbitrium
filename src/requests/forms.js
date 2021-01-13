@@ -13,12 +13,12 @@ async function getForm({ programId }) {
   return GET(`/api/forms/${programId}`);
 }
 
-//The second paramater of GET is a boolean if the endpoint requires Authorization
+//The third paramater of GET is a boolean if the endpoint requires Authorization
 async function getFormBySubmission({ id }) {
   return GET(`/api/forms/submit/${id}`, null, false);
 }
 
-//The second paramater of GET is a boolean if the endpoint requires Authorization
+//The third paramater of GET is a boolean if the endpoint requires Authorization
 async function getFormByPreview({ id }) {
   return GET(`/api/forms/preview/${id}`, null, false);
 }

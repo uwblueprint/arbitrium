@@ -17,9 +17,6 @@ function setProgram(prog) {
 }
 
 async function GET(url, filepath, requiresAuth = true) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
-
   let token = "";
   if (requiresAuth) {
     token = await firebaseApp.auth().currentUser.getIdToken();
@@ -41,11 +38,11 @@ async function GET(url, filepath, requiresAuth = true) {
   return body;
 }
 
-async function POST(url, databody) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
-  //let program = window.location.pathname.split("/")[0]
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+async function POST(url, databody, requiresAuth = true) {
+  let token = "";
+  if (requiresAuth) {
+    token = await firebaseApp.auth().currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     method: "POST",
@@ -67,9 +64,6 @@ async function POST(url, databody) {
 }
 
 async function PUT(url, databody) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
-  //let program = window.location.pathname.split("/")[0]
   const token = await firebaseApp.auth().currentUser.getIdToken();
 
   const response = await fetch(proxy + url, {
@@ -91,9 +85,6 @@ async function PUT(url, databody) {
 }
 
 async function PATCH(url, databody) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
-  //let program = window.location.pathname.split("/")[0]
   const token = await firebaseApp.auth().currentUser.getIdToken();
 
   const response = await fetch(proxy + url, {
@@ -114,9 +105,6 @@ async function PATCH(url, databody) {
 }
 
 async function DELETE(url) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
-  //let program = window.location.pathname.split("/")[0]
   const token = await firebaseApp.auth().currentUser.getIdToken();
 
   const response = await fetch(proxy + url, {

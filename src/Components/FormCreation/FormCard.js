@@ -190,9 +190,12 @@ function FormCard({
     console.log(options);
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
       const opt = {
-        xoptions: options.map((option) => option[0]),
+        xoptions: options.map((option) => {
+          return { value: option[0] };
+        }),
         yoptions: null
       };
+      console.log(opt);
       handleQuestionContentUpdate(opt);
     }
     if (card.type === "CHECKBOX_GRID") {
@@ -245,7 +248,9 @@ function FormCard({
         <SelectQuestion
           data={card.options}
           onChange={onQuestionUpdate}
-          initialOptions={card && card.x_options.map((option) => [option])}
+          initialOptions={
+            card && card.x_options.map((option) => [option.value])
+          }
           multiSelect={true}
         />
       ),
@@ -261,7 +266,9 @@ function FormCard({
         <SelectQuestion
           data={card.options}
           onChange={onQuestionUpdate}
-          initialOptions={card && card.x_options.map((option) => [option])}
+          initialOptions={
+            card && card.x_options.map((option) => [option.value])
+          }
           multiSelect={false}
         />
       ),

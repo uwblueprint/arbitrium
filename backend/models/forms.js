@@ -47,6 +47,13 @@ const formSettings = new mongoose.Schema({
   }
 });
 
+const option = new mongoose.Schema({
+  value: {
+    type: String,
+    default: null
+  }
+});
+
 //Yoptions and Xoptions explained:
 //Each Xoption is a collumn and ech Yoption is a row
 //Each option contains a string and a min/max for validations.
@@ -92,11 +99,11 @@ const question = new mongoose.Schema({
     default: null
   },
   x_options: {
-    type: [String]
+    type: [option]
   },
   //y_options is only used for grid type questions
   y_options: {
-    type: [String]
+    type: [option]
   }
 });
 

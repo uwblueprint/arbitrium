@@ -98,13 +98,37 @@ const DescriptionField = styled.div`
 
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
+function FormCard({
+  card,
+  active,
+  handleActive,
+  sectionKey,
+  questionKey,
+  updateSubmission
+}) {
   const { themeColour } = useContext(FormSettingsContext);
   const classes = useStyles({ themeColour });
 
   const onQuestionUpdate = (data) => {
-    console.log(data);
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
+      //We are storing the selected options by id in the submissions
+      //To get the values we will cross-reference with the form
+      let answerArray = card.x_options
+        .filter((opt) => data[opt.value])
+        .map((opt) => opt._id);
+      updateSubmission(card._id, card.type, "", answerArray);
+    } else if (
+      card.type === "SHORT_ANSWER" ||
+      card.type === "PARAGRAPHS" ||
+      card.type === "IDENTIFIER"
+    ) {
+      //Stored as a string
+      updateSubmission(card._id, card.type, data, []);
+    } else if (card.type === "FILE_UPLOAD") {
+      //Stored as an array of strings of file links
+      updateSubmission(card._id, card.type, data, []);
+    } else if (card.type === "CHECKBOX_GRID") {
+      //TODO
     }
   };
 
@@ -158,9 +182,10 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
       isDeletable: true,
       render: (
         <SelectQuestion
-          data={card.options}
           onChange={onQuestionUpdate}
-          initialOptions={card && card.x_options.map((option) => [option])}
+          initialOptions={
+            card && card.x_options.map((option) => [option.value])
+          }
           multiSelect={true}
           submission={true}
         />
@@ -174,10 +199,11 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
       isDeletable: true,
       render: (
         <SelectQuestion
-          data={card.options}
           submission={true}
           onChange={onQuestionUpdate}
-          initialOptions={card && card.x_options.map((option) => [option])}
+          initialOptions={
+            card && card.x_options.map((option) => [option.value])
+          }
           multiSelect={false}
         />
       ),

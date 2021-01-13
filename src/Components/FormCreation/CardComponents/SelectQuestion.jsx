@@ -165,7 +165,7 @@ function SelectQuestion({
 
   const handleMultipleChoiceSelect = (event) => {
     setSelected({ ...selectedInit, [event.target.name]: event.target.checked });
-    onChange({ ...selected, [event.target.name]: event.target.checked });
+    onChange({ ...selectedInit, [event.target.name]: event.target.checked });
   };
 
   // useEffect(() => {
