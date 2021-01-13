@@ -15,6 +15,7 @@ import { getAllProgramsAPI } from "../../requests/get";
 import usePromise from "../../Hooks/usePromise";
 import { loadProgram } from "../../Actions/index.js";
 import { Typography } from "@material-ui/core";
+import { defaultRouteAfterLogin } from "../../Authentication/PrivateRoute";
 
 export const HEADER_HEIGHT = 56;
 export const MIN_WIDTH = 960;
@@ -148,7 +149,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
       <BodyWrapper>
         <AppName>
           <Tooltip title="Arbitrium" classes={{ tooltip: classes.tooltip }}>
-            <div>
+            <div onClick={() => history.push("/programs")}>
               <AppIcon />
             </div>
           </Tooltip>

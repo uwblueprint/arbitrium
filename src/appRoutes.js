@@ -23,9 +23,9 @@ const routes = [
   {
     path: "/applications",
     component: AllApplications,
-    title: "Candidate Submissions",
+    title: "Submissions",
     header: true,
-    programGroup: ""
+    programGroup: "REVIEWER"
   },
   {
     path: "/home",
