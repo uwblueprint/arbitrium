@@ -149,7 +149,6 @@ function CreateSubmissionForm({ match }) {
       refetchSubmission({ submissionId: result._id });
     }
     //Only create a form if this isn't a preview link
-    initiate();
     if (!preview) {
       initiate();
     }
@@ -193,6 +192,7 @@ function CreateSubmissionForm({ match }) {
     if (loadSubmission.isPending || loadForm.isPending || !loadForm.value)
       return;
     if (!loadSubmission.value) {
+      console.log(loadSubmission);
       initiateSubmission();
       return;
     }

@@ -486,6 +486,7 @@ function CreateEditForm({ programId }) {
     newForm.sections = sections;
     newForm.draft = false;
     newForm.previewLink.close = moment();
+    newForm.settings = formSettings;
     await FORM.updateForm(loadForm.value._id, newForm);
     refetch({ programId: programId });
   }
