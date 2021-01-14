@@ -81,7 +81,7 @@ function FileQuestion({
 
   let link = "";
   //Create a link to download the file :)
-  if (!loadFile.isPending) {
+  if (!loadFile.isPending && loadFile.value && loadFile.value.Body) {
     const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
     const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
     link = window.URL.createObjectURL(blob);

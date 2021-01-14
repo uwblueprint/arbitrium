@@ -39,4 +39,23 @@ router.get("/:submissionId", (req, res) => {
     });
 });
 
+//Update a form by ID
+router.patch("/:submissionId", (req, res) => {
+  db["Authentication"].submissions.updateOne(
+    {
+      _id: req.params.submissionId
+    },
+    req.body,
+    (error, result) => {
+      if (error) {
+        console.error("Error updating submission");
+        console.error(error);
+        res.status(500).send(error);
+      } else {
+        res.status(201).json(result);
+      }
+    }
+  );
+});
+
 module.exports = router;

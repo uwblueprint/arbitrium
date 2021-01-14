@@ -5,7 +5,7 @@ import * as FORM from "../../../requests/forms.js";
 import usePromise from "../../../Hooks/usePromise";
 import { defaultFormState } from "./../CreateEditFormStateManagement";
 import SubmissionFormHeader from "./SubmissionFormHeader";
-import customFormSectionsReducer from "../../../Reducers/CustomFormSectionsReducer";
+import customSubmissionAnswerReduce from "../../../Reducers/CustomSubmissionAnswersReducers";
 import Button from "@material-ui/core/Button";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -76,8 +76,11 @@ function CreateSubmissionForm({ match }) {
   });
 
   const [sections, setSections] = useState([]);
-
-  const [answers, setAnswers] = useState([]);
+  const [identifierQuestion, setidentifierQuestion] = "";
+  const [answers, dispatchAnswersUpdate] = useReducer(
+    customSubmissionAnswerReduce,
+    []
+  );
 
   //----------------------------------------------------------------------------
   //Check to see if Preview or closed
@@ -187,50 +190,81 @@ function CreateSubmissionForm({ match }) {
   }, [loadForm, refetch, match.params.formId, preview]);
 
   useEffect(() => {
-    console.log(loadForm);
     if (loadSubmission.isPending || loadForm.isPending || !loadForm.value)
       return;
     if (!loadSubmission.value) {
-      console.log("We are here");
       initiateSubmission();
       return;
     }
 
     //Here is where we would load the submission into state
     //Currently we don't allow this functionality
+
+    /*
+    dispatchAnswersUpdate({
+      type: "LOAD",
+      answers: loadSubmission.value.answers
+    });
+    */
   }, [initiateSubmission, loadSubmission, loadForm]);
+
+  //usecallback prevents functions from being re-created on every render.
+  //This is useful when a function is a dependency of useEffect (otherwise you get infinite renders)
+  const saveSubmission = useCallback(() => {
+    if (
+      !loadForm.isPending &&
+      loadForm.value &&
+      !loadSubmission.isPending &&
+      loadSubmission.value
+    ) {
+      const newSubmission = loadSubmission.value;
+
+      newSubmission.answers = answers;
+      newSubmission.lastSaveDate = moment();
+      newSubmission.identifier = identifierQuestion;
+      console.log(newSubmission);
+      SUBMISSION.updateSubmission(loadSubmission.value._id, newSubmission);
+    }
+  }, [loadForm, loadSubmission, answers]);
 
   //Update the submission
   useEffect(() => {
-    console.log(answers);
-  }, [answers]);
+    saveSubmission();
+  }, [answers, saveSubmission]);
 
   const handleSave = (answer) => {
-    console.log(answers);
-    let curAnswer = answers.findIndex(
+    if (answer.type === "IDENTIFIER") {
+      setidentifierQuestion(answer.answerString);
+    }
+
+    const curAnswer = answers.findIndex(
       (ans) =>
         ans.questionId === answer.questionId &&
         ans.sectionId === answer.sectionId
     );
-    console.log(curAnswer);
+
     if (curAnswer !== -1) {
       //replace answer
-      console.log(answers.splice(curAnswer, 1, answer));
-      setAnswers(answers.splice(curAnswer, 1, answer));
+      dispatchAnswersUpdate({
+        type: "EDIT_ANSWER",
+        index: curAnswer,
+        answer: answer
+      });
     } else {
       //new answer
-      setAnswers([...answers, answer]);
+      dispatchAnswersUpdate({
+        type: "ADD_ANSWER",
+        answer: answer
+      });
     }
   };
 
   //Save the form for a final time after hitting submit
   const handleSubmit = () => {
+    console.log("Submitted");
+
     setSubmitted(true);
-
-    //If preview don't record the response
-    if (preview) return;
-
-    //TODO: Save the response
+    saveSubmission();
   };
 
   //----------------------------------------------------------------------------

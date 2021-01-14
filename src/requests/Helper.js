@@ -63,8 +63,11 @@ async function POST(url, databody, requiresAuth = true) {
   return body;
 }
 
-async function PUT(url, databody) {
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+async function PUT(url, databody, requiresAuth = true) {
+  let token = "";
+  if (requiresAuth) {
+    token = await firebaseApp.auth().currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     method: "PUT",
@@ -84,8 +87,11 @@ async function PUT(url, databody) {
   return body;
 }
 
-async function PATCH(url, databody) {
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+async function PATCH(url, databody, requiresAuth = true) {
+  let token = "";
+  if (requiresAuth) {
+    token = await firebaseApp.auth().currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     method: "PATCH",
@@ -104,8 +110,11 @@ async function PATCH(url, databody) {
   return body;
 }
 
-async function DELETE(url) {
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+async function DELETE(url, requiresAuth = true) {
+  let token = "";
+  if (requiresAuth) {
+    token = await firebaseApp.auth().currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     method: "DELETE",

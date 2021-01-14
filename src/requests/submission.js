@@ -10,7 +10,7 @@ async function getSubmission({ submissionId }) {
 }
 
 async function updateSubmission(submissionId, databody) {
-  return PATCH(`/api/forms/${submissionId}`, databody);
+  return PATCH(`/api/submissions/${submissionId}`, databody, false);
 }
 
 export { createSubmission, getSubmission, updateSubmission };
