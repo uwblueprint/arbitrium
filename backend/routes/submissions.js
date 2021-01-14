@@ -39,7 +39,7 @@ router.get("/:submissionId", (req, res) => {
     });
 });
 
-//Update a form by ID
+//Update a submission by ID
 router.patch("/:submissionId", (req, res) => {
   db["Authentication"].submissions.updateOne(
     {
@@ -48,7 +48,9 @@ router.patch("/:submissionId", (req, res) => {
     req.body,
     (error, result) => {
       if (error) {
-        console.error("Error updating submission");
+        console.error(
+          `Error updating submission with ID = ${req.params.submissionId}`
+        );
         console.error(error);
         res.status(500).send(error);
       } else {

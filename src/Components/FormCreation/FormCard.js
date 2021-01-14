@@ -187,7 +187,6 @@ function FormCard({
   const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
 
   const onQuestionUpdate = (options) => {
-    console.log(options);
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
       const opt = {
         xoptions: options.map((option) => {
@@ -195,7 +194,6 @@ function FormCard({
         }),
         yoptions: null
       };
-      console.log(opt);
       handleQuestionContentUpdate(opt);
     }
     if (card.type === "CHECKBOX_GRID") {

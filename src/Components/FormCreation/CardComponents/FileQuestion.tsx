@@ -6,7 +6,7 @@ import Select from "@material-ui/core/Select";
 import { fileUpload, downloadFile } from "../../../requests/file";
 import usePromise from "../../../Hooks/usePromise";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -18,7 +18,7 @@ type Props = {
   submission: boolean;
   short_answer: boolean;
   validation?: any;
-  onChange: (options: any) => void;
+  onChange: (options: Array<string> | number) => void;
   active: boolean;
   initialNumFiles?: number;
 };
@@ -36,35 +36,37 @@ const useStyles = makeStyles({
 function FileQuestion({
   submission,
   active,
-  validation,
   onChange,
   initialNumFiles
-}: Props) {
+}: Props): React.ReactElement {
   const [numFiles, setnumFiles] = useState(initialNumFiles || 1);
   const classes = useStyles();
   const [spinner, setSpinner] = useState(false);
-  const handleNumFileChange = (value: any) => {
+  const handleNumFileChange = (value: number | null | unknown) => {
     //Check validations here and update the error prop accordingly
     setnumFiles(value as number);
-    onChange(value);
+    onChange(value as number);
   };
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState([] as Array<string>);
 
   const numFileOptions = [1, 2, 3, 5, 10];
 
-  async function handleFileUpload(event: any) {
+  async function handleFileUpload(filesToUpload: FileList | null) {
+    if (!filesToUpload) return;
     setSpinner(true);
-    const file = event.target.files[0]; //access the file
+    const file = filesToUpload[0]; //access the file
 
-    //todo: check if the file extension is valid
-    const formData = new FormData();
-    formData.append("file", file); // appending file
+    if (file) {
+      //todo: check if the file extension is valid
+      const formData = new FormData();
+      formData.append("file", file); // appending file
 
-    //returns the url to the file in aws
-    const result = await fileUpload("arbitrium", file.name, formData);
-    setFiles([...files, result]);
+      //returns the url to the file in aws
+      const result = await fileUpload("arbitrium", file.name, formData);
+      setFiles([...files, result]);
+      onChange([...files, result]);
+    }
     setSpinner(false);
-    onChange([...files, result]);
   }
 
   //download a file from AWS
@@ -79,25 +81,25 @@ function FileQuestion({
     []
   );
 
-  let link = "";
-  //Create a link to download the file :)
-  if (!loadFile.isPending && loadFile.value && loadFile.value.Body) {
-    const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
-    const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
-    link = window.URL.createObjectURL(blob);
+  // let link = "";
+  // //Create a link to download the file :)
+  // if (!loadFile.isPending && loadFile.value && loadFile.value.Body) {
+  //   const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
+  //   const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
+  //   link = window.URL.createObjectURL(blob);
 
-    // const headerImg = document?.querySelector<HTMLImageElement>("#image");
-    // // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    // headerImg!.src = link;
-  }
+  //   // const headerImg = document?.querySelector<HTMLImageElement>("#image");
+  //   // // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  //   // headerImg!.src = link;
+  // }
 
-  const getFileName = (awsFilePath: string | null | undefined) => {
+  function getFileName(awsFilePath: string | null | undefined) {
     if (!awsFilePath) {
       return null;
     }
     const split = awsFilePath.split("/");
     return split[split.length - 1];
-  };
+  }
 
   return (
     <Wrapper>
@@ -151,7 +153,7 @@ function FileQuestion({
             {spinner ? <CircularProgress size={20} /> : "Upload File"}
             <input
               type="file"
-              onChange={(event) => handleFileUpload(event)}
+              onChange={(event) => handleFileUpload(event.target.files)}
               style={{ display: "none" }}
             />
           </Button>

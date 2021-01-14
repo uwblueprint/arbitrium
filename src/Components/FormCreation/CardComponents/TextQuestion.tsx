@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
+import { AnyNaptrRecord } from "dns";
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -11,7 +12,7 @@ const Wrapper = styled.div`
 type Props = {
   submission: boolean;
   short_answer: boolean;
-  validation?: any;
+  validation?: AnyNaptrRecord;
   onChange: (text: string) => void;
 };
 
@@ -19,9 +20,8 @@ type Props = {
 function TextQuestion({
   submission = false,
   short_answer,
-  validation,
   onChange
-}: Props) {
+}: Props): React.ReactElement {
   const [text, setText] = useState("");
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //Check validations here and update the error prop accordingly

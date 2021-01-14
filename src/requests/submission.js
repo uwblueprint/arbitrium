@@ -1,4 +1,4 @@
-import { GET, POST, PATCH, DELETE } from "./Helper.js";
+import { GET, POST, PATCH } from "./Helper.js";
 
 async function createSubmission(databody) {
   return POST(`/api/submissions/create`, databody, false);

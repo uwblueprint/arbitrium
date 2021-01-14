@@ -113,7 +113,7 @@ function FormCard({
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
       //We are storing the selected options by id in the submissions
       //To get the values we will cross-reference with the form
-      let answerArray = card.x_options
+      const answerArray = card.x_options
         .filter((opt) => data[opt.value])
         .map((opt) => opt._id);
       updateSubmission(card._id, card.type, "", answerArray);
@@ -126,7 +126,7 @@ function FormCard({
       updateSubmission(card._id, card.type, data, []);
     } else if (card.type === "FILE_UPLOAD") {
       //Stored as an array of strings of file links
-      updateSubmission(card._id, card.type, data, []);
+      updateSubmission(card._id, card.type, "", data);
     } else if (card.type === "CHECKBOX_GRID") {
       //TODO
     }

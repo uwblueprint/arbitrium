@@ -12,7 +12,7 @@ import usePromise from "../Hooks/usePromise";
 import * as userRoles from "../Constants/UserRoles";
 
 //This route must only require the user to be logged in. (no groups needed)
-export const defaultRouteAfterLogin = "/program";
+export const defaultRouteAfterLogin = "/programs";
 
 function doesRoleProvideAccess(routeRole, userRole) {
   if (routeRole === userRoles.ADMIN) {

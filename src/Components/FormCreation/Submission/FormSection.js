@@ -8,7 +8,7 @@ import FormCard from "./FormCard";
 import customFormQuestionsReducer from "../../../Reducers/CustomFormQuestionsReducer";
 import FormSettingsContext from "../FormSettingsContext";
 
-const useStyles = makeStyles((props) => ({
+const useStyles = makeStyles(() => ({
   content: {
     marginTop: -16
   },

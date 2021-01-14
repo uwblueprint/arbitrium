@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Close from "@material-ui/icons/Close";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
@@ -11,14 +11,12 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormSettingsContext from "../FormSettingsContext";
 
 import { reorder } from "../../../Utils/dragAndDropUtils";
-import { green } from "@material-ui/core/colors";
 
-const useStyles = makeStyles((props) => ({
+const useStyles = makeStyles(() => ({
   closeRoot: {
     display: "inline-block",
     position: "absolute",
@@ -105,12 +103,12 @@ function SelectQuestion({
   const [options, setOptions] = useState(initialOptions || []);
   const [hoveredOption, setHoveredOption] = useState(-1);
 
-  let selectedInit = {};
+  const selectedInit = {};
   initialOptions.forEach((m) => (selectedInit[m[0]] = false));
   const [selected, setSelected] = useState(selectedInit);
 
   //----------------------------------------------------------------------------
-  //Create Form
+  //Form Creation Related
   //----------------------------------------------------------------------------
   const onAddOption = (event) => {
     setOptions(options.concat(""));
@@ -155,7 +153,7 @@ function SelectQuestion({
   };
 
   //----------------------------------------------------------------------------
-  //Submission
+  //Submission Related
   //----------------------------------------------------------------------------
 
   const handleCheckBoxSelect = (event) => {
@@ -201,7 +199,7 @@ function SelectQuestion({
     checked: {}
   })((props) => <Radio color="default" disabled={!submission} {...props} />);
 
-  const formLabel =
+  const formErrorLabel =
     multiSelect &&
     minSelectValidation > 0 &&
     "Select at least " + minSelectValidation;
@@ -250,7 +248,7 @@ function SelectQuestion({
                   ))
                 : null}
             </FormGroup>
-            <FormHelperText>{formLabel}</FormHelperText>
+            <FormHelperText>{formErrorLabel}</FormHelperText>
           </FormControl>
         </div>
       ) : (

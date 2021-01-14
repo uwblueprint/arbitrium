@@ -5,7 +5,7 @@ import * as FORM from "../../../requests/forms.js";
 import usePromise from "../../../Hooks/usePromise";
 import { defaultFormState } from "./../CreateEditFormStateManagement";
 import SubmissionFormHeader from "./SubmissionFormHeader";
-import customSubmissionAnswerReduce from "../../../Reducers/CustomSubmissionAnswersReducers";
+import customSubmissionAnswerReducer from "../../../Reducers/CustomSubmissionAnswersReducers";
 import Button from "@material-ui/core/Button";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -76,9 +76,9 @@ function CreateSubmissionForm({ match }) {
   });
 
   const [sections, setSections] = useState([]);
-  const [identifierQuestion, setidentifierQuestion] = "";
+  const [identifierQuestion, setIdentifierQuestion] = useState("");
   const [answers, dispatchAnswersUpdate] = useReducer(
-    customSubmissionAnswerReduce,
+    customSubmissionAnswerReducer,
     []
   );
 
@@ -103,8 +103,7 @@ function CreateSubmissionForm({ match }) {
 
   //Currently no way to load a submission
   //So one will always be created
-  const [submissionId, setSubmissionId] = useState(null);
-
+  const [submissionId] = useState(null);
   //Grab the submission
   const [loadSubmission, refetchSubmission] = usePromise(
     SUBMISSION.getSubmission,
@@ -115,6 +114,7 @@ function CreateSubmissionForm({ match }) {
     [submissionId]
   );
 
+  //Header image
   const [loadFile] = usePromise(
     FILE.downloadFile,
     {
@@ -136,7 +136,6 @@ function CreateSubmissionForm({ match }) {
   //If a form doesn't exist then create a new one from the default template
   const initiateSubmission = useCallback(() => {
     async function initiate() {
-      console.log("here again");
       const data = {
         formId: loadForm.value._id,
         linkId: match.params.formId,
@@ -146,12 +145,9 @@ function CreateSubmissionForm({ match }) {
         identifier: ""
       };
 
-      console.log(submissionId);
       const result = await SUBMISSION.createSubmission(data);
-      console.log(result);
       refetchSubmission({ submissionId: result._id });
     }
-    console.log("here");
     //Only create a form if this isn't a preview link
     initiate();
     if (!preview) {
@@ -159,6 +155,8 @@ function CreateSubmissionForm({ match }) {
     }
   }, [loadForm.value, match.params.formId, refetchSubmission, preview]);
 
+  //Load the form values into the sub-states like in FormCreation
+  //The form can't be edited in submissions so this won't be called often.
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
 
@@ -189,6 +187,8 @@ function CreateSubmissionForm({ match }) {
     }
   }, [loadForm, refetch, match.params.formId, preview]);
 
+  //Similar to above ^
+  //Load Submission values into sub-states or create a new submission if null
   useEffect(() => {
     if (loadSubmission.isPending || loadForm.isPending || !loadForm.value)
       return;
@@ -222,10 +222,11 @@ function CreateSubmissionForm({ match }) {
       newSubmission.answers = answers;
       newSubmission.lastSaveDate = moment();
       newSubmission.identifier = identifierQuestion;
-      console.log(newSubmission);
+      newSubmission.submissionDate = submitted ? moment() : null;
+
       SUBMISSION.updateSubmission(loadSubmission.value._id, newSubmission);
     }
-  }, [loadForm, loadSubmission, answers]);
+  }, [loadForm, loadSubmission, answers, submitted, identifierQuestion]);
 
   //Update the submission
   useEffect(() => {
@@ -233,10 +234,12 @@ function CreateSubmissionForm({ match }) {
   }, [answers, saveSubmission]);
 
   const handleSave = (answer) => {
+    //The identifier question has its own state
     if (answer.type === "IDENTIFIER") {
-      setidentifierQuestion(answer.answerString);
+      setIdentifierQuestion(answer.answerString);
     }
 
+    //Find the index of the answer if it exists
     const curAnswer = answers.findIndex(
       (ans) =>
         ans.questionId === answer.questionId &&
@@ -261,11 +264,28 @@ function CreateSubmissionForm({ match }) {
 
   //Save the form for a final time after hitting submit
   const handleSubmit = () => {
-    console.log("Submitted");
-
+    if (preview) {
+      //Has the form closed? AND is it a draft?
+      setValidLink(
+        !moment(loadForm.value.previewLink.close).isBefore(moment()) &&
+          loadForm.value.draft
+      );
+    } else {
+      const link = loadForm.value.submissionLinks.find(
+        (link) => link._id === match.params.formId
+      );
+      //Has the form closed? AND is it NOT a draft?
+      setValidLink(
+        !moment(link.close).isBefore(moment()) && !loadForm.value.draft
+      );
+    }
     setSubmitted(true);
-    saveSubmission();
   };
+
+  //Save one last time after the submission screen is shown
+  if (submitted) {
+    saveSubmission();
+  }
 
   //----------------------------------------------------------------------------
   //PAGE MOVEMENT
@@ -302,7 +322,9 @@ function CreateSubmissionForm({ match }) {
               description={
                 preview
                   ? "Preview Link has been disabled as the form is published"
-                  : "This form is closed. If you think this is a mistake, please contact the publisher of this form."
+                  : answers === []
+                  ? "This form is closed. If you think this is a mistake, please contact the publisher of this form."
+                  : "This form is now closed. We've save a copy of your responses in the backend. If you think this is a mistake, please contact the publisher of this form."
               }
             />
           </FormWrapper>

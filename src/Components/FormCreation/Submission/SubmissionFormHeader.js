@@ -5,7 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import styled from "styled-components";
 import FormSettingsContext from "../FormSettingsContext";
 
-const useStyles = makeStyles((props) => ({
+const useStyles = makeStyles(() => ({
   content: {
     marginTop: -16
   },
