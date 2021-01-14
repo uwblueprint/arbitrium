@@ -149,7 +149,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
       <BodyWrapper>
         <AppName>
           <Tooltip title="Arbitrium" classes={{ tooltip: classes.tooltip }}>
-            <div onClick={() => history.push("/programs")}>
+            <div onClick={() => history.push(defaultRouteAfterLogin)}>
               <AppIcon />
             </div>
           </Tooltip>

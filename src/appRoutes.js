@@ -28,18 +28,11 @@ const routes = [
     programGroup: "REVIEWER"
   },
   {
-    path: "/home",
-    component: null,
-    title: "Program Management",
-    header: false,
-    programGroup: ""
-  },
-  {
     path: "/programs",
     component: ProgramManagement,
-    header: false,
-    title: "Program Management",
-    programGroup: ""
+    header: true,
+    title: "Programs List",
+    programGroup: "REVIEWER"
   },
   {
     path: "/submissions/:organizationId",

@@ -14,7 +14,6 @@ function customSubmissionAnswerReducer(
         break;
       case "ADD_ANSWER":
         return [...state, action.answer];
-        break;
       default:
         break;
     }
