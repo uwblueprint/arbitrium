@@ -43,17 +43,16 @@ const TitleWrapper = styled.div`
 
 const NameField = styled.div`
   font-size: 20px;
-  width: 846px;
+  width: 816px;
   margin-bottom: 16px;
   line-height: 22px;
 `;
 
 const DescriptionField = styled.div`
-  width: 846px;
+  width: 816px;
   display: block;
   line-height: 21px;
-  overflow-y: auto;
-  max-height: 48px;
+  max-height: 56px;
   font-size: 16px;
   color: #888888;
 `;

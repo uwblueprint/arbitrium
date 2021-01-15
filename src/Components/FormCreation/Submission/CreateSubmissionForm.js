@@ -319,11 +319,22 @@ function CreateSubmissionForm({ match }) {
             <SubmissionFormHeader
               name={headerData.name}
               description={
-                preview
-                  ? "Preview Link has been disabled as the form is published"
-                  : answers === []
-                  ? "This form is closed. If you think this is a mistake, please contact the publisher of this form."
-                  : "This form is now closed. We've save a copy of your responses in the backend. If you think this is a mistake, please contact the publisher of this form."
+                preview ? (
+                  "Preview Link has been disabled as the form is published"
+                ) : answers.length === 0 ? (
+                  "This form is closed. If you think this is a mistake, please contact the publisher of this form."
+                ) : (
+                  <div style={{ margin: "16px", paddingBottom: "50px" }}>
+                    <h>
+                      This form is now closed. We've saved a copy of your
+                      responses in the backend.{" "}
+                    </h>
+                    <h>
+                      If you think this is a mistake, please contact the
+                      publisher of this form.
+                    </h>
+                  </div>
+                )
               }
             />
           </FormWrapper>
