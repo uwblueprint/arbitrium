@@ -192,7 +192,6 @@ function CreateSubmissionForm({ match }) {
     if (loadSubmission.isPending || loadForm.isPending || !loadForm.value)
       return;
     if (!loadSubmission.value) {
-      console.log(loadSubmission);
       initiateSubmission();
       return;
     }

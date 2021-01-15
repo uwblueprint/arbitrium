@@ -429,7 +429,7 @@ function CreateEditForm({ programId }) {
     //We need to refetch the form to get the updated questions here so we don't override changes when moving
     //We don't use "refetch" here because next state update it will overwrite our re-ordering
 
-    let freshForm = await FORM.getForm({ programId: programId });
+    const freshForm = await FORM.getForm({ programId: programId });
     const sectionsCopy = freshForm.sections;
     const questionRemovedArray = Array.from(
       sectionsCopy[sectionIndex].questions
