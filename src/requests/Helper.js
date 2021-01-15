@@ -16,7 +16,32 @@ function setProgram(prog) {
   program = prog;
 }
 
-async function GET(url, filepath, requiresAuth = true) {
+//Uses a service account to grab a token that lasts for 1-hour
+async function getTempToken() {
+  return await fetch(
+    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" +
+      process.env.REACT_APP_FIREBASE_KEY,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        email: process.env.REACT_APP_SERVICE_EMAIL,
+        password: process.env.REACT_APP_SERVICE_PASSWORD,
+        returnSecureToken: "true"
+      }),
+      headers: {
+        Accept: "application/json"
+      }
+    }
+  )
+    .then((result) => {
+      return result.json();
+    })
+    .then((res) => {
+      return res.idToken;
+    });
+}
+
+async function GET(url, filepath = "", requiresAuth = true) {
   let token = "";
   if (requiresAuth) {
     token = await firebaseApp.auth().currentUser.getIdToken();
@@ -110,10 +135,15 @@ async function PATCH(url, databody, requiresAuth = true) {
   return body;
 }
 
-async function DELETE(url, requiresAuth = true) {
+async function DELETE(url, filepath, requiresAuth = true) {
   let token = "";
   if (requiresAuth) {
-    token = await firebaseApp.auth().currentUser.getIdToken();
+    const currentUser = await firebaseApp.auth().currentUser;
+    if (!currentUser) {
+      token = await getTempToken();
+    } else {
+      token = await currentUser.getIdToken();
+    }
   }
 
   const response = await fetch(proxy + url, {
@@ -122,7 +152,8 @@ async function DELETE(url, requiresAuth = true) {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
-      database: program
+      database: program,
+      filepath: filepath
     }
   });
 
@@ -134,7 +165,13 @@ async function DELETE(url, requiresAuth = true) {
 }
 
 async function FILE(url, databody, filepath) {
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+  const currentUser = await firebaseApp.auth().currentUser;
+  let token = "";
+  if (!currentUser) {
+    token = await getTempToken();
+  } else {
+    token = await currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     method: "POST",

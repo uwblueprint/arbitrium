@@ -104,7 +104,8 @@ function FormCard({
   handleActive,
   sectionKey,
   questionKey,
-  updateSubmission
+  updateSubmission,
+  fileUploadURL
 }) {
   const { themeColour } = useContext(FormSettingsContext);
   const classes = useStyles({ themeColour });
@@ -219,7 +220,8 @@ function FormCard({
           active={true}
           submission={true}
           onChange={onQuestionUpdate}
-          initialNumFiles={card && card.x_options[0]}
+          fileUploadURL={fileUploadURL}
+          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
         />
       ),
       renderInactive: (
@@ -227,7 +229,7 @@ function FormCard({
           active={false}
           onChange={onQuestionUpdate}
           submission={true}
-          initialNumFiles={card && card.x_options[0]}
+          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
         />
       )
     }

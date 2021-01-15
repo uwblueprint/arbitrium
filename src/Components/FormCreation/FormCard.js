@@ -180,7 +180,7 @@ function FormCard({
   handleQuestionContentUpdate,
   handleRequiredToggle,
   themeColour,
-  isPublished
+  isPublished = false
 }) {
   const classes = useStyles();
   const [title, setTitle] = useState(card.name);
@@ -202,7 +202,7 @@ function FormCard({
     }
     if (card.type === "FILE_UPLOAD") {
       const opt = {
-        xoptions: [options],
+        xoptions: [{ value: options }],
         yoptions: null
       };
       handleQuestionContentUpdate(opt);
@@ -284,7 +284,7 @@ function FormCard({
           active={true}
           onChange={onQuestionUpdate}
           submission={false}
-          initialNumFiles={card && card.x_options[0]}
+          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
         />
       ),
       renderInactive: (
@@ -292,7 +292,7 @@ function FormCard({
           active={false}
           onChange={onQuestionUpdate}
           submission={false}
-          initialNumFiles={card && card.x_options[0]}
+          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
         />
       )
     }
@@ -337,7 +337,9 @@ function FormCard({
                     {active ? (
                       <div>
                         <Button
-                          disabled={!card || card.type === "IDENTIFIER"}
+                          disabled={
+                            !card || card.type === "IDENTIFIER" || isPublished
+                          }
                           className={classes.questionTypeMenu}
                           variant="outlined"
                           onClick={(event) =>
@@ -396,7 +398,7 @@ function FormCard({
                       </div>
                     ) : null}
                   </div>
-                  {active && !isPublished ? (
+                  {active ? (
                     <div>
                       <TextField
                         placeholder="New Description"

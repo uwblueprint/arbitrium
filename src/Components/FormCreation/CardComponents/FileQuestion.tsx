@@ -3,10 +3,12 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Select from "@material-ui/core/Select";
-import { fileUpload, downloadFile } from "../../../requests/file";
+import { fileUpload, downloadFile, deleteFile } from "../../../requests/file";
 import usePromise from "../../../Hooks/usePromise";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
+import CloudDoneIcon from "@material-ui/icons/CloudDone";
+import CloseIcon from "@material-ui/icons/Close";
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -21,6 +23,7 @@ type Props = {
   onChange: (options: Array<string> | number) => void;
   active: boolean;
   initialNumFiles?: number;
+  fileUploadURL?: string;
 };
 
 const useStyles = makeStyles({
@@ -29,15 +32,27 @@ const useStyles = makeStyles({
     marginTop: 16,
     marginBottom: 24,
     marginLeft: 16
+  },
+  title: {
+    marginLeft: 16
   }
 });
+
+function getFileName(awsFilePath: string | null | undefined) {
+  if (!awsFilePath) {
+    return null;
+  }
+  const split = awsFilePath.split("/");
+  return split[split.length - 1];
+}
 
 //TODO: Add Response Validation
 function FileQuestion({
   submission,
   active,
   onChange,
-  initialNumFiles
+  fileUploadURL,
+  initialNumFiles = 0
 }: Props): React.ReactElement {
   const [numFiles, setnumFiles] = useState(initialNumFiles || 1);
   const classes = useStyles();
@@ -56,17 +71,38 @@ function FileQuestion({
     setSpinner(true);
     const file = filesToUpload[0]; //access the file
 
+    if (files.length >= initialNumFiles) {
+      alert("You may only upload a maxiumum of: " + initialNumFiles);
+      setSpinner(false);
+      return;
+    }
+
     if (file) {
       //todo: check if the file extension is valid
       const formData = new FormData();
       formData.append("file", file); // appending file
 
       //returns the url to the file in aws
-      const result = await fileUpload("arbitrium", file.name, formData);
+      const result = await fileUpload(
+        "arbitrium",
+        fileUploadURL + file.name,
+        formData
+      );
       setFiles([...files, result]);
       onChange([...files, result]);
     }
     setSpinner(false);
+  }
+
+  async function handleRemoveFile(index: number) {
+    const updatedFiles = files.filter((file, i) => i !== index);
+    //We delete files to make sure we don't waste space
+    await deleteFile(
+      "arbitrium",
+      fileUploadURL + (getFileName(files[index]) || "")
+    );
+    setFiles(updatedFiles);
+    onChange(updatedFiles);
   }
 
   //download a file from AWS
@@ -92,14 +128,6 @@ function FileQuestion({
   //   // // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   //   // headerImg!.src = link;
   // }
-
-  function getFileName(awsFilePath: string | null | undefined) {
-    if (!awsFilePath) {
-      return null;
-    }
-    const split = awsFilePath.split("/");
-    return split[split.length - 1];
-  }
 
   return (
     <Wrapper>
@@ -143,6 +171,9 @@ function FileQuestion({
         )
       ) : !loadFile.isPending ? (
         <div>
+          <p className={classes.title}>
+            {"Maximum of " + initialNumFiles + " files"}
+          </p>
           <Button
             className={classes.button}
             variant="outlined"
@@ -154,14 +185,22 @@ function FileQuestion({
             <input
               type="file"
               onChange={(event) => handleFileUpload(event.target.files)}
+              onClick={(event) => {
+                event.currentTarget.value = "";
+              }}
               style={{ display: "none" }}
             />
           </Button>
           <hr></hr>
           {files.map((file, index) => (
-            <div key={index}>
+            <div style={{ display: "flex", alignItems: "center" }} key={index}>
               {getFileName(file)}{" "}
               {spinner ? <CircularProgress size={20} /> : null}
+              <CloudDoneIcon style={{ paddingLeft: "50px" }} />
+              <Button key={index} onClick={() => handleRemoveFile(index)}>
+                <CloseIcon fontSize="small" />
+              </Button>
+              {}
             </div>
           ))}
         </div>

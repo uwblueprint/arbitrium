@@ -38,7 +38,7 @@ function asyncFetchReducer<T>(
     case START_FETCH:
       return { ...state, isPending: true };
     case FETCH_SUCCESS:
-      return { ...state, value: action.value, isPending: false };
+      return { ...state, error: null, value: action.value, isPending: false };
     case FETCH_FAILED:
       return { ...state, error: action.error, isPending: false };
     default:

@@ -1,4 +1,4 @@
-import { GET, POST, FILE } from "./Helper.js";
+import { GET, POST, FILE, DELETE } from "./Helper.js";
 
 //Getting a file will be done by using the bucket URL and the bucket + filename
 //Ex: arbitrium.s3.us-east-2.amazonaws.com/bucketname/filename.png
@@ -22,6 +22,10 @@ async function deleteBucket(bucketname) {
   return POST(`/api/files/deleteBucket/${bucketname}`);
 }
 
+async function deleteFile(bucketname, filename) {
+  return DELETE(`/api/files/delete/${bucketname}`, filename);
+}
+
 async function fileUpload(bucketname, filename, formData) {
   return FILE(`/api/files/upload/${bucketname}`, formData, filename);
 }
@@ -41,5 +45,6 @@ export {
   createBucket,
   deleteBucket,
   fileUpload,
-  downloadFile
+  downloadFile,
+  deleteFile
 };

@@ -182,7 +182,7 @@ function CreateEditForm({ programId }) {
 
   useEffect(() => {
     if (loadForm.isPending) return;
-    if (!loadForm.value) {
+    if (!loadForm.value || loadForm.error) {
       //Create a form and refetch
       initiateForm();
       return;

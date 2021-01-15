@@ -103,7 +103,7 @@ function CreateSubmissionForm({ match }) {
 
   //Currently no way to load a submission
   //So one will always be created
-  const [submissionId] = useState(null);
+  const [submissionId, setSubmissionId] = useState(null);
   //Grab the submission
   const [loadSubmission, refetchSubmission] = usePromise(
     SUBMISSION.getSubmission,
@@ -195,6 +195,8 @@ function CreateSubmissionForm({ match }) {
       initiateSubmission();
       return;
     }
+
+    setSubmissionId(loadSubmission._id);
 
     //Here is where we would load the submission into state
     //Currently we don't allow this functionality
@@ -397,6 +399,11 @@ function CreateSubmissionForm({ match }) {
                   numSections={sections.length}
                   sectionNum={page + 1}
                   sectionData={sections[page]}
+                  fileUploadURL={
+                    "forms/" + loadSubmission.value &&
+                    loadSubmission.value.formId + "/" + loadSubmission.value &&
+                    loadSubmission.value._id + "/"
+                  }
                 />
               ) : null}
               {page === sections.length - 1 && !loadForm.isPending ? (

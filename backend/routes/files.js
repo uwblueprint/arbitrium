@@ -208,4 +208,34 @@ router.get("/download/:bucketname", async function(req, res) {
   }
 });
 
+router.delete("/delete/:bucketname", async function(req, res) {
+  if (!req.params.bucketname) {
+    res.status(400).send("Bad Request. Missing param 'bucketname'");
+    return;
+  }
+  if (!req.headers.filepath) {
+    res.status(400).send("Bad Request. Missing header 'filepath'");
+    return;
+  }
+  // Create the parameters for calling getObject
+  const bucketParams = {
+    Bucket: req.params.bucketname,
+    Key: req.headers.filepath
+  };
+  try {
+    s3.deleteObject(bucketParams, function(err, data) {
+      if (err) {
+        console.info("Error", err);
+        res.status(500).send(err);
+      } else {
+        console.info("Success", data);
+        res.status(200).json(data);
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(400).send(e);
+  }
+});
+
 module.exports = router;

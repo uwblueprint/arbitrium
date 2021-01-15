@@ -124,6 +124,7 @@ router.patch("/:formId", (req, res) => {
     (error, result) => {
       if (error) {
         console.error("Error updating form into MongoDB");
+        console.error(error);
         res.status(500).send(error);
       } else {
         res.status(201).json(result);

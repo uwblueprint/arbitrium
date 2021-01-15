@@ -1,11 +1,10 @@
-import React, { useReducer, useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import FormCard from "./FormCard";
-import customFormQuestionsReducer from "../../../Reducers/CustomFormQuestionsReducer";
 import FormSettingsContext from "../FormSettingsContext";
 
 const useStyles = makeStyles(() => ({
@@ -69,21 +68,17 @@ const CardWrapper = styled.div`
   display: flex;
 `;
 
-function FormSection({ numSections, sectionNum, sectionData, saveAnswer }) {
+function FormSection({
+  numSections,
+  sectionNum,
+  sectionData,
+  saveAnswer,
+  fileUploadURL
+}) {
   const { themeColour } = useContext(FormSettingsContext);
   const classes = useStyles({ themeColour });
   const [activeQuestion, setActiveQuestion] = useState(0);
-  const [questions, dispatchQuestionsUpdate] = useReducer(
-    customFormQuestionsReducer,
-    sectionData.questions
-  );
-
-  useEffect(() => {
-    dispatchQuestionsUpdate({
-      type: "LOAD",
-      questions: questions
-    });
-  }, [questions, dispatchQuestionsUpdate]);
+  const [questions] = useState(sectionData.questions);
 
   function updateActiveQuestion(sectionKey, questionKey) {
     if (activeQuestion !== questionKey) {
@@ -118,6 +113,16 @@ function FormSection({ numSections, sectionNum, sectionData, saveAnswer }) {
     });
   };
 
+  const filteredEmptyQuestions = questions.filter((question) => {
+    if (
+      (question.type === "CHECKBOXES" || question.type === "MULTIPLE_CHOICE") &&
+      question.x_options.length === 0
+    ) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <div>
       <span className={classes.section_title}>
@@ -135,13 +140,13 @@ function FormSection({ numSections, sectionNum, sectionData, saveAnswer }) {
           </CardContent>
         </Card>
       </CardWrapper>
-      {questions.map((_question, questionKey) => (
+      {filteredEmptyQuestions.map((_question, questionKey) => (
         <CardWrapper
           key={questionKey}
           id={"question_" + questionKey + "_" + (sectionNum - 1)}
         >
           <FormCard
-            card={questions[questionKey]}
+            card={filteredEmptyQuestions[questionKey]}
             key={questionKey + "_question"}
             active={activeQuestion === questionKey}
             handleActive={updateActiveQuestion}
@@ -149,6 +154,7 @@ function FormSection({ numSections, sectionNum, sectionData, saveAnswer }) {
             questionKey={questionKey}
             updateSubmission={updateSubmission}
             themeColour={themeColour}
+            fileUploadURL={fileUploadURL}
           />
         </CardWrapper>
       ))}
