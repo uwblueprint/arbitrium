@@ -41,6 +41,17 @@ const columns = [
       textAlign: "right",
       minWidth: 148
     }
+  },
+  {
+    title: "",
+    field: "options",
+    sorting: false,
+    searchable: false,
+    export: false,
+    cellStyle: {
+      textAlign: "right",
+      maxWidth: 20
+    }
   }
 ];
 

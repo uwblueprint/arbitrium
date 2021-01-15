@@ -148,18 +148,20 @@ function ProgramManagement({ history }) {
             >
               View
             </Button>
-            <ProgramMenuButtonWrapper>
-              {appUser.adminOrganization === program.orgId && (
-                <IconButton
-                  aria-label="actions"
-                  aria-controls={"actions-menu"}
-                  onClick={(e) => openProgramMenu(e, program)}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-              )}
-            </ProgramMenuButtonWrapper>
           </>
+        ),
+        options: (
+          <ProgramMenuButtonWrapper>
+            {appUser.adminOrganization === program.orgId && (
+              <IconButton
+                aria-label="actions"
+                aria-controls={"actions-menu"}
+                onClick={(e) => openProgramMenu(e, program)}
+              >
+                <MoreVertIcon />
+              </IconButton>
+            )}
+          </ProgramMenuButtonWrapper>
         )
       };
     });
