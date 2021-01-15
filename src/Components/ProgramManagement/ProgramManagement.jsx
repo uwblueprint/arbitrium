@@ -76,7 +76,7 @@ const useStyles = makeStyles({
   }
 });
 
-function ProgramManagement() {
+function ProgramManagement({ history }) {
   const { appUser } = useContext(AuthContext);
   const userId = appUser.userId;
   const [programs, reloadPrograms] = usePromise(
@@ -137,18 +137,17 @@ function ProgramManagement() {
         archived: program.archived,
         link: (
           <>
-            <a href={"/applications"}>
-              <Button
-                variant="contained"
-                color="primary"
-                target="_blank"
-                value="OpenApplication"
-                style={{ textTransform: "none" }}
-                onClick={program && setUserProgram(program)}
-              >
-                View
-              </Button>
-            </a>
+            <Button
+              variant="contained"
+              color="primary"
+              value="OpenApplication"
+              onClick={() => {
+                program && setUserProgram(program);
+                history.push("/applications");
+              }}
+            >
+              View
+            </Button>
             <ProgramMenuButtonWrapper>
               {appUser.adminOrganization === program.orgId && (
                 <IconButton
