@@ -326,12 +326,14 @@ function CreateSubmissionForm({ match }) {
                 ) : (
                   <div style={{ margin: "16px", paddingBottom: "50px" }}>
                     <h>
-                      This form is now closed. We've saved a copy of your
-                      responses in the backend.{" "}
+                      {
+                        "This form is now closed. We've saved a copy of your responses in the backend."
+                      }{" "}
                     </h>
                     <h>
-                      If you think this is a mistake, please contact the
-                      publisher of this form.
+                      {
+                        "If you think this is a mistake, please contact the publisher of this form."
+                      }
                     </h>
                   </div>
                 )
