@@ -24,9 +24,13 @@ import {
 } from "../../Constants/ActionTypes";
 
 const Wrapper = styled.div`
+  padding: 0 136px;
   margin-top: 50px;
   text-align: left;
-  padding: 0 64px;
+  padding-bottom: 30px;
+  table.MuiTable-root {
+    border: 1px solid #cccccc;
+  }
   button: {
     text-transform: none;
   }

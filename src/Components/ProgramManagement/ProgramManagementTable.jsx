@@ -23,8 +23,8 @@ const columns = [
   {
     title: "Program name",
     field: "name",
-    cellStyle: { minWidth: 500, maxHeight: 52 },
-    headerStyle: { minWidth: 500 }
+    cellStyle: { minWidth: 300, maxHeight: 52 },
+    headerStyle: { minWidth: 300 }
   },
   {
     title: "Organization",
