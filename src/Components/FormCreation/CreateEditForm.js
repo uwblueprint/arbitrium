@@ -82,7 +82,6 @@ function CreateEditForm({ programId }) {
   const [showFormSettings, setShowFormSettings] = useState(false);
   const [showMoveSectionsDialog, setShowMoveSectionsDialog] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
-  //const programId = appUser.currentProgram;
 
   //Only GET and UPDATE form uses programId, every other form update uses formId
   const [loadForm, refetch] = usePromise(
@@ -426,7 +425,12 @@ function CreateEditForm({ programId }) {
     questionIndex,
     questionTargetIndex
   ) {
-    const sectionsCopy = sections.map((section) => ({ ...section }));
+    //The questions are managed by the sections, not here.
+    //We need to refetch the form to get the updated questions here so we don't override changes when moving
+    //We don't use "refetch" here because next state update it will overwrite our re-ordering
+
+    let freshForm = await FORM.getForm({ programId: programId });
+    const sectionsCopy = freshForm.sections;
     const questionRemovedArray = Array.from(
       sectionsCopy[sectionIndex].questions
     );
@@ -441,18 +445,17 @@ function CreateEditForm({ programId }) {
       questionAddArray.splice(questionTargetIndex, 0, movedQuestion);
       sectionsCopy[sectionTargetIndex].questions = questionAddArray;
     }
-
     sectionsCopy[sectionIndex].questions = questionRemovedArray;
-
-    dispatchSectionsUpdate({
+    setInitialActiveQuestion(questionTargetIndex);
+    await dispatchSectionsUpdate({
       type: "LOAD",
       sections: sectionsCopy
     });
-
     updateActiveSection(sectionTargetIndex);
+    return;
   }
 
-  const onDragEnd = (result) => {
+  async function onDragEnd(result) {
     const { source, destination } = result;
     if (!destination) return; // return if item was dropped outside
 
@@ -461,13 +464,13 @@ function CreateEditForm({ programId }) {
       source.index === destination.index
     )
       return;
-    reorderQuestion(
+    await reorderQuestion(
       parseInt(source.droppableId),
       parseInt(destination.droppableId),
       source.index,
       destination.index
     );
-  };
+  }
 
   //----------------------------------------------------------------------------
   //FORM HEADER UPDATE / CUSTOMIZATION
@@ -603,7 +606,13 @@ function CreateEditForm({ programId }) {
             />
           )
         ) : null}
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext
+          onDragEnd={
+            !isPublished
+              ? onDragEnd
+              : () => alert("You may not move questions in a published form")
+          }
+        >
           {sections &&
             sections.map((section, key) => (
               <div key={uniquekey + section._id}>
@@ -627,6 +636,7 @@ function CreateEditForm({ programId }) {
                     handleMoveSection={handleMoveSection}
                     handleDeleteSection={handleDeleteSection}
                     setShowMoveSectionsDialog={setShowMoveSectionsDialog}
+                    isPublished={isPublished}
                   />
                 </FormWrapper>
               </div>

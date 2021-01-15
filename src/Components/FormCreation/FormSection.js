@@ -146,7 +146,8 @@ function FormSection({
   formId,
   initialActiveQuestion,
   refetch,
-  setInitialActiveQuestion
+  setInitialActiveQuestion,
+  isPublished
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
@@ -171,14 +172,6 @@ function FormSection({
   const handleAnchorClose = () => {
     setAnchorEl(null);
   };
-
-  useEffect(() => {
-    //Loading Questions
-    dispatchQuestionsUpdate({
-      type: "LOAD",
-      questions: questions
-    });
-  }, [questions, dispatchQuestionsUpdate]);
 
   function updateActiveQuestion(sectionKey, questionKey) {
     //Saving is done on focus change
@@ -350,6 +343,7 @@ function FormSection({
               ></InputBase>
               {active ? (
                 <IconButton
+                  disabled={isPublished}
                   className={classes.sectionMenu}
                   aria-label="actions"
                   aria-controls="actions-menu"
@@ -415,7 +409,7 @@ function FormSection({
                 How will information from this section be used?{" "}
               </p>
               <div>
-                <FormControl component="fieldset">
+                <FormControl disabled={isPublished} component="fieldset">
                   <RadioGroup
                     row
                     aria-label="position"
@@ -452,7 +446,7 @@ function FormSection({
             </CardContent>
           )}
         </SectionCard>
-        {active && activeQuestion === -1 ? (
+        {active && activeQuestion === -1 && !isPublished ? (
           <AddCardComponent
             handleAddSection={handleAddSection}
             handleAddQuestion={handleAddQuestion}
@@ -487,9 +481,10 @@ function FormSection({
                     handleQuestionValidationsUpdate
                   }
                   themeColour={themeColour}
+                  isPublished={isPublished}
                 />
                 <div style={{ marginLeft: snapshot.isDraggingOver ? 820 : 0 }}>
-                  {active && activeQuestion === questionKey ? (
+                  {active && activeQuestion === questionKey && !isPublished ? (
                     <AddCardComponent
                       handleAddSection={handleAddSection}
                       handleAddQuestion={handleAddQuestion}

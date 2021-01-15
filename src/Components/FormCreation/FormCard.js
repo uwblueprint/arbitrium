@@ -179,7 +179,8 @@ function FormCard({
   handleQuestionTypeUpdate,
   handleQuestionContentUpdate,
   handleRequiredToggle,
-  themeColour
+  themeColour,
+  isPublished
 }) {
   const classes = useStyles();
   const [title, setTitle] = useState(card.name);
@@ -395,7 +396,7 @@ function FormCard({
                       </div>
                     ) : null}
                   </div>
-                  {active ? (
+                  {active && !isPublished ? (
                     <div>
                       <TextField
                         placeholder="New Description"
@@ -442,7 +443,9 @@ function FormCard({
                     <div className={classes.buttonRow}>
                       <div className={classes.buttonContainer}>
                         <Button
-                          disabled={card && card.type === "IDENTIFIER"}
+                          disabled={
+                            (card && card.type === "IDENTIFIER") || isPublished
+                          }
                           size="small"
                           className={classes.button}
                           onClick={() => {
@@ -455,7 +458,9 @@ function FormCard({
                       </div>
                       <div className={classes.buttonContainer}>
                         <Button
-                          disabled={card && card.type === "IDENTIFIER"}
+                          disabled={
+                            (card && card.type === "IDENTIFIER") || isPublished
+                          }
                           size="small"
                           className={classes.button}
                           onClick={() => handleDuplicate(questionKey)}
@@ -466,7 +471,11 @@ function FormCard({
                       </div>
                       <Divider orientation="vertical" flexItem />
                       <div className={classes.buttonContainer}>
-                        <Button size="small" className={classes.button}>
+                        <Button
+                          size="small"
+                          className={classes.button}
+                          disabled={isPublished}
+                        >
                           <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
                           <span className={classes.buttonLabel}>
                             Validation
@@ -477,7 +486,10 @@ function FormCard({
                         <FormControlLabel
                           control={
                             <StyledSwitch
-                              disabled={card && card.type === "IDENTIFIER"}
+                              disabled={
+                                (card && card.type === "IDENTIFIER") ||
+                                isPublished
+                              }
                               size="small"
                               checked={card.required}
                               color="primary"
