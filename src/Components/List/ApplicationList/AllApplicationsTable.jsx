@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, usePromise, useState } from "react";
 import styled from "styled-components";
 import MaterialTable from "material-table";
 import {
@@ -10,6 +10,16 @@ import {
 } from "@material-ui/core";
 import TableIcons from "../../Common/TableIcons";
 import moment from "moment";
+import { CSVLink } from "react-csv";
+
+import {
+  getCandidateSubmissions,
+  getAllRankingsAPI
+} from "../../../requests/get";
+
+const HiddenCSVLink = styled(CSVLink)`
+  display: none;
+`;
 
 const Container = styled(Paper)`
   table {
@@ -53,6 +63,13 @@ const ExportWrapper = styled.div`
 `;
 
 function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
+  const [applications] = useState([]);
+  const appsDownloadLink = useRef();
+
+  const applicationsCSVFilename = `Applications - ${moment().format(
+    "DD-MM-YYYY hh-mm-ss"
+  )}.csv`;
+
   const columns = [
     { title: "Applicant Name", field: "applicantName" },
     { title: "Rating (/5)", field: "rating" },
@@ -78,7 +95,7 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
             className="dropdown"
           >
             <InputLabel className="dropdown-text">Download All</InputLabel>
-            <Select>
+            <Select onChange={exportAllData}>
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
@@ -101,8 +118,61 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
     search: true,
     showTitle: true
   };
+
+  async function getApplicationsInfo() {
+    const rankings = await getAllRankingsAPI();
+    const applications = await getCandidateSubmissions();
+    const apps = [];
+
+    const appIdToAverageRanking = {};
+    applications.forEach((app) => (appIdToAverageRanking[app._id] = []));
+    applications.forEach((app) => apps.push(app));
+    rankings.forEach((rank) => {
+      rank.applications.forEach(
+        (app, ind) =>
+          appIdToAverageRanking[app.appId] &&
+          appIdToAverageRanking[app.appId].push(ind + 1)
+      );
+    });
+
+    return applications;
+    // Convert arrays to averages
+    // return applications.map((app) => {
+    //   const numRankings = appIdToAverageRanking[app._id].length;
+    //   const rankingsSum = appIdToAverageRanking[app._id].reduce(
+    //     (sum, val) => sum + val,
+    //     0
+    //   );
+    //   const avgRanking =
+    //     numRankings > 0
+    //       ? parseFloat((rankingsSum / numRankings).toFixed(2))
+    //       : "No Rankings";
+    //   return {
+    //     ...app,
+    //     avgRanking,
+    //     numReviews: app.numReviews
+    //   };
+    // });
+  }
+
+  function exportAllData(event) {
+    if (event.target.value === "csv") {
+      appsDownloadLink.current.link.click();
+    } else if (event.target.value === "pdf") {
+      // TODO: export pdf logic
+    }
+  }
+
   return (
     <Wrapper>
+      <HiddenCSVLink
+        ref={appsDownloadLink}
+        filename={applicationsCSVFilename}
+        data={
+          // eslint-disable-next-line no-unused-vars
+          applications.map(({ _id, ...item }) => item)
+        }
+      />
       <MaterialTable
         icons={TableIcons}
         components={{
