@@ -10,7 +10,8 @@ import usePromise from "../../../Hooks/usePromise";
 
 import {
   getApplicationTableData,
-  getReviewCountAPI
+  getReviewCountAPI,
+  getAllApplicationsAPI
 } from "../../../requests/get";
 
 const Wrapper = styled.div`
@@ -76,6 +77,13 @@ function AllApplications({ user, program }) {
     [program]
   );
 
+  const [allApplications] = usePromise(
+    getAllApplicationsAPI,
+    { user },
+    [],
+    [program]
+  );
+
   const [reviewCount] = usePromise(
     getReviewCountAPI,
     user.userId,
@@ -87,7 +95,9 @@ function AllApplications({ user, program }) {
     <div>
       <Wrapper>
         <Paper>
-          {!applications.isPending && !reviewCount.isPending ? (
+          {!applications.isPending &&
+          !reviewCount.isPending &&
+          !allApplications.isPending ? (
             <div>
               <h1 style={{ fontSize: "24px" }}>Candidate Submissions</h1>
               <p style={{ fontSize: "14px" }}>
@@ -103,6 +113,7 @@ function AllApplications({ user, program }) {
                 reviewCount={reviewCount.value}
                 applicationCount={applications.value.length}
                 data={convertToTableData(applications.value, program)}
+                exportData={allApplications}
               />
             </div>
           ) : (

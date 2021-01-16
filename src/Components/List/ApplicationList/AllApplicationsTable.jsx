@@ -1,4 +1,4 @@
-import React, { useRef, usePromise, useState } from "react";
+import React, { useRef, useEffect, useState, usePromise } from "react";
 import styled from "styled-components";
 import MaterialTable from "material-table";
 import {
@@ -62,8 +62,13 @@ const ExportWrapper = styled.div`
   }
 `;
 
-function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
-  const [applications] = useState([]);
+function AllApplicationsTable({
+  reviewCount,
+  applicationCount,
+  data,
+  exportData,
+  ...props
+}) {
   const appsDownloadLink = useRef();
 
   const applicationsCSVFilename = `Applications - ${moment().format(
@@ -119,43 +124,8 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
     showTitle: true
   };
 
-  async function getApplicationsInfo() {
-    const rankings = await getAllRankingsAPI();
-    const applications = await getCandidateSubmissions();
-    const apps = [];
-
-    const appIdToAverageRanking = {};
-    applications.forEach((app) => (appIdToAverageRanking[app._id] = []));
-    applications.forEach((app) => apps.push(app));
-    rankings.forEach((rank) => {
-      rank.applications.forEach(
-        (app, ind) =>
-          appIdToAverageRanking[app.appId] &&
-          appIdToAverageRanking[app.appId].push(ind + 1)
-      );
-    });
-
-    return applications;
-    // Convert arrays to averages
-    // return applications.map((app) => {
-    //   const numRankings = appIdToAverageRanking[app._id].length;
-    //   const rankingsSum = appIdToAverageRanking[app._id].reduce(
-    //     (sum, val) => sum + val,
-    //     0
-    //   );
-    //   const avgRanking =
-    //     numRankings > 0
-    //       ? parseFloat((rankingsSum / numRankings).toFixed(2))
-    //       : "No Rankings";
-    //   return {
-    //     ...app,
-    //     avgRanking,
-    //     numReviews: app.numReviews
-    //   };
-    // });
-  }
-
   function exportAllData(event) {
+    // console.log(applications);
     if (event.target.value === "csv") {
       appsDownloadLink.current.link.click();
     } else if (event.target.value === "pdf") {
@@ -170,7 +140,7 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
         filename={applicationsCSVFilename}
         data={
           // eslint-disable-next-line no-unused-vars
-          applications.map(({ _id, ...item }) => item)
+          exportData.value.map(({ _id, ...item }) => item)
         }
       />
       <MaterialTable
@@ -179,7 +149,7 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
           Container: (props) => <Container {...props} elevation={0} />
         }}
         columns={columns}
-        {...props}
+        data={data}
         title={reviewCount + "/" + applicationCount + " candidates rated"}
         options={options}
       ></MaterialTable>
