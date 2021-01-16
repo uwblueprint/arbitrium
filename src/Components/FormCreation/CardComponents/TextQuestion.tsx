@@ -22,6 +22,7 @@ type Props = {
 function TextQuestion({
   submission = false,
   short_answer,
+  validation,
   onChange
 }: Props): React.ReactElement {
   const [text, setText] = useState("");
