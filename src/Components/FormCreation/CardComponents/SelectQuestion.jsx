@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Close from "@material-ui/icons/Close";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
@@ -8,10 +8,15 @@ import Radio from "@material-ui/core/Radio";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Checkbox from "@material-ui/core/Checkbox";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormSettingsContext from "../FormSettingsContext";
 
 import { reorder } from "../../../Utils/dragAndDropUtils";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(() => ({
   closeRoot: {
     display: "inline-block",
     position: "absolute",
@@ -32,14 +37,14 @@ const useStyles = makeStyles({
   dragIndicatorHidden: {
     color: "#FFFFFF"
   },
-  inputFocused: {
+  inputFocused: (props) => ({
     // focused styling has priority over hovered styling
-    boxShadow: "0 1px 0 #2261AD !important"
-  },
+    boxShadow: `0 1px 0 #${props.themeColour} !important`
+  }),
   inputHovered: {
     boxShadow: "0 1px 0 #DADADA"
   }
-});
+}));
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -86,16 +91,25 @@ const GreyCheckbox = withStyles({
 function SelectQuestion({
   submission = false,
   multiSelect,
-  validations,
   onChange,
-  initialOptions
+  initialOptions,
+  minSelectValidation = 0,
+  maxSelectValidation = 0
 }) {
-  const styles = useStyles();
+  const { themeColour } = useContext(FormSettingsContext);
+  const styles = useStyles({ themeColour });
 
   // options is a string array
   const [options, setOptions] = useState(initialOptions || []);
   const [hoveredOption, setHoveredOption] = useState(-1);
 
+  const selectedInit = {};
+  initialOptions.forEach((m) => (selectedInit[m[0]] = false));
+  const [selected, setSelected] = useState(selectedInit);
+
+  //----------------------------------------------------------------------------
+  //Form Creation Related
+  //----------------------------------------------------------------------------
   const onAddOption = (event) => {
     setOptions(options.concat(""));
     event.target.blur();
@@ -138,88 +152,191 @@ function SelectQuestion({
     document.activeElement.blur();
   };
 
+  //----------------------------------------------------------------------------
+  //Submission Related
+  //----------------------------------------------------------------------------
+
+  const handleCheckBoxSelect = (event) => {
+    setSelected({ ...selected, [event.target.name]: event.target.checked });
+    onChange({ ...selected, [event.target.name]: event.target.checked });
+  };
+
+  const handleMultipleChoiceSelect = (event) => {
+    setSelected({ ...selectedInit, [event.target.name]: event.target.checked });
+    onChange({ ...selectedInit, [event.target.name]: event.target.checked });
+  };
+
+  // useEffect(() => {
+  //   onChange(selected);
+  // }, [selected, onChange]);
+
+  const errorMin =
+    Object.values(selected).filter((v) => v).length > minSelectValidation;
+  const errorMax =
+    Object.values(selected).filter((v) => v).length <= maxSelectValidation;
+
+  const CustomColourCheckbox = withStyles({
+    root: {
+      color: `#${themeColour}`,
+      "&$checked": {
+        color: `#${themeColour}`
+      },
+      paddingLeft: "24px",
+      paddingBottom: "5px"
+    },
+    checked: {}
+  })((props) => <Checkbox color="default" disabled={!submission} {...props} />);
+
+  const CustomColourRadio = withStyles({
+    root: {
+      color: `#${themeColour}`,
+      "&$checked": {
+        color: `#${themeColour}`
+      },
+      paddingLeft: "24px",
+      paddingBottom: "5px"
+    },
+    checked: {}
+  })((props) => <Radio color="default" disabled={!submission} {...props} />);
+
+  const formErrorLabel =
+    multiSelect &&
+    minSelectValidation > 0 &&
+    "Select at least " + minSelectValidation;
+
   return (
     <Wrapper>
-      <DragDropContext
-        onDragEnd={onDragEnd}
-        onBeforeDragStart={onBeforeDragStart}
-      >
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {options
-                ? options.map((data, index) => (
-                    <Draggable
-                      draggableId={`${index}`}
-                      index={index}
-                      key={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          onMouseEnter={() => setHoveredOption(index)}
-                          onMouseLeave={() => setHoveredOption(-1)}
-                          className={styles.droppableSection}
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <OptionWrapper key={index}>
-                            <DragIndicatorIcon
-                              className={`${styles.dragIndicator}
+      {submission ? (
+        <div>
+          <FormControl required={!multiSelect} error={errorMin || errorMax}>
+            <FormGroup>
+              {selected
+                ? Object.keys(selected).map((data, index) => (
+                    <OptionWrapper key={index}>
+                      {multiSelect ? (
+                        <FormControlLabel
+                          control={
+                            <CustomColourCheckbox
+                              checked={selected[data]}
+                              onChange={handleCheckBoxSelect}
+                              size="large"
+                              name={data}
+                              inputProps={{
+                                "aria-label": "checkbox with default color"
+                              }}
+                            ></CustomColourCheckbox>
+                          }
+                          label={data}
+                        ></FormControlLabel>
+                      ) : (
+                        <FormControlLabel
+                          control={
+                            <CustomColourRadio
+                              checked={selected[data]}
+                              onChange={handleMultipleChoiceSelect}
+                              size="large"
+                              name={data}
+                              inputProps={{
+                                "aria-label": "checkbox with default color"
+                              }}
+                            ></CustomColourRadio>
+                          }
+                          label={data}
+                        ></FormControlLabel>
+                      )}
+                    </OptionWrapper>
+                  ))
+                : null}
+            </FormGroup>
+            <FormHelperText>{formErrorLabel}</FormHelperText>
+          </FormControl>
+        </div>
+      ) : (
+        <DragDropContext
+          onDragEnd={onDragEnd}
+          onBeforeDragStart={onBeforeDragStart}
+        >
+          <Droppable droppableId="droppable">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {options
+                  ? options.map((data, index) => (
+                      <Draggable
+                        draggableId={`${index}`}
+                        index={index}
+                        key={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            onMouseEnter={() => setHoveredOption(index)}
+                            onMouseLeave={() => setHoveredOption(-1)}
+                            className={styles.droppableSection}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <OptionWrapper key={index}>
+                              <DragIndicatorIcon
+                                className={`${styles.dragIndicator}
                               ${
                                 hoveredOption === index || snapshot.isDragging
                                   ? styles.dragIndicatorVisible
                                   : styles.dragIndicatorHidden
                               }`}
-                            />
-                            {multiSelect ? <GreyCheckbox /> : <GreyRadio />}
-                            <OptionNameInput
-                              className={
-                                hoveredOption === index || snapshot.isDragging
-                                  ? styles.inputHovered
-                                  : ""
-                              }
-                              classes={{ focused: styles.inputFocused }}
-                              autoFocus={true}
-                              onBlur={() => {
-                                onChange(options);
-                              }}
-                              placeholder="Option..."
-                              value={data}
-                              onChange={(event) =>
-                                onEditOption(index, event.target.value)
-                              }
-                            />
-                            <IconButton
-                              onClick={() => onDeleteOption(index)}
-                              classes={{ root: styles.closeRoot }}
-                              size="small"
-                            >
-                              <Close />
-                            </IconButton>
-                          </OptionWrapper>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))
-                : null}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                              />
+                              {multiSelect ? <GreyCheckbox /> : <GreyRadio />}
+                              <OptionNameInput
+                                className={
+                                  hoveredOption === index || snapshot.isDragging
+                                    ? styles.inputHovered
+                                    : ""
+                                }
+                                classes={{ focused: styles.inputFocused }}
+                                autoFocus={true}
+                                onBlur={() => {
+                                  onChange(options);
+                                }}
+                                placeholder="Option..."
+                                value={data}
+                                onChange={(event) =>
+                                  onEditOption(index, event.target.value)
+                                }
+                              />
+                              <IconButton
+                                onClick={() => onDeleteOption(index)}
+                                classes={{ root: styles.closeRoot }}
+                                size="small"
+                              >
+                                <Close />
+                              </IconButton>
+                            </OptionWrapper>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))
+                  : null}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      )}
 
-      <OptionWrapper>
-        <DragIndicatorIcon
-          className={`${styles.dragIndicator} ${styles.dragIndicatorHidden}`}
-        />
-        {multiSelect ? <GreyCheckbox /> : <GreyRadio />}
-        <OptionNameInput
-          placeholder="Add option"
-          onFocus={onAddOption}
-          value={""}
-        />
-      </OptionWrapper>
+      {submission ? (
+        <div></div>
+      ) : (
+        <OptionWrapper>
+          <DragIndicatorIcon
+            className={`${styles.dragIndicator} ${styles.dragIndicatorHidden}`}
+          />
+          {multiSelect ? <GreyCheckbox /> : <GreyRadio />}
+          <OptionNameInput
+            placeholder="Add option"
+            onFocus={onAddOption}
+            value={""}
+          />
+        </OptionWrapper>
+      )}
     </Wrapper>
   );
 }

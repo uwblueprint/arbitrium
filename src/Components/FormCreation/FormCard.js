@@ -60,7 +60,7 @@ const useStyles = makeStyles({
   },
   questionTitle: {
     height: 24,
-    width: 145,
+    width: 568,
     display: "flex",
     fontSize: 16
   },
@@ -179,7 +179,8 @@ function FormCard({
   handleQuestionTypeUpdate,
   handleQuestionContentUpdate,
   handleRequiredToggle,
-  themeColour
+  themeColour,
+  isPublished = false
 }) {
   const classes = useStyles();
   const [title, setTitle] = useState(card.name);
@@ -189,7 +190,9 @@ function FormCard({
   const onQuestionUpdate = (options) => {
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
       const opt = {
-        xoptions: options.map((option) => option[0]),
+        xoptions: options.map((option) => {
+          return { value: option[0] };
+        }),
         yoptions: null
       };
       handleQuestionContentUpdate(opt);
@@ -199,7 +202,7 @@ function FormCard({
     }
     if (card.type === "FILE_UPLOAD") {
       const opt = {
-        xoptions: [options],
+        xoptions: [{ value: options }],
         yoptions: null
       };
       handleQuestionContentUpdate(opt);
@@ -244,7 +247,9 @@ function FormCard({
         <SelectQuestion
           data={card.options}
           onChange={onQuestionUpdate}
-          initialOptions={card && card.x_options.map((option) => [option])}
+          initialOptions={
+            card && card.x_options.map((option) => [option.value])
+          }
           multiSelect={true}
         />
       ),
@@ -260,7 +265,9 @@ function FormCard({
         <SelectQuestion
           data={card.options}
           onChange={onQuestionUpdate}
-          initialOptions={card && card.x_options.map((option) => [option])}
+          initialOptions={
+            card && card.x_options.map((option) => [option.value])
+          }
           multiSelect={false}
         />
       ),
@@ -277,7 +284,7 @@ function FormCard({
           active={true}
           onChange={onQuestionUpdate}
           submission={false}
-          initialNumFiles={card && card.x_options[0]}
+          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
         />
       ),
       renderInactive: (
@@ -285,7 +292,7 @@ function FormCard({
           active={false}
           onChange={onQuestionUpdate}
           submission={false}
-          initialNumFiles={card && card.x_options[0]}
+          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
         />
       )
     }
@@ -330,7 +337,9 @@ function FormCard({
                     {active ? (
                       <div>
                         <Button
-                          disabled={!card || card.type === "IDENTIFIER"}
+                          disabled={
+                            !card || card.type === "IDENTIFIER" || isPublished
+                          }
                           className={classes.questionTypeMenu}
                           variant="outlined"
                           onClick={(event) =>
@@ -436,7 +445,9 @@ function FormCard({
                     <div className={classes.buttonRow}>
                       <div className={classes.buttonContainer}>
                         <Button
-                          disabled={card && card.type === "IDENTIFIER"}
+                          disabled={
+                            (card && card.type === "IDENTIFIER") || isPublished
+                          }
                           size="small"
                           className={classes.button}
                           onClick={() => {
@@ -449,7 +460,9 @@ function FormCard({
                       </div>
                       <div className={classes.buttonContainer}>
                         <Button
-                          disabled={card && card.type === "IDENTIFIER"}
+                          disabled={
+                            (card && card.type === "IDENTIFIER") || isPublished
+                          }
                           size="small"
                           className={classes.button}
                           onClick={() => handleDuplicate(questionKey)}
@@ -460,7 +473,11 @@ function FormCard({
                       </div>
                       <Divider orientation="vertical" flexItem />
                       <div className={classes.buttonContainer}>
-                        <Button size="small" className={classes.button}>
+                        <Button
+                          size="small"
+                          className={classes.button}
+                          disabled={isPublished}
+                        >
                           <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
                           <span className={classes.buttonLabel}>
                             Validation
@@ -471,7 +488,10 @@ function FormCard({
                         <FormControlLabel
                           control={
                             <StyledSwitch
-                              disabled={card && card.type === "IDENTIFIER"}
+                              disabled={
+                                (card && card.type === "IDENTIFIER") ||
+                                isPublished
+                              }
                               size="small"
                               checked={card.required}
                               color="primary"

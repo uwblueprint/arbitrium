@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
+import { AnyNaptrRecord } from "dns";
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -9,19 +10,18 @@ const Wrapper = styled.div`
 `;
 
 type Props = {
-  submission: Boolean;
-  short_answer: Boolean;
-  validation?: any;
-  onBlur: (text: string) => void;
+  submission: boolean;
+  short_answer: boolean;
+  validation?: AnyNaptrRecord;
+  onChange: (text: string) => void;
 };
 
 //TODO: Add Response Validation
 function TextQuestion({
   submission = false,
   short_answer,
-  validation,
-  onBlur //Could change this to be onChange if that makes more sense
-}: Props) {
+  onChange
+}: Props): React.ReactElement {
   const [text, setText] = useState("");
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //Check validations here and update the error prop accordingly
@@ -36,7 +36,7 @@ function TextQuestion({
         placeholder={short_answer ? "Short answer text" : "Long answer text"}
         size="medium"
         value={text}
-        onBlur={() => onBlur(text)}
+        onBlur={() => onChange(text)}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           handleTextChange(event)
         }

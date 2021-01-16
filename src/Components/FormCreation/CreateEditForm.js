@@ -5,6 +5,7 @@ import React, {
   useContext,
   useCallback
 } from "react";
+import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import FormSection from "./FormSection";
@@ -70,7 +71,7 @@ const FormWrapper = styled.div`
 //In case 2 we will update the program to the one in the ID, so the proper form
 //will load. In the event they don't have admin access to the program they will
 //denied access
-function CreateEditForm() {
+function CreateEditForm({ programId }) {
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
@@ -81,12 +82,16 @@ function CreateEditForm() {
   const [showFormSettings, setShowFormSettings] = useState(false);
   const [showMoveSectionsDialog, setShowMoveSectionsDialog] = useState(false);
   const [activeSection, setActiveSection] = useState(0);
-  const programId = appUser.currentProgram;
 
   //Only GET and UPDATE form uses programId, every other form update uses formId
-  const [loadForm, refetch] = usePromise(FORM.getForm, {
-    programId: appUser.currentProgram
-  });
+  const [loadForm, refetch] = usePromise(
+    FORM.getForm,
+    {
+      programId: programId
+    },
+    null,
+    [programId]
+  );
   const [formSettings, setFormSettings] = useState({
     themeColour: "2261AD",
     headerImage: null,
@@ -95,11 +100,14 @@ function CreateEditForm() {
   const [loadFile] = usePromise(
     FILE.downloadFile,
     {
-      bucketname: "arbitrium",
-      filename: formSettings.headerImage?.replace(process.env.REACT_APP_AWS, "")
+      bucketname: "arbitrium-public",
+      filename: formSettings.headerImage?.replace(
+        process.env.REACT_APP_AWS_PUBLIC,
+        ""
+      )
     },
     null,
-    [loadForm]
+    [loadForm.settings]
   );
   const [headerData, setHeaderData] = useState({
     name: defaultFormState.name,
@@ -174,7 +182,7 @@ function CreateEditForm() {
 
   useEffect(() => {
     if (loadForm.isPending) return;
-    if (!loadForm.value) {
+    if (!loadForm.value || loadForm.error) {
       //Create a form and refetch
       initiateForm();
       return;
@@ -417,7 +425,12 @@ function CreateEditForm() {
     questionIndex,
     questionTargetIndex
   ) {
-    const sectionsCopy = sections.map((section) => ({ ...section }));
+    //The questions are managed by the sections, not here.
+    //We need to refetch the form to get the updated questions here so we don't override changes when moving
+    //We don't use "refetch" here because next state update it will overwrite our re-ordering
+
+    const freshForm = await FORM.getForm({ programId: programId });
+    const sectionsCopy = freshForm.sections;
     const questionRemovedArray = Array.from(
       sectionsCopy[sectionIndex].questions
     );
@@ -432,18 +445,17 @@ function CreateEditForm() {
       questionAddArray.splice(questionTargetIndex, 0, movedQuestion);
       sectionsCopy[sectionTargetIndex].questions = questionAddArray;
     }
-
     sectionsCopy[sectionIndex].questions = questionRemovedArray;
-
-    dispatchSectionsUpdate({
+    setInitialActiveQuestion(questionTargetIndex);
+    await dispatchSectionsUpdate({
       type: "LOAD",
       sections: sectionsCopy
     });
-
     updateActiveSection(sectionTargetIndex);
+    return;
   }
 
-  const onDragEnd = (result) => {
+  async function onDragEnd(result) {
     const { source, destination } = result;
     if (!destination) return; // return if item was dropped outside
 
@@ -452,13 +464,13 @@ function CreateEditForm() {
       source.index === destination.index
     )
       return;
-    reorderQuestion(
+    await reorderQuestion(
       parseInt(source.droppableId),
       parseInt(destination.droppableId),
       source.index,
       destination.index
     );
-  };
+  }
 
   //----------------------------------------------------------------------------
   //FORM HEADER UPDATE / CUSTOMIZATION
@@ -477,6 +489,7 @@ function CreateEditForm() {
     newForm.sections = sections;
     newForm.draft = false;
     newForm.previewLink.close = moment();
+    newForm.settings = formSettings;
     await FORM.updateForm(loadForm.value._id, newForm);
     refetch({ programId: programId });
   }
@@ -510,7 +523,6 @@ function CreateEditForm() {
     refetch({ programId: programId });
   }
 
-  //TODO: Add header customization here
   let link = "";
   if (!loadFile.isPending && loadFile.value) {
     const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
@@ -583,18 +595,24 @@ function CreateEditForm() {
             <img
               key={link}
               alt="header"
-              style={{ display: "center", marginLeft: "25%", marginTop: "5%" }}
+              style={{ display: "flex", paddingLeft: "20%", marginTop: "5%" }}
               src={link}
               width="640px"
               height="160px"
             ></img>
           ) : (
             <CircularProgress
-              style={{ display: "center", marginLeft: "50%", marginTop: "5%" }}
+              style={{ display: "center", marginLeft: "40%", marginTop: "5%" }}
             />
           )
         ) : null}
-        <DragDropContext onDragEnd={onDragEnd}>
+        <DragDropContext
+          onDragEnd={
+            !isPublished
+              ? onDragEnd
+              : () => alert("You may not move questions in a published form")
+          }
+        >
           {sections &&
             sections.map((section, key) => (
               <div key={uniquekey + section._id}>
@@ -618,6 +636,7 @@ function CreateEditForm() {
                     handleMoveSection={handleMoveSection}
                     handleDeleteSection={handleDeleteSection}
                     setShowMoveSectionsDialog={setShowMoveSectionsDialog}
+                    isPublished={isPublished}
                   />
                 </FormWrapper>
               </div>
@@ -710,4 +729,8 @@ function CreateEditForm() {
   );
 }
 
-export default CreateEditForm;
+const mapStateToProps = (state) => ({
+  programId: state.program
+});
+
+export default connect(mapStateToProps)(CreateEditForm);

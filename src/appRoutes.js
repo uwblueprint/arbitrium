@@ -23,23 +23,16 @@ const routes = [
   {
     path: "/applications",
     component: AllApplications,
-    title: "Candidate Submissions",
+    title: "Submissions",
     header: true,
-    programGroup: ""
-  },
-  {
-    path: "/home",
-    component: null,
-    title: "Program Management",
-    header: false,
-    programGroup: ""
+    programGroup: "REVIEWER"
   },
   {
     path: "/programs",
     component: ProgramManagement,
-    header: false,
-    title: "Program Management",
-    programGroup: ""
+    header: true,
+    title: "Programs List",
+    programGroup: "REVIEWER"
   },
   {
     path: "/submissions/:organizationId",

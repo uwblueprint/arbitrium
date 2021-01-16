@@ -1,15 +1,25 @@
-import React, { useReducer, useEffect, useState } from "react";
+import React, { useReducer, useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import FormSection from "./FormSection";
 import * as FORM from "../../../requests/forms.js";
 import usePromise from "../../../Hooks/usePromise";
 import { defaultFormState } from "./../CreateEditFormStateManagement";
 import SubmissionFormHeader from "./SubmissionFormHeader";
-import customFormSectionsReducer from "../../../Reducers/CustomFormSectionsReducer";
+import customSubmissionAnswerReducer from "../../../Reducers/CustomSubmissionAnswersReducers";
 import Button from "@material-ui/core/Button";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import moment from "moment";
+import * as FILE from "../../../requests/file";
+import * as SUBMISSION from "../../../requests/submission";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FormSettingsContext from "../FormSettingsContext";
+
+//----------------------------------------------------------------------------
+/*
+This component behaves similarly to the CreateEditForm but with signifcantly reduced functionality
+*/
+//----------------------------------------------------------------------------
 
 const useStyles = makeStyles({
   button: {
@@ -51,45 +61,114 @@ const BorderLinearProgress = withStyles((theme) => ({
 
 function CreateSubmissionForm({ match }) {
   const classes = useStyles();
+  const [page, setPage] = useState(-1);
+  const [submitted, setSubmitted] = useState(false);
+  const [validLink, setValidLink] = useState(false);
 
-  //Check to see if this is a preview link or not
+  const [headerData, setHeaderData] = useState({
+    name: defaultFormState.name,
+    description: defaultFormState.description
+  });
+  const [formSettings, setFormSettings] = useState({
+    themeColour: "2261AD",
+    headerImage: null,
+    confirmationMessage: "Your response has been recorded."
+  });
+
+  const [sections, setSections] = useState([]);
+  const [identifierQuestion, setIdentifierQuestion] = useState("");
+  const [answers, dispatchAnswersUpdate] = useReducer(
+    customSubmissionAnswerReducer,
+    []
+  );
+
+  //----------------------------------------------------------------------------
+  //Check to see if Preview or closed
+  //----------------------------------------------------------------------------
+
+  //Check to see if this is a preview link
   let preview = true;
+  //preview link is "/form-preview/:formId"
   if (match.path === "/form/:formId") {
     preview = false;
   }
 
-  const [sections, dispatchSectionsUpdate] = useReducer(
-    customFormSectionsReducer,
-    []
-  );
-  const [page, setPage] = useState(-1);
-
-  //Query based on if this is a preview or not
+  //Query form based on if this is a preview or not
   const [loadForm, refetch] = usePromise(
     preview ? FORM.getFormByPreview : FORM.getFormBySubmission,
     {
       id: match.params.formId
     }
   );
-  const [headerData, setHeaderData] = useState({
-    name: defaultFormState.name,
-    description: defaultFormState.description
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [validLink, setValidLink] = useState(false);
 
+  //Currently no way to load a submission
+  //So one will always be created
+  const [submissionId, setSubmissionId] = useState(null);
+  //Grab the submission
+  const [loadSubmission, refetchSubmission] = usePromise(
+    SUBMISSION.getSubmission,
+    {
+      submissionId: submissionId
+    },
+    null,
+    [submissionId]
+  );
+
+  //Header image
+  const [loadFile] = usePromise(
+    FILE.downloadFile,
+    {
+      bucketname: "arbitrium-public",
+      filename: formSettings.headerImage?.replace(
+        process.env.REACT_APP_AWS_PUBLIC,
+        ""
+      ),
+      requiresAuth: false
+    },
+    null,
+    [loadForm.settings]
+  );
+
+  //----------------------------------------------------------------------------
+  //SUBMISSION INIT/SAVE FUNCTIONS
+  //----------------------------------------------------------------------------
+
+  //If a form doesn't exist then create a new one from the default template
+  const initiateSubmission = useCallback(() => {
+    async function initiate() {
+      const data = {
+        formId: loadForm.value._id,
+        linkId: match.params.formId,
+        SubmissionDate: null,
+        lastSaveDate: moment(),
+        answers: [],
+        identifier: ""
+      };
+
+      const result = await SUBMISSION.createSubmission(data);
+      refetchSubmission({ submissionId: result._id });
+    }
+    //Only create a form if this isn't a preview link
+    if (!preview) {
+      initiate();
+    }
+  }, [loadForm.value, match.params.formId, refetchSubmission, preview]);
+
+  //Load the form values into the sub-states like in FormCreation
+  //The form can't be edited in submissions so this won't be called often.
   useEffect(() => {
     if (loadForm.isPending || !loadForm.value) return;
-    // Get form from database using programID
-    dispatchSectionsUpdate({
-      type: "LOAD",
-      sections: loadForm.value.sections
-    });
+
+    setSections(loadForm.value.sections);
     setHeaderData({
       name: loadForm.value.name,
       description: loadForm.value.description
     });
+    //Load the form settings
+    setFormSettings(loadForm.value.settings);
 
+    //Preview: Is Draft
+    //Submission: Not Draft
     if (preview) {
       //Has the form closed? AND is it a draft?
       setValidLink(
@@ -100,33 +179,118 @@ function CreateSubmissionForm({ match }) {
       const link = loadForm.value.submissionLinks.find(
         (link) => link._id === match.params.formId
       );
-      //Has the form closed? AND is it not a draft?
+      //Has the form closed? AND is it NOT a draft?
       setValidLink(
         !moment(link.close).isBefore(moment()) && !loadForm.value.draft
       );
     }
   }, [loadForm, refetch, match.params.formId, preview]);
 
-  // Used to scroll to top when moving between sections
+  //Similar to above ^
+  //Load Submission values into sub-states or create a new submission if null
   useEffect(() => {
-    window.requestAnimationFrame(() => {
-      const element = document.getElementById("root");
+    if (loadSubmission.isPending || loadForm.isPending || !loadForm.value)
+      return;
+    if (!loadSubmission.value) {
+      initiateSubmission();
+      return;
+    }
 
-      element.scrollIntoView({
-        behavior: "auto",
-        alignToTop: true
-      });
+    setSubmissionId(loadSubmission._id);
+
+    //Here is where we would load the submission into state
+    //Currently we don't allow this functionality
+
+    /*
+    dispatchAnswersUpdate({
+      type: "LOAD",
+      answers: loadSubmission.value.answers
     });
-  }, [page]);
+    */
+  }, [initiateSubmission, loadSubmission, loadForm]);
 
-  const handleSubmit = () => {
-    setSubmitted(true);
+  //usecallback prevents functions from being re-created on every render.
+  //This is useful when a function is a dependency of useEffect (otherwise you get infinite renders)
+  const saveSubmission = useCallback(() => {
+    if (
+      !loadForm.isPending &&
+      loadForm.value &&
+      !loadSubmission.isPending &&
+      loadSubmission.value
+    ) {
+      const newSubmission = loadSubmission.value;
 
-    //If preview don't record the response
-    if (preview) return;
+      newSubmission.answers = answers;
+      newSubmission.lastSaveDate = moment();
+      newSubmission.identifier = identifierQuestion;
+      newSubmission.submissionDate = submitted ? moment() : null;
 
-    //TODO: Save the response
+      SUBMISSION.updateSubmission(loadSubmission.value._id, newSubmission);
+    }
+  }, [loadForm, loadSubmission, answers, submitted, identifierQuestion]);
+
+  //Update the submission
+  useEffect(() => {
+    saveSubmission();
+  }, [answers, saveSubmission]);
+
+  const handleSave = (answer) => {
+    //The identifier question has its own state
+    if (answer.type === "IDENTIFIER") {
+      setIdentifierQuestion(answer.answerString);
+    }
+
+    //Find the index of the answer if it exists
+    const curAnswer = answers.findIndex(
+      (ans) =>
+        ans.questionId === answer.questionId &&
+        ans.sectionId === answer.sectionId
+    );
+
+    if (curAnswer !== -1) {
+      //replace answer
+      dispatchAnswersUpdate({
+        type: "EDIT_ANSWER",
+        index: curAnswer,
+        answer: answer
+      });
+    } else {
+      //new answer
+      dispatchAnswersUpdate({
+        type: "ADD_ANSWER",
+        answer: answer
+      });
+    }
   };
+
+  //Save the form for a final time after hitting submit
+  const handleSubmit = () => {
+    if (preview) {
+      //Has the form closed? AND is it a draft?
+      setValidLink(
+        !moment(loadForm.value.previewLink.close).isBefore(moment()) &&
+          loadForm.value.draft
+      );
+    } else {
+      const link = loadForm.value.submissionLinks.find(
+        (link) => link._id === match.params.formId
+      );
+      //Has the form closed? AND is it NOT a draft?
+      setValidLink(
+        !moment(link.close).isBefore(moment()) && !loadForm.value.draft
+      );
+    }
+    setSubmitted(true);
+  };
+
+  //Save one last time after the submission screen is shown
+  if (submitted) {
+    saveSubmission();
+  }
+
+  //----------------------------------------------------------------------------
+  //PAGE MOVEMENT
+  //----------------------------------------------------------------------------
 
   // Used to scroll to top when moving between sections
   useEffect(() => {
@@ -144,101 +308,160 @@ function CreateSubmissionForm({ match }) {
     return (pageNum * 100) / sections.length;
   };
 
-  if (!validLink && (!loadForm.isPending || loadForm.value == null)) {
-    if (preview) {
-      return (
-        <div> Preview Link has been disabled as the form is published</div>
-      );
-    } else {
-      return <div> Form has closed!</div>;
-    }
-  }
+  //----------------------------------------------------------------------------
+  //INVALID LINK RENDERS
+  //----------------------------------------------------------------------------
 
-  return (
-    <div>
-      <img
-        style={{ display: "center", marginLeft: "25%", marginTop: "10%" }}
-        id="image"
-        width="640px"
-        height="160px"
-        alt="header"
-      />
-      {submitted ? (
+  if (!validLink && (!loadForm.isPending || loadForm.value == null)) {
+    return (
+      <div>
+        {" "}
         <div>
           <FormWrapper>
             <SubmissionFormHeader
               name={headerData.name}
-              description={"Your response has been recorded"}
+              description={
+                preview ? (
+                  "Preview Link has been disabled as the form is published"
+                ) : answers.length === 0 ? (
+                  "This form is closed. If you think this is a mistake, please contact the publisher of this form."
+                ) : (
+                  <div style={{ margin: "16px", paddingBottom: "50px" }}>
+                    <h>
+                      {
+                        "This form is now closed. We've saved a copy of your responses in the backend."
+                      }{" "}
+                    </h>
+                    <h>
+                      {
+                        "If you think this is a mistake, please contact the publisher of this form."
+                      }
+                    </h>
+                  </div>
+                )
+              }
             />
           </FormWrapper>
         </div>
-      ) : (
-        <div>
-          <FormWrapper key={page} id={"section_" + page}>
-            <SubmissionFormHeader {...headerData} />
-            {page !== -1 && sections && page < sections.length ? (
-              <FormSection
-                key={page + "_section"}
-                numSections={sections.length}
-                sectionNum={page + 1}
-                sectionData={sections[page]}
+      </div>
+    );
+  }
+
+  //----------------------------------------------------------------------------
+  //HEADER
+  //----------------------------------------------------------------------------
+
+  let link = "";
+  if (!loadFile.isPending && loadFile.value) {
+    const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
+    const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
+    link = window.URL.createObjectURL(blob);
+  } else {
+    link = "";
+  }
+
+  return (
+    <div>
+      <FormSettingsContext.Provider value={formSettings}>
+        {formSettings.headerImage ? (
+          link !== "" ? (
+            <img
+              key={link}
+              alt="header"
+              style={{ display: "flex", paddingLeft: "20%", marginTop: "5%" }}
+              src={link}
+              width="640px"
+              height="160px"
+            ></img>
+          ) : (
+            <CircularProgress
+              style={{ display: "center", marginLeft: "40%", marginTop: "5%" }}
+            />
+          )
+        ) : null}
+        {submitted ? (
+          <div>
+            <FormWrapper>
+              <SubmissionFormHeader
+                name={headerData.name}
+                description={"Your response has been recorded"}
               />
-            ) : null}
-            {page === sections.length - 1 && !loadForm.isPending ? (
-              <div style={{ marginTop: 10 }}>
-                By clicking &quot;Submit&quot;, your application will be
-                submitted to the owner of this form.{" "}
-              </div>
-            ) : (
-              <div></div>
-            )}
-          </FormWrapper>
-          <ButtonGroup>
-            <Button
-              variant="outlined"
-              className={classes.button}
-              disabled={page === -1}
-              color="primary"
-              onClick={() => setPage(page - 1)}
-            >
-              Back
-            </Button>
-            {page === sections.length - 1 ? (
-              <Button
-                variant="contained"
-                className={classes.button}
-                color="primary"
-                onClick={() => {
-                  handleSubmit();
-                }}
-              >
-                Submit
-              </Button>
-            ) : (
+            </FormWrapper>
+          </div>
+        ) : (
+          <div>
+            <FormWrapper key={page} id={"section_" + page}>
+              <SubmissionFormHeader {...headerData} />
+              {page !== -1 && sections && page < sections.length ? (
+                <FormSection
+                  saveAnswer={handleSave}
+                  key={page + "_section"}
+                  numSections={sections.length}
+                  sectionNum={page + 1}
+                  sectionData={sections[page]}
+                  fileUploadURL={
+                    "forms/" + loadSubmission.value &&
+                    loadSubmission.value.formId + "/" + loadSubmission.value &&
+                    loadSubmission.value._id + "/"
+                  }
+                />
+              ) : null}
+              {page === sections.length - 1 && !loadForm.isPending ? (
+                <div style={{ marginTop: 10 }}>
+                  By clicking &quot;Submit&quot;, your application will be
+                  submitted to the owner of this form.{" "}
+                </div>
+              ) : (
+                <div></div>
+              )}
+            </FormWrapper>
+            <ButtonGroup>
               <Button
                 variant="outlined"
                 className={classes.button}
-                disabled={page === sections.length - 1}
+                disabled={page === -1}
                 color="primary"
-                onClick={() => setPage(page + 1)}
+                onClick={() => setPage(page - 1)}
               >
-                Next
+                Back
               </Button>
-            )}
-            {page === -1 ? (
-              <div></div>
-            ) : (
-              <div style={{ width: 500, marginLeft: 140 }}>
-                <BorderLinearProgress
-                  variant="determinate"
-                  value={norm_progress(page + 1)}
-                />
-                Section {page + 1} of {sections.length}
-              </div>
-            )}
-          </ButtonGroup>
-        </div>
-      )}
+              {page === sections.length - 1 ? (
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  color="primary"
+                  onClick={() => {
+                    handleSubmit();
+                  }}
+                >
+                  Submit
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  className={classes.button}
+                  disabled={page === sections.length - 1}
+                  color="primary"
+                  onClick={() => setPage(page + 1)}
+                >
+                  Next
+                </Button>
+              )}
+              {page === -1 ? (
+                <div></div>
+              ) : (
+                <div style={{ width: 500, marginLeft: 140 }}>
+                  <BorderLinearProgress
+                    variant="determinate"
+                    value={norm_progress(page + 1)}
+                  />
+                  Section {page + 1} of {sections.length}
+                </div>
+              )}
+            </ButtonGroup>
+          </div>
+        )}
+      </FormSettingsContext.Provider>
     </div>
   );
 }

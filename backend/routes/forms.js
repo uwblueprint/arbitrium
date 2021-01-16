@@ -34,6 +34,7 @@ router.get("/submit/:submissionLinkID", (req, res) => {
       console.error(
         `Error getting form with submission ID = ${req.params.submissionLinkID}`
       );
+      console.error(err);
       res.status(500).send(err);
     });
 });
@@ -108,6 +109,7 @@ router.get("/:programId", (req, res) => {
     })
     .catch(function(err) {
       console.error(`Error getting form with ID = ${req.params.programId}`);
+      console.error(err);
       res.status(500).send(err);
     });
 });
@@ -122,6 +124,7 @@ router.patch("/:formId", (req, res) => {
     (error, result) => {
       if (error) {
         console.error("Error updating form into MongoDB");
+        console.error(error);
         res.status(500).send(error);
       } else {
         res.status(201).json(result);

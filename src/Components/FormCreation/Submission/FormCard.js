@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import SelectQuestion from "../CardComponents/SelectQuestion";
 import TextQuestion from "./../CardComponents/TextQuestion";
 import styled from "styled-components";
+import FileQuestion from "./../CardComponents/FileQuestion";
+import FormSettingsContext from "../FormSettingsContext";
 
 const useStyles = makeStyles({
   content: {
@@ -17,14 +19,14 @@ const useStyles = makeStyles({
     marginBottom: 20,
     width: 816
   },
-  active: {
+  active: (props) => ({
     fontSize: 14,
     borderRadius: 0,
-    borderLeft: "4px solid #2261AD",
+    borderLeft: `4px solid #${props.themeColour}`,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
     width: 816
-  },
+  }),
   title: {
     color: "#000",
     fontSize: "20px",
@@ -96,8 +98,142 @@ const DescriptionField = styled.div`
 
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
-  const classes = useStyles();
+function FormCard({
+  card,
+  active,
+  handleActive,
+  sectionKey,
+  questionKey,
+  updateSubmission,
+  fileUploadURL
+}) {
+  const { themeColour } = useContext(FormSettingsContext);
+  const classes = useStyles({ themeColour });
+
+  const onQuestionUpdate = (data) => {
+    if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
+      //We are storing the selected options by id in the submissions
+      //To get the values we will cross-reference with the form
+      const answerArray = card.x_options
+        .filter((opt) => data[opt.value])
+        .map((opt) => opt._id);
+      updateSubmission(card._id, card.type, "", answerArray);
+    } else if (
+      card.type === "SHORT_ANSWER" ||
+      card.type === "PARAGRAPHS" ||
+      card.type === "IDENTIFIER"
+    ) {
+      //Stored as a string
+      updateSubmission(card._id, card.type, data, []);
+    } else if (card.type === "FILE_UPLOAD") {
+      //Stored as an array of strings of file links
+      updateSubmission(card._id, card.type, "", data);
+    } else if (card.type === "CHECKBOX_GRID") {
+      //TODO
+    }
+  };
+
+  const questionTypes = [
+    {
+      name: "IDENTIFIER",
+      value: "Identifier",
+      style: classes.action_menu_item,
+      isDeletable: false,
+      render: (
+        <TextQuestion
+          short_answer={true}
+          submission={true}
+          onChange={onQuestionUpdate}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "SHORT_ANSWER",
+      value: "Short Answer",
+      style: classes.action_menu_item2,
+      isDeletable: true,
+      render: (
+        <TextQuestion
+          short_answer={true}
+          submission={true}
+          onChange={onQuestionUpdate}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "PARAGRAPHS",
+      value: "Paragraphs",
+      style: classes.action_menu_item,
+      isDeletable: true,
+      render: (
+        <TextQuestion
+          short_answer={false}
+          submission={true}
+          onChange={onQuestionUpdate}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "CHECKBOXES",
+      value: "Checkboxes",
+      style: classes.action_menu_item2,
+      isDeletable: true,
+      render: (
+        <SelectQuestion
+          onChange={onQuestionUpdate}
+          initialOptions={
+            card && card.x_options.map((option) => [option.value])
+          }
+          multiSelect={true}
+          submission={true}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "MULTIPLE_CHOICE",
+      value: "Multiple Choice",
+      style: classes.action_menu_item,
+      isDeletable: true,
+      render: (
+        <SelectQuestion
+          submission={true}
+          onChange={onQuestionUpdate}
+          initialOptions={
+            card && card.x_options.map((option) => [option.value])
+          }
+          multiSelect={false}
+        />
+      ),
+      renderInactive: card.type
+    },
+    {
+      name: "FILE_UPLOAD",
+      value: "File Upload",
+      style: classes.action_menu_item2,
+      isDeletable: true,
+      render: (
+        <FileQuestion
+          active={true}
+          submission={true}
+          onChange={onQuestionUpdate}
+          fileUploadURL={fileUploadURL}
+          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
+        />
+      ),
+      renderInactive: (
+        <FileQuestion
+          active={false}
+          onChange={onQuestionUpdate}
+          submission={true}
+          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
+        />
+      )
+    }
+  ];
 
   return (
     <div className={classes.container}>
@@ -107,33 +243,26 @@ function FormCard({ card, active, handleActive, sectionKey, questionKey }) {
       >
         <CardContent className={classes.content}>
           <TitleWrapper>
-            <NameField>{card.name ? card.name : "Default Card Name"}</NameField>
+            <NameField style={{ display: "flex" }}>
+              {card.name ? card.name : "Default Card Name "}
+              {card.required ? <font color="red">{" *"}</font> : null}
+            </NameField>
+
             <DescriptionField>
-              {card.description ? card.description : "Default Card Description"}
+              {card.description ? card.description : ""}
             </DescriptionField>
           </TitleWrapper>
-          {card && card.type === "MULTIPLE_CHOICE" ? (
-            <SelectQuestion
-              data={card.options}
-              submission={true}
-              onBlur={() => {}}
-            />
-          ) : null}
-          {card && card.type === "SHORT_ANSWER" ? (
-            <TextQuestion
-              short_answer={true}
-              submission={true}
-              onBlur={() => {}}
-            />
-          ) : null}
-          {card && card.type === "PARAGRAPHS" ? (
-            <TextQuestion short_answer={false} submission={true} />
-          ) : null}
-          {card && card.type === "CHECKBOXES" ? (
-            <SelectQuestion data={card.options} submission={true} />
-          ) : null}
-          {card && card.type === "FILE_UPLOAD" ? <div>todo</div> : null}
-          {card && card.type === "CHECKBOX_GRID" ? <div>todo</div> : null}
+          {card
+            ? questionTypes
+                .filter((type) => type.name === card.type)
+                .map((question) => {
+                  return (
+                    <div key={card._id + "_QuestionContent"}>
+                      {question.render}
+                    </div>
+                  );
+                })
+            : null}
         </CardContent>
       </Card>
     </div>

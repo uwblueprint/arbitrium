@@ -77,11 +77,8 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
             margin="dense"
             className="dropdown"
           >
-            <InputLabel className="dropdown-text">Download All</InputLabel>
-            <Select>
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
+            <InputLabel className="dropdown-text"></InputLabel>
+            <Select value="csv" onChange={null}>
               <MenuItem value={"csv"}>Download as CSV</MenuItem>
               <MenuItem value={"pdf"}>Download as PDF</MenuItem>
             </Select>

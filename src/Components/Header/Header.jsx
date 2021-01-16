@@ -15,6 +15,7 @@ import { getAllProgramsAPI } from "../../requests/get";
 import usePromise from "../../Hooks/usePromise";
 import { loadProgram } from "../../Actions/index.js";
 import { Typography } from "@material-ui/core";
+import { defaultRouteAfterLogin } from "../../Authentication/PrivateRoute";
 
 export const HEADER_HEIGHT = 56;
 export const MIN_WIDTH = 960;
@@ -94,7 +95,7 @@ const useStyles = makeStyles({
 //programs is a list of programs that the user has access to
 //curRoute is the current route object from appRoutes
 //routes is a list of routes that should be displayed in the header
-function Header({ program, loadProgram, history, admin, curRoute, routes }) {
+function Header({ program, loadProgram, history, curRoute, routes }) {
   const { currentUser, appUser } = useContext(AuthContext);
   const [programMenuAnchor, setprogramMenuAnchor] = useState(null);
   const [adminMenuAnchor, setAdminMenuAnchor] = useState(null);
@@ -148,7 +149,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
       <BodyWrapper>
         <AppName>
           <Tooltip title="Arbitrium" classes={{ tooltip: classes.tooltip }}>
-            <div>
+            <div onClick={() => history.push(defaultRouteAfterLogin)}>
               <AppIcon />
             </div>
           </Tooltip>
@@ -201,7 +202,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                   ))}
                   {validPrograms.length === 0 ? (
                     <MenuItem key={"None"}>
-                      You don't have access to any programs
+                      {"You don't have access to any programs"}
                     </MenuItem>
                   ) : null}
                 </div>
@@ -272,7 +273,7 @@ function Header({ program, loadProgram, history, admin, curRoute, routes }) {
                         })}
                         {validPrograms.length === 0 ? (
                           <MenuItem key={"None"}>
-                            You don't have access to other pages
+                            {"You don't have access to other pages"}
                           </MenuItem>
                         ) : null}
                       </div>

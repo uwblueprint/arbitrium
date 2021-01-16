@@ -7,10 +7,38 @@ const multer = require("multer");
 const router = express.Router();
 
 const { isAuthenticated } = require("../middlewares/auth");
-router.use(isAuthenticated);
 
 // Create S3 service object
 const s3 = new AWS.S3({ apiVersion: "2006-03-01" });
+
+//This route doesn't require authentication
+router.get("/download/public", async function(req, res) {
+  if (!req.headers.filepath) {
+    res.status(400).send("Bad Request. Missing header 'filepath'");
+    return;
+  }
+  // Create the parameters for calling getObject
+  const bucketParams = {
+    Bucket: "arbitrium-public",
+    Key: req.headers.filepath
+  };
+  try {
+    s3.getObject(bucketParams, function(err, data) {
+      if (err) {
+        console.info("Error", err);
+        res.status(500).send(err);
+      } else {
+        console.info("Success", data);
+        res.status(200).json(data);
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(400).send(e);
+  }
+});
+
+router.use(isAuthenticated);
 
 router.get("/listBuckets", async function(req, res) {
   try {
@@ -166,6 +194,36 @@ router.get("/download/:bucketname", async function(req, res) {
   };
   try {
     s3.getObject(bucketParams, function(err, data) {
+      if (err) {
+        console.info("Error", err);
+        res.status(500).send(err);
+      } else {
+        console.info("Success", data);
+        res.status(200).json(data);
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(400).send(e);
+  }
+});
+
+router.delete("/delete/:bucketname", async function(req, res) {
+  if (!req.params.bucketname) {
+    res.status(400).send("Bad Request. Missing param 'bucketname'");
+    return;
+  }
+  if (!req.headers.filepath) {
+    res.status(400).send("Bad Request. Missing header 'filepath'");
+    return;
+  }
+  // Create the parameters for calling getObject
+  const bucketParams = {
+    Bucket: req.params.bucketname,
+    Key: req.headers.filepath
+  };
+  try {
+    s3.deleteObject(bucketParams, function(err, data) {
       if (err) {
         console.info("Error", err);
         res.status(500).send(err);

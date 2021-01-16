@@ -16,10 +16,32 @@ function setProgram(prog) {
   program = prog;
 }
 
-async function GET(url, filepath, requiresAuth = true) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
+//Uses a service account to grab a token that lasts for 1-hour
+async function getTempToken() {
+  return await fetch(
+    "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=" +
+      process.env.REACT_APP_FIREBASE_KEY,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        email: process.env.REACT_APP_SERVICE_EMAIL,
+        password: process.env.REACT_APP_SERVICE_PASSWORD,
+        returnSecureToken: "true"
+      }),
+      headers: {
+        Accept: "application/json"
+      }
+    }
+  )
+    .then((result) => {
+      return result.json();
+    })
+    .then((res) => {
+      return res.idToken;
+    });
+}
 
+async function GET(url, filepath = "", requiresAuth = true) {
   let token = "";
   if (requiresAuth) {
     token = await firebaseApp.auth().currentUser.getIdToken();
@@ -41,11 +63,11 @@ async function GET(url, filepath, requiresAuth = true) {
   return body;
 }
 
-async function POST(url, databody) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
-  //let program = window.location.pathname.split("/")[0]
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+async function POST(url, databody, requiresAuth = true) {
+  let token = "";
+  if (requiresAuth) {
+    token = await firebaseApp.auth().currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     method: "POST",
@@ -66,11 +88,11 @@ async function POST(url, databody) {
   return body;
 }
 
-async function PUT(url, databody) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
-  //let program = window.location.pathname.split("/")[0]
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+async function PUT(url, databody, requiresAuth = true) {
+  let token = "";
+  if (requiresAuth) {
+    token = await firebaseApp.auth().currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     method: "PUT",
@@ -90,11 +112,11 @@ async function PUT(url, databody) {
   return body;
 }
 
-async function PATCH(url, databody) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
-  //let program = window.location.pathname.split("/")[0]
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+async function PATCH(url, databody, requiresAuth = true) {
+  let token = "";
+  if (requiresAuth) {
+    token = await firebaseApp.auth().currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     method: "PATCH",
@@ -113,11 +135,16 @@ async function PATCH(url, databody) {
   return body;
 }
 
-async function DELETE(url) {
-  //Get the program from the url - we will pass this in the url and the
-  //backend will query the corresponding database
-  //let program = window.location.pathname.split("/")[0]
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+async function DELETE(url, filepath, requiresAuth = true) {
+  let token = "";
+  if (requiresAuth) {
+    const currentUser = await firebaseApp.auth().currentUser;
+    if (!currentUser) {
+      token = await getTempToken();
+    } else {
+      token = await currentUser.getIdToken();
+    }
+  }
 
   const response = await fetch(proxy + url, {
     method: "DELETE",
@@ -125,7 +152,8 @@ async function DELETE(url) {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
-      database: program
+      database: program,
+      filepath: filepath
     }
   });
 
@@ -137,7 +165,13 @@ async function DELETE(url) {
 }
 
 async function FILE(url, databody, filepath) {
-  const token = await firebaseApp.auth().currentUser.getIdToken();
+  const currentUser = await firebaseApp.auth().currentUser;
+  let token = "";
+  if (!currentUser) {
+    token = await getTempToken();
+  } else {
+    token = await currentUser.getIdToken();
+  }
 
   const response = await fetch(proxy + url, {
     method: "POST",

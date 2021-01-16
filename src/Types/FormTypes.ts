@@ -142,3 +142,27 @@ export type FormSettingsType = {
   themeColour: string;
   confirmationMessage: string;
 };
+
+export type Answer = {
+  type: QuestionType;
+  answerString: string | null;
+  answerArray: Array<string> | null;
+  answerMatrix: Array<Array<string>> | null;
+  sectionID: string;
+  questionID: string;
+};
+
+export type EditAnswersAction =
+  | {
+      type: "LOAD";
+      answers: Answer[];
+    }
+  | {
+      type: "EDIT_ANSWER";
+      index: number;
+      answer: Answer;
+    }
+  | {
+      type: "ADD_ANSWER";
+      answer: Answer;
+    };
