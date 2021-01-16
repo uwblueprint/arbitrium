@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 import { AnyNaptrRecord } from "dns";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 
 const Wrapper = styled.div`
   margin-top: 16px;
@@ -44,6 +46,28 @@ function TextQuestion({
         rowsMax={short_answer ? 2 : 4}
         fullWidth={true}
       ></TextField>
+      {!short_answer ? (
+        <div>
+          <Select
+            defaultValue="word"
+            style={{ width: "150px", marginRight: "20px", marginTop: "20px" }}
+          >
+            <MenuItem value="word">Word count</MenuItem>
+            <MenuItem value="char">Character count</MenuItem>
+          </Select>
+          <Select
+            defaultValue="most"
+            style={{ width: "100px", marginRight: "20px", marginTop: "20px" }}
+          >
+            <MenuItem value="most">At most</MenuItem>
+            <MenuItem value="least">At least</MenuItem>
+          </Select>
+          <TextField
+            value={500}
+            style={{ width: "50px", marginRight: "20px", marginTop: "20px" }}
+          />
+        </div>
+      ) : null}
     </Wrapper>
   );
 }
