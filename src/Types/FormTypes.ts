@@ -89,6 +89,30 @@ export type EditQuestionsAction =
       validations: any[];
     };
 
+export type ValidationTypeEnum = "CHECKBOX" | "EMAIL" | "Link";
+
+export type ValidationType = {
+  type: string;
+  enum: ValidationTypeEnum;
+};
+
+export type ValidationMin = {
+  type: number;
+  default: 0;
+};
+
+export type ValidationMax = {
+  type: number;
+  default: 0;
+};
+
+export type Validation = {
+  type: ValidationType;
+  expression: string;
+  min: ValidationMin;
+  max: ValidationMax;
+};
+
 export type FormContext = {
   formId: string;
 };

@@ -46,7 +46,7 @@ function TextQuestion({
         rowsMax={short_answer ? 2 : 4}
         fullWidth={true}
       ></TextField>
-      {!short_answer ? (
+      {validation && !short_answer ? (
         <div>
           <Select
             defaultValue="word"
