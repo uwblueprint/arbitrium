@@ -52,7 +52,7 @@ function FileQuestion({
   active,
   onChange,
   fileUploadURL,
-  initialNumFiles = 0
+  initialNumFiles = 1
 }: Props): React.ReactElement {
   const [numFiles, setnumFiles] = useState(initialNumFiles || 1);
   const classes = useStyles();

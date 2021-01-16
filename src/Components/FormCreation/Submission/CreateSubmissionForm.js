@@ -360,6 +360,10 @@ function CreateSubmissionForm({ match }) {
     link = "";
   }
 
+  const formId = loadSubmission.value != null && loadSubmission.value.formId;
+  const Id = loadSubmission.value && loadSubmission.value._id;
+  let fileUploadURL = "forms/" + formId + "/" + Id + "/";
+
   return (
     <div>
       <FormSettingsContext.Provider value={formSettings}>
@@ -399,11 +403,7 @@ function CreateSubmissionForm({ match }) {
                   numSections={sections.length}
                   sectionNum={page + 1}
                   sectionData={sections[page]}
-                  fileUploadURL={
-                    "forms/" + loadSubmission.value &&
-                    loadSubmission.value.formId + "/" + loadSubmission.value &&
-                    loadSubmission.value._id + "/"
-                  }
+                  fileUploadURL={fileUploadURL}
                 />
               ) : null}
               {page === sections.length - 1 && !loadForm.isPending ? (
