@@ -60,9 +60,11 @@ connections["Authentication"].programs
   .then(function(found) {
     //For each program create a new database connection.
     //If a database does not exist it will be created
-    found.forEach((item) => {
-      addConnection(item);
-    });
+    found
+      .filter((program) => program.appVersion === 1)
+      .forEach((item) => {
+        addConnection(item);
+      });
   })
   .catch(function(err) {
     console.error("ERROR fetching programs");

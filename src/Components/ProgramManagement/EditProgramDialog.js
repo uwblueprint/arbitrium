@@ -6,7 +6,7 @@ import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
 import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import { updateProgramNameAPI } from "../../requests/update";
+import { updateProgramNameAPI, createProgramAPI } from "../../requests/update";
 
 const StyledLabel = styled(InputLabel)`
   margin-bottom: 4px;
@@ -24,12 +24,11 @@ const Wrapper = styled.div`
 
 function EditProgramDialog({
   close,
-  // eslint-disable-next-line no-unused-vars
   userId = "",
-  // eslint-disable-next-line no-unused-vars
   orgId = "",
   program = null,
-  newProgram = false
+  newProgram = false,
+  reloadPrograms
 }) {
   const [programName, setProgramName] = useState(program ? program.name : "");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,7 +40,20 @@ function EditProgramDialog({
   async function createProgram() {
     setIsSubmitting(true);
     try {
-      // TODO: Implement createProgramAPI and call it with the userId, orgId, and program name
+      let newProgram = {
+        createdByUserId: userId,
+        organization: orgId,
+        databaseName: null,
+        displayName: programName,
+        appVersion: 2,
+        deleted: false,
+        archived: false
+      };
+      console.log("here");
+      console.log(newProgram);
+      let result = await createProgramAPI(newProgram);
+      reloadPrograms({ userId });
+
       close();
     } catch (e) {
       console.error(e);

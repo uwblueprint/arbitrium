@@ -146,12 +146,14 @@ function CreateSubmissionForm({ match }) {
       };
 
       const result = await SUBMISSION.createSubmission(data);
+      setSubmissionId(result._id);
       refetchSubmission({ submissionId: result._id });
     }
     //Only create a form if this isn't a preview link
     if (!preview) {
       initiate();
     }
+    console.log("create");
   }, [loadForm.value, match.params.formId, refetchSubmission, preview]);
 
   //Load the form values into the sub-states like in FormCreation
@@ -192,11 +194,9 @@ function CreateSubmissionForm({ match }) {
     if (loadSubmission.isPending || loadForm.isPending || !loadForm.value)
       return;
     if (!loadSubmission.value) {
+      console.log(loadSubmission);
       initiateSubmission();
-      return;
     }
-
-    setSubmissionId(loadSubmission._id);
 
     //Here is where we would load the submission into state
     //Currently we don't allow this functionality

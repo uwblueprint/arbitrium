@@ -185,7 +185,8 @@ function ProgramManagement({ history }) {
                     dialogProps={{
                       userId: userId,
                       orgId: appUser.adminOrganization,
-                      newProgram: true
+                      newProgram: true,
+                      reloadPrograms: reloadPrograms
                     }}
                     closeOnEsc={true}
                   >
@@ -201,7 +202,8 @@ function ProgramManagement({ history }) {
                 close: closeEditProgramDialog,
                 userId: userId,
                 orgId: appUser.adminOrganization,
-                program: currentProgram
+                program: currentProgram,
+                reloadPrograms: reloadPrograms
               }}
             />
             <ControlledDialogTrigger

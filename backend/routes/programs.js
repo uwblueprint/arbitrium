@@ -10,7 +10,7 @@ const { sendWelcomeEmail } = require("../nodemailer");
 const { createFirebaseUser, deleteFirebaseUser } = require("../services/users");
 const { isAuthenticated } = require("../middlewares/auth");
 
-router.use(isAuthenticated);
+//router.use(isAuthenticated);
 
 router.get("/all", function(req, res) {
   db["Authentication"].programs
@@ -26,9 +26,68 @@ router.get("/all", function(req, res) {
 // Create a program
 router.post("/", function(req, res) {
   try {
-    // TODO: call programsServices.createProgram()
-    res.status(201).send();
+    try {
+      //Create the program
+      db["Authentication"].programs.create(req.body, (error, result) => {
+        if (error) {
+          console.error(`Error creating program ${req.body.displayName}`);
+          res.status(501).send(error);
+        } else {
+          // Add the organization's admins to the program
+
+          try {
+            db["Authentication"].users.updateMany(
+              {
+                adminOrganization: req.body.organization
+              },
+              {
+                $addToSet: {
+                  programs: {
+                    id: result._id,
+                    role: "ADMIN"
+                  }
+                }
+              },
+              (error, result) => {
+                if (error) {
+                  console.error(
+                    `Error adding program to Admin users, aborting program creation`
+                  );
+                  res.status(503).send(error);
+                }
+              }
+            );
+          } catch (e) {
+            console.error(`Error adding admin users to program`);
+            db["Authentication"].programs.findOneAndUpdate(
+              { _id: result._id },
+              { deleted: true },
+              (error, result) => {
+                if (error) {
+                  console.error(
+                    `Error ${
+                      req.body.archived ? "archiving" : "unarchiving"
+                    } program with ID = ${result._id}`
+                  );
+                  res.status(500).send(error);
+                } else {
+                  res.status(204).json(result);
+                }
+              }
+            );
+            res.status(502).send(e);
+          }
+
+          //Return the program
+          res.status(201).send(result);
+        }
+      });
+    } catch (e) {
+      console.error(`Error creating program ${req.body.displayName}`);
+      res.status(501).send(e);
+    }
   } catch (e) {
+    console.error(`Error creating program ${req.body.displayName}`);
     res.send(e);
   }
 });
