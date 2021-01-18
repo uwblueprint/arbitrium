@@ -10,8 +10,11 @@ import usePromise from "../../../Hooks/usePromise";
 
 import {
   getApplicationTableData,
-  getReviewCountAPI
+  getReviewCountAPI,
+  getProgramByID
 } from "../../../requests/get";
+
+import * as SUBMISSION from "../../../requests/submission";
 
 const Wrapper = styled.div`
   margin-top: 100px;
@@ -47,7 +50,8 @@ function convertToTableData(fetched) {
             : application.rating,
         applicantName:
           application["Organization Name"] ||
-          application["Organization Name (legal name)"],
+          application["Organization Name (legal name)"] ||
+          application["identifier"],
         lastEdited: application["lastReviewed"],
         applicantLink: (
           <a href={`/submissions/${application._id}`}>
@@ -68,14 +72,25 @@ function convertToTableData(fetched) {
 }
 
 function AllApplications({ user, program }) {
+  //We now have two version of submissions
+  //1: From google forms
+  //2: From in house form creation
+
+  let programVersion = 2;
+  console.log(program);
   // Applications, with reviews attached
   const [applications] = usePromise(
-    getApplicationTableData,
-    { user },
+    program.appVersion === 1
+      ? getApplicationTableData
+      : SUBMISSION.getSubmissionTableData,
+    { user, program },
     [],
     [program]
   );
 
+  console.log(applications);
+
+  //TODO: Update the review count based on version
   const [reviewCount] = usePromise(
     getReviewCountAPI,
     user.userId,

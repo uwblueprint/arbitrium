@@ -60,4 +60,87 @@ router.patch("/:submissionId", (req, res) => {
   );
 });
 
+router.get("/user/:userid/:programId", function(req, res) {
+  db["Authentication"].submissions
+    .aggregate([
+      {
+        $match: { submissionDate: { $ne: null } }
+      },
+      {
+        $project: {
+          identifier: 1,
+          formId: 2
+        }
+      },
+      {
+        $lookup: {
+          from: "Forms",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $eq: ["$programId", req.params.programId] }]
+                }
+              }
+            },
+            { $project: { _id: 1 } }
+          ],
+          as: "form"
+        }
+      },
+      {
+        $unwind: {
+          path: "$form"
+        }
+      },
+      {
+        $project: {
+          identifier: 1,
+          formId: 2,
+          form: 3
+        }
+      },
+      {
+        $match: { formId: "form._id" }
+      },
+      {
+        $lookup: {
+          from: "Reviews",
+          let: { appId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$applicationId", "$$appId"] },
+                    { $eq: ["$userId", req.params.userid] }
+                  ]
+                }
+              }
+            },
+            { $project: { _id: 0, rating: 1, lastReviewed: 1 } }
+          ],
+          as: "ratingInfo"
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ["$$ROOT", { $arrayElemAt: ["$ratingInfo", 0] }]
+          }
+        }
+      },
+      {
+        $project: { ratingInfo: 0 }
+      }
+    ])
+    .then(function(found) {
+      res.json(found);
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.send(err);
+    });
+});
+
 module.exports = router;

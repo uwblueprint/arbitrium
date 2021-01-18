@@ -10,7 +10,7 @@ const { sendWelcomeEmail } = require("../nodemailer");
 const { createFirebaseUser, deleteFirebaseUser } = require("../services/users");
 const { isAuthenticated } = require("../middlewares/auth");
 
-//router.use(isAuthenticated);
+router.use(isAuthenticated);
 
 router.get("/all", function(req, res) {
   db["Authentication"].programs
@@ -20,6 +20,20 @@ router.get("/all", function(req, res) {
     })
     .catch(function(err) {
       res.send(err);
+    });
+});
+
+//Get a program by programId
+router.get("/:programId", (req, res) => {
+  db["Authentication"].programs
+    .findOne({ _id: req.params.programId })
+    .then(function(result) {
+      res.status(200).json(result);
+    })
+    .catch(function(err) {
+      console.error(`Error getting program with ID = ${req.params.programId}`);
+      console.error(err);
+      res.status(500).send(err);
     });
 });
 

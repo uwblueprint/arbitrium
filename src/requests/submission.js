@@ -13,4 +13,13 @@ async function updateSubmission(submissionId, databody) {
   return PATCH(`/api/submissions/${submissionId}`, databody, false);
 }
 
-export { createSubmission, getSubmission, updateSubmission };
+async function getSubmissionTableData({ user, program }) {
+  return GET(`/api/submissions/user/${user.userId}/${program}`);
+}
+
+export {
+  createSubmission,
+  getSubmission,
+  updateSubmission,
+  getSubmissionTableData
+};
