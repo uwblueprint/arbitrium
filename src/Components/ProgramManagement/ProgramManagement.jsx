@@ -17,6 +17,8 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { rolesMap } from "../../Constants/UserRoles";
+import { connect } from "react-redux";
+import { loadProgram } from "../../Actions/index.js";
 import {
   ARCHIVE_PROGRAM,
   UNARCHIVE_PROGRAM,
@@ -80,7 +82,8 @@ const useStyles = makeStyles({
   }
 });
 
-function ProgramManagement({ history }) {
+function ProgramManagement({ history, program, loadProgram }) {
+  console.log(program);
   const { appUser } = useContext(AuthContext);
   const userId = appUser.userId;
   const [programs, reloadPrograms] = usePromise(
@@ -90,7 +93,7 @@ function ProgramManagement({ history }) {
   );
   const [showEditProgramDialog, setShowEditProgramDialog] = useState(false);
   const [showConfirmActionDialog, setShowConfirmActionDialog] = useState(false);
-  const [currentProgram, setCurrentProgram] = useState(null);
+  const [currentProgram, setCurrentProgram] = useState(program);
   const [programAction, setProgramAction] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
@@ -108,8 +111,14 @@ function ProgramManagement({ history }) {
     setCurrentProgram(program);
   };
 
-  function setUserProgram(program) {
-    updateUserProgramAPI(userId, { programId: program.id });
+  async function setUserProgram(newProgram) {
+    console.log("here");
+    await updateUserProgramAPI(userId, { programId: newProgram.id });
+    console.log("here2");
+    console.log(newProgram.id);
+    console.log(program);
+    console.log(loadProgram);
+    loadProgram(newProgram.id);
   }
 
   function closeEditProgramDialog() {
@@ -145,8 +154,8 @@ function ProgramManagement({ history }) {
               variant="contained"
               color="primary"
               value="OpenApplication"
-              onClick={() => {
-                program && setUserProgram(program);
+              onClick={async function() {
+                program && (await setUserProgram(program));
                 history.push("/applications");
               }}
             >
@@ -293,4 +302,17 @@ function ProgramManagement({ history }) {
   );
 }
 
-export default ProgramManagement;
+const mapStateToProps = (state) => ({
+  program: state.program
+});
+
+const mapDispatchToProps = {
+  loadProgram
+};
+
+const connectedAuth = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProgramManagement);
+
+export default connectedAuth;

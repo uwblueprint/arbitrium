@@ -96,6 +96,7 @@ const useStyles = makeStyles({
 //curRoute is the current route object from appRoutes
 //routes is a list of routes that should be displayed in the header
 function Header({ program, loadProgram, history, curRoute, routes }) {
+  console.log(program);
   const { currentUser, appUser } = useContext(AuthContext);
   const [programMenuAnchor, setprogramMenuAnchor] = useState(null);
   const [adminMenuAnchor, setAdminMenuAnchor] = useState(null);
@@ -126,6 +127,7 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
   const handleSelect = async (newProgram) => {
     setprogramMenuAnchor(null);
     await updateUserProgramAPI(currentUser.uid, { programId: newProgram._id });
+    console.log(newProgram._id);
     loadProgram(newProgram._id);
     //Load the application data into redux
   };
