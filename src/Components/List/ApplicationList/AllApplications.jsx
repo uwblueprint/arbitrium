@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -40,6 +40,9 @@ const Wrapper = styled.div`
 `;
 
 function convertToTableData(fetched) {
+  if (!fetched) {
+    return;
+  }
   const applicantsList = [];
   if (fetched !== null) {
     fetched.forEach((application) => {
@@ -76,33 +79,68 @@ function AllApplications({ user, program }) {
   //1: From google forms
   //2: From in house form creation
 
-  let programVersion = 2;
-  console.log(program);
+  const [applications, setApplications] = useState(null);
+  const [reviewCount, setReviewCount] = useState(0);
+
+  const [loadProgram] = usePromise(getProgramByID, { programId: program }, {}, [
+    program
+  ]);
+
   // Applications, with reviews attached
-  const [applications] = usePromise(
-    program.appVersion === 1
+  // loadApplication.error will be true until loadProgram.value loads
+  const [loadApplications] = usePromise(
+    loadProgram.value.appVersion === 1
       ? getApplicationTableData
       : SUBMISSION.getSubmissionTableData,
     { user, program },
-    [],
-    [program]
+    null,
+    [program, loadProgram]
   );
 
-  console.log(applications);
-
   //TODO: Update the review count based on version
-  const [reviewCount] = usePromise(
+  const [loadReviewCount] = usePromise(
     getReviewCountAPI,
     user.userId,
     [],
     [program]
   );
 
+  useEffect(() => {
+    if (
+      loadProgram.isPending ||
+      loadReviewCount.isPending ||
+      loadApplications.isPending ||
+      !loadProgram.value ||
+      !loadApplications.value ||
+      !loadReviewCount.value ||
+      loadApplications.error
+    ) {
+      return;
+    }
+
+    if (loadProgram.value.appVersion === 2) {
+      setApplications(
+        loadApplications.value.filter(
+          (application) => application.formId === application.form._id
+        )
+      );
+    } else {
+      setApplications(loadApplications.value);
+    }
+
+    setReviewCount(loadReviewCount.value);
+  }, [loadReviewCount, loadApplications, loadProgram]);
+
   return (
     <div>
       <Wrapper>
         <Paper>
-          {!applications.isPending && !reviewCount.isPending ? (
+          {!loadProgram.isPending &&
+          !loadReviewCount.isPending &&
+          !loadApplications.isPending &&
+          loadProgram.value &&
+          loadReviewCount.value &&
+          loadApplications.value ? (
             <div>
               <h1 style={{ fontSize: "24px" }}>Candidate Submissions</h1>
               <p style={{ fontSize: "14px" }}>
@@ -113,12 +151,12 @@ function AllApplications({ user, program }) {
                   }
                 </b>
               </p>
-              <hr />
               <AllApplicationsTable
-                reviewCount={reviewCount.value}
-                applicationCount={applications.value.length}
-                data={convertToTableData(applications.value, program)}
+                reviewCount={reviewCount}
+                applicationCount={applications && applications.length}
+                data={convertToTableData(applications)}
               />
+              <hr />
             </div>
           ) : (
             <div>

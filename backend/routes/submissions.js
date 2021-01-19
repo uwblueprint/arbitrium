@@ -69,7 +69,7 @@ router.get("/user/:userid/:programId", function(req, res) {
       {
         $project: {
           identifier: 1,
-          formId: 2
+          formId: 1
         }
       },
       {
@@ -96,12 +96,9 @@ router.get("/user/:userid/:programId", function(req, res) {
       {
         $project: {
           identifier: 1,
-          formId: 2,
-          form: 3
+          formId: 1,
+          form: 1
         }
-      },
-      {
-        $match: { formId: "form._id" }
       },
       {
         $lookup: {
