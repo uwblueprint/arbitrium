@@ -31,6 +31,20 @@ function TextQuestion({
     setText(event.target.value);
   };
 
+  const [validationType, setValidationType] = useState("word");
+  const [validationLimit, setValidationLimit] = useState("at most");
+  const [validationCount, setValidationCount] = useState(500);
+
+  const updateValidationCount = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    if (event.target.value === "") {
+      setValidationCount(0);
+    } else {
+      setValidationCount(parseInt(event.target.value));
+    }
+  };
+
   return (
     <Wrapper>
       <TextField
@@ -53,18 +67,27 @@ function TextQuestion({
             defaultValue="word"
             style={{ width: "150px", marginRight: "20px", marginTop: "20px" }}
           >
-            <MenuItem value="word">Word count</MenuItem>
-            <MenuItem value="char">Character count</MenuItem>
+            <MenuItem value="word" onClick={() => setValidationType("word")}>
+              Word count
+            </MenuItem>
+            <MenuItem value="char" onClick={() => setValidationType("char")}>
+              Character count
+            </MenuItem>
           </Select>
           <Select
             defaultValue="most"
             style={{ width: "100px", marginRight: "20px", marginTop: "20px" }}
           >
-            <MenuItem value="most">At most</MenuItem>
-            <MenuItem value="least">At least</MenuItem>
+            <MenuItem value="most" onClick={() => setValidationLimit("most")}>
+              At most
+            </MenuItem>
+            <MenuItem value="least" onClick={() => setValidationLimit("least")}>
+              At least
+            </MenuItem>
           </Select>
           <TextField
-            value={500}
+            value={validationCount}
+            onChange={(e) => updateValidationCount(e)}
             style={{ width: "50px", marginRight: "20px", marginTop: "20px" }}
           />
         </div>
