@@ -16,7 +16,8 @@ type Props = {
   submission: boolean;
   short_answer: boolean;
   validation?: AnyNaptrRecord;
-  onValidation: (text: Validation) => void;
+  onValidation: (validation: Validation) => void;
+  initialValidation: Validation;
   onChange: (text: string) => void;
 };
 
@@ -26,6 +27,7 @@ function TextQuestion({
   short_answer,
   validation,
   onValidation,
+  initialValidation,
   onChange
 }: Props): React.ReactElement {
   const [text, setText] = useState("");
@@ -34,9 +36,17 @@ function TextQuestion({
     setText(event.target.value);
   };
 
-  const [validationType, setValidationType] = useState("word");
-  const [validationLimit, setValidationLimit] = useState("most");
-  const [validationCount, setValidationCount] = useState(500);
+  const [validationType, setValidationType] = useState(
+    initialValidation?.type.toLowerCase() as string
+  );
+  const [validationLimit, setValidationLimit] = useState(
+    (initialValidation?.max as number) !== 0 ? "most" : "least"
+  );
+  const [validationCount, setValidationCount] = useState(
+    initialValidation?.max !== 0
+      ? (initialValidation?.max as number)
+      : (initialValidation?.min as number)
+  );
 
   const updateValidationType = (valType: string) => {
     // todo
@@ -56,7 +66,7 @@ function TextQuestion({
     setValidationLimit(valLimit);
 
     const validation = {
-      type: validationType.toUpperCase(),
+      type: validationType?.toUpperCase(),
       expression: null,
       max: valLimit === "most" ? validationCount : 0,
       min: valLimit === "least" ? validationCount : 0
@@ -73,7 +83,7 @@ function TextQuestion({
       setValidationCount(parseInt(event.target.value));
 
       const validation = {
-        type: validationType.toUpperCase(),
+        type: validationType?.toUpperCase(),
         expression: null,
         max: validationLimit === "most" ? parseInt(event.target.value) : 0,
         min: validationLimit === "least" ? parseInt(event.target.value) : 0
@@ -101,7 +111,7 @@ function TextQuestion({
       {validation && !short_answer ? (
         <div>
           <Select
-            defaultValue="word"
+            defaultValue={validationType || "word"}
             style={{ width: "150px", marginRight: "20px", marginTop: "20px" }}
           >
             <MenuItem value="word" onClick={() => updateValidationType("word")}>
@@ -112,7 +122,7 @@ function TextQuestion({
             </MenuItem>
           </Select>
           <Select
-            defaultValue="most"
+            defaultValue={validationLimit || "least"}
             style={{ width: "100px", marginRight: "20px", marginTop: "20px" }}
           >
             <MenuItem
@@ -129,7 +139,7 @@ function TextQuestion({
             </MenuItem>
           </Select>
           <TextField
-            value={validationCount}
+            value={validationCount || 0}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               updateValidationCount(event)
             }
