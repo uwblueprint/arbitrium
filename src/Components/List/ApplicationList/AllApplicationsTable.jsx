@@ -100,6 +100,8 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
     search: true,
     showTitle: true
   };
+
+  console.log(reviewCount);
   return (
     <Wrapper>
       <MaterialTable
@@ -110,7 +112,12 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
         }}
         columns={columns}
         {...props}
-        title={reviewCount + "/" + applicationCount + " candidates rated"}
+        title={
+          (reviewCount !== {} ? 0 : reviewCount) +
+          "/" +
+          applicationCount +
+          " candidates rated"
+        }
         options={options}
       ></MaterialTable>
     </Wrapper>
