@@ -86,14 +86,19 @@ export type EditQuestionsAction =
   | {
       type: "EDIT_VALIDATION";
       index: number;
-      validations: any[];
+      validations: Validation;
     };
 
-export type ValidationTypeEnum = "CHECKBOX" | "EMAIL" | "Link";
+export type ValidationTypeEnum =
+  | "CHECKBOX"
+  | "EMAIL"
+  | "LINK"
+  | "WORD"
+  | "CHAR";
 
 export type ValidationType = {
   type: string;
-  enum: ValidationTypeEnum;
+  default: "WORD";
 };
 
 export type ValidationMin = {
@@ -107,11 +112,11 @@ export type ValidationMax = {
 };
 
 export type Validation = {
-  type: ValidationType;
-  expression: string;
-  min: ValidationMin;
-  max: ValidationMax;
-};
+  type: string;
+  expression: string | null;
+  min: number;
+  max: number;
+} | null;
 
 export type FormContext = {
   formId: string;
@@ -125,7 +130,7 @@ export type QuestionCard = {
   question: string;
   x_options: any[];
   y_options: any[];
-  validations: any[];
+  validations: Validation;
   required: boolean;
 };
 

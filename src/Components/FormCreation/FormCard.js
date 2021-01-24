@@ -178,6 +178,7 @@ function FormCard({
   handleQuestionTitleUpdate,
   handleQuestionTypeUpdate,
   handleQuestionContentUpdate,
+  handleQuestionValidationsUpdate,
   handleRequiredToggle,
   themeColour,
   isPublished = false
@@ -209,6 +210,12 @@ function FormCard({
     }
   };
 
+  const onValidationUpdate = (options) => {
+    if (card.type === "PARAGRAPHS") {
+      handleQuestionValidationsUpdate(options);
+    }
+  };
+
   const questionTypes = [
     {
       name: "IDENTIFIER",
@@ -234,7 +241,13 @@ function FormCard({
       icon: <SubjectIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item,
       isDeletable: true,
-      render: <TextQuestion short_answer={false} validation={true} />,
+      render: (
+        <TextQuestion
+          short_answer={false}
+          validation={true}
+          onValidation={onValidationUpdate}
+        />
+      ),
       renderInactive: card.type
     },
     {
