@@ -40,7 +40,7 @@ function TextQuestion({
     initialValidation?.type.toLowerCase() as string
   );
   const [validationLimit, setValidationLimit] = useState(
-    (initialValidation?.max as number) !== 0 ? "most" : "least"
+    (initialValidation?.min as number) !== 0 ? "least" : "most"
   );
   const [validationCount, setValidationCount] = useState(
     initialValidation?.max !== 0
