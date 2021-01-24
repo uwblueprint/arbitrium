@@ -13,16 +13,12 @@ import { AuthContext } from "../../Authentication/Auth";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import { rolesMap } from "../../Constants/UserRoles";
 import { connect } from "react-redux";
 import { loadProgram } from "../../Actions/index.js";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import {
@@ -92,41 +88,34 @@ const useStyles = makeStyles({
 });
 
 function ProgramManagement({ history, program, loadProgram }) {
-  console.log(program);
   const { appUser } = useContext(AuthContext);
   const userId = appUser.userId;
   const [programs, reloadPrograms] = usePromise(
     getAllUserProgramsAPI,
     { userId },
+    [],
     [program]
   );
   const [showEditProgramDialog, setShowEditProgramDialog] = useState(false);
   const [showConfirmActionDialog, setShowConfirmActionDialog] = useState(false);
   const [currentProgram, setCurrentProgram] = useState(program);
   const [programAction, setProgramAction] = useState("");
-  const [anchorEl, setAnchorEl] = useState(false);
+  const [showOptionsMenu, setshowOptionsMenu] = useState(false);
   const [shouldDuplicate, setShouldDuplicate] = useState(false);
   const classes = useStyles();
 
-  console.log(programs.value);
-
-  const handleAnchorClick = (event) => {
-    setAnchorEl(true);
+  const handleAnchorClick = () => {
+    setshowOptionsMenu(true);
   };
 
   const handleAnchorClose = () => {
-    setAnchorEl(false);
+    setshowOptionsMenu(false);
   };
 
-  const openProgramMenu = (event, program) => {
+  const openProgramMenu = useCallback((event, program) => {
     handleAnchorClick(event);
     setCurrentProgram(program);
-  };
-
-  async function setUserProgram(newProgram) {
-    await updateUserProgramAPI(userId, { programId: newProgram.id });
-    loadProgram(newProgram.id);
-  }
+  }, []);
 
   function closeEditProgramDialog() {
     setShowEditProgramDialog(false);
@@ -150,6 +139,10 @@ function ProgramManagement({ history, program, loadProgram }) {
 
   const convertToTableData = useCallback(
     (programs) => {
+      async function setUserProgram(newProgram) {
+        await updateUserProgramAPI(userId, { programId: newProgram.id });
+        loadProgram(newProgram.id);
+      }
       return programs.map((program) => {
         return {
           name: program.name,
@@ -202,7 +195,7 @@ function ProgramManagement({ history, program, loadProgram }) {
         };
       });
     },
-    [setUserProgram, appUser, history, openProgramMenu]
+    [loadProgram, userId, appUser, history, openProgramMenu]
   );
 
   return (
@@ -273,7 +266,7 @@ function ProgramManagement({ history, program, loadProgram }) {
       <Dialog
         onClose={handleAnchorClose}
         aria-labelledby="simple-dialog-title"
-        open={anchorEl}
+        open={showOptionsMenu}
       >
         <DialogTitle style={{ float: "right" }} id="simple-dialog-title">
           Select Option
@@ -292,6 +285,7 @@ function ProgramManagement({ history, program, loadProgram }) {
           </ListItem>
           <ListItem>
             <Button
+              disabled={true}
               classes={{ root: classes.action_menu_item }}
               onClick={() => {
                 handleAnchorClose();

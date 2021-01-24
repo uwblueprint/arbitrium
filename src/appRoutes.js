@@ -32,7 +32,7 @@ const routes = [
     component: ProgramManagement,
     header: true,
     title: "Programs List",
-    programGroup: "REVIEWER"
+    programGroup: ""
   },
   {
     path: "/submissions/:organizationId",

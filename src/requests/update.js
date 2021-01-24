@@ -28,8 +28,8 @@ async function updateProgramArchivedAPI(programId, databody) {
   return PATCH(`/api/programs/${programId}/archived`, databody);
 }
 
-async function duplicateProgram(fromProgramId, toProgramId) {
-  return GET(`api/programs/duplicate/${fromProgramId}/${toProgramId}`);
+async function duplicateProgram(programId) {
+  return GET(`api/programs/duplicate/${programId}`);
 }
 
 async function createOrAddUserProgramAPI(programId, databody) {

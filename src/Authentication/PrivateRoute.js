@@ -84,6 +84,8 @@ function PrivateRoute({
       );
       setAccess(hasRoleAccess || route.loginRequired === false);
       setHeaderRoutes(headerRoutes);
+    } else {
+      setAccess(route.programGroup === "");
     }
   }, [
     user,

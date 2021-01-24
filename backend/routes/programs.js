@@ -38,11 +38,11 @@ router.get("/:programId", (req, res) => {
 });
 
 //Duplicate a program
-router.post("/duplicate/:programId", function(req, res) {
-  //Create program
-  //Copy form - set the programId to the new programId
-  //Add users
-});
+// router.post("/duplicate/:programId", function(req, res) {
+//   //Create program
+//   //Copy form - set the programId to the new programId
+//   //Add users
+// });
 
 // Create a program
 router.post("/", function(req, res) {
@@ -69,7 +69,7 @@ router.post("/", function(req, res) {
                   }
                 }
               },
-              (error, result) => {
+              (error) => {
                 if (error) {
                   console.error(
                     `Error adding program to Admin users, aborting program creation`

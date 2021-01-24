@@ -135,7 +135,7 @@ router.get("/user/:userid/:programId", function(req, res) {
       res.json(found);
     })
     .catch(function(err) {
-      console.log(err);
+      console.error(err);
       res.send(err);
     });
 });

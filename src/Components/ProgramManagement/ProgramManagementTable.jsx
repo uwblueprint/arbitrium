@@ -26,26 +26,26 @@ const columnStyle = {
 //Maintainer is inactive
 //Community Core with a fix is here: https://github.com/material-table-core/core/pull/5/files
 
-const columns = [
-  {
-    title: "Program name",
-    field: "name",
-    cellStyle: { minWidth: 300, maxHeight: 52 },
-    headerStyle: { minWidth: 300 }
-  },
-  {
-    title: "Organization",
-    field: "organization"
-  },
-  { title: "Role", field: "role" },
-  {
-    title: "",
-    field: "link",
-    sorting: false,
-    searchable: false,
-    export: false
-  }
-];
+// const columns = [
+//   {
+//     title: "Program name",
+//     field: "name",
+//     cellStyle: { minWidth: 300, maxHeight: 52 },
+//     headerStyle: { minWidth: 300 }
+//   },
+//   {
+//     title: "Organization",
+//     field: "organization"
+//   },
+//   { title: "Role", field: "role" },
+//   {
+//     title: "",
+//     field: "link",
+//     sorting: false,
+//     searchable: false,
+//     export: false
+//   }
+// ];
 
 function ProgramManagementTable({ ...props }) {
   return (

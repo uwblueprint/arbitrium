@@ -10,7 +10,6 @@ import { history } from "./Store";
 import PrivateRoute from "./Authentication/PrivateRoute";
 import routes from "./appRoutes";
 import ProgramContextProvider from "./Contexts/ProgramContext";
-import defaultRouteAfterLogin from "./Authentication/PrivateRoute";
 
 const AppWrapper = styled.div`
   background-color: #ffffff;

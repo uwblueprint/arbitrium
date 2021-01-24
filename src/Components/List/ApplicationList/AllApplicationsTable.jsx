@@ -69,23 +69,17 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
       }
     },
     {
-      title: null,
-      /*}
-        <ExportWrapper>
-          <FormControl
-            variant="outlined"
-            size="small"
-            margin="dense"
-            className="dropdown"
-          >
+      title: (
+        <>
+          <ExportWrapper>
             <InputLabel className="dropdown-text"></InputLabel>
-            <Select value="csv" onChange={(e) => console.log(e)}>
+            <Select value="csv" onChange={() => console.info("replace me")}>
               <MenuItem value={"csv"}>Download as CSV</MenuItem>
               <MenuItem value={"pdf"}>Download as PDF</MenuItem>
             </Select>
-          </FormControl>
-        </ExportWrapper>
-      */
+          </ExportWrapper>
+        </>
+      ),
       field: "applicantLink",
       sorting: false,
       searchable: false,
@@ -93,7 +87,6 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
     }
   ];
 
-  console.log(applicationCount);
   const options = {
     pageSize: applicationCount > 0 ? Math.min(10, applicationCount) : 10,
     rowStyle: rowStyle,
@@ -101,7 +94,6 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
     showTitle: true
   };
 
-  console.log(reviewCount);
   return (
     <Wrapper>
       <MaterialTable

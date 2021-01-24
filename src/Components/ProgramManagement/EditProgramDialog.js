@@ -6,11 +6,7 @@ import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
 import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import {
-  duplicateProgram,
-  updateProgramNameAPI,
-  createProgramAPI
-} from "../../requests/update";
+import { updateProgramNameAPI, createProgramAPI } from "../../requests/update";
 
 const StyledLabel = styled(InputLabel)`
   margin-bottom: 4px;
@@ -79,18 +75,19 @@ function EditProgramDialog({
   async function duplicateProgram() {
     setIsSubmitting(true);
     try {
-      const newProgram = {
-        createdByUserId: userId,
-        organization: orgId,
-        databaseName: null,
-        displayName: programName,
-        appVersion: 2,
-        deleted: false,
-        archived: false
-      };
-      let result = await createProgramAPI(newProgram);
-      console.log(result);
-      let dup = await duplicateProgram(program.id, result._id);
+      //TODO: Finish later
+      // const newProgram = {
+      //   createdByUserId: userId,
+      //   organization: orgId,
+      //   databaseName: null,
+      //   displayName: programName,
+      //   appVersion: 2,
+      //   deleted: false,
+      //   archived: false
+      // };
+      // let result = await createProgramAPI(newProgram);
+      // console.log(result);
+      //await duplicateProgram(program.id);
       close();
     } catch (e) {
       console.error(e);

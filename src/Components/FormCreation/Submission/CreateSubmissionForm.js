@@ -153,7 +153,6 @@ function CreateSubmissionForm({ match }) {
     if (!preview) {
       initiate();
     }
-    console.log("create");
   }, [loadForm.value, match.params.formId, refetchSubmission, preview]);
 
   //Load the form values into the sub-states like in FormCreation
@@ -194,7 +193,6 @@ function CreateSubmissionForm({ match }) {
     if (loadSubmission.isPending || loadForm.isPending || !loadForm.value)
       return;
     if (!loadSubmission.value) {
-      console.log(loadSubmission);
       initiateSubmission();
     }
 

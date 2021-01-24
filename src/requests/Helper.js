@@ -69,8 +69,6 @@ async function POST(url, databody, requiresAuth = true) {
     token = await firebaseApp.auth().currentUser.getIdToken();
   }
 
-  console.log(databody);
-
   const response = await fetch(proxy + url, {
     method: "POST",
     body: JSON.stringify(databody),
