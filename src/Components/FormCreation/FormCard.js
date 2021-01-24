@@ -234,7 +234,7 @@ function FormCard({
       icon: <SubjectIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item,
       isDeletable: true,
-      render: <TextQuestion short_answer={false} />,
+      render: <TextQuestion short_answer={false} validation={true} />,
       renderInactive: card.type
     },
     {

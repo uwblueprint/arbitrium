@@ -87,7 +87,9 @@ function TextQuestion({
           </Select>
           <TextField
             value={validationCount}
-            onChange={(e) => updateValidationCount(e)}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              updateValidationCount(event)
+            }
             style={{ width: "50px", marginRight: "20px", marginTop: "20px" }}
           />
         </div>
