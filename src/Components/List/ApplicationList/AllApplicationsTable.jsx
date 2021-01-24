@@ -113,7 +113,7 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
         columns={columns}
         {...props}
         title={
-          (reviewCount !== {} ? 0 : reviewCount) +
+          (reviewCount === {} ? 0 : reviewCount) +
           "/" +
           applicationCount +
           " candidates rated"

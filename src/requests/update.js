@@ -1,4 +1,4 @@
-import { PATCH, POST, PUT } from "./Helper.js";
+import { GET, PATCH, POST, PUT } from "./Helper.js";
 
 async function createFeedbackAPI(databody) {
   return POST("/api/feedback", databody);
@@ -28,6 +28,10 @@ async function updateProgramArchivedAPI(programId, databody) {
   return PATCH(`/api/programs/${programId}/archived`, databody);
 }
 
+async function duplicateProgram(fromProgramId, toProgramId) {
+  return GET(`api/programs/duplicate/${fromProgramId}/${toProgramId}`);
+}
+
 async function createOrAddUserProgramAPI(programId, databody) {
   return POST(`/api/programs/${programId}/user`, databody);
 }
@@ -49,6 +53,7 @@ export {
   updateReviewAPI,
   updateStackedAPI,
   createProgramAPI,
+  duplicateProgram,
   updateProgramNameAPI,
   updateProgramArchivedAPI,
   updateUserProgramAPI,

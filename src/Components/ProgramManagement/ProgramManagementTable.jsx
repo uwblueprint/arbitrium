@@ -16,8 +16,15 @@ const rowStyle = {
 };
 
 const columnStyle = {
-  width: "100%"
+  maxWidth: 20
 };
+
+//There is a bug in material-table that causes the browser to freeze when clicking buttons in the cell
+//Quick-fix: Move columns array directly into props, however, the width doesn't work anymore. :(
+
+//Issue: https://github.com/mbrn/material-table/issues/2451
+//Maintainer is inactive
+//Community Core with a fix is here: https://github.com/material-table-core/core/pull/5/files
 
 const columns = [
   {
@@ -36,22 +43,7 @@ const columns = [
     field: "link",
     sorting: false,
     searchable: false,
-    export: false,
-    cellStyle: {
-      textAlign: "right",
-      minWidth: 148
-    }
-  },
-  {
-    title: "",
-    field: "options",
-    sorting: false,
-    searchable: false,
-    export: false,
-    cellStyle: {
-      textAlign: "right",
-      maxWidth: 20
-    }
+    export: false
   }
 ];
 
@@ -63,7 +55,24 @@ function ProgramManagementTable({ ...props }) {
         components={{
           Container: (props) => <Container {...props} elevation={0} />
         }}
-        columns={columns}
+        columns={[
+          {
+            title: "Program name",
+            field: "name"
+          },
+          {
+            title: "Organization",
+            field: "organization"
+          },
+          { title: "Role", field: "role" },
+          {
+            title: "",
+            field: "link",
+            sorting: false,
+            searchable: false,
+            export: false
+          }
+        ]}
         {...props}
         options={{
           pageSize: Math.min(5, props.data.length),

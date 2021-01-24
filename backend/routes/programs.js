@@ -37,6 +37,13 @@ router.get("/:programId", (req, res) => {
     });
 });
 
+//Duplicate a program
+router.post("/duplicate/:programId", function(req, res) {
+  //Create program
+  //Copy form - set the programId to the new programId
+  //Add users
+});
+
 // Create a program
 router.post("/", function(req, res) {
   try {

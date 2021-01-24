@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import Spinner from "react-spinner-material";
 import styled from "styled-components";
 import usePromise from "../../Hooks/usePromise";
@@ -19,6 +19,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { rolesMap } from "../../Constants/UserRoles";
 import { connect } from "react-redux";
 import { loadProgram } from "../../Actions/index.js";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemText from "@material-ui/core/ListItemText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
 import {
   ARCHIVE_PROGRAM,
   UNARCHIVE_PROGRAM,
@@ -39,7 +45,6 @@ const Wrapper = styled.div`
 `;
 
 const ProgramMenuButtonWrapper = styled.div`
-  float: right;
   button {
     margin-left: 8px;
     height: 36px;
@@ -72,13 +77,17 @@ const useStyles = makeStyles({
   },
   action_menu_content: {
     paddingTop: "8px",
-    paddingBottom: "8px"
+    paddingBottom: "8px",
+    alignContent: "center"
   },
   action_menu_item: {
     fontSize: "14px",
     color: "rgba(0, 0, 0, 0.87)",
     lineHeight: "20px",
     letterSpacing: "0.25px"
+  },
+  optionsMenuItems: {
+    display: "flex"
   }
 });
 
@@ -89,21 +98,24 @@ function ProgramManagement({ history, program, loadProgram }) {
   const [programs, reloadPrograms] = usePromise(
     getAllUserProgramsAPI,
     { userId },
-    []
+    [program]
   );
   const [showEditProgramDialog, setShowEditProgramDialog] = useState(false);
   const [showConfirmActionDialog, setShowConfirmActionDialog] = useState(false);
   const [currentProgram, setCurrentProgram] = useState(program);
   const [programAction, setProgramAction] = useState("");
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(false);
+  const [shouldDuplicate, setShouldDuplicate] = useState(false);
   const classes = useStyles();
 
+  console.log(programs.value);
+
   const handleAnchorClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(true);
   };
 
   const handleAnchorClose = () => {
-    setAnchorEl(null);
+    setAnchorEl(false);
   };
 
   const openProgramMenu = (event, program) => {
@@ -112,12 +124,7 @@ function ProgramManagement({ history, program, loadProgram }) {
   };
 
   async function setUserProgram(newProgram) {
-    console.log("here");
     await updateUserProgramAPI(userId, { programId: newProgram.id });
-    console.log("here2");
-    console.log(newProgram.id);
-    console.log(program);
-    console.log(loadProgram);
     loadProgram(newProgram.id);
   }
 
@@ -141,44 +148,62 @@ function ProgramManagement({ history, program, loadProgram }) {
     });
   }
 
-  function convertToTableData(programs) {
-    return programs.map((program) => {
-      return {
-        name: program.name,
-        organization: program.orgName,
-        role: rolesMap[program.role],
-        archived: program.archived,
-        link: (
-          <>
-            <Button
-              variant="contained"
-              color="primary"
-              value="OpenApplication"
-              onClick={async function() {
-                program && (await setUserProgram(program));
-                history.push("/applications");
-              }}
-            >
-              View
-            </Button>
-          </>
-        ),
-        options: (
-          <ProgramMenuButtonWrapper>
-            {appUser.adminOrganization === program.orgId && (
-              <IconButton
-                aria-label="actions"
-                aria-controls={"actions-menu"}
-                onClick={(e) => openProgramMenu(e, program)}
+  const convertToTableData = useCallback(
+    (programs) => {
+      return programs.map((program) => {
+        return {
+          name: program.name,
+          organization: program.orgName,
+          role: rolesMap[program.role],
+          archived: program.archived,
+          link: (
+            <div style={{ display: "flex", float: "right" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                value="OpenApplication"
+                onClick={async function() {
+                  program && (await setUserProgram(program));
+                  history.push("/applications");
+                }}
               >
-                <MoreVertIcon />
-              </IconButton>
-            )}
-          </ProgramMenuButtonWrapper>
-        )
-      };
-    });
-  }
+                View
+              </Button>
+              <ProgramMenuButtonWrapper>
+                {appUser.adminOrganization === program.orgId ? (
+                  <IconButton
+                    aria-label="actions"
+                    aria-controls={"actions-menu"}
+                    onClick={(e) => openProgramMenu(e, program)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton disabled={true}></IconButton>
+                )}
+              </ProgramMenuButtonWrapper>
+            </div>
+          ),
+          options: (
+            <>
+              <ProgramMenuButtonWrapper>
+                {appUser.adminOrganization === program.orgId && (
+                  <IconButton
+                    aria-label="actions"
+                    aria-controls={"actions-menu"}
+                    onClick={(e) => openProgramMenu(e, program)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                )}
+              </ProgramMenuButtonWrapper>
+            </>
+          )
+        };
+      });
+    },
+    [setUserProgram, appUser, history, openProgramMenu]
+  );
 
   return (
     <div>
@@ -212,6 +237,7 @@ function ProgramManagement({ history, program, loadProgram }) {
                 userId: userId,
                 orgId: appUser.adminOrganization,
                 program: currentProgram,
+                duplicate: shouldDuplicate,
                 reloadPrograms: reloadPrograms
               }}
             />
@@ -244,60 +270,68 @@ function ProgramManagement({ history, program, loadProgram }) {
           </>
         )}
       </Wrapper>
-      <Menu
-        id="actions-menu"
-        classes={{
-          paper: classes.action_menu,
-          list: classes.action_menu_content
-        }}
-        anchorEl={anchorEl}
-        getContentAnchorEl={null}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "center" }}
-        keepMounted
-        open={Boolean(anchorEl)}
+      <Dialog
         onClose={handleAnchorClose}
+        aria-labelledby="simple-dialog-title"
+        open={anchorEl}
       >
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleAnchorClose();
-            setShowEditProgramDialog(true);
-          }}
-        >
-          Rename
-        </MenuItem>
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleAnchorClose();
-          }}
-        >
-          Duplicate
-        </MenuItem>
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleAnchorClose();
-            setShowConfirmActionDialog(true);
-            setProgramAction(
-              !currentProgram.archived ? ARCHIVE_PROGRAM : UNARCHIVE_PROGRAM
-            );
-          }}
-        >
-          {currentProgram && !currentProgram.archived ? "Archive" : "Unarchive"}
-        </MenuItem>
-        <MenuItem
-          classes={{ root: classes.action_menu_item }}
-          onClick={() => {
-            handleAnchorClose();
-            setShowConfirmActionDialog(true);
-            setProgramAction(DELETE_PROGRAM);
-          }}
-        >
-          Delete
-        </MenuItem>
-      </Menu>
+        <DialogTitle style={{ float: "right" }} id="simple-dialog-title">
+          Select Option
+        </DialogTitle>
+        <List style={{ display: "flex" }}>
+          <ListItem>
+            <Button
+              classes={{ root: classes.action_menu_item }}
+              onClick={() => {
+                handleAnchorClose();
+                setShowEditProgramDialog(true);
+              }}
+            >
+              Rename
+            </Button>
+          </ListItem>
+          <ListItem>
+            <Button
+              classes={{ root: classes.action_menu_item }}
+              onClick={() => {
+                handleAnchorClose();
+                setShouldDuplicate(true);
+                setShowEditProgramDialog(true);
+              }}
+            >
+              Duplicate
+            </Button>
+          </ListItem>
+          <ListItem>
+            <Button
+              classes={{ root: classes.action_menu_item }}
+              onClick={() => {
+                handleAnchorClose();
+                setShowConfirmActionDialog(true);
+                setProgramAction(
+                  !currentProgram.archived ? ARCHIVE_PROGRAM : UNARCHIVE_PROGRAM
+                );
+              }}
+            >
+              {currentProgram && !currentProgram.archived
+                ? "Archive"
+                : "Unarchive"}
+            </Button>
+          </ListItem>
+          <ListItem>
+            <Button
+              classes={{ root: classes.action_menu_item }}
+              onClick={() => {
+                handleAnchorClose();
+                setShowConfirmActionDialog(true);
+                setProgramAction(DELETE_PROGRAM);
+              }}
+            >
+              Delete
+            </Button>
+          </ListItem>
+        </List>
+      </Dialog>
     </div>
   );
 }

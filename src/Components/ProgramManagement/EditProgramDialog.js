@@ -6,7 +6,11 @@ import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
 import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import { updateProgramNameAPI, createProgramAPI } from "../../requests/update";
+import {
+  duplicateProgram,
+  updateProgramNameAPI,
+  createProgramAPI
+} from "../../requests/update";
 
 const StyledLabel = styled(InputLabel)`
   margin-bottom: 4px;
@@ -28,6 +32,7 @@ function EditProgramDialog({
   orgId = "",
   program = null,
   newProgram = false,
+  duplicate = false,
   reloadPrograms
 }) {
   const [programName, setProgramName] = useState(program ? program.name : "");
@@ -40,7 +45,7 @@ function EditProgramDialog({
   async function createProgram() {
     setIsSubmitting(true);
     try {
-      let newProgram = {
+      const newProgram = {
         createdByUserId: userId,
         organization: orgId,
         databaseName: null,
@@ -49,9 +54,7 @@ function EditProgramDialog({
         deleted: false,
         archived: false
       };
-      console.log("here");
-      console.log(newProgram);
-      let result = await createProgramAPI(newProgram);
+      await createProgramAPI(newProgram);
       reloadPrograms({ userId });
 
       close();
@@ -73,12 +76,41 @@ function EditProgramDialog({
     }
   }
 
+  async function duplicateProgram() {
+    setIsSubmitting(true);
+    try {
+      const newProgram = {
+        createdByUserId: userId,
+        organization: orgId,
+        databaseName: null,
+        displayName: programName,
+        appVersion: 2,
+        deleted: false,
+        archived: false
+      };
+      let result = await createProgramAPI(newProgram);
+      console.log(result);
+      let dup = await duplicateProgram(program.id, result._id);
+      close();
+    } catch (e) {
+      console.error(e);
+      setIsSubmitting(false);
+      close();
+    }
+  }
+
   return (
     <Wrapper>
       <Dialog width="400px" paddingHorizontal={28} paddingVertical={28}>
         <DialogHeader
           onClose={close}
-          title={newProgram ? "New program" : "Rename program"}
+          title={
+            newProgram
+              ? "New program"
+              : duplicate
+              ? "Duplicate program"
+              : "Rename program"
+          }
         />
         <LoadingOverlay
           show={isSubmitting}
@@ -98,7 +130,13 @@ function EditProgramDialog({
         </QuestionWrapper>
         <Button
           className="createButton"
-          onClick={newProgram ? createProgram : renameProgram}
+          onClick={
+            newProgram
+              ? createProgram
+              : duplicate
+              ? duplicateProgram
+              : renameProgram
+          }
           fullWidth
           variant="contained"
           color="primary"
