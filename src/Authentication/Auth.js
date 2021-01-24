@@ -63,6 +63,7 @@ function AuthProvider({ loadProgram, children }) {
       const validPrograms = appUser.programs
         ? appUser.programs.filter((p) => programsSet.has(p.id))
         : [];
+
       if (
         appUser.programs &&
         validPrograms.length !== appUser.programs.length
@@ -72,8 +73,15 @@ function AuthProvider({ loadProgram, children }) {
           programs: validPrograms
         });
       }
+
       let program = appUser.currentProgram;
-      if (!program && validPrograms.length > 0) {
+
+      //Check if the user has a valid currentProgram, if not load the first one in the list
+      if (
+        !program &&
+        validPrograms.find((p) => p._id === program) &&
+        validPrograms.length > 0
+      ) {
         program = validPrograms[0].id;
         await updateUserProgramAPI(user.uid, { programId: program });
       }
