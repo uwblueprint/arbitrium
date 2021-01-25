@@ -87,7 +87,7 @@ const routes = [
     path: "/form-preview/:formId",
     component: CreateSubmissionForm,
     title: "Preview Form Submission",
-    header: true,
+    header: false,
     loginRequired: false,
     programGroup: ""
   },

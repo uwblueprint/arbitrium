@@ -27,7 +27,7 @@ function doesRoleProvideAccess(routeRole, userRole) {
       userRole === userRoles.ADMIN_REVIEWER
     );
   } else {
-    return userRole === "";
+    return routeRole === "";
   }
 }
 
