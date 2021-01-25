@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -10,8 +10,11 @@ import usePromise from "../../../Hooks/usePromise";
 
 import {
   getApplicationTableData,
-  getReviewCountAPI
+  getReviewCountAPI,
+  getProgramByID
 } from "../../../requests/get";
+
+import * as SUBMISSION from "../../../requests/submission";
 
 const Wrapper = styled.div`
   margin-top: 100px;
@@ -37,6 +40,9 @@ const Wrapper = styled.div`
 `;
 
 function convertToTableData(fetched) {
+  if (!fetched) {
+    return;
+  }
   const applicantsList = [];
   if (fetched !== null) {
     fetched.forEach((application) => {
@@ -47,7 +53,8 @@ function convertToTableData(fetched) {
             : application.rating,
         applicantName:
           application["Organization Name"] ||
-          application["Organization Name (legal name)"],
+          application["Organization Name (legal name)"] ||
+          application["identifier"],
         lastEdited: application["lastReviewed"],
         applicantLink: (
           <a href={`/submissions/${application._id}`}>
@@ -68,26 +75,71 @@ function convertToTableData(fetched) {
 }
 
 function AllApplications({ user, program }) {
+  //We now have two version of submissions
+  //1: From google forms
+  //2: From in house form creation
+
+  const [applications, setApplications] = useState(null);
+  const [reviewCount, setReviewCount] = useState(0);
+
+  const [loadProgram] = usePromise(getProgramByID, { programId: program }, {}, [
+    program
+  ]);
+
   // Applications, with reviews attached
-  const [applications] = usePromise(
-    getApplicationTableData,
-    { user },
-    [],
-    [program]
+  // loadApplication.error will be true until loadProgram.value loads
+  const [loadApplications] = usePromise(
+    loadProgram.value.appVersion === 1
+      ? getApplicationTableData
+      : SUBMISSION.getSubmissionTableData,
+    { user, program },
+    null,
+    [program, loadProgram]
   );
 
-  const [reviewCount] = usePromise(
+  //TODO: Update the review count based on version
+  const [loadReviewCount] = usePromise(
     getReviewCountAPI,
     user.userId,
     [],
     [program]
   );
 
+  useEffect(() => {
+    if (
+      loadProgram.isPending ||
+      loadReviewCount.isPending ||
+      loadApplications.isPending ||
+      !loadProgram.value ||
+      !loadApplications.value ||
+      loadApplications.error
+    ) {
+      return;
+    }
+
+    if (loadProgram.value.appVersion === 2) {
+      setApplications(
+        loadApplications.value.filter(
+          (application) => application.formId === application.form._id
+        )
+      );
+    } else {
+      setApplications(loadApplications.value);
+    }
+
+    setReviewCount(loadReviewCount.value);
+  }, [loadReviewCount, loadApplications, loadProgram]);
+
   return (
     <div>
       <Wrapper>
         <Paper>
-          {!applications.isPending && !reviewCount.isPending ? (
+          {!loadProgram.isPending &&
+          !loadReviewCount.isPending &&
+          !loadApplications.isPending &&
+          loadProgram.value &&
+          loadReviewCount.value !== null &&
+          loadApplications.value ? (
             <div>
               <h1 style={{ fontSize: "24px" }}>Candidate Submissions</h1>
               <p style={{ fontSize: "14px" }}>
@@ -98,12 +150,12 @@ function AllApplications({ user, program }) {
                   }
                 </b>
               </p>
-              <hr />
               <AllApplicationsTable
-                reviewCount={reviewCount.value}
-                applicationCount={applications.value.length}
-                data={convertToTableData(applications.value, program)}
+                reviewCount={reviewCount}
+                applicationCount={applications && applications.length}
+                data={convertToTableData(applications)}
               />
+              <hr />
             </div>
           ) : (
             <div>

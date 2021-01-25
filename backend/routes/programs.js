@@ -23,12 +23,92 @@ router.get("/all", function(req, res) {
     });
 });
 
+//Get a program by programId
+router.get("/:programId", (req, res) => {
+  db["Authentication"].programs
+    .findOne({ _id: req.params.programId })
+    .then(function(result) {
+      res.status(200).json(result);
+    })
+    .catch(function(err) {
+      console.error(`Error getting program with ID = ${req.params.programId}`);
+      console.error(err);
+      res.status(500).send(err);
+    });
+});
+
+//Duplicate a program
+// router.post("/duplicate/:programId", function(req, res) {
+//   //Create program
+//   //Copy form - set the programId to the new programId
+//   //Add users
+// });
+
 // Create a program
 router.post("/", function(req, res) {
   try {
-    // TODO: call programsServices.createProgram()
-    res.status(201).send();
+    try {
+      //Create the program
+      db["Authentication"].programs.create(req.body, (error, result) => {
+        if (error) {
+          console.error(`Error creating program ${req.body.displayName}`);
+          res.status(501).send(error);
+        } else {
+          // Add the organization's admins to the program
+
+          try {
+            db["Authentication"].users.updateMany(
+              {
+                adminOrganization: req.body.organization
+              },
+              {
+                $addToSet: {
+                  programs: {
+                    id: result._id,
+                    role: "ADMIN"
+                  }
+                }
+              },
+              (error) => {
+                if (error) {
+                  console.error(
+                    `Error adding program to Admin users, aborting program creation`
+                  );
+                  res.status(503).send(error);
+                }
+              }
+            );
+          } catch (e) {
+            console.error(`Error adding admin users to program`);
+            db["Authentication"].programs.findOneAndUpdate(
+              { _id: result._id },
+              { deleted: true },
+              (error, result) => {
+                if (error) {
+                  console.error(
+                    `Error ${
+                      req.body.archived ? "archiving" : "unarchiving"
+                    } program with ID = ${result._id}`
+                  );
+                  res.status(500).send(error);
+                } else {
+                  res.status(204).json(result);
+                }
+              }
+            );
+            res.status(502).send(e);
+          }
+
+          //Return the program
+          res.status(201).send(result);
+        }
+      });
+    } catch (e) {
+      console.error(`Error creating program ${req.body.displayName}`);
+      res.status(501).send(e);
+    }
   } catch (e) {
+    console.error(`Error creating program ${req.body.displayName}`);
     res.send(e);
   }
 });

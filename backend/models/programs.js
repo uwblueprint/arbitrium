@@ -1,17 +1,5 @@
 const mongoose = require("mongoose");
 
-const form = new mongoose.Schema({
-  id: {
-    type: String
-  },
-  openDate: {
-    type: Date
-  },
-  closeDate: {
-    type: Date
-  }
-});
-
 const timeframe = new mongoose.Schema({
   openDate: {
     type: Date
@@ -38,10 +26,6 @@ const programSchema = new mongoose.Schema(
     displayName: {
       type: String,
       default: "Untitled Program"
-    },
-    form: {
-      type: form,
-      default: null
     },
     review: {
       type: timeframe,

@@ -112,7 +112,9 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
 
   const myProgramsMap = useMemo(() => {
     const programMap = {};
-    appUser.programs.forEach((p) => (programMap[p.id] = p));
+    appUser.programs.forEach((p) => {
+      programMap[p.id] = p;
+    });
     return programMap;
   }, [appUser.programs]);
 
@@ -129,10 +131,16 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
     loadProgram(newProgram._id);
     //Load the application data into redux
   };
+
   const classes = useStyles();
   const validPrograms = allPrograms.isPending
     ? []
-    : allPrograms.value.filter((p) => !!myProgramsMap[p._id]);
+    : allPrograms.value.filter(
+        (p) =>
+          myProgramsMap[p._id] &&
+          !programsMap[p._id]?.deleted &&
+          !programsMap[p._id]?.archived
+      );
 
   const hasAdminAccessForCurrentProgram = true;
   //TODO: This is handled in privateRoute.js. Remove once migration is done

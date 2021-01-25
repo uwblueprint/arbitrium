@@ -1,13 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import MaterialTable from "material-table";
-import {
-  Paper,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl
-} from "@material-ui/core";
+//import { Paper, Select, MenuItem, InputLabel } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import TableIcons from "../../Common/TableIcons";
 import moment from "moment";
 
@@ -69,22 +64,18 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
       }
     },
     {
-      title: (
-        <ExportWrapper>
-          <FormControl
-            variant="outlined"
-            size="small"
-            margin="dense"
-            className="dropdown"
-          >
-            <InputLabel className="dropdown-text"></InputLabel>
-            <Select value="csv" onChange={null}>
-              <MenuItem value={"csv"}>Download as CSV</MenuItem>
-              <MenuItem value={"pdf"}>Download as PDF</MenuItem>
-            </Select>
-          </FormControl>
-        </ExportWrapper>
-      ),
+      title: null,
+      //(
+      //   <>
+      //     <ExportWrapper>
+      //       <InputLabel className="dropdown-text"></InputLabel>
+      //       <Select value="csv" onChange={() => console.info("replace me")}>
+      //         <MenuItem value={"csv"}>Download as CSV</MenuItem>
+      //         <MenuItem value={"pdf"}>Download as PDF</MenuItem>
+      //       </Select>
+      //     </ExportWrapper>
+      //   </>
+      // ),
       field: "applicantLink",
       sorting: false,
       searchable: false,
@@ -98,16 +89,23 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
     search: true,
     showTitle: true
   };
+
   return (
     <Wrapper>
       <MaterialTable
+        key={reviewCount + applicationCount}
         icons={TableIcons}
         components={{
           Container: (props) => <Container {...props} elevation={0} />
         }}
         columns={columns}
         {...props}
-        title={reviewCount + "/" + applicationCount + " candidates rated"}
+        title={
+          (Object.keys(reviewCount).length === 0 ? 0 : reviewCount) +
+          "/" +
+          applicationCount +
+          " candidates rated"
+        }
         options={options}
       ></MaterialTable>
     </Wrapper>

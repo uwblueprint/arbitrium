@@ -146,6 +146,7 @@ function CreateSubmissionForm({ match }) {
       };
 
       const result = await SUBMISSION.createSubmission(data);
+      setSubmissionId(result._id);
       refetchSubmission({ submissionId: result._id });
     }
     //Only create a form if this isn't a preview link
@@ -193,10 +194,7 @@ function CreateSubmissionForm({ match }) {
       return;
     if (!loadSubmission.value) {
       initiateSubmission();
-      return;
     }
-
-    setSubmissionId(loadSubmission._id);
 
     //Here is where we would load the submission into state
     //Currently we don't allow this functionality

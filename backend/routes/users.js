@@ -95,7 +95,8 @@ router.get("/:userId/programs", isAuthenticated, async function(req, res) {
       }
     ])
     .then(function(data) {
-      res.json(data[0].programs);
+      //If the user has no programs, return an empty array
+      res.json(data.length !== 0 ? data[0].programs : []);
     })
     .catch(function(err) {
       res.send(err);
