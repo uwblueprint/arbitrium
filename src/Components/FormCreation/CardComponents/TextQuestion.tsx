@@ -37,6 +37,9 @@ function TextQuestion({
   const [text, setText] = useState(initialAnswer);
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //Check validations here and update the error prop accordingly
+    if (initialValidation) {
+      console.log(initialValidation);
+    }
     setText(event.target.value);
   };
 

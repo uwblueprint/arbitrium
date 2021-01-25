@@ -169,6 +169,7 @@ function FormCard({
           <TextQuestion
             short_answer={true}
             submission={true}
+            initialValidation={card.validations}
             onChange={onQuestionUpdate}
             initialAnswer={initialAnswer?.answerString}
           />
@@ -184,6 +185,7 @@ function FormCard({
           <TextQuestion
             short_answer={false}
             submission={true}
+            initialValidation={card.validations}
             onChange={onQuestionUpdate}
             initialAnswer={initialAnswer?.answerString}
           />
