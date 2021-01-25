@@ -112,7 +112,6 @@ function AllApplications({ user, program }) {
       loadApplications.isPending ||
       !loadProgram.value ||
       !loadApplications.value ||
-      !loadReviewCount.value ||
       loadApplications.error
     ) {
       return;
@@ -139,7 +138,7 @@ function AllApplications({ user, program }) {
           !loadReviewCount.isPending &&
           !loadApplications.isPending &&
           loadProgram.value &&
-          loadReviewCount.value &&
+          loadReviewCount.value !== null &&
           loadApplications.value ? (
             <div>
               <h1 style={{ fontSize: "24px" }}>Candidate Submissions</h1>

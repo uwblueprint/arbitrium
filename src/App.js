@@ -55,7 +55,7 @@ function App() {
                       ></PrivateRoute>
                     );
                   })}
-                  <Redirect to={"/programs"} />
+                  <Redirect to={"/applications"} />
                 </Switch>
               </>
             </ConnectedRouter>

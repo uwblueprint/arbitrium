@@ -63,17 +63,18 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
       }
     },
     {
-      title: (
-        <>
-          <ExportWrapper>
-            <InputLabel className="dropdown-text"></InputLabel>
-            <Select value="csv" onChange={() => console.info("replace me")}>
-              <MenuItem value={"csv"}>Download as CSV</MenuItem>
-              <MenuItem value={"pdf"}>Download as PDF</MenuItem>
-            </Select>
-          </ExportWrapper>
-        </>
-      ),
+      title: null,
+      //(
+      //   <>
+      //     <ExportWrapper>
+      //       <InputLabel className="dropdown-text"></InputLabel>
+      //       <Select value="csv" onChange={() => console.info("replace me")}>
+      //         <MenuItem value={"csv"}>Download as CSV</MenuItem>
+      //         <MenuItem value={"pdf"}>Download as PDF</MenuItem>
+      //       </Select>
+      //     </ExportWrapper>
+      //   </>
+      // ),
       field: "applicantLink",
       sorting: false,
       searchable: false,
@@ -99,7 +100,7 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
         columns={columns}
         {...props}
         title={
-          (reviewCount === {} ? 0 : reviewCount) +
+          (Object.keys(reviewCount).length === 0 ? 0 : reviewCount) +
           "/" +
           applicationCount +
           " candidates rated"
