@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import MaterialTable from "material-table";
-import { Paper, Select, MenuItem, InputLabel } from "@material-ui/core";
+//import { Paper, Select, MenuItem, InputLabel } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import TableIcons from "../../Common/TableIcons";
 import moment from "moment";
 
