@@ -266,6 +266,7 @@ function FormCard({
             card && card.x_options.map((option) => [option.value])
           }
           multiSelect={true}
+          isPublished={true}
         />
       ),
       renderInactive: card.type
@@ -284,6 +285,7 @@ function FormCard({
             card && card.x_options.map((option) => [option.value])
           }
           multiSelect={false}
+          isPublished={true}
         />
       ),
       renderInactive: card.type
@@ -300,6 +302,7 @@ function FormCard({
           onChange={onQuestionUpdate}
           submission={false}
           initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
+          isPublished={true}
         />
       ),
       renderInactive: (
@@ -308,6 +311,7 @@ function FormCard({
           onChange={onQuestionUpdate}
           submission={false}
           initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
+          isPublished={true}
         />
       )
     }

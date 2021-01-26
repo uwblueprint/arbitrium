@@ -49,7 +49,8 @@ function getFileName(awsFilePath: string | null | undefined) {
 
 //TODO: Add Response Validation
 function FileQuestion({
-  submission,
+  submission = false,
+  isPublished = false,
   active,
   onChange,
   fileUploadURL,
@@ -141,6 +142,7 @@ function FileQuestion({
               Maximum number of files{" "}
             </p>
             <Select
+              disabled={isPublished}
               value={numFiles}
               onChange={(event) => handleNumFileChange(event.target.value)}
             >

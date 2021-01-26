@@ -90,6 +90,7 @@ const GreyCheckbox = withStyles({
 
 function SelectQuestion({
   submission = false,
+  isPublished = false,
   multiSelect,
   onChange,
   initialOptions,
@@ -260,7 +261,11 @@ function SelectQuestion({
         </div>
       ) : (
         <DragDropContext
-          onDragEnd={onDragEnd}
+          onDragEnd={
+            !isPublished
+              ? onDragEnd
+              : () => alert("You may not move options in a published form")
+          }
           onBeforeDragStart={onBeforeDragStart}
         >
           <Droppable droppableId="droppable">
@@ -308,11 +313,13 @@ function SelectQuestion({
                                 onChange={(event) =>
                                   onEditOption(index, event.target.value)
                                 }
+                                disabled={isPublished}
                               />
                               <IconButton
                                 onClick={() => onDeleteOption(index)}
                                 classes={{ root: styles.closeRoot }}
                                 size="small"
+                                disabled={isPublished}
                               >
                                 <Close />
                               </IconButton>
