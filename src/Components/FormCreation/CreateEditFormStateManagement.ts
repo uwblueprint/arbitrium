@@ -8,14 +8,14 @@ import {
 } from "../../Types/FormTypes";
 import moment from "moment";
 
-let defaultQuestion = {
+const defaultQuestion = {
   name: "Untitled",
   description: "",
   type: "SHORT_ANSWER" as QuestionType,
   question: "Untitled Question",
   x_options: [],
   y_options: [],
-  validations: [],
+  validations: null,
   required: true
 };
 
@@ -35,7 +35,7 @@ export const sectionsStarter: FormSectionBase[] = [
         question: "What is the name of your charity?",
         x_options: [],
         y_options: [],
-        validations: [],
+        validations: null,
         required: true
       },
       defaultQuestion

@@ -275,12 +275,11 @@ function FormSection({
   }
 
   // TODO: Implement
-  function handleQuestionValidationsUpdate() {
+  function handleQuestionValidationsUpdate(validation) {
     dispatchQuestionsUpdate({
       type: "EDIT_VALIDATION",
       index: activeQuestion,
-      xoptions: null,
-      yoptions: null
+      validations: validation
     });
   }
 
