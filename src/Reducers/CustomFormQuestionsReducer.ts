@@ -38,7 +38,7 @@ function customFormQuestionsReducer(
         } else {
           draftState[action.index].x_options = [];
           draftState[action.index].y_options = [];
-          draftState[action.index].validations = [];
+          draftState[action.index].validations = null;
         }
         break;
       case "REQUIRED_TOGGLE":

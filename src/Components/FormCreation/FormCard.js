@@ -178,6 +178,7 @@ function FormCard({
   handleQuestionTitleUpdate,
   handleQuestionTypeUpdate,
   handleQuestionContentUpdate,
+  handleQuestionValidationsUpdate,
   handleRequiredToggle,
   themeColour,
   isPublished = false
@@ -186,6 +187,7 @@ function FormCard({
   const [title, setTitle] = useState(card.name);
   const [description, setDescription] = useState(card.description);
   const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
+  const [isValidation, setIsValidation] = useState(false);
 
   const onQuestionUpdate = (options) => {
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
@@ -206,6 +208,12 @@ function FormCard({
         yoptions: null
       };
       handleQuestionContentUpdate(opt);
+    }
+  };
+
+  const onValidationUpdate = (options) => {
+    if (card.type === "PARAGRAPHS") {
+      handleQuestionValidationsUpdate(options);
     }
   };
 
@@ -234,7 +242,14 @@ function FormCard({
       icon: <SubjectIcon className={classes.action_menu_icon} />,
       style: classes.action_menu_item,
       isDeletable: true,
-      render: <TextQuestion short_answer={false} />,
+      render: (
+        <TextQuestion
+          short_answer={false}
+          validation={isValidation}
+          onValidation={onValidationUpdate}
+          initialValidation={card.validations}
+        />
+      ),
       renderInactive: card.type
     },
     {
@@ -477,6 +492,7 @@ function FormCard({
                           size="small"
                           className={classes.button}
                           disabled={isPublished}
+                          onClick={() => setIsValidation(!isValidation)}
                         >
                           <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
                           <span className={classes.buttonLabel}>

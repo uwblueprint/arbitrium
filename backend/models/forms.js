@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const validation = new mongoose.Schema({
   type: {
     type: String,
-    enum: ["CHECKBOX", "EMAIL", "LINK"]
+    enum: ["CHECKBOX", "EMAIL", "LINK", "WORD", "CHAR"]
   },
   expression: {
     type: String
@@ -95,7 +95,7 @@ const question = new mongoose.Schema({
     default: "SHORT_ANSWER"
   },
   validations: {
-    type: [validation],
+    type: validation,
     default: null
   },
   x_options: {
