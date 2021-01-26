@@ -27,25 +27,26 @@ const rowStyle = {
   border: "1px solid #cccccc"
 };
 
-const ExportWrapper = styled.div`
-  .dropdown-text {
-    color: #2261ad;
-    text-align: center;
-    font-size: 14px;
-    letter-spacing: 1.25px;
-    position: absolute;
-    height: 16px;
-    right: 42px;
-  }
-  .dropdown {
-    width: 180px;
-    position: absolute;
-    top: 0%;
-    bottom: 0%;
-    left: 0%;
-    right: 0%;
-  }
-`;
+//TODO: Uncomment for CSV
+// const ExportWrapper = styled.div`
+//   .dropdown-text {
+//     color: #2261ad;
+//     text-align: center;
+//     font-size: 14px;
+//     letter-spacing: 1.25px;
+//     position: absolute;
+//     height: 16px;
+//     right: 42px;
+//   }
+//   .dropdown {
+//     width: 180px;
+//     position: absolute;
+//     top: 0%;
+//     bottom: 0%;
+//     left: 0%;
+//     right: 0%;
+//   }
+// `;
 
 function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
   const columns = [
