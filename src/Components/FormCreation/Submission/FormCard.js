@@ -264,8 +264,14 @@ function FormCard({
         <CardContent className={classes.content}>
           <TitleWrapper>
             <NameField style={{ display: "flex" }}>
-              {card.name ? card.name : "Default Card Name "}
-              {card.required ? <font color="red">{" *"}</font> : null}
+              {card.name ? (
+                <div>
+                  {card.name}
+                  {card.required ? <font color="red">{" *"}</font> : ""}
+                </div>
+              ) : (
+                "Default Card Name "
+              )}
             </NameField>
 
             <DescriptionField>
