@@ -360,7 +360,7 @@ function CreateSubmissionForm({ match }) {
 
   const formId = loadSubmission.value != null && loadSubmission.value.formId;
   const Id = loadSubmission.value && loadSubmission.value._id;
-  let fileUploadURL = "forms/" + formId + "/" + Id + "/";
+  const fileUploadURL = "forms/" + formId + "/" + Id + "/";
 
   return (
     <div>
