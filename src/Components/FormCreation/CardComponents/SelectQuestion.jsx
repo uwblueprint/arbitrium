@@ -93,6 +93,7 @@ function SelectQuestion({
   multiSelect,
   onChange,
   initialOptions,
+  initialAnswers, //Submission
   minSelectValidation = 0,
   maxSelectValidation = 0
 }) {
@@ -103,8 +104,14 @@ function SelectQuestion({
   const [options, setOptions] = useState(initialOptions || []);
   const [hoveredOption, setHoveredOption] = useState(-1);
 
+  //Check if the initial option already exists as an asnwer, and set to true
+  //initialoptions[value, _id]
   const selectedInit = {};
-  initialOptions.forEach((m) => (selectedInit[m[0]] = false));
+  initialOptions.forEach((m) => {
+    return (selectedInit[m[0]] = initialAnswers?.find(
+      (ansId) => ansId === m[1]
+    ));
+  });
   const [selected, setSelected] = useState(selectedInit);
 
   //----------------------------------------------------------------------------

@@ -72,6 +72,7 @@ const FormWrapper = styled.div`
 //will load. In the event they don't have admin access to the program they will
 //denied access
 function CreateEditForm({ programId }) {
+  console.log(programId);
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
@@ -618,6 +619,7 @@ function CreateEditForm({ programId }) {
               <div key={uniquekey + section._id}>
                 <FormWrapper key={section._id} id={"section_" + key}>
                   <FormSection
+                    programId={programId} //Use this for saving and not appUser.currentProgram
                     key={key + "_section"}
                     formId={loadForm.value._id}
                     numSections={sections.length}

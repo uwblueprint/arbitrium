@@ -14,15 +14,17 @@ type Props = {
   short_answer: boolean;
   validation?: AnyNaptrRecord;
   onChange: (text: string) => void;
+  initialAnswer: string;
 };
 
 //TODO: Add Response Validation
 function TextQuestion({
   submission = false,
   short_answer,
-  onChange
+  onChange,
+  initialAnswer = ""
 }: Props): React.ReactElement {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(initialAnswer);
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //Check validations here and update the error prop accordingly
     setText(event.target.value);

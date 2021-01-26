@@ -147,11 +147,11 @@ function FormSection({
   initialActiveQuestion,
   refetch,
   setInitialActiveQuestion,
-  isPublished
+  isPublished,
+  programId
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
-  const { appUser } = useContext(AuthContext);
   const [activeQuestion, setActiveQuestion] = useState(initialActiveQuestion);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
@@ -286,13 +286,8 @@ function FormSection({
 
   const updateParent = useCallback(() => {
     setInitialActiveQuestion(activeQuestion);
-    refetch({ programId: appUser.currentProgram });
-  }, [
-    activeQuestion,
-    refetch,
-    appUser.currentProgram,
-    setInitialActiveQuestion
-  ]);
+    refetch({ programId: programId });
+  }, [activeQuestion, refetch, programId, setInitialActiveQuestion]);
 
   //When the questions changes we will update the form.
   //1. When anything in the card changes focus

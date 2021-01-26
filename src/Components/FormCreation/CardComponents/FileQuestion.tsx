@@ -24,6 +24,7 @@ type Props = {
   active: boolean;
   initialNumFiles?: number;
   fileUploadURL?: string;
+  initialAnswer: Array<string>;
 };
 
 const useStyles = makeStyles({
@@ -52,7 +53,8 @@ function FileQuestion({
   active,
   onChange,
   fileUploadURL,
-  initialNumFiles = 1
+  initialNumFiles = 1,
+  initialAnswer = []
 }: Props): React.ReactElement {
   const [numFiles, setnumFiles] = useState(initialNumFiles || 1);
   const classes = useStyles();
@@ -62,7 +64,7 @@ function FileQuestion({
     setnumFiles(value as number);
     onChange(value as number);
   };
-  const [files, setFiles] = useState([] as Array<string>);
+  const [files, setFiles] = useState(initialAnswer as Array<string>);
 
   const numFileOptions = [1, 2, 3, 5, 10];
 

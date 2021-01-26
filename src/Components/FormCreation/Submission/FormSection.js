@@ -152,6 +152,7 @@ function FormSection({
             handleActive={updateActiveQuestion}
             sectionKey={sectionNum - 1}
             questionKey={questionKey}
+            sectionId={sectionData._id}
             updateSubmission={updateSubmission}
             themeColour={themeColour}
             fileUploadURL={fileUploadURL}

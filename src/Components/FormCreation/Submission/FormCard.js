@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -7,6 +7,7 @@ import TextQuestion from "./../CardComponents/TextQuestion";
 import styled from "styled-components";
 import FileQuestion from "./../CardComponents/FileQuestion";
 import FormSettingsContext from "../FormSettingsContext";
+import SubmissionAnswersContext from "./../Submission/SubmissionAnswersContext";
 
 const useStyles = makeStyles({
   content: {
@@ -105,9 +106,11 @@ function FormCard({
   sectionKey,
   questionKey,
   updateSubmission,
-  fileUploadURL
+  fileUploadURL,
+  sectionId
 }) {
   const { themeColour } = useContext(FormSettingsContext);
+  const answers = useContext(SubmissionAnswersContext);
   const classes = useStyles({ themeColour });
 
   const onQuestionUpdate = (data) => {
@@ -132,108 +135,125 @@ function FormCard({
       //TODO
     }
   };
-
-  const questionTypes = [
-    {
-      name: "IDENTIFIER",
-      value: "Identifier",
-      style: classes.action_menu_item,
-      isDeletable: false,
-      render: (
-        <TextQuestion
-          short_answer={true}
-          submission={true}
-          onChange={onQuestionUpdate}
-        />
-      ),
-      renderInactive: card.type
-    },
-    {
-      name: "SHORT_ANSWER",
-      value: "Short Answer",
-      style: classes.action_menu_item2,
-      isDeletable: true,
-      render: (
-        <TextQuestion
-          short_answer={true}
-          submission={true}
-          onChange={onQuestionUpdate}
-        />
-      ),
-      renderInactive: card.type
-    },
-    {
-      name: "PARAGRAPHS",
-      value: "Paragraphs",
-      style: classes.action_menu_item,
-      isDeletable: true,
-      render: (
-        <TextQuestion
-          short_answer={false}
-          submission={true}
-          onChange={onQuestionUpdate}
-        />
-      ),
-      renderInactive: card.type
-    },
-    {
-      name: "CHECKBOXES",
-      value: "Checkboxes",
-      style: classes.action_menu_item2,
-      isDeletable: true,
-      render: (
-        <SelectQuestion
-          onChange={onQuestionUpdate}
-          initialOptions={
-            card && card.x_options.map((option) => [option.value])
-          }
-          multiSelect={true}
-          submission={true}
-        />
-      ),
-      renderInactive: card.type
-    },
-    {
-      name: "MULTIPLE_CHOICE",
-      value: "Multiple Choice",
-      style: classes.action_menu_item,
-      isDeletable: true,
-      render: (
-        <SelectQuestion
-          submission={true}
-          onChange={onQuestionUpdate}
-          initialOptions={
-            card && card.x_options.map((option) => [option.value])
-          }
-          multiSelect={false}
-        />
-      ),
-      renderInactive: card.type
-    },
-    {
-      name: "FILE_UPLOAD",
-      value: "File Upload",
-      style: classes.action_menu_item2,
-      isDeletable: true,
-      render: (
-        <FileQuestion
-          active={true}
-          submission={true}
-          onChange={onQuestionUpdate}
-          fileUploadURL={fileUploadURL}
-          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
-        />
-      ),
-      renderInactive: (
-        <FileQuestion
-          active={false}
-          onChange={onQuestionUpdate}
-          submission={true}
-          initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
-        />
-      )
-    }
-  ];
+  console.log(answers);
+  const initialAnswer = answers.find((ans) => {
+    return ans.questionId === card._id && ans.sectionId === sectionId;
+  });
+  console.log(initialAnswer?.answerArray);
+  const questionTypes = useMemo(() => {
+    return [
+      {
+        name: "IDENTIFIER",
+        value: "Identifier",
+        style: classes.action_menu_item,
+        isDeletable: false,
+        render: (
+          <TextQuestion
+            short_answer={true}
+            submission={true}
+            onChange={onQuestionUpdate}
+            initialAnswer={initialAnswer?.answerString}
+          />
+        ),
+        renderInactive: card.type
+      },
+      {
+        name: "SHORT_ANSWER",
+        value: "Short Answer",
+        style: classes.action_menu_item2,
+        isDeletable: true,
+        render: (
+          <TextQuestion
+            short_answer={true}
+            submission={true}
+            onChange={onQuestionUpdate}
+            initialAnswer={initialAnswer?.answerString}
+          />
+        ),
+        renderInactive: card.type
+      },
+      {
+        name: "PARAGRAPHS",
+        value: "Paragraphs",
+        style: classes.action_menu_item,
+        isDeletable: true,
+        render: (
+          <TextQuestion
+            short_answer={false}
+            submission={true}
+            onChange={onQuestionUpdate}
+            initialAnswer={initialAnswer?.answerString}
+          />
+        ),
+        renderInactive: card.type
+      },
+      {
+        name: "CHECKBOXES",
+        value: "Checkboxes",
+        style: classes.action_menu_item2,
+        isDeletable: true,
+        render: (
+          <SelectQuestion
+            onChange={onQuestionUpdate}
+            initialOptions={
+              card && card.x_options.map((option) => [option.value, option._id])
+            }
+            multiSelect={true}
+            submission={true}
+            initialAnswers={initialAnswer?.answerArray}
+          />
+        ),
+        renderInactive: card.type
+      },
+      {
+        name: "MULTIPLE_CHOICE",
+        value: "Multiple Choice",
+        style: classes.action_menu_item,
+        isDeletable: true,
+        render: (
+          <SelectQuestion
+            submission={true}
+            onChange={onQuestionUpdate}
+            initialOptions={
+              card && card.x_options.map((option) => [option.value, option._id])
+            }
+            multiSelect={false}
+            initialAnswers={initialAnswer?.answerArray}
+          />
+        ),
+        renderInactive: card.type
+      },
+      {
+        name: "FILE_UPLOAD",
+        value: "File Upload",
+        style: classes.action_menu_item2,
+        isDeletable: true,
+        render: (
+          <FileQuestion
+            active={true}
+            submission={true}
+            onChange={onQuestionUpdate}
+            fileUploadURL={fileUploadURL}
+            initialNumFiles={
+              card && card.x_options[0] && card.x_options[0].value
+            }
+            initialAnswer={initialAnswer?.answerArray}
+          />
+        ),
+        renderInactive: (
+          <FileQuestion
+            active={false}
+            onChange={onQuestionUpdate}
+            submission={true}
+            initialNumFiles={
+              card && card.x_options[0] && card.x_options[0].value
+            }
+            initialAnswer={initialAnswer?.answerArray}
+          />
+        )
+      }
+    ];
+  }, [initialAnswer]);
 
   return (
     <div className={classes.container}>
