@@ -141,9 +141,9 @@ function PublishedFormHeader({
             )}
           </p>
           <p style={{ fontWeight: 400 }}>
-            {" "}
-            You can manually close the form or schedule a time for it to
-            automatically close in “Manage Applicant Access”.
+            {linkData.close == null
+              ? "You can manually close the form or schedule a time for it to automatically close in “Manage Applicant Access”."
+              : "You can open the form in “Manage Applicant Access”."}
           </p>
           <div style={{ display: "flex", marginTop: 32, marginBottom: 32 }}>
             <Button
