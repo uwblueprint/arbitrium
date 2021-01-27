@@ -278,7 +278,7 @@ function FormCard({
             <DescriptionField>
               <TextField
                 disabled={true}
-                placeholder="New Description"
+                placeholder=""
                 className={classes.sectionDescription}
                 value={card.description ? card.description : ""}
                 multiline
