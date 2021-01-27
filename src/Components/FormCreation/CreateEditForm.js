@@ -269,6 +269,7 @@ function CreateEditForm({ programId }) {
       return;
     }
 
+    console.log(sectionKey);
     //Scroll to the new active section
     window.requestAnimationFrame(() => {
       const element = document.getElementById("section_" + sectionKey);
@@ -368,7 +369,6 @@ function CreateEditForm({ programId }) {
 
     const response = FORM.deleteSection(loadForm.value._id, section._id)
       .then((result) => {
-        console.log(result);
         setDeletedSection({
           index: activeSection,
           sectionId: section._id,
@@ -384,9 +384,8 @@ function CreateEditForm({ programId }) {
       .catch((e) => {
         //alert("Something went wrong. Form section deleted unsuccessfully.");
         console.error(`ERROR: Status - ${response}`);
-        console.log(e);
+        console.error(e);
       });
-    updateActiveSection(activeSection);
   }
 
   async function undoDeleteSection() {
