@@ -152,6 +152,9 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
   //     hasAdminAccessForCurrentProgram = true;
   //   }
   // }
+
+  console.log(curRoute);
+  console.log(routes);
   return (
     <Container>
       <BodyWrapper>
@@ -162,21 +165,21 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
             </div>
           </Tooltip>
         </AppName>
-        <div
-          style={{
-            maxWidth: 250,
-            display: "flex",
-            justifyContent: "space-between"
-          }}
-        >
-          <p style={{ minWidth: 200 }}>
-            <Typography noWrap>
-              {program && programsMap[program]
-                ? programsMap[program].displayName
-                : "Select a program to view applications "}
-            </Typography>
-          </p>
-          {curRoute.path !== "/programs" ? (
+        {curRoute.path !== "/programs" ? (
+          <div
+            style={{
+              maxWidth: 250,
+              display: "flex",
+              justifyContent: "space-between"
+            }}
+          >
+            <p style={{ minWidth: 200 }}>
+              <Typography noWrap>
+                {program && programsMap[program]
+                  ? programsMap[program].displayName
+                  : "Select a program to view applications "}
+              </Typography>
+            </p>
             <div>
               <ArrowDropDownCircleOutlinedIcon
                 style={{ marginLeft: "4px", margin: "12px" }}
@@ -218,8 +221,8 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
                 ) : null}
               </Menu>
             </div>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
         <RightSideHeaderWrapper>
           {appUser.role === "Admin" || hasAdminAccessForCurrentProgram ? (
             <RightSideHeaderWrapper
@@ -233,7 +236,7 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
                 {" "}
                 {curRoute.title}{" "}
               </p>
-              {routes.length > 0 ? (
+              {routes.length > 1 ? (
                 <div>
                   <ArrowDropDownCircleOutlinedIcon
                     style={{ marginRight: "12px" }}
