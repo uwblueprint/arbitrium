@@ -5,11 +5,13 @@ import { AnyNaptrRecord } from "dns";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { Validation } from "../../../Types/FormTypes";
+import InputBase from "@material-ui/core/InputBase";
 
 const Wrapper = styled.div`
   margin-top: 16px;
   margin-bottom: 33px;
   width: 744px;
+  fontsize: 14px;
 `;
 
 type Props = {
@@ -96,11 +98,11 @@ function TextQuestion({
 
   return (
     <Wrapper>
-      <TextField
+      <InputBase
         disabled={!submission}
         error={false}
         placeholder={short_answer ? "Short answer text" : "Long answer text"}
-        size="medium"
+        style={{ fontSize: "14px" }}
         value={text}
         onBlur={() => onChange(text)}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -108,7 +110,7 @@ function TextQuestion({
         }
         multiline={!short_answer}
         fullWidth={true}
-      ></TextField>
+      ></InputBase>
       {validation && !short_answer ? (
         <div>
           <Select

@@ -43,6 +43,9 @@ const useStyles = makeStyles(() => ({
   }),
   inputHovered: {
     boxShadow: "0 1px 0 #DADADA"
+  },
+  submissionOptions: {
+    fontSize: "12px"
   }
 }));
 
@@ -65,10 +68,7 @@ const OptionNameInput = styled(InputBase)`
     max-height: 48px;
     position: absolute;
     bottom: 0px;
-  }
-  textarea {
-    font-size: 14px;
-    color: #888888;
+    fontsize: 8px;
   }
 `;
 
@@ -212,10 +212,11 @@ function SelectQuestion({
     minSelectValidation > 0 &&
     "Select at least " + minSelectValidation;
 
+  console.log(isPublished);
   return (
     <Wrapper>
       {submission ? (
-        <div>
+        <div classes={{ body1: styles.submissionOptions }}>
           <FormControl required={!multiSelect} error={errorMin || errorMax}>
             <FormGroup>
               {selected
@@ -223,11 +224,12 @@ function SelectQuestion({
                     <OptionWrapper key={index}>
                       {multiSelect ? (
                         <FormControlLabel
+                          classes={{ label: styles.submissionOptions }}
                           control={
                             <CustomColourCheckbox
                               checked={selected[data]}
                               onChange={handleCheckBoxSelect}
-                              size="large"
+                              size="small"
                               name={data}
                               inputProps={{
                                 "aria-label": "checkbox with default color"
@@ -313,7 +315,6 @@ function SelectQuestion({
                                 onChange={(event) =>
                                   onEditOption(index, event.target.value)
                                 }
-                                disabled={isPublished}
                               />
                               <IconButton
                                 onClick={() => onDeleteOption(index)}

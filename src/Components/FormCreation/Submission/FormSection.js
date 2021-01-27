@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import FormCard from "./FormCard";
 import FormSettingsContext from "../FormSettingsContext";
-import TextField from "@material-ui/core/TextField";
+import InputBase from "@material-ui/core/InputBase";
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -32,7 +32,9 @@ const useStyles = makeStyles(() => ({
   title: {
     color: "#000",
     fontSize: "20px",
-    fontWeight: "500"
+    fontWeight: "400",
+    lineHeight: "24px",
+    paddingLeft: "16px"
   },
   section_title: (props) => ({
     borderTopLeftRadius: "4px",
@@ -49,7 +51,9 @@ const useStyles = makeStyles(() => ({
   }),
   //Section Description
   sectionDescription: {
-    width: 784
+    width: 784,
+    fontSize: 16,
+    color: "black"
   },
   action_menu: {
     boxShadow:
@@ -136,22 +140,17 @@ function FormSection({
       </span>
       <CardWrapper key={sectionNum}>
         <Card className={classes.active}>
-          <CardHeader
-            className={classes.title}
-            title={sectionData.name}
-            id={sectionNum}
-          />
+          <p className={classes.title}>{sectionData.name}</p>
           <CardContent className={classes.content}>
-            <div style={{ color: "black" }}>
-              <TextField
-                disabled={true}
-                className={classes.sectionDescription}
-                placeholder=""
-                value={sectionData.description}
-                multiline
-                type="string"
-              ></TextField>
-            </div>
+            <InputBase
+              disabled={true}
+              style={{ color: "black" }}
+              className={classes.sectionDescription}
+              placeholder=""
+              value={sectionData.description}
+              multiline
+              type="string"
+            ></InputBase>
           </CardContent>
         </Card>
       </CardWrapper>

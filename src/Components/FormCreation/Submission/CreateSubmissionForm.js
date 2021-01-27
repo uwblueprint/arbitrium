@@ -7,7 +7,12 @@ import { defaultFormState } from "./../CreateEditFormStateManagement";
 import SubmissionFormHeader from "./SubmissionFormHeader";
 import customSubmissionAnswerReducer from "../../../Reducers/CustomSubmissionAnswersReducers";
 import Button from "@material-ui/core/Button";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  withStyles,
+  makeStyles,
+  ThemeProvider
+} from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import moment from "moment";
 import * as FILE from "../../../requests/file";
@@ -23,9 +28,9 @@ This component behaves similarly to the CreateEditForm but with signifcantly red
 //----------------------------------------------------------------------------
 
 const useStyles = makeStyles({
-  button: {
+  button: (props) => ({
     marginRight: 11
-  },
+  }),
   sectionProgress: {
     marginTop: 13,
     marginBottom: 13
@@ -61,7 +66,6 @@ const BorderLinearProgress = withStyles((theme) => ({
 }))(LinearProgress);
 
 function CreateSubmissionForm({ match }) {
-  const classes = useStyles();
   const [page, setPage] = useState(-1);
   const [submitted, setSubmitted] = useState(false);
   const [validLink, setValidLink] = useState(false);
@@ -75,6 +79,15 @@ function CreateSubmissionForm({ match }) {
     headerImage: null,
     confirmationMessage: "Your response has been recorded."
   });
+
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+        main: `#${formSettings.themeColour}`
+      }
+    }
+  });
+  const classes = useStyles({ themeColour: formSettings.themeColour });
 
   const [sections, setSections] = useState([]);
   const [identifierQuestion, setIdentifierQuestion] = useState("");
@@ -423,37 +436,39 @@ function CreateSubmissionForm({ match }) {
                 )}
               </FormWrapper>
               <ButtonGroup>
-                <Button
-                  variant="outlined"
-                  className={classes.button}
-                  disabled={page === -1}
-                  color="primary"
-                  onClick={() => setPage(page - 1)}
-                >
-                  Back
-                </Button>
-                {page === sections.length - 1 ? (
-                  <Button
-                    variant="contained"
-                    className={classes.button}
-                    color="primary"
-                    onClick={() => {
-                      handleSubmit();
-                    }}
-                  >
-                    Submit
-                  </Button>
-                ) : (
+                <ThemeProvider theme={theme}>
                   <Button
                     variant="outlined"
                     className={classes.button}
-                    disabled={page === sections.length - 1}
+                    disabled={page === -1}
                     color="primary"
-                    onClick={() => setPage(page + 1)}
+                    onClick={() => setPage(page - 1)}
                   >
-                    Next
+                    Back
                   </Button>
-                )}
+                  {page === sections.length - 1 ? (
+                    <Button
+                      variant="contained"
+                      className={classes.button}
+                      color="primary"
+                      onClick={() => {
+                        handleSubmit();
+                      }}
+                    >
+                      Submit
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      className={classes.button}
+                      disabled={page === sections.length - 1}
+                      color="primary"
+                      onClick={() => setPage(page + 1)}
+                    >
+                      Next
+                    </Button>
+                  )}
+                </ThemeProvider>
                 {page === -1 ? (
                   <div></div>
                 ) : (

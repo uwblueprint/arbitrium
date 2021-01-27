@@ -10,10 +10,12 @@ import FormSettingsContext from "../FormSettingsContext";
 import SubmissionAnswersContext from "./../Submission/SubmissionAnswersContext";
 import TextField from "@material-ui/core/TextField";
 import { fileUpload } from "../../../requests/file";
+import InputBase from "@material-ui/core/InputBase";
 
 const useStyles = makeStyles({
   content: {
-    marginTop: -16
+    marginTop: -16,
+    color: "black"
   },
   root: {
     fontSize: 14,
@@ -64,8 +66,10 @@ const useStyles = makeStyles({
     paddingLeft: 10
   },
   //Section Description
-  sectionDescription: {
-    width: 784
+  description: {
+    display: "block",
+    fontSize: 12,
+    overflowy: "auto"
   },
   questionTitle: {
     borderRadius: 4,
@@ -84,18 +88,15 @@ const TitleWrapper = styled.div`
 `;
 
 const NameField = styled.div`
-  font-size: 20px;
+  font-size: 16px;
   width: 846px;
   margin-bottom: 16px;
   line-height: 22px;
 `;
 
-const DescriptionField = styled.div`
-  width: 846px;
-  display: block;
-  line-height: 21px;
-  overflow-y: auto;
-  font-size: 16px;
+const DescriptionField = styled(InputBase)`
+  width: 784px;
+  color: black;
 `;
 
 //Other props { numCards, card, type, question, options, required }
@@ -256,6 +257,7 @@ function FormCard({
     ];
   }, [initialAnswer, card, classes, fileUploadURL, onQuestionUpdate]);
 
+  console.log(classes.description);
   return (
     <div className={classes.container}>
       <Card
@@ -275,16 +277,15 @@ function FormCard({
               )}
             </NameField>
 
-            <DescriptionField>
-              <TextField
-                disabled={true}
-                placeholder=""
-                className={classes.sectionDescription}
-                value={card.description ? card.description : ""}
-                multiline
-                type="string"
-              ></TextField>
-            </DescriptionField>
+            <DescriptionField
+              style={{ color: "black" }}
+              className={classes.description}
+              disabled={true}
+              placeholder=""
+              value={card.description ? card.description : ""}
+              multiline
+              type="string"
+            ></DescriptionField>
           </TitleWrapper>
           {card
             ? questionTypes

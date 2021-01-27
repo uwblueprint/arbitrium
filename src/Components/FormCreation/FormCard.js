@@ -264,7 +264,7 @@ function FormCard({
             card && card.x_options.map((option) => [option.value])
           }
           multiSelect={true}
-          isPublished={true}
+          isPublished={isPublished}
         />
       ),
       renderInactive: card.type
@@ -283,7 +283,7 @@ function FormCard({
             card && card.x_options.map((option) => [option.value])
           }
           multiSelect={false}
-          isPublished={true}
+          isPublished={isPublished}
         />
       ),
       renderInactive: card.type
