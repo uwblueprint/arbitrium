@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -8,6 +8,7 @@ import styled from "styled-components";
 import FileQuestion from "./../CardComponents/FileQuestion";
 import FormSettingsContext from "../FormSettingsContext";
 import SubmissionAnswersContext from "./../Submission/SubmissionAnswersContext";
+import TextField from "@material-ui/core/TextField";
 import { fileUpload } from "../../../requests/file";
 
 const useStyles = makeStyles({
@@ -62,22 +63,23 @@ const useStyles = makeStyles({
     paddingTop: 4,
     paddingLeft: 10
   },
+  //Section Description
+  sectionDescription: {
+    width: 784
+  },
   questionTitle: {
     borderRadius: 4,
     border: "1px solid #ffffff",
     background: "#f4f5f6",
     height: 56,
-    width: 768,
-    paddingLeft: 16,
+    width: 784,
     marginBottom: 16
   }
 });
 
 const TitleWrapper = styled.div`
   margin-top: 24px;
-  margin-left: 8px;
   margin-bottom: 16px;
-  margin-right: 16px;
   position: "flex";
 `;
 
@@ -93,9 +95,7 @@ const DescriptionField = styled.div`
   display: block;
   line-height: 21px;
   overflow-y: auto;
-  max-height: 48px;
   font-size: 16px;
-  color: #888888;
 `;
 
 //Other props { numCards, card, type, question, options, required }
@@ -114,7 +114,7 @@ function FormCard({
   const answers = useContext(SubmissionAnswersContext);
   const classes = useStyles({ themeColour });
 
-  const onQuestionUpdate = (data) => {
+  const onQuestionUpdate = useCallback((data) => {
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
       //We are storing the selected options by id in the submissions
       //To get the values we will cross-reference with the form
@@ -135,7 +135,7 @@ function FormCard({
     } else if (card.type === "CHECKBOX_GRID") {
       //TODO
     }
-  };
+  });
   console.log(answers);
   const initialAnswer = answers.find((ans) => {
     return ans.questionId === card._id && ans.sectionId === sectionId;
@@ -271,12 +271,19 @@ function FormCard({
                   {card.required ? <font color="red">{" *"}</font> : ""}
                 </div>
               ) : (
-                "Default Card Name "
+                ""
               )}
             </NameField>
 
             <DescriptionField>
-              {card.description ? card.description : ""}
+              <TextField
+                disabled={true}
+                placeholder="New Description"
+                className={classes.sectionDescription}
+                value={card.description ? card.description : ""}
+                multiline
+                type="string"
+              ></TextField>
             </DescriptionField>
           </TitleWrapper>
           {card

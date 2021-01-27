@@ -82,7 +82,6 @@ const useStyles = makeStyles({
   //Question Description
   questionDescription: {
     width: 744,
-    height: 21,
     marginBottom: 24
   },
 

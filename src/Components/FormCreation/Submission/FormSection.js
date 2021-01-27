@@ -6,6 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import FormCard from "./FormCard";
 import FormSettingsContext from "../FormSettingsContext";
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -46,6 +47,10 @@ const useStyles = makeStyles(() => ({
     paddingTop: "5px",
     paddingBottom: "5px"
   }),
+  //Section Description
+  sectionDescription: {
+    width: 784
+  },
   action_menu: {
     boxShadow:
       "0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 5px 5px rgba(0, 0, 0, 0.2)",
@@ -66,6 +71,7 @@ const useStyles = makeStyles(() => ({
 
 const CardWrapper = styled.div`
   display: flex;
+  padding: "16px";
 `;
 
 function FormSection({
@@ -136,7 +142,16 @@ function FormSection({
             id={sectionNum}
           />
           <CardContent className={classes.content}>
-            {sectionData.description}
+            <div style={{ color: "black" }}>
+              <TextField
+                disabled={true}
+                className={classes.sectionDescription}
+                placeholder=""
+                value={sectionData.description}
+                multiline
+                type="string"
+              ></TextField>
+            </div>
           </CardContent>
         </Card>
       </CardWrapper>

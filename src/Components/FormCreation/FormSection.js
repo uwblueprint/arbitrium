@@ -74,7 +74,6 @@ const useStyles = makeStyles({
 
   //Section Description
   sectionDescription: {
-    height: 21,
     width: 744
   },
 
