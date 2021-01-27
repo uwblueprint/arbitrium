@@ -106,7 +106,7 @@ function TextQuestion({
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           handleTextChange(event)
         }
-        multiline
+        multiline={!short_answer}
         fullWidth={true}
       ></TextField>
       {validation && !short_answer ? (
