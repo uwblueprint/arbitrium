@@ -107,7 +107,6 @@ function TextQuestion({
           handleTextChange(event)
         }
         multiline
-        rowsMax={short_answer ? 2 : 4}
         fullWidth={true}
       ></TextField>
       {validation && !short_answer ? (
