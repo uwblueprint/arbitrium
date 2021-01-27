@@ -9,7 +9,6 @@ import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
 
 const Header = styled.div`
   box-sizing: border-box;
-  height: 176px;
   width: 100%;
   box-shadow: 0 2px 3px 1px #cccccc;
   display: flex;
@@ -34,7 +33,6 @@ const DescriptionInput = styled(InputBase)`
     display: block;
     line-height: 21px;
     overflow-y: auto;
-    max-height: 48px;
   }
   textarea {
     font-size: 14px;

@@ -8,6 +8,7 @@ import styled from "styled-components";
 import FileQuestion from "./../CardComponents/FileQuestion";
 import FormSettingsContext from "../FormSettingsContext";
 import SubmissionAnswersContext from "./../Submission/SubmissionAnswersContext";
+import { fileUpload } from "../../../requests/file";
 
 const useStyles = makeStyles({
   content: {
@@ -253,7 +254,7 @@ function FormCard({
         )
       }
     ];
-  }, [initialAnswer]);
+  }, [initialAnswer, card, classes, fileUploadURL, onQuestionUpdate]);
 
   return (
     <div className={classes.container}>

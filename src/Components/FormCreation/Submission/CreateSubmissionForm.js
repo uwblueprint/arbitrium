@@ -363,6 +363,7 @@ function CreateSubmissionForm({ match }) {
   const Id = loadSubmission.value && loadSubmission.value._id;
   const fileUploadURL = "forms/" + formId + "/" + Id + "/";
 
+  console.log(page);
   return (
     <div>
       <FormSettingsContext.Provider value={formSettings}>
@@ -393,13 +394,15 @@ function CreateSubmissionForm({ match }) {
                 <SubmissionFormHeader
                   name={headerData.name}
                   description={"Your response has been recorded"}
+                  page={page}
+                  submitted={true}
                 />
               </FormWrapper>
             </div>
           ) : (
             <div>
               <FormWrapper key={page} id={"section_" + page}>
-                <SubmissionFormHeader {...headerData} />
+                <SubmissionFormHeader {...headerData} page={page} />
                 {page !== -1 && sections && page < sections.length ? (
                   <FormSection
                     saveAnswer={handleSave}
