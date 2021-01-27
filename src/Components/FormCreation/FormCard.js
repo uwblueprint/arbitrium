@@ -59,8 +59,7 @@ const useStyles = makeStyles({
     fontSize: 16
   },
   questionTitle: {
-    height: 24,
-    width: 568,
+    width: 784,
     display: "flex",
     fontSize: 16
   },
@@ -349,7 +348,7 @@ function FormCard({
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       onBlur={() => handleQuestionTitleUpdate(title)}
-                      rowsMax={1}
+                      multiline={!active}
                       type="string"
                     ></InputBase>
                     {active ? (

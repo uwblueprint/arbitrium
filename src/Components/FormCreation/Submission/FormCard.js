@@ -266,7 +266,7 @@ function FormCard({
           <TitleWrapper>
             <NameField style={{ display: "flex" }}>
               {card.name ? (
-                <div>
+                <div style={{ maxWidth: "784px", overflowWrap: "break-word" }}>
                   {card.name}
                   {card.required ? <font color="red">{" *"}</font> : ""}
                 </div>

@@ -60,7 +60,7 @@ const useStyles = makeStyles({
   //Section Title
   sectionTitle: {
     height: 36,
-    width: 440,
+    width: 700,
     fontSize: 24,
     paddingTop: 24
   },
