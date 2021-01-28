@@ -67,19 +67,13 @@ router.get("/user/:userid/:programId", function(req, res) {
         $match: { submissionDate: { $ne: null } }
       },
       {
-        $project: {
-          identifier: 1,
-          formId: 1
-        }
-      },
-      {
         $lookup: {
           from: "Forms",
           pipeline: [
             {
               $match: {
                 $expr: {
-                  $and: [{ $eq: ["$programId", req.params.programId] }]
+                  $eq: ["$programId", req.params.programId]
                 }
               }
             },

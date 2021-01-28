@@ -70,7 +70,8 @@ function AuthProvider({ loadProgram, children }) {
 
       if (
         appUser.programs &&
-        validPrograms.length !== appUser.programs.length
+        validPrograms.length !== appUser.programs.length &&
+        validPrograms.length !== 0
       ) {
         await updateUserProgramMembershipAPI({
           userId: user.uid,
