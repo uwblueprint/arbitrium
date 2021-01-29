@@ -102,7 +102,7 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
         columns={columns}
         {...props}
         title={
-          (Object.keys(reviewCount).length === 0 ? 0 : reviewCount) +
+          (Number.isInteger(reviewCount) ? reviewCount : 0) +
           "/" +
           applicationCount +
           " candidates rated"

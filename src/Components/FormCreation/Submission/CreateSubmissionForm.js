@@ -28,7 +28,7 @@ This component behaves similarly to the CreateEditForm but with signifcantly red
 //----------------------------------------------------------------------------
 
 const useStyles = makeStyles({
-  button: (props) => ({
+  button: () => ({
     marginRight: 11
   }),
   sectionProgress: {
@@ -376,7 +376,6 @@ function CreateSubmissionForm({ match }) {
   const Id = loadSubmission.value && loadSubmission.value._id;
   const fileUploadURL = "forms/" + formId + "/" + Id + "/";
 
-  console.log(page);
   return (
     <div>
       <FormSettingsContext.Provider value={formSettings}>

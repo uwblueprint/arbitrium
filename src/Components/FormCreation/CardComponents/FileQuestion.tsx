@@ -25,6 +25,7 @@ type Props = {
   initialNumFiles?: number;
   fileUploadURL?: string;
   initialAnswer: Array<string>;
+  isPublished: boolean;
 };
 
 const useStyles = makeStyles({

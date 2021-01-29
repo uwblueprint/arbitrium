@@ -8,8 +8,6 @@ import styled from "styled-components";
 import FileQuestion from "./../CardComponents/FileQuestion";
 import FormSettingsContext from "../FormSettingsContext";
 import SubmissionAnswersContext from "./../Submission/SubmissionAnswersContext";
-import TextField from "@material-ui/core/TextField";
-import { fileUpload } from "../../../requests/file";
 import InputBase from "@material-ui/core/InputBase";
 
 const useStyles = makeStyles({
@@ -115,33 +113,36 @@ function FormCard({
   const answers = useContext(SubmissionAnswersContext);
   const classes = useStyles({ themeColour });
 
-  const onQuestionUpdate = useCallback((data) => {
-    if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
-      //We are storing the selected options by id in the submissions
-      //To get the values we will cross-reference with the form
-      const answerArray = card.x_options
-        .filter((opt) => data[opt.value])
-        .map((opt) => opt._id);
-      updateSubmission(card._id, card.type, "", answerArray);
-    } else if (
-      card.type === "SHORT_ANSWER" ||
-      card.type === "PARAGRAPHS" ||
-      card.type === "IDENTIFIER"
-    ) {
-      //Stored as a string
-      updateSubmission(card._id, card.type, data, []);
-    } else if (card.type === "FILE_UPLOAD") {
-      //Stored as an array of strings of file links
-      updateSubmission(card._id, card.type, "", data);
-    } else if (card.type === "CHECKBOX_GRID") {
-      //TODO
-    }
-  });
-  console.log(answers);
+  const onQuestionUpdate = useCallback(
+    (data) => {
+      if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
+        //We are storing the selected options by id in the submissions
+        //To get the values we will cross-reference with the form
+        const answerArray = card.x_options
+          .filter((opt) => data[opt.value])
+          .map((opt) => opt._id);
+        updateSubmission(card._id, card.type, "", answerArray);
+      } else if (
+        card.type === "SHORT_ANSWER" ||
+        card.type === "PARAGRAPHS" ||
+        card.type === "IDENTIFIER"
+      ) {
+        //Stored as a string
+        updateSubmission(card._id, card.type, data, []);
+      } else if (card.type === "FILE_UPLOAD") {
+        //Stored as an array of strings of file links
+        updateSubmission(card._id, card.type, "", data);
+      } else if (card.type === "CHECKBOX_GRID") {
+        //TODO
+      }
+    },
+    [card, updateSubmission]
+  );
+
   const initialAnswer = answers.find((ans) => {
     return ans.questionId === card._id && ans.sectionId === sectionId;
   });
-  console.log(initialAnswer?.answerArray);
+
   const questionTypes = useMemo(() => {
     return [
       {
@@ -257,7 +258,6 @@ function FormCard({
     ];
   }, [initialAnswer, card, classes, fileUploadURL, onQuestionUpdate]);
 
-  console.log(classes.description);
   return (
     <div className={classes.container}>
       <Card

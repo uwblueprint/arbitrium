@@ -72,7 +72,6 @@ const FormWrapper = styled.div`
 //will load. In the event they don't have admin access to the program they will
 //denied access
 function CreateEditForm({ programId }) {
-  console.log(programId);
   const classes = useStyles();
   const { appUser } = useContext(AuthContext);
   const [sections, dispatchSectionsUpdate] = useReducer(
@@ -155,7 +154,7 @@ function CreateEditForm({ programId }) {
       newForm.sections = sections;
       FORM.updateForm(loadForm.value._id, newForm);
     }
-  }, [sections, loadForm.value, loadForm.isPending]);
+  }, [sections, loadForm.value, loadForm.isPending, deletedSection]);
 
   //If a form doesn't exist then create a new one from the default template
   const initiateForm = useCallback(() => {
@@ -269,7 +268,6 @@ function CreateEditForm({ programId }) {
       return;
     }
 
-    console.log(sectionKey);
     //Scroll to the new active section
     window.requestAnimationFrame(() => {
       const element = document.getElementById("section_" + sectionKey);
@@ -368,7 +366,7 @@ function CreateEditForm({ programId }) {
     const section = sections[activeSection];
 
     const response = FORM.deleteSection(loadForm.value._id, section._id)
-      .then((result) => {
+      .then(() => {
         setDeletedSection({
           index: activeSection,
           sectionId: section._id,
@@ -416,9 +414,6 @@ function CreateEditForm({ programId }) {
     // prompt user for confirmation
     setShowDeleteSectionConfirmation(true);
   }
-
-  console.log(sections);
-  console.log(activeSection);
 
   //----------------------------------------------------------------------------
   //DRAG/DROP QUESTIONS

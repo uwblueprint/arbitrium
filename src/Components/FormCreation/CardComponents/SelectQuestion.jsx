@@ -212,7 +212,6 @@ function SelectQuestion({
     minSelectValidation > 0 &&
     "Select at least " + minSelectValidation;
 
-  console.log(isPublished);
   return (
     <Wrapper>
       {submission ? (

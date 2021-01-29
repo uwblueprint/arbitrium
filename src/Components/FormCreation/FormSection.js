@@ -18,7 +18,6 @@ import InputBase from "@material-ui/core/InputBase";
 import AddCardComponent from "./AddCardComponent";
 import { deleteQuestion } from "../../requests/forms";
 import TextField from "@material-ui/core/TextField";
-import { AuthContext } from "../../Authentication/Auth.js";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";

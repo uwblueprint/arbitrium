@@ -153,8 +153,6 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
   //   }
   // }
 
-  console.log(curRoute);
-  console.log(routes);
   return (
     <Container>
       <BodyWrapper>
