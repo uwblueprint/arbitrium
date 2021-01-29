@@ -6,6 +6,7 @@ img {
     margin-top: 1rem;
     margin-bottom: 1rem;
     max-width: 600px;
+    border: 0.5px solid rgb(225, 225, 225);
 }
 
 .banner {
@@ -34,7 +35,7 @@ details {
 }
 
 li {
-    ol {
+    ol, ul {
         margin-top: 0 !important;
     }
     p {

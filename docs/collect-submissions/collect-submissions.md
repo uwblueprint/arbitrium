@@ -9,8 +9,8 @@ permalink: /docs/forms
 
 # Collect submissions
 
-1. [Set up a new form](setup)
-2. [Build the form](build)
-3. [Publish your form](publish)
-4. [Collect submissions](send)
-5. [Close your form](setup)
+1. [Create a program](create-program)
+2. [Set up your form](setup-form)
+3. [Build your form](build)
+4. [Publish your form](publish)
+5. [Close your form](close)
