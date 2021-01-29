@@ -47,69 +47,57 @@ router.get("/:programId", (req, res) => {
 // Create a program
 router.post("/", function(req, res) {
   try {
-    try {
-      //Create the program
-      db["Authentication"].programs.create(req.body, (error, result) => {
-        if (error) {
-          console.error(`Error creating program ${req.body.displayName}`);
-          res.status(501).send(error);
-        } else {
-          // Add the organization's admins to the program
+    //Create the program
+    db["Authentication"].programs.create(req.body, (error, result) => {
+      if (error) {
+        console.error(`Error creating program ${req.body.displayName}`);
+        throw error;
+      } else {
+        // Add the organization's admins to the program
 
-          try {
-            db["Authentication"].users.updateMany(
-              {
-                adminOrganization: req.body.organization
-              },
-              {
-                $addToSet: {
-                  programs: {
-                    id: result._id,
-                    role: "ADMIN"
-                  }
-                }
-              },
-              (error) => {
-                if (error) {
-                  console.error(
-                    `Error adding program to Admin users, aborting program creation`
-                  );
-                  res.status(503).send(error);
+        try {
+          db["Authentication"].users.updateMany(
+            {
+              adminOrganization: req.body.organization
+            },
+            {
+              $addToSet: {
+                programs: {
+                  id: result._id,
+                  role: "ADMIN"
                 }
               }
-            );
-          } catch (e) {
-            console.error(`Error adding admin users to program`);
-            db["Authentication"].programs.findOneAndUpdate(
-              { _id: result._id },
-              { deleted: true },
-              (error, result) => {
-                if (error) {
-                  console.error(
-                    `Error ${
-                      req.body.archived ? "archiving" : "unarchiving"
-                    } program with ID = ${result._id}`
-                  );
-                  res.status(500).send(error);
-                } else {
-                  res.status(204).json(result);
-                }
+            },
+            (error) => {
+              if (error) {
+                console.error(
+                  `Error adding program to Admin users, aborting program creation`
+                );
+                throw error;
               }
-            );
-            res.status(502).send(e);
-          }
-
-          //Return the program
-          res.status(201).send(result);
+            }
+          );
+        } catch (e) {
+          db["Authentication"].programs.findOneAndUpdate(
+            { _id: result._id },
+            { deleted: true },
+            (error, result) => {
+              if (error) {
+                console.error(`Error deleting program = ${result._id}`);
+              }
+              throw error;
+            }
+          );
+          throw e;
         }
-      });
-    } catch (e) {
-      console.error(`Error creating program ${req.body.displayName}`);
-      res.status(501).send(e);
-    }
+
+        //Return the program
+        res.status(201).send(result);
+      }
+    });
   } catch (e) {
     console.error(`Error creating program ${req.body.displayName}`);
-    res.send(e);
+    res.status(501).send(e);
   }
 });
 

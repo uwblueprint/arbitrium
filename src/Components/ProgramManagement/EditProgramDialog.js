@@ -39,6 +39,7 @@ function EditProgramDialog({
   };
 
   async function createProgram() {
+    if (programName.length === 0) return;
     setIsSubmitting(true);
     try {
       const newProgram = {
@@ -61,6 +62,7 @@ function EditProgramDialog({
   }
 
   async function renameProgram() {
+    if (programName.length === 0) return;
     setIsSubmitting(true);
     try {
       updateProgramNameAPI(program.id, { name: programName });
@@ -120,7 +122,9 @@ function EditProgramDialog({
           <StyledLabel htmlFor="program-name-input">Name</StyledLabel>
           <OutlinedInput
             id="program-name-input"
+            error={programName.length === 0}
             fullWidth
+            required
             value={programName}
             onChange={updateProgramName()}
           />
