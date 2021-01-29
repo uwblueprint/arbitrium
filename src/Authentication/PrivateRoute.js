@@ -27,7 +27,7 @@ function doesRoleProvideAccess(routeRole, userRole) {
       userRole === userRoles.ADMIN_REVIEWER
     );
   } else {
-    return userRole === "";
+    return routeRole === "";
   }
 }
 
@@ -84,6 +84,8 @@ function PrivateRoute({
       );
       setAccess(hasRoleAccess || route.loginRequired === false);
       setHeaderRoutes(headerRoutes);
+    } else {
+      setAccess(route.programGroup === "");
     }
   }, [
     user,

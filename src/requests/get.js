@@ -26,8 +26,8 @@ async function getAllReviewsAPI() {
   return GET(`/api/ratings`);
 }
 
-async function getApplicationTableData(user) {
-  return GET(`/api/applications/${user.user.userId}`);
+async function getApplicationTableData({ user }) {
+  return GET(`/api/applications/${user.userId}`);
 }
 async function getCandidateSubmissions() {
   return GET(`/api/admin/candidate-submissions`);
@@ -74,6 +74,10 @@ async function getAllUserProgramsAPI({ userId }) {
   return GET(`/api/users/${userId}/programs`);
 }
 
+async function getProgramByID({ programId }) {
+  return GET(`/api/programs/${programId}`);
+}
+
 export {
   getAllStackingsAPI,
   getAllApplicationsAPI,
@@ -91,5 +95,6 @@ export {
   getAllProgramsAPI,
   getAllFirebaseUsers,
   getAllProgramUsersAPI,
-  getAllUserProgramsAPI
+  getAllUserProgramsAPI,
+  getProgramByID
 };

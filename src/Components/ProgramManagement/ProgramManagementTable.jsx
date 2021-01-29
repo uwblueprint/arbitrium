@@ -16,33 +16,36 @@ const rowStyle = {
 };
 
 const columnStyle = {
-  width: "100%"
+  maxWidth: 20
 };
 
-const columns = [
-  {
-    title: "Program name",
-    field: "name",
-    cellStyle: { minWidth: 500, maxHeight: 52 },
-    headerStyle: { minWidth: 500 }
-  },
-  {
-    title: "Organization",
-    field: "organization"
-  },
-  { title: "Role", field: "role" },
-  {
-    title: "",
-    field: "link",
-    sorting: false,
-    searchable: false,
-    export: false,
-    cellStyle: {
-      textAlign: "right",
-      minWidth: 148
-    }
-  }
-];
+//There is a bug in material-table that causes the browser to freeze when clicking buttons in the cell
+//Quick-fix: Move columns array directly into props, however, the width doesn't work anymore. :(
+
+//Issue: https://github.com/mbrn/material-table/issues/2451
+//Maintainer is inactive
+//Community Core with a fix is here: https://github.com/material-table-core/core/pull/5/files
+
+// const columns = [
+//   {
+//     title: "Program name",
+//     field: "name",
+//     cellStyle: { minWidth: 300, maxHeight: 52 },
+//     headerStyle: { minWidth: 300 }
+//   },
+//   {
+//     title: "Organization",
+//     field: "organization"
+//   },
+//   { title: "Role", field: "role" },
+//   {
+//     title: "",
+//     field: "link",
+//     sorting: false,
+//     searchable: false,
+//     export: false
+//   }
+// ];
 
 function ProgramManagementTable({ ...props }) {
   return (
@@ -52,7 +55,24 @@ function ProgramManagementTable({ ...props }) {
         components={{
           Container: (props) => <Container {...props} elevation={0} />
         }}
-        columns={columns}
+        columns={[
+          {
+            title: "Program name",
+            field: "name"
+          },
+          {
+            title: "Organization",
+            field: "organization"
+          },
+          { title: "Role", field: "role" },
+          {
+            title: "",
+            field: "link",
+            sorting: false,
+            searchable: false,
+            export: false
+          }
+        ]}
         {...props}
         options={{
           pageSize: Math.min(5, props.data.length),

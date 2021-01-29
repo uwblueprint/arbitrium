@@ -1,13 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import MaterialTable from "material-table";
-import {
-  Paper,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl
-} from "@material-ui/core";
+//import { Paper, Select, MenuItem, InputLabel } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import TableIcons from "../../Common/TableIcons";
 import moment from "moment";
 
@@ -32,25 +27,26 @@ const rowStyle = {
   border: "1px solid #cccccc"
 };
 
-const ExportWrapper = styled.div`
-  .dropdown-text {
-    color: #2261ad;
-    text-align: center;
-    font-size: 14px;
-    letter-spacing: 1.25px;
-    position: absolute;
-    height: 16px;
-    right: 42px;
-  }
-  .dropdown {
-    width: 180px;
-    position: absolute;
-    top: 0%;
-    bottom: 0%;
-    left: 0%;
-    right: 0%;
-  }
-`;
+//TODO: Uncomment for CSV
+// const ExportWrapper = styled.div`
+//   .dropdown-text {
+//     color: #2261ad;
+//     text-align: center;
+//     font-size: 14px;
+//     letter-spacing: 1.25px;
+//     position: absolute;
+//     height: 16px;
+//     right: 42px;
+//   }
+//   .dropdown {
+//     width: 180px;
+//     position: absolute;
+//     top: 0%;
+//     bottom: 0%;
+//     left: 0%;
+//     right: 0%;
+//   }
+// `;
 
 function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
   const columns = [
@@ -69,22 +65,18 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
       }
     },
     {
-      title: (
-        <ExportWrapper>
-          <FormControl
-            variant="outlined"
-            size="small"
-            margin="dense"
-            className="dropdown"
-          >
-            <InputLabel className="dropdown-text"></InputLabel>
-            <Select value="csv" onChange={null}>
-              <MenuItem value={"csv"}>Download as CSV</MenuItem>
-              <MenuItem value={"pdf"}>Download as PDF</MenuItem>
-            </Select>
-          </FormControl>
-        </ExportWrapper>
-      ),
+      title: null,
+      //(
+      //   <>
+      //     <ExportWrapper>
+      //       <InputLabel className="dropdown-text"></InputLabel>
+      //       <Select value="csv" onChange={() => console.info("replace me")}>
+      //         <MenuItem value={"csv"}>Download as CSV</MenuItem>
+      //         <MenuItem value={"pdf"}>Download as PDF</MenuItem>
+      //       </Select>
+      //     </ExportWrapper>
+      //   </>
+      // ),
       field: "applicantLink",
       sorting: false,
       searchable: false,
@@ -98,16 +90,23 @@ function AllApplicationsTable({ applicationCount, reviewCount, ...props }) {
     search: true,
     showTitle: true
   };
+
   return (
     <Wrapper>
       <MaterialTable
+        key={reviewCount + applicationCount}
         icons={TableIcons}
         components={{
           Container: (props) => <Container {...props} elevation={0} />
         }}
         columns={columns}
         {...props}
-        title={reviewCount + "/" + applicationCount + " candidates rated"}
+        title={
+          (Object.keys(reviewCount).length === 0 ? 0 : reviewCount) +
+          "/" +
+          applicationCount +
+          " candidates rated"
+        }
         options={options}
       ></MaterialTable>
     </Wrapper>

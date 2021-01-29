@@ -32,7 +32,7 @@ const routes = [
     component: ProgramManagement,
     header: true,
     title: "Programs List",
-    programGroup: "REVIEWER"
+    programGroup: ""
   },
   {
     path: "/submissions/:organizationId",
@@ -87,7 +87,7 @@ const routes = [
     path: "/form-preview/:formId",
     component: CreateSubmissionForm,
     title: "Preview Form Submission",
-    header: true,
+    header: false,
     loginRequired: false,
     programGroup: ""
   },

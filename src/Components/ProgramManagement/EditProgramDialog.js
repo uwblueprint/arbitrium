@@ -6,7 +6,7 @@ import Dialog from "../Common/Dialogs/Dialog";
 import DialogHeader from "../Common/Dialogs/DialogHeader";
 import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import { updateProgramNameAPI } from "../../requests/update";
+import { updateProgramNameAPI, createProgramAPI } from "../../requests/update";
 
 const StyledLabel = styled(InputLabel)`
   margin-bottom: 4px;
@@ -24,12 +24,12 @@ const Wrapper = styled.div`
 
 function EditProgramDialog({
   close,
-  // eslint-disable-next-line no-unused-vars
   userId = "",
-  // eslint-disable-next-line no-unused-vars
   orgId = "",
   program = null,
-  newProgram = false
+  newProgram = false,
+  duplicate = false,
+  reloadPrograms
 }) {
   const [programName, setProgramName] = useState(program ? program.name : "");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,9 +39,21 @@ function EditProgramDialog({
   };
 
   async function createProgram() {
+    if (programName.length === 0) return;
     setIsSubmitting(true);
     try {
-      // TODO: Implement createProgramAPI and call it with the userId, orgId, and program name
+      const newProgram = {
+        createdByUserId: userId,
+        organization: orgId,
+        databaseName: null,
+        displayName: programName,
+        appVersion: 2,
+        deleted: false,
+        archived: false
+      };
+      await createProgramAPI(newProgram);
+      reloadPrograms({ userId });
+
       close();
     } catch (e) {
       console.error(e);
@@ -50,6 +62,7 @@ function EditProgramDialog({
   }
 
   async function renameProgram() {
+    if (programName.length === 0) return;
     setIsSubmitting(true);
     try {
       updateProgramNameAPI(program.id, { name: programName });
@@ -61,12 +74,42 @@ function EditProgramDialog({
     }
   }
 
+  async function duplicateProgram() {
+    setIsSubmitting(true);
+    try {
+      //TODO: Finish later
+      // const newProgram = {
+      //   createdByUserId: userId,
+      //   organization: orgId,
+      //   databaseName: null,
+      //   displayName: programName,
+      //   appVersion: 2,
+      //   deleted: false,
+      //   archived: false
+      // };
+      // let result = await createProgramAPI(newProgram);
+      // console.log(result);
+      //await duplicateProgram(program.id);
+      close();
+    } catch (e) {
+      console.error(e);
+      setIsSubmitting(false);
+      close();
+    }
+  }
+
   return (
     <Wrapper>
       <Dialog width="400px" paddingHorizontal={28} paddingVertical={28}>
         <DialogHeader
           onClose={close}
-          title={newProgram ? "New program" : "Rename program"}
+          title={
+            newProgram
+              ? "New program"
+              : duplicate
+              ? "Duplicate program"
+              : "Rename program"
+          }
         />
         <LoadingOverlay
           show={isSubmitting}
@@ -79,14 +122,22 @@ function EditProgramDialog({
           <StyledLabel htmlFor="program-name-input">Name</StyledLabel>
           <OutlinedInput
             id="program-name-input"
+            error={programName.length === 0}
             fullWidth
+            required
             value={programName}
             onChange={updateProgramName()}
           />
         </QuestionWrapper>
         <Button
           className="createButton"
-          onClick={newProgram ? createProgram : renameProgram}
+          onClick={
+            newProgram
+              ? createProgram
+              : duplicate
+              ? duplicateProgram
+              : renameProgram
+          }
           fullWidth
           variant="contained"
           color="primary"
