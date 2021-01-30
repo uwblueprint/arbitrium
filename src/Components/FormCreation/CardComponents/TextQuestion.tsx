@@ -37,11 +37,55 @@ function TextQuestion({
   const [text, setText] = useState(initialAnswer);
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //Check validations here and update the error prop accordingly
+    console.log(initialValidation);
     if (initialValidation) {
-      console.log(initialValidation);
+      if (initialValidation.max !== 0) {
+        if (
+          (initialValidation.type === "CHAR" &&
+            event.target.value.length > initialValidation.max) ||
+          (initialValidation.type === "WORD" &&
+            event.target.value.split(" ").length > initialValidation.max)
+        ) {
+          // violates MAX validation
+          setIsValid(false);
+          setErrorMessage(
+            "Entered text exceeds the maximum " +
+              initialValidation.type.toLowerCase() +
+              " count of " +
+              initialValidation.max +
+              "."
+          );
+        } else {
+          setIsValid(true);
+          setErrorMessage("");
+        }
+      } else {
+        if (
+          (initialValidation.type === "CHAR" &&
+            event.target.value.length < initialValidation.min) ||
+          (initialValidation.type === "WORD" &&
+            event.target.value.split(" ").length < initialValidation.min)
+        ) {
+          // violates MIN validation
+          setIsValid(false);
+          setErrorMessage(
+            "Entered text is below the minimum " +
+              initialValidation.type.toLowerCase() +
+              " count of " +
+              initialValidation.min +
+              "."
+          );
+        } else {
+          setIsValid(true);
+          setErrorMessage("");
+        }
+      }
     }
     setText(event.target.value);
   };
+
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [validationType, setValidationType] = useState(
     initialValidation?.type
@@ -116,6 +160,7 @@ function TextQuestion({
         multiline={!short_answer}
         fullWidth={true}
       ></InputBase>
+      {!isValid ? <p style={{ color: "red" }}>{errorMessage}</p> : null}
       {validation && !short_answer ? (
         <div>
           <Select
