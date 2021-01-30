@@ -37,7 +37,9 @@ function TextQuestion({
   };
 
   const [validationType, setValidationType] = useState(
-    initialValidation?.type.toLowerCase() as string
+    initialValidation?.type
+      ? (initialValidation?.type.toLowerCase() as string)
+      : "word"
   );
   const [validationLimit, setValidationLimit] = useState(
     (initialValidation?.min as number) !== 0 ? "least" : "most"
