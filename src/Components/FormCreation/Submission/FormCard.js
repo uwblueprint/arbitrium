@@ -107,7 +107,8 @@ function FormCard({
   questionKey,
   updateSubmission,
   fileUploadURL,
-  sectionId
+  sectionId,
+  onValidUpdate
 }) {
   const { themeColour } = useContext(FormSettingsContext);
   const answers = useContext(SubmissionAnswersContext);
@@ -188,6 +189,7 @@ function FormCard({
             initialValidation={card.validations}
             onChange={onQuestionUpdate}
             initialAnswer={initialAnswer?.answerString}
+            onValidUpdate={onValidUpdate}
           />
         ),
         renderInactive: card.type

@@ -95,6 +95,7 @@ function CreateSubmissionForm({ match }) {
     customSubmissionAnswerReducer,
     []
   );
+  const [isValid, setIsValid] = useState(0);
 
   //----------------------------------------------------------------------------
   //Check to see if Preview or closed
@@ -316,6 +317,14 @@ function CreateSubmissionForm({ match }) {
     });
   }, [page]);
 
+  const onValidUpdate = (isValid) => {
+    if (isValid) {
+      setIsValid(isValid - 1);
+    } else {
+      setIsValid(isValid + 1);
+    }
+  };
+
   const norm_progress = (pageNum) => {
     return (pageNum * 100) / sections.length;
   };
@@ -423,6 +432,7 @@ function CreateSubmissionForm({ match }) {
                     sectionNum={page + 1}
                     sectionData={sections[page]}
                     fileUploadURL={fileUploadURL}
+                    onValidUpdate={onValidUpdate}
                   />
                 ) : null}
                 {page === sections.length - 1 && !loadForm.isPending ? (
@@ -449,6 +459,7 @@ function CreateSubmissionForm({ match }) {
                     <Button
                       variant="contained"
                       className={classes.button}
+                      disabled={isValid !== 0}
                       color="primary"
                       onClick={() => {
                         handleSubmit();
@@ -460,7 +471,7 @@ function CreateSubmissionForm({ match }) {
                     <Button
                       variant="contained"
                       className={classes.button}
-                      disabled={page === sections.length - 1}
+                      disabled={page === sections.length - 1 || isValid !== 0}
                       color="primary"
                       onClick={() => setPage(page + 1)}
                     >
