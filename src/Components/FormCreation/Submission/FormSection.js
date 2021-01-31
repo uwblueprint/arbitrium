@@ -82,7 +82,8 @@ function FormSection({
   sectionNum,
   sectionData,
   saveAnswer,
-  fileUploadURL
+  fileUploadURL,
+  onValidUpdate
 }) {
   const { themeColour } = useContext(FormSettingsContext);
   const classes = useStyles({ themeColour });
@@ -169,6 +170,7 @@ function FormSection({
             updateSubmission={updateSubmission}
             themeColour={themeColour}
             fileUploadURL={fileUploadURL}
+            onValidUpdate={onValidUpdate}
           />
         </CardWrapper>
       ))}
