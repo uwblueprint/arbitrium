@@ -38,6 +38,7 @@
     "nodemailer": "^6.4.16",
     "nodemon": "^1.19.4",
     "prop-types": "^15.7.2",
+    "puppeteer": "^5.5.0",
     "react": "^16.14.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-csv": "^2.0.3",

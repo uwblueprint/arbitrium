@@ -1,6 +1,7 @@
 const express = require("express");
 const firebase = require("firebase");
 require("firebase/firestore");
+const puppeteer = require("puppeteer");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
@@ -100,6 +101,30 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/files", filesRoutes);
+
+//------------------------------------------------------------------------------
+//Puppeteer.launch();
+//------------------------------------------------------------------------------
+try {
+  (async () => {
+    console.log("Creating browswer");
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox"]
+    });
+    console.log("Creating Page");
+    const page = await browser.newPage();
+    console.log("going to page");
+    await page.goto("https://www.google.com", {
+      waitUntil: "domcontentloaded"
+    });
+    console.log("exporting to pdf");
+    await page.pdf({ path: "hn.pdf", format: "A4" });
+    console.info("Saved");
+    await browser.close();
+  })();
+} catch (e) {
+  console.log(e);
+}
 
 app.listen(4000, () => {
   console.info("Server is listening on port:4000");
