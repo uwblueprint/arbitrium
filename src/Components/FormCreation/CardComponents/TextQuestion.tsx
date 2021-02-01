@@ -5,11 +5,13 @@ import { AnyNaptrRecord } from "dns";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { Validation } from "../../../Types/FormTypes";
+import InputBase from "@material-ui/core/InputBase";
 
 const Wrapper = styled.div`
   margin-top: 16px;
   margin-bottom: 33px;
   width: 744px;
+  fontsize: 14px;
 `;
 
 type Props = {
@@ -19,18 +21,20 @@ type Props = {
   onValidation: (validation: Validation) => void;
   initialValidation: Validation;
   onChange: (text: string) => void;
+  initialAnswer: string;
 };
 
 //TODO: Add Response Validation
 function TextQuestion({
   submission = false,
   short_answer,
+  onChange,
   validation,
   onValidation,
   initialValidation,
-  onChange
+  initialAnswer = ""
 }: Props): React.ReactElement {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(initialAnswer);
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //Check validations here and update the error prop accordingly
     setText(event.target.value);
@@ -96,20 +100,19 @@ function TextQuestion({
 
   return (
     <Wrapper>
-      <TextField
+      <InputBase
         disabled={!submission}
         error={false}
         placeholder={short_answer ? "Short answer text" : "Long answer text"}
-        size="medium"
+        style={{ fontSize: "14px" }}
         value={text}
         onBlur={() => onChange(text)}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           handleTextChange(event)
         }
-        multiline
-        rowsMax={short_answer ? 2 : 4}
+        multiline={!short_answer}
         fullWidth={true}
-      ></TextField>
+      ></InputBase>
       {validation && !short_answer ? (
         <div>
           <Select

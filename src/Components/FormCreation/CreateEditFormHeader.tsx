@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import InputBase from "@material-ui/core/InputBase";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
@@ -6,10 +6,11 @@ import GetFormDialog from "./Dialogs/GetFormDialog";
 import Snackbar from "@material-ui/core/Snackbar";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import ControlledDialogTrigger from "../Common/Dialogs/DialogTrigger";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import FormSettingsContext from "./FormSettingsContext";
 
 const Header = styled.div`
   box-sizing: border-box;
-  height: 176px;
   width: 100%;
   box-shadow: 0 2px 3px 1px #cccccc;
   display: flex;
@@ -34,7 +35,6 @@ const DescriptionInput = styled(InputBase)`
     display: block;
     line-height: 21px;
     overflow-y: auto;
-    max-height: 48px;
   }
   textarea {
     font-size: 14px;
@@ -58,14 +58,12 @@ const ButtonWrapper = styled.div`
 
 const LinkPreviewButton = styled(Button)`
   && {
-    color: #2261ad;
     margin-right: 16px;
 
     text-transform: none;
     letter-spacing: 1.25px;
     line-height: 16px;
     padding: 10px 12px 10px 12px;
-    border: 1px solid rgba(0, 0, 0, 0.33);
   }
 `;
 
@@ -87,9 +85,7 @@ const SettingsButton = styled(Button)`
   }
 `;
 
-const FormSettingsOutlineIcon = styled(SettingsOutlinedIcon)`
-  color: #2261ad;
-`;
+const FormSettingsOutlineIcon = styled(SettingsOutlinedIcon)``;
 
 type Props = {
   name: string;
@@ -114,6 +110,15 @@ function CreateEditFormHeader({
   const [showPreviewLink, setShowPreviewLink] = useState(false);
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [copiedPreviewLink, setCopiedPreviewLink] = useState(false);
+
+  const { themeColour } = useContext(FormSettingsContext);
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+        main: `#${themeColour}`
+      }
+    }
+  });
 
   useEffect(() => {
     setFormTitle(name);
@@ -148,89 +153,91 @@ function CreateEditFormHeader({
 
   return (
     <Header>
-      <InputWrapper>
-        <NameInput
-          placeholder="Form name"
-          value={formTitle}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFormTitle(e.target.value)
-          }
-          onBlur={updateHeader}
+      <ThemeProvider theme={theme}>
+        <InputWrapper>
+          <NameInput
+            placeholder="Form name"
+            value={formTitle}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormTitle(e.target.value)
+            }
+            onBlur={updateHeader}
+          />
+          <DescriptionInput
+            multiline
+            placeholder="Form description..."
+            value={formDescription}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setFormDescription(e.target.value)
+            }
+            onBlur={updateHeader}
+          ></DescriptionInput>
+        </InputWrapper>
+        <ButtonWrapper>
+          <div>
+            <LinkPreviewButton
+              variant="outlined"
+              onClick={() => {
+                setShowPreviewLink(true);
+              }}
+              color="primary"
+            >
+              Get Preview Link
+            </LinkPreviewButton>
+            <PublishButton
+              variant="contained"
+              onClick={() => {
+                setShowPublishDialog(true);
+              }}
+              color="primary"
+            >
+              Publish
+            </PublishButton>
+          </div>
+          <div>
+            <SettingsButton
+              onClick={onFormSettingsClick}
+              color="primary"
+              startIcon={<FormSettingsOutlineIcon />}
+            >
+              Form Settings
+            </SettingsButton>
+          </div>
+        </ButtonWrapper>
+        <ControlledDialogTrigger
+          showDialog={showPreviewLink}
+          Dialog={GetFormDialog}
+          dialogProps={{
+            link: previewLink,
+            close: closeDialog,
+            copyLinkToClipboard: copyLinkToClipboard
+          }}
         />
-        <DescriptionInput
-          multiline
-          placeholder="Form description..."
-          value={formDescription}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setFormDescription(e.target.value)
-          }
-          onBlur={updateHeader}
-        ></DescriptionInput>
-      </InputWrapper>
-      <ButtonWrapper>
-        <div>
-          <LinkPreviewButton
-            variant="outlined"
-            onClick={() => {
-              setShowPreviewLink(true);
-            }}
-            color="primary"
-          >
-            Get Preview Link
-          </LinkPreviewButton>
-          <PublishButton
-            variant="contained"
-            onClick={() => {
-              setShowPublishDialog(true);
-            }}
-            color="primary"
-          >
-            Publish
-          </PublishButton>
-        </div>
-        <div>
-          <SettingsButton
-            onClick={onFormSettingsClick}
-            color="primary"
-            startIcon={<FormSettingsOutlineIcon />}
-          >
-            Form Settings
-          </SettingsButton>
-        </div>
-      </ButtonWrapper>
-      <ControlledDialogTrigger
-        showDialog={showPreviewLink}
-        Dialog={GetFormDialog}
-        dialogProps={{
-          link: previewLink,
-          close: closeDialog,
-          copyLinkToClipboard: copyLinkToClipboard
-        }}
-      />
-      <ControlledDialogTrigger
-        showDialog={showPublishDialog}
-        Dialog={GetFormDialog}
-        dialogProps={{
-          link: previewLink,
-          close: closeDialog,
-          copyLinkToClipboard: copyLinkToClipboard,
-          publish: true,
-          handlePublish: publish
-        }}
-      />
-      <Snackbar
-        open={copiedPreviewLink}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left"
-        }}
-        autoHideDuration={5000}
-        resumeHideDuration={5000}
-        onClose={() => {
-          setCopiedPreviewLink(false);
-        }}
-        message={"Copied to clipboard."}
-      />
+        <ControlledDialogTrigger
+          showDialog={showPublishDialog}
+          Dialog={GetFormDialog}
+          dialogProps={{
+            link: previewLink,
+            close: closeDialog,
+            copyLinkToClipboard: copyLinkToClipboard,
+            publish: true,
+            handlePublish: publish
+          }}
+        />
+        <Snackbar
+          open={copiedPreviewLink}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          autoHideDuration={5000}
+          resumeHideDuration={5000}
+          onClose={() => {
+            setCopiedPreviewLink(false);
+          }}
+          message={"Copied to clipboard."}
+        />
+      </ThemeProvider>
     </Header>
   );
 }

@@ -152,6 +152,7 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
   //     hasAdminAccessForCurrentProgram = true;
   //   }
   // }
+
   return (
     <Container>
       <BodyWrapper>
@@ -162,62 +163,64 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
             </div>
           </Tooltip>
         </AppName>
-        <div
-          style={{
-            maxWidth: 250,
-            display: "flex",
-            justifyContent: "space-between"
-          }}
-        >
-          <p style={{ minWidth: 200 }}>
-            <Typography noWrap>
-              {program && programsMap[program]
-                ? programsMap[program].displayName
-                : "Select a program to view applications "}
-            </Typography>
-          </p>
-          <div>
-            <ArrowDropDownCircleOutlinedIcon
-              style={{ marginLeft: "4px", margin: "12px" }}
-              onClick={handleClickProgramMenu}
-            ></ArrowDropDownCircleOutlinedIcon>
-            <Menu
-              elevation={0}
-              id="simple-menu"
-              anchorEl={programMenuAnchor}
-              keepMounted
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-              open={Boolean(programMenuAnchor)}
-              onClose={() => {
-                setprogramMenuAnchor(null);
-              }}
-              style={{
-                marginTop: HEADER_HEIGHT / 2 + 4,
-                maxWidth: 250
-              }}
-              MenuListProps={{
-                classes: {
-                  padding: classes.padding
-                }
-              }}
-            >
-              {validPrograms ? (
-                <div style={{ border: "1px solid #ccc" }}>
-                  {validPrograms.map((p, index) => (
-                    <MenuItem key={index} onClick={() => handleSelect(p)}>
-                      <Typography noWrap>{p.displayName}</Typography>
-                    </MenuItem>
-                  ))}
-                  {validPrograms.length === 0 ? (
-                    <MenuItem key={"None"}>
-                      {"You don't have access to any programs"}
-                    </MenuItem>
-                  ) : null}
-                </div>
-              ) : null}
-            </Menu>
+        {curRoute.path !== "/programs" ? (
+          <div
+            style={{
+              maxWidth: 250,
+              display: "flex",
+              justifyContent: "space-between"
+            }}
+          >
+            <p style={{ minWidth: 200 }}>
+              <Typography noWrap>
+                {program && programsMap[program]
+                  ? programsMap[program].displayName
+                  : "Select a program to view applications "}
+              </Typography>
+            </p>
+            <div>
+              <ArrowDropDownCircleOutlinedIcon
+                style={{ marginLeft: "4px", margin: "12px" }}
+                onClick={handleClickProgramMenu}
+              ></ArrowDropDownCircleOutlinedIcon>
+              <Menu
+                elevation={0}
+                id="simple-menu"
+                anchorEl={programMenuAnchor}
+                keepMounted
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+                open={Boolean(programMenuAnchor)}
+                onClose={() => {
+                  setprogramMenuAnchor(null);
+                }}
+                style={{
+                  marginTop: HEADER_HEIGHT / 2 + 4,
+                  maxWidth: 250
+                }}
+                MenuListProps={{
+                  classes: {
+                    padding: classes.padding
+                  }
+                }}
+              >
+                {validPrograms ? (
+                  <div style={{ border: "1px solid #ccc" }}>
+                    {validPrograms.map((p, index) => (
+                      <MenuItem key={index} onClick={() => handleSelect(p)}>
+                        <Typography noWrap>{p.displayName}</Typography>
+                      </MenuItem>
+                    ))}
+                    {validPrograms.length === 0 ? (
+                      <MenuItem key={"None"}>
+                        {"You don't have access to any programs"}
+                      </MenuItem>
+                    ) : null}
+                  </div>
+                ) : null}
+              </Menu>
+            </div>
           </div>
-        </div>
+        ) : null}
         <RightSideHeaderWrapper>
           {appUser.role === "Admin" || hasAdminAccessForCurrentProgram ? (
             <RightSideHeaderWrapper
@@ -231,7 +234,7 @@ function Header({ program, loadProgram, history, curRoute, routes }) {
                 {" "}
                 {curRoute.title}{" "}
               </p>
-              {routes.length > 0 ? (
+              {routes.length > 1 ? (
                 <div>
                   <ArrowDropDownCircleOutlinedIcon
                     style={{ marginRight: "12px" }}

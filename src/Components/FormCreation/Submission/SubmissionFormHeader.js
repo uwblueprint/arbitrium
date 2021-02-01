@@ -4,6 +4,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import styled from "styled-components";
 import FormSettingsContext from "../FormSettingsContext";
+import InputBase from "@material-ui/core/InputBase";
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -15,7 +16,8 @@ const useStyles = makeStyles(() => ({
     borderTop: `14px solid #${props.themeColour}`,
     boxShadow: "0 2px 3px 1px #cccccc",
     marginBottom: 20,
-    width: 816
+    width: 816,
+    color: "black"
   }),
   logo: {
     fontSize: 14,
@@ -43,18 +45,16 @@ const TitleWrapper = styled.div`
 
 const NameField = styled.div`
   font-size: 20px;
-  width: 816px;
+  width: 784px;
   margin-bottom: 16px;
   line-height: 22px;
 `;
 
-const DescriptionField = styled.div`
-  width: 816px;
+const DescriptionField = styled(InputBase)`
+  width: 784px;
   display: block;
   line-height: 21px;
-  max-height: 56px;
   font-size: 16px;
-  color: #888888;
 `;
 
 const CardWrapper = styled.div`
@@ -63,7 +63,7 @@ const CardWrapper = styled.div`
 
 //Other props { numCards, card, type, question, options, required }
 //commented due to lint error
-function SubmissionFormHeader({ name, description }) {
+function SubmissionFormHeader({ name, description, page, submitted = false }) {
   const { themeColour } = useContext(FormSettingsContext);
   const classes = useStyles({ themeColour });
 
@@ -74,7 +74,15 @@ function SubmissionFormHeader({ name, description }) {
           <CardContent className={classes.content}>
             <TitleWrapper>
               <NameField>{name}</NameField>
-              <DescriptionField>{description}</DescriptionField>
+              {page === -1 || submitted ? (
+                <DescriptionField
+                  style={{ color: "black" }}
+                  multiline
+                  placeholder="Form description..."
+                  value={description}
+                  disabled={true}
+                ></DescriptionField>
+              ) : null}
             </TitleWrapper>
           </CardContent>
         </Card>

@@ -18,7 +18,6 @@ import InputBase from "@material-ui/core/InputBase";
 import AddCardComponent from "./AddCardComponent";
 import { deleteQuestion } from "../../requests/forms";
 import TextField from "@material-ui/core/TextField";
-import { AuthContext } from "../../Authentication/Auth.js";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -60,7 +59,7 @@ const useStyles = makeStyles({
   //Section Title
   sectionTitle: {
     height: 36,
-    width: 440,
+    width: 700,
     fontSize: 24,
     paddingTop: 24
   },
@@ -74,7 +73,6 @@ const useStyles = makeStyles({
 
   //Section Description
   sectionDescription: {
-    height: 21,
     width: 744
   },
 
@@ -147,11 +145,11 @@ function FormSection({
   initialActiveQuestion,
   refetch,
   setInitialActiveQuestion,
-  isPublished
+  isPublished,
+  programId
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
-  const { appUser } = useContext(AuthContext);
   const [activeQuestion, setActiveQuestion] = useState(initialActiveQuestion);
   const [questions, dispatchQuestionsUpdate] = useReducer(
     customFormQuestionsReducer,
@@ -285,13 +283,8 @@ function FormSection({
 
   const updateParent = useCallback(() => {
     setInitialActiveQuestion(activeQuestion);
-    refetch({ programId: appUser.currentProgram });
-  }, [
-    activeQuestion,
-    refetch,
-    appUser.currentProgram,
-    setInitialActiveQuestion
-  ]);
+    refetch({ programId: programId });
+  }, [activeQuestion, refetch, programId, setInitialActiveQuestion]);
 
   //When the questions changes we will update the form.
   //1. When anything in the card changes focus

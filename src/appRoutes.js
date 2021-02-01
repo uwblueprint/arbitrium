@@ -30,7 +30,7 @@ const routes = [
   {
     path: "/programs",
     component: ProgramManagement,
-    header: true,
+    header: false,
     title: "Programs List",
     programGroup: ""
   },

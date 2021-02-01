@@ -147,13 +147,14 @@ function CreateEditForm({ programId }) {
       !loadForm.isPending &&
       loadForm.value &&
       sections.length > 0 &&
-      sections !== loadForm.value.sections
+      sections !== loadForm.value.sections &&
+      deletedSection === null
     ) {
       const newForm = loadForm.value;
       newForm.sections = sections;
       FORM.updateForm(loadForm.value._id, newForm);
     }
-  }, [sections, loadForm.value, loadForm.isPending]);
+  }, [sections, loadForm.value, loadForm.isPending, deletedSection]);
 
   //If a form doesn't exist then create a new one from the default template
   const initiateForm = useCallback(() => {
@@ -378,11 +379,10 @@ function CreateEditForm({ programId }) {
         });
         updateActiveSection(activeSection !== 0 ? activeSection - 1 : 0);
       })
-      .catch(() => {
-        setDeletedSection(null);
-
-        alert("Something went wrong. Form section deleted unsuccessfully.");
+      .catch((e) => {
+        //alert("Something went wrong. Form section deleted unsuccessfully.");
         console.error(`ERROR: Status - ${response}`);
+        console.error(e);
       });
   }
 
@@ -618,6 +618,7 @@ function CreateEditForm({ programId }) {
               <div key={uniquekey + section._id}>
                 <FormWrapper key={section._id} id={"section_" + key}>
                   <FormSection
+                    programId={programId} //Use this for saving and not appUser.currentProgram
                     key={key + "_section"}
                     formId={loadForm.value._id}
                     numSections={sections.length}
@@ -662,40 +663,20 @@ function CreateEditForm({ programId }) {
                 horizontal: "left"
               }}
             />
-            <DragDropContext onDragEnd={onDragEnd}>
-              {sections &&
-                sections.map((section, key) => (
-                  <div key={uniquekey + section._id}>
-                    <FormWrapper key={section._id} id={"section_" + key}>
-                      <FormSection
-                        key={key + "_section"}
-                        numSections={sections.length}
-                        sectionNum={key + 1}
-                        sectionData={section}
-                        updateActiveSection={updateActiveSection}
-                        active={activeSection === key}
-                        handleAddSection={handleAddSection}
-                        handleTitleUpdate={handleTitleUpdate}
-                        handleDescriptionUpdate={handleDescriptionUpdate}
-                        handleSectionTypeUpdate={handleSectionTypeUpdate}
-                        handleMoveSection={handleMoveSection}
-                        handleDeleteSection={handleDeleteSection}
-                        setShowMoveSectionsDialog={setShowMoveSectionsDialog}
-                      />
-                    </FormWrapper>
-                  </div>
-                ))}
-            </DragDropContext>
-
             <ControlledDialogTrigger
               showDialog={showDeleteSectionConfirmation}
               Dialog={DeleteSectionConfirmation}
               dialogProps={{
                 confirm: deleteSection,
                 close: closeDeleteSectionConfirmation,
-                sectionName: sections.length && sections[activeSection].name,
+                sectionName:
+                  sections.length &&
+                  sections[activeSection] &&
+                  sections[activeSection].name,
                 questionCount:
-                  sections.length && sections[activeSection].questions.length
+                  sections.length &&
+                  sections[activeSection] &&
+                  sections[activeSection].questions.length
               }}
             />
           </div>

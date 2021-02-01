@@ -24,6 +24,8 @@ type Props = {
   active: boolean;
   initialNumFiles?: number;
   fileUploadURL?: string;
+  initialAnswer: Array<string>;
+  isPublished: boolean;
 };
 
 const useStyles = makeStyles({
@@ -48,11 +50,13 @@ function getFileName(awsFilePath: string | null | undefined) {
 
 //TODO: Add Response Validation
 function FileQuestion({
-  submission,
+  submission = false,
+  isPublished = false,
   active,
   onChange,
   fileUploadURL,
-  initialNumFiles = 0
+  initialNumFiles = 1,
+  initialAnswer = []
 }: Props): React.ReactElement {
   const [numFiles, setnumFiles] = useState(initialNumFiles || 1);
   const classes = useStyles();
@@ -62,7 +66,7 @@ function FileQuestion({
     setnumFiles(value as number);
     onChange(value as number);
   };
-  const [files, setFiles] = useState([] as Array<string>);
+  const [files, setFiles] = useState(initialAnswer as Array<string>);
 
   const numFileOptions = [1, 2, 3, 5, 10];
 
@@ -139,6 +143,7 @@ function FileQuestion({
               Maximum number of files{" "}
             </p>
             <Select
+              disabled={isPublished}
               value={numFiles}
               onChange={(event) => handleNumFileChange(event.target.value)}
             >

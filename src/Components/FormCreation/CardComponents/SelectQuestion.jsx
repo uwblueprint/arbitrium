@@ -43,6 +43,9 @@ const useStyles = makeStyles(() => ({
   }),
   inputHovered: {
     boxShadow: "0 1px 0 #DADADA"
+  },
+  submissionOptions: {
+    fontSize: "12px"
   }
 }));
 
@@ -65,10 +68,7 @@ const OptionNameInput = styled(InputBase)`
     max-height: 48px;
     position: absolute;
     bottom: 0px;
-  }
-  textarea {
-    font-size: 14px;
-    color: #888888;
+    fontsize: 8px;
   }
 `;
 
@@ -90,9 +90,11 @@ const GreyCheckbox = withStyles({
 
 function SelectQuestion({
   submission = false,
+  isPublished = false,
   multiSelect,
   onChange,
   initialOptions,
+  initialAnswers, //Submission
   minSelectValidation = 0,
   maxSelectValidation = 0
 }) {
@@ -103,8 +105,14 @@ function SelectQuestion({
   const [options, setOptions] = useState(initialOptions || []);
   const [hoveredOption, setHoveredOption] = useState(-1);
 
+  //Check if the initial option already exists as an asnwer, and set to true
+  //initialoptions[value, _id]
   const selectedInit = {};
-  initialOptions.forEach((m) => (selectedInit[m[0]] = false));
+  initialOptions.forEach((m) => {
+    return (selectedInit[m[0]] = initialAnswers?.find(
+      (ansId) => ansId === m[1]
+    ));
+  });
   const [selected, setSelected] = useState(selectedInit);
 
   //----------------------------------------------------------------------------
@@ -207,7 +215,7 @@ function SelectQuestion({
   return (
     <Wrapper>
       {submission ? (
-        <div>
+        <div classes={{ body1: styles.submissionOptions }}>
           <FormControl required={!multiSelect} error={errorMin || errorMax}>
             <FormGroup>
               {selected
@@ -215,11 +223,12 @@ function SelectQuestion({
                     <OptionWrapper key={index}>
                       {multiSelect ? (
                         <FormControlLabel
+                          classes={{ label: styles.submissionOptions }}
                           control={
                             <CustomColourCheckbox
                               checked={selected[data]}
                               onChange={handleCheckBoxSelect}
-                              size="large"
+                              size="small"
                               name={data}
                               inputProps={{
                                 "aria-label": "checkbox with default color"
@@ -253,7 +262,11 @@ function SelectQuestion({
         </div>
       ) : (
         <DragDropContext
-          onDragEnd={onDragEnd}
+          onDragEnd={
+            !isPublished
+              ? onDragEnd
+              : () => alert("You may not move options in a published form")
+          }
           onBeforeDragStart={onBeforeDragStart}
         >
           <Droppable droppableId="droppable">
@@ -306,6 +319,7 @@ function SelectQuestion({
                                 onClick={() => onDeleteOption(index)}
                                 classes={{ root: styles.closeRoot }}
                                 size="small"
+                                disabled={isPublished}
                               >
                                 <Close />
                               </IconButton>

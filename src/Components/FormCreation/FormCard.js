@@ -59,8 +59,7 @@ const useStyles = makeStyles({
     fontSize: 16
   },
   questionTitle: {
-    height: 24,
-    width: 568,
+    width: 784,
     display: "flex",
     fontSize: 16
   },
@@ -82,7 +81,6 @@ const useStyles = makeStyles({
   //Question Description
   questionDescription: {
     width: 744,
-    height: 21,
     marginBottom: 24
   },
 
@@ -266,6 +264,7 @@ function FormCard({
             card && card.x_options.map((option) => [option.value])
           }
           multiSelect={true}
+          isPublished={isPublished}
         />
       ),
       renderInactive: card.type
@@ -284,6 +283,7 @@ function FormCard({
             card && card.x_options.map((option) => [option.value])
           }
           multiSelect={false}
+          isPublished={isPublished}
         />
       ),
       renderInactive: card.type
@@ -300,6 +300,7 @@ function FormCard({
           onChange={onQuestionUpdate}
           submission={false}
           initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
+          isPublished={true}
         />
       ),
       renderInactive: (
@@ -308,6 +309,7 @@ function FormCard({
           onChange={onQuestionUpdate}
           submission={false}
           initialNumFiles={card && card.x_options[0] && card.x_options[0].value}
+          isPublished={true}
         />
       )
     }
@@ -346,7 +348,7 @@ function FormCard({
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       onBlur={() => handleQuestionTitleUpdate(title)}
-                      rowsMax={1}
+                      multiline={!active}
                       type="string"
                     ></InputBase>
                     {active ? (

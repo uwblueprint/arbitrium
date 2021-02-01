@@ -3,9 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "@material-ui/core/CardHeader";
 import FormCard from "./FormCard";
 import FormSettingsContext from "../FormSettingsContext";
+import InputBase from "@material-ui/core/InputBase";
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -31,7 +31,9 @@ const useStyles = makeStyles(() => ({
   title: {
     color: "#000",
     fontSize: "20px",
-    fontWeight: "500"
+    fontWeight: "400",
+    lineHeight: "24px",
+    paddingLeft: "16px"
   },
   section_title: (props) => ({
     borderTopLeftRadius: "4px",
@@ -46,6 +48,12 @@ const useStyles = makeStyles(() => ({
     paddingTop: "5px",
     paddingBottom: "5px"
   }),
+  //Section Description
+  sectionDescription: {
+    width: 784,
+    fontSize: 16,
+    color: "black"
+  },
   action_menu: {
     boxShadow:
       "0px 8px 10px rgba(0, 0, 0, 0.14), 0px 3px 14px rgba(0, 0, 0, 0.12), 0px 5px 5px rgba(0, 0, 0, 0.2)",
@@ -66,6 +74,7 @@ const useStyles = makeStyles(() => ({
 
 const CardWrapper = styled.div`
   display: flex;
+  padding: "16px";
 `;
 
 function FormSection({
@@ -130,13 +139,17 @@ function FormSection({
       </span>
       <CardWrapper key={sectionNum}>
         <Card className={classes.active}>
-          <CardHeader
-            className={classes.title}
-            title={sectionData.name}
-            id={sectionNum}
-          />
+          <p className={classes.title}>{sectionData.name}</p>
           <CardContent className={classes.content}>
-            {sectionData.description}
+            <InputBase
+              disabled={true}
+              style={{ color: "black" }}
+              className={classes.sectionDescription}
+              placeholder=""
+              value={sectionData.description}
+              multiline
+              type="string"
+            ></InputBase>
           </CardContent>
         </Card>
       </CardWrapper>
@@ -152,6 +165,7 @@ function FormSection({
             handleActive={updateActiveQuestion}
             sectionKey={sectionNum - 1}
             questionKey={questionKey}
+            sectionId={sectionData._id}
             updateSubmission={updateSubmission}
             themeColour={themeColour}
             fileUploadURL={fileUploadURL}
