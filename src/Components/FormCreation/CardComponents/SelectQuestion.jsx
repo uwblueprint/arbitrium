@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Close from "@material-ui/icons/Close";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
@@ -118,6 +118,7 @@ function SelectQuestion({
   //----------------------------------------------------------------------------
   //Form Creation Related
   //----------------------------------------------------------------------------
+
   const onAddOption = (event) => {
     setOptions(options.concat(""));
     event.target.blur();
@@ -138,6 +139,7 @@ function SelectQuestion({
       ...options.slice(index + 1)
     ];
     setOptions(newOptions);
+    onChange(newOptions);
   };
 
   const onDragEnd = (result) => {
@@ -173,10 +175,6 @@ function SelectQuestion({
     setSelected({ ...selectedInit, [event.target.name]: event.target.checked });
     onChange({ ...selectedInit, [event.target.name]: event.target.checked });
   };
-
-  // useEffect(() => {
-  //   onChange(selected);
-  // }, [selected, onChange]);
 
   const errorMin =
     Object.values(selected).filter((v) => v).length > minSelectValidation;
