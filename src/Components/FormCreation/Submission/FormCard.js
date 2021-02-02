@@ -260,7 +260,14 @@ function FormCard({
         )
       }
     ];
-  }, [initialAnswer, card, classes, fileUploadURL, onQuestionUpdate]);
+  }, [
+    initialAnswer,
+    card,
+    classes,
+    fileUploadURL,
+    onQuestionUpdate,
+    onValidUpdate
+  ]);
 
   return (
     <div className={classes.container}>
