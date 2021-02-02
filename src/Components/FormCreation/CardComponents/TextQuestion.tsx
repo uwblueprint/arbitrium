@@ -185,7 +185,9 @@ function TextQuestion({
         multiline={!short_answer}
         fullWidth={true}
       ></InputBase>
-      {!isValid ? <p style={{ color: "red" }}>{errorMessage}</p> : null}
+      {submission && !isValid ? (
+        <p style={{ color: "red" }}>{errorMessage}</p>
+      ) : null}
       {validation && !short_answer ? (
         <div>
           <Select
