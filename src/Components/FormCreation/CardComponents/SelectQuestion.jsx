@@ -138,6 +138,7 @@ function SelectQuestion({
       ...options.slice(index + 1)
     ];
     setOptions(newOptions);
+    onChange(newOptions);
   };
 
   const onDragEnd = (result) => {
