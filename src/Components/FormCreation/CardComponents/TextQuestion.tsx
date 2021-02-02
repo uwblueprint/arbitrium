@@ -22,23 +22,95 @@ type Props = {
   initialValidation: Validation;
   onChange: (text: string) => void;
   initialAnswer: string;
+  onValidUpdate: (isValid: boolean) => void;
 };
 
 //TODO: Add Response Validation
 function TextQuestion({
   submission = false,
   short_answer,
-  onChange,
   validation,
   onValidation,
   initialValidation,
-  initialAnswer = ""
+  onChange,
+  initialAnswer = "",
+  onValidUpdate
 }: Props): React.ReactElement {
   const [text, setText] = useState(initialAnswer);
+
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //Check validations here and update the error prop accordingly
+    if (initialValidation) {
+      if (initialValidation.max !== 0) {
+        if (
+          (initialValidation.type === "CHAR" &&
+            event.target.value.length > initialValidation.max) ||
+          (initialValidation.type === "WORD" &&
+            event.target.value.split(" ").length > initialValidation.max)
+        ) {
+          // violates MAX validation
+          if (isValid) {
+            onValidUpdate(false);
+          }
+          setIsValid(false);
+          setErrorMessage(
+            "Entered text exceeds the maximum " +
+              initialValidation.type.toLowerCase() +
+              " count of " +
+              initialValidation.max +
+              "."
+          );
+        } else {
+          if (!isValid) {
+            onValidUpdate(true);
+          }
+          setIsValid(true);
+          setErrorMessage("");
+        }
+      } else {
+        if (
+          (initialValidation.type === "CHAR" &&
+            event.target.value.length < initialValidation.min) ||
+          (initialValidation.type === "WORD" &&
+            event.target.value.split(" ").length < initialValidation.min)
+        ) {
+          // violates MIN validation
+          if (isValid) {
+            onValidUpdate(false);
+          }
+          setIsValid(false);
+          setErrorMessage(
+            "Entered text is below the minimum " +
+              initialValidation.type.toLowerCase() +
+              " count of " +
+              initialValidation.min +
+              "."
+          );
+        } else {
+          if (!isValid) {
+            onValidUpdate(true);
+          }
+          setIsValid(true);
+          setErrorMessage("");
+        }
+      }
+    }
     setText(event.target.value);
   };
+
+  const [isValid, setIsValid] = useState(
+    !initialValidation || initialValidation?.min === 0
+  );
+
+  const [errorMessage, setErrorMessage] = useState(
+    !initialValidation || initialValidation?.min === 0
+      ? ""
+      : "Entered text is below the minimum " +
+          initialValidation?.type.toLowerCase() +
+          " count of " +
+          initialValidation?.min +
+          "."
+  );
 
   const [validationType, setValidationType] = useState(
     initialValidation?.type
@@ -113,6 +185,9 @@ function TextQuestion({
         multiline={!short_answer}
         fullWidth={true}
       ></InputBase>
+      {submission && !isValid ? (
+        <p style={{ color: "red" }}>{errorMessage}</p>
+      ) : null}
       {validation && !short_answer ? (
         <div>
           <Select
