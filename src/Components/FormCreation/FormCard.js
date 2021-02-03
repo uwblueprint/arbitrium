@@ -185,7 +185,6 @@ function FormCard({
   const [title, setTitle] = useState(card.name);
   const [description, setDescription] = useState(card.description);
   const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
-  const [isValidation, setIsValidation] = useState(false);
 
   const onQuestionUpdate = (options) => {
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
@@ -212,6 +211,28 @@ function FormCard({
   const onValidationUpdate = (options) => {
     if (card.type === "PARAGRAPHS") {
       handleQuestionValidationsUpdate(options);
+    }
+  };
+
+  const handleValidationToggle = () => {
+    if (!card.validations) {
+      const validation = {
+        type: "WORD",
+        expression: null,
+        max: 0,
+        min: 0,
+        active: true
+      };
+      onValidationUpdate(validation);
+    } else {
+      const validation = {
+        type: card.validations.type.toUpperCase(),
+        expression: null,
+        max: card.validations.max,
+        min: card.validations.min,
+        active: !card.validations.active
+      };
+      onValidationUpdate(validation);
     }
   };
 
@@ -243,7 +264,6 @@ function FormCard({
       render: (
         <TextQuestion
           short_answer={false}
-          validation={isValidation}
           onValidation={onValidationUpdate}
           initialValidation={card.validations}
         />
@@ -494,7 +514,7 @@ function FormCard({
                           size="small"
                           className={classes.button}
                           disabled={isPublished}
-                          onClick={() => setIsValidation(!isValidation)}
+                          onClick={() => handleValidationToggle()}
                         >
                           <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
                           <span className={classes.buttonLabel}>
