@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
-import { AnyNaptrRecord } from "dns";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { Validation } from "../../../Types/FormTypes";
@@ -17,7 +16,6 @@ const Wrapper = styled.div`
 type Props = {
   submission: boolean;
   short_answer: boolean;
-  validation?: AnyNaptrRecord;
   onValidation: (validation: Validation) => void;
   initialValidation: Validation;
   onChange: (text: string) => void;
@@ -29,7 +27,6 @@ type Props = {
 function TextQuestion({
   submission = false,
   short_answer,
-  validation,
   onValidation,
   initialValidation,
   onChange,
@@ -40,7 +37,7 @@ function TextQuestion({
 
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //Check validations here and update the error prop accordingly
-    if (initialValidation) {
+    if (initialValidation && initialValidation.active) {
       if (initialValidation.max !== 0) {
         if (
           (initialValidation.type === "CHAR" &&
@@ -103,7 +100,9 @@ function TextQuestion({
   );
 
   const [errorMessage, setErrorMessage] = useState(
-    !initialValidation || initialValidation?.min === 0
+    !initialValidation ||
+      !initialValidation?.active ||
+      initialValidation?.min === 0
       ? ""
       : "Entered text is below the minimum " +
           initialValidation?.type.toLowerCase() +
@@ -134,7 +133,8 @@ function TextQuestion({
       type: valType.toUpperCase(),
       expression: null,
       max: validationLimit === "most" ? validationCount : 0,
-      min: validationLimit === "least" ? validationCount : 0
+      min: validationLimit === "least" ? validationCount : 0,
+      active: true
     };
     onValidation(validation);
   };
@@ -147,7 +147,8 @@ function TextQuestion({
       type: validationType?.toUpperCase(),
       expression: null,
       max: valLimit === "most" ? validationCount : 0,
-      min: valLimit === "least" ? validationCount : 0
+      min: valLimit === "least" ? validationCount : 0,
+      active: true
     };
     onValidation(validation);
   };
@@ -164,7 +165,8 @@ function TextQuestion({
         type: validationType?.toUpperCase(),
         expression: null,
         max: validationLimit === "most" ? parseInt(event.target.value) : 0,
-        min: validationLimit === "least" ? parseInt(event.target.value) : 0
+        min: validationLimit === "least" ? parseInt(event.target.value) : 0,
+        active: true
       };
       onValidation(validation);
     }
@@ -188,7 +190,10 @@ function TextQuestion({
       {submission && !isValid ? (
         <p style={{ color: "red" }}>{errorMessage}</p>
       ) : null}
-      {validation && !short_answer ? (
+      {!submission &&
+      initialValidation &&
+      initialValidation.active &&
+      !short_answer ? (
         <div>
           <Select
             defaultValue={validationType || "word"}

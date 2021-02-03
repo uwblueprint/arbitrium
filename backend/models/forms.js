@@ -21,6 +21,10 @@ const validation = new mongoose.Schema({
   max: {
     type: Number,
     default: 0
+  },
+  active: {
+    type: Boolean,
+    default: false
   }
 });
 

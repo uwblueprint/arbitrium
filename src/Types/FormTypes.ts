@@ -116,6 +116,7 @@ export type Validation = {
   expression: string | null;
   min: number;
   max: number;
+  active: boolean;
 } | null;
 
 export type FormContext = {
