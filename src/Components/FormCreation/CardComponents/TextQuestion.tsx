@@ -134,7 +134,8 @@ function TextQuestion({
       type: valType.toUpperCase(),
       expression: null,
       max: validationLimit === "most" ? validationCount : 0,
-      min: validationLimit === "least" ? validationCount : 0
+      min: validationLimit === "least" ? validationCount : 0,
+      active: true
     };
     onValidation(validation);
   };
@@ -147,7 +148,8 @@ function TextQuestion({
       type: validationType?.toUpperCase(),
       expression: null,
       max: valLimit === "most" ? validationCount : 0,
-      min: valLimit === "least" ? validationCount : 0
+      min: valLimit === "least" ? validationCount : 0,
+      active: true
     };
     onValidation(validation);
   };
@@ -164,7 +166,8 @@ function TextQuestion({
         type: validationType?.toUpperCase(),
         expression: null,
         max: validationLimit === "most" ? parseInt(event.target.value) : 0,
-        min: validationLimit === "least" ? parseInt(event.target.value) : 0
+        min: validationLimit === "least" ? parseInt(event.target.value) : 0,
+        active: true
       };
       onValidation(validation);
     }

@@ -185,7 +185,7 @@ function FormCard({
   const [title, setTitle] = useState(card.name);
   const [description, setDescription] = useState(card.description);
   const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
-  const [isValidation, setIsValidation] = useState(false);
+  const [isValidation, setIsValidation] = useState(card.validations?.active);
 
   const onQuestionUpdate = (options) => {
     if (card.type === "CHECKBOXES" || card.type === "MULTIPLE_CHOICE") {
@@ -494,7 +494,9 @@ function FormCard({
                           size="small"
                           className={classes.button}
                           disabled={isPublished}
-                          onClick={() => setIsValidation(!isValidation)}
+                          onClick={() => {
+                            setIsValidation(!isValidation);
+                          }}
                         >
                           <SettingsOutlinedIcon style={{ marginRight: 5 }} />{" "}
                           <span className={classes.buttonLabel}>
