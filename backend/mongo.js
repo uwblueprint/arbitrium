@@ -3,13 +3,17 @@ const mongoose = require("mongoose");
 
 //Load in all of the schemas, they will attached to each successful connection
 const userSchema = require("./models/users");
-const applicationSchema = require("./models/application");
-const rankingSchema = require("./models/stackedRankings");
-const ratingSchema = require("./models/ratings");
 const programSchema = require("./models/programs.js");
 const organizationSchema = require("./models/organizations");
 const formsSchema = require("./models/forms");
 const submissionSchema = require("./models/submission");
+const reviewSchema = require("./models/reviews");
+const rankingSchema = require("./models/rankings");
+
+//legacy
+const applicationLegacySchema = require("./models/legacy/application");
+const rankingLegacySchema = require("./models/legacy/stackedRankings");
+const ratingLegacySchema = require("./models/legacy/ratings");
 
 console.info("Attempting to connect to Mongo...");
 const USERNAME = MONGO_CONFIGS.module.mongoUsername;
@@ -41,13 +45,17 @@ const submissionModel = mongoPrograms.model(
   "submissionModel",
   submissionSchema
 );
+const reviewModel = mongoPrograms.model("reviewModel", reviewSchema);
+const rankingModel = mongoPrograms.model("rankingModel", rankingSchema);
 const newConnection = {
   mongo: mongoPrograms,
   users: userModel,
   programs: programModel,
   organizations: organizationModel,
   forms: formsModel,
-  submissions: submissionModel
+  submissions: submissionModel,
+  reviews: reviewModel,
+  rankings: rankingModel
 };
 connections["Authentication"] = newConnection;
 
@@ -92,20 +100,21 @@ function addConnection(database) {
     const mongo = connect(database.databaseName);
 
     //These collections exist in every database except Authentication (program scope)
-    const applicationModel = mongo.model("applicationModel", applicationSchema);
-    const rankingModel = mongo.model("rankingModel", rankingSchema);
-    const ratingModel = mongo.model("ratingModel", ratingSchema);
+    const applicationModel = mongo.model(
+      "applicationModel",
+      applicationLegacySchema
+    );
+    const rankingModel = mongo.model("rankingModel", rankingLegacySchema);
+    const ratingModel = mongo.model("ratingModel", ratingLegacySchema);
 
     //These are program specific collections. Each program has a database with
     //the collections below.
     //TODO: Move all program data to the program schema in the far future
     const newConnection = {
       mongo: mongo,
-      users: userModel,
       applications: applicationModel,
       rankings: rankingModel,
-      ratings: ratingModel,
-      submissions: submissionModel
+      ratings: ratingModel
     };
     connections[database._id] = newConnection;
   }

@@ -8,11 +8,11 @@ const { isAuthenticated } = require("../middlewares/auth");
 
 router.use(isAuthenticated);
 
-router.get("/:userid", function(req, res) {
-  db[req.headers.database].rankings
+router.get("/:userid/:programId", function(req, res) {
+  db["Authentication"].rankings
     .aggregate([
       {
-        $match: { userId: req.params.userid }
+        $match: { userId: req.params.userid, programId: req.params.programId }
       },
       {
         $unwind: "$applications"
@@ -20,14 +20,19 @@ router.get("/:userid", function(req, res) {
       {
         $lookup: {
           from: "Reviews",
-          let: { appId: "$applications.appId", userId: "$userId" },
+          let: {
+            appId: "$applications.appId",
+            userId: "$userId",
+            programId: "$programId"
+          },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
                     { $eq: ["$applicationId", "$$appId"] },
-                    { $eq: ["$userId", "$$userId"] }
+                    { $eq: ["$userId", "$$userId"] },
+                    { $eq: ["$programId", "$$programId"] }
                   ]
                 }
               }
@@ -36,7 +41,7 @@ router.get("/:userid", function(req, res) {
               $addFields: {
                 questionRatings: {
                   $map: {
-                    input: "$questionList",
+                    input: "$sectionList",
                     as: "item",
                     in: {
                       $cond: {
@@ -102,7 +107,7 @@ router.get("/:userid", function(req, res) {
 
 //Admin stats
 router.get("/", function(req, res) {
-  db[req.headers.database].rankings
+  db["Authentication"].rankings
     .find()
     .then(function(found) {
       res.json(found);
@@ -119,7 +124,7 @@ router.post("/", function(req, res) {
     userId: req.body.userId,
     applications: req.body.rankings
   };
-  db[req.headers.database].rankings
+  db["Authentication"].rankings
     .updateOne({ userId: req.body.userId }, stacked, { upsert: true })
     // status code 201 means created
     .then(function(newSchedule) {
