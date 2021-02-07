@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
@@ -83,12 +83,46 @@ function FormSection({
   sectionData,
   saveAnswer,
   fileUploadURL,
-  onValidUpdate
+  onSectionUpdate
 }) {
   const { themeColour } = useContext(FormSettingsContext);
   const classes = useStyles({ themeColour });
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions] = useState(sectionData.questions);
+
+  // check if section is valid
+  const [isValid, setIsValid] = useState(
+    questions.reduce(function(n, val) {
+      console.log(val);
+      return n + (val.validations && val.validations.min !== 0);
+    }, 0)
+  );
+
+  useEffect(() => {
+    if (isValid === 0) {
+      onSectionUpdate(false);
+    } else {
+      onSectionUpdate(true);
+    }
+  });
+
+  const onValidUpdate = (isVal) => {
+    let newIsValidCount = isValid;
+
+    if (isVal) {
+      newIsValidCount -= 1;
+      setIsValid(newIsValidCount);
+    } else {
+      newIsValidCount += 1;
+      setIsValid(newIsValidCount);
+    }
+
+    if (newIsValidCount === 0) {
+      onSectionUpdate(false);
+    } else {
+      onSectionUpdate(true);
+    }
+  };
 
   function updateActiveQuestion(sectionKey, questionKey) {
     if (activeQuestion !== questionKey) {
