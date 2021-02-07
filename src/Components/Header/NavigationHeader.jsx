@@ -8,6 +8,7 @@ import usePromise from "../../Hooks/usePromise";
 import { HEADER_HEIGHT, MIN_WIDTH } from "./Header";
 import { getApplicationTableData, getReviewCountAPI } from "../../requests/get";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { ProgramContext } from "../../Contexts/ProgramContext";
 
 const Container = styled.div`
   position: fixed;
@@ -118,19 +119,7 @@ function NavigationHeader({
       ? true
       : false;
 
-  const [applications] = usePromise(
-    getApplicationTableData,
-    { user: appUser },
-    [],
-    [program]
-  );
-
-  const [reviewAmount] = usePromise(
-    getReviewCountAPI,
-    appUser.userId,
-    [],
-    [curRoute, updateNavbar]
-  );
+  const programContext = useContext(ProgramContext);
 
   const classes = useStyles();
   return (
@@ -155,7 +144,9 @@ function NavigationHeader({
               : classes.rankingsSelected, // class name, e.g. `classes-nesting-root-x`
             label: classes.label // class name, e.g. `classes-nesting-label-x`
           }}
-          disabled={reviewAmount.value < applications.value.length}
+          disabled={
+            programContext.reviewCount < programContext.applications.length
+          }
           onClick={() => {
             history.push("/rankings");
           }}
@@ -168,7 +159,9 @@ function NavigationHeader({
             style={{ float: "right", margin: "10px", marginRight: "30px" }}
             variant="contained"
             color="primary"
-            disabled={reviewAmount.value < applications.value.length}
+            disabled={
+              programContext.reviewCount < programContext.applications.length
+            }
             onClick={() => {
               history.push("/rankings");
             }}
@@ -176,12 +169,14 @@ function NavigationHeader({
             Next Step &gt;
           </Button>
         ) : null}
-        {!reviewAmount.isPending || !applications.isPending ? (
+        {programContext ? (
           <LinearProgress
             variant="determinate"
             value={Math.min(
               100,
-              (reviewAmount.value / applications.value.length) * 100
+              (programContext.reviewCount /
+                programContext.applications.length) *
+                100
             )}
           />
         ) : null}

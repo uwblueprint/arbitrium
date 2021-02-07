@@ -60,6 +60,61 @@ router.patch("/:submissionId", (req, res) => {
   );
 });
 
+//Get all submissions
+router.get("/all/:programId", (req, res) => {
+  console.log("HERE");
+  db["Authentication"].submissions
+    .aggregate([
+      {
+        $match: { submissionDate: { $ne: null } }
+      },
+      {
+        $lookup: {
+          from: "Forms",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$programId", req.params.programId]
+                }
+              }
+            },
+            { $project: { _id: 1 } }
+          ],
+          as: "form"
+        }
+      },
+      {
+        $unwind: {
+          path: "$form"
+        }
+      },
+      {
+        $project: {
+          identifier: 1,
+          formId: 1,
+          form: 1
+        }
+      },
+      {
+        $match: {
+          $expr: {
+            $eq: [{ $toString: "$formId" }, { $toString: "$form._id" }]
+          }
+        }
+      }
+    ])
+    .then(function(found) {
+      res.json(found);
+    })
+    .catch(function(err) {
+      console.error(err);
+      res.send(err);
+    });
+});
+
+//Used for submissions table
+//Gets all submissions for a program with the users reviews attached
 router.get("/user/:userid/:programId", function(req, res) {
   db["Authentication"].submissions
     .aggregate([
@@ -92,6 +147,13 @@ router.get("/user/:userid/:programId", function(req, res) {
           identifier: 1,
           formId: 1,
           form: 1
+        }
+      },
+      {
+        $match: {
+          $expr: {
+            $eq: [{ $toString: "$formId" }, { $toString: "$form._id" }]
+          }
         }
       },
       {

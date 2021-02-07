@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
 import AllApplicationsTable from "./AllApplicationsTable";
 import { connect } from "react-redux";
-
 import usePromise from "../../../Hooks/usePromise";
+import { ProgramContext } from "../../../Contexts/ProgramContext";
 
 import {
   getApplicationTableData,
@@ -82,64 +82,37 @@ function AllApplications({ user, program }) {
   const [applications, setApplications] = useState(null);
   const [reviewCount, setReviewCount] = useState(0);
 
-  const [loadProgram] = usePromise(getProgramByID, { programId: program }, {}, [
-    program
-  ]);
+  const programContext = useContext(ProgramContext);
+  console.log(programContext);
 
   // Applications, with reviews attached
   // loadApplication.error will be true until loadProgram.value loads
   const [loadApplications] = usePromise(
-    loadProgram.value.appVersion === 1
-      ? getApplicationTableData
-      : SUBMISSION.getSubmissionTableData,
+    programContext.appVersion !== 1
+      ? SUBMISSION.getSubmissionTableData
+      : getApplicationTableData,
     { user, program },
     null,
-    [program, loadProgram]
-  );
-
-  //TODO: Update the review count based on version
-  const [loadReviewCount] = usePromise(
-    getReviewCountAPI,
-    user.userId,
-    [],
     [program]
   );
-
   useEffect(() => {
     if (
-      loadProgram.isPending ||
-      loadReviewCount.isPending ||
       loadApplications.isPending ||
-      !loadProgram.value ||
       !loadApplications.value ||
       loadApplications.error
     ) {
       return;
     }
 
-    if (loadProgram.value.appVersion === 2) {
-      setApplications(
-        loadApplications.value.filter(
-          (application) => application.formId === application.form._id
-        )
-      );
-    } else {
-      setApplications(loadApplications.value);
-    }
-
-    setReviewCount(loadReviewCount.value);
-  }, [loadReviewCount, loadApplications, loadProgram]);
+    setApplications(loadApplications.value);
+    setReviewCount(programContext.reviewCount);
+  }, [loadApplications, programContext]);
 
   return (
     <div>
       <Wrapper>
         <Paper>
-          {!loadProgram.isPending &&
-          !loadReviewCount.isPending &&
-          !loadApplications.isPending &&
-          loadProgram.value &&
-          loadReviewCount.value !== null &&
-          loadApplications.value ? (
+          {!loadApplications.isPending && loadApplications.value ? (
             <div>
               <h1 style={{ fontSize: "24px" }}>Candidate Submissions</h1>
               <p style={{ fontSize: "14px" }}>
