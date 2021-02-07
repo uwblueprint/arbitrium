@@ -9,9 +9,9 @@ import React, {
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "./Categories/Categories";
-import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
-import Rating from "../Rating/Rating";
-import Files from "../Files/Files";
+import DecisionCanvas from "../ReviewToolComponents/DecisionCanvas/DecisionCanvas";
+import Rating from "../ReviewToolComponents/Rating";
+import Files from "../ReviewToolComponents/Files";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import { HEADER_HEIGHT } from "../Header/Header";
 //column categories

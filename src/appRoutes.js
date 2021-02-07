@@ -1,5 +1,5 @@
-import Application from "./Components/Application/Application";
-import AllApplications from "./Components/List/ApplicationList/AllApplications";
+import Application from "./Components/ReviewToolLegacy/Application";
+import AllApplications from "./Components/ApplicationTable/AllApplications";
 import UserManagement from "./Components/Admin/ProgramUserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";

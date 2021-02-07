@@ -1,5 +1,5 @@
 import { GET } from "./Helper";
-import { createReview } from "../Components/Application/applicationDataHelpers";
+import { createReview } from "../Components/ReviewToolLegacy/applicationDataHelpers";
 
 async function getReviewAPI({ user, applicationId }) {
   return GET(`/api/ratings/${user.userId}/${applicationId}`);

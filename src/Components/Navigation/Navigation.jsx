@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { connect } from "react-redux";
+import { connect } from "../ReviewToolLegacy/node_modules/react-redux";
 import { push } from "connected-react-router";
 import NavButton from "./NavButton";
 import Drawer from "@material-ui/core/Drawer";

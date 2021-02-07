@@ -4,9 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { connect } from "react-redux";
-import usePromise from "../../Hooks/usePromise";
 import { HEADER_HEIGHT, MIN_WIDTH } from "./Header";
-import { getApplicationTableData, getReviewCountAPI } from "../../requests/get";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { ProgramContext } from "../../Contexts/ProgramContext";
 

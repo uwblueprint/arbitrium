@@ -2,9 +2,9 @@ import React from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
-import Comment from "../Comment/Comment";
+import Comment from "./Comment";
 import AddComment from "../AddComment/AddComment";
-import SectionRating from "../DecisionCanvas/SectionRating";
+import SectionRating from "./DecisionCanvas/SectionRating";
 import { makeStyles } from "@material-ui/core/styles";
 
 const StyledPaper = styled(Paper)`

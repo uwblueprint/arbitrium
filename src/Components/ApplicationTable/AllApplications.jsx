@@ -5,16 +5,16 @@ import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
 import AllApplicationsTable from "./AllApplicationsTable";
 import { connect } from "react-redux";
-import usePromise from "../../../Hooks/usePromise";
-import { ProgramContext } from "../../../Contexts/ProgramContext";
+import usePromise from "../../Hooks/usePromise";
+import { ProgramContext } from "../../Contexts/ProgramContext";
 
 import {
   getApplicationTableData,
   getReviewCountAPI,
   getProgramByID
-} from "../../../requests/get";
+} from "../../requests/get";
 
-import * as SUBMISSION from "../../../requests/submission";
+import * as SUBMISSION from "../../requests/submission";
 
 const Wrapper = styled.div`
   margin-top: 100px;

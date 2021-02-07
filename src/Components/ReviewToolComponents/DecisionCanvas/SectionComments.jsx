@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-import Comment from "../Comment/Comment";
-import AddComment from "../AddComment/AddComment";
+import Comment from "../Comment";
+import AddComment from "../../AddComment/AddComment";
 
 const SectionWrapper = styled.div`
   font-size: inherit;
