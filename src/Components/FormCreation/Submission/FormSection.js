@@ -129,7 +129,6 @@ function FormSection({
       return (
         n +
         (val.validations &&
-          val.validations.min !== 0 &&
           !isTextValid(
             val.validations,
             initialAnswer ? initialAnswer.answerString : ""

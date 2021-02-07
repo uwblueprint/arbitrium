@@ -263,15 +263,15 @@ function FormCard({
       }
     ];
   }, [
+    card,
     classes.action_menu_item,
     classes.action_menu_item2,
-    onQuestionUpdate,
-    initialAnswer?.answerString,
+    fileUploadURL,
     initialAnswer?.answerArray,
-    card,
-    onValidUpdate,
+    initialAnswer?.answerString,
     isTextValid,
-    fileUploadURL
+    onQuestionUpdate,
+    onValidUpdate
   ]);
 
   return (
