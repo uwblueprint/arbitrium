@@ -264,11 +264,9 @@ function FormCard({
     ];
   }, [
     card,
-    classes.action_menu_item,
-    classes.action_menu_item2,
+    classes,
     fileUploadURL,
-    initialAnswer?.answerArray,
-    initialAnswer?.answerString,
+    initialAnswer,
     isTextValid,
     onQuestionUpdate,
     onValidUpdate
