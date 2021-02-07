@@ -124,6 +124,11 @@ function TextQuestion({
       ? (initialValidation?.max as number)
       : (initialValidation?.min as number)
   );
+  const [validationCountText, setValidationCountText] = useState(
+    initialValidation?.max !== 0
+      ? ((initialValidation?.max as unknown) as string)
+      : ((initialValidation?.min as unknown) as string)
+  );
 
   const updateValidationType = (valType: string) => {
     // todo
@@ -156,16 +161,24 @@ function TextQuestion({
   const updateValidationCount = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    if (event.target.value === "") {
+    const re = /^[0-9\b]+$/;
+    const valCount = event.target.value;
+
+    if (valCount === "" || re.test(valCount)) {
+      setValidationCountText(valCount);
+    }
+    if (valCount === "") {
       setValidationCount(0);
     } else {
-      setValidationCount(parseInt(event.target.value));
+      const valCountInt = parseInt(event.target.value);
+
+      setValidationCount(valCountInt);
 
       const validation = {
         type: validationType?.toUpperCase(),
         expression: null,
-        max: validationLimit === "most" ? parseInt(event.target.value) : 0,
-        min: validationLimit === "least" ? parseInt(event.target.value) : 0,
+        max: validationLimit === "most" ? valCountInt : 0,
+        min: validationLimit === "least" ? valCountInt : 0,
         active: true
       };
       onValidation(validation);
@@ -224,7 +237,7 @@ function TextQuestion({
             </MenuItem>
           </Select>
           <TextField
-            value={validationCount || 0}
+            value={validationCountText}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               updateValidationCount(event)
             }
