@@ -83,10 +83,10 @@ function AllApplications({ user, program }) {
   const [reviewCount, setReviewCount] = useState(0);
 
   const programContext = useContext(ProgramContext);
-  console.log(programContext);
 
-  // Applications, with reviews attached
-  // loadApplication.error will be true until loadProgram.value loads
+  // Applications, with rating attached
+  //We don't use the applications in the program Context because it doesn't include reviews
+  //And we want it to be read only as we don't want to reload the context (and the entire app) each review
   const [loadApplications] = usePromise(
     programContext.appVersion !== 1
       ? SUBMISSION.getSubmissionTableData
@@ -95,6 +95,7 @@ function AllApplications({ user, program }) {
     null,
     [program]
   );
+
   useEffect(() => {
     if (
       loadApplications.isPending ||
