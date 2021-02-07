@@ -108,7 +108,8 @@ function FormCard({
   updateSubmission,
   fileUploadURL,
   sectionId,
-  onValidUpdate
+  onValidUpdate,
+  isTextValid
 }) {
   const { themeColour } = useContext(FormSettingsContext);
   const answers = useContext(SubmissionAnswersContext);
@@ -190,6 +191,7 @@ function FormCard({
             onChange={onQuestionUpdate}
             initialAnswer={initialAnswer?.answerString}
             onValidUpdate={onValidUpdate}
+            isTextValid={isTextValid}
           />
         ),
         renderInactive: card.type
@@ -261,12 +263,15 @@ function FormCard({
       }
     ];
   }, [
-    initialAnswer,
-    card,
-    classes,
-    fileUploadURL,
+    classes.action_menu_item,
+    classes.action_menu_item2,
     onQuestionUpdate,
-    onValidUpdate
+    initialAnswer?.answerString,
+    initialAnswer?.answerArray,
+    card,
+    onValidUpdate,
+    isTextValid,
+    fileUploadURL
   ]);
 
   return (

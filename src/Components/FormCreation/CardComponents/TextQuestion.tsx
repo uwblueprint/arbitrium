@@ -21,6 +21,7 @@ type Props = {
   onChange: (text: string) => void;
   initialAnswer: string;
   onValidUpdate: (isValid: boolean) => void;
+  isTextValid: (validation: Validation, text: string) => boolean;
 };
 
 //TODO: Add Response Validation
@@ -31,7 +32,8 @@ function TextQuestion({
   initialValidation,
   onChange,
   initialAnswer = "",
-  onValidUpdate
+  onValidUpdate,
+  isTextValid
 }: Props): React.ReactElement {
   const [text, setText] = useState(initialAnswer);
 
@@ -96,7 +98,7 @@ function TextQuestion({
   };
 
   const [isValid, setIsValid] = useState(
-    !initialValidation || initialValidation?.min === 0
+    initialValidation && isTextValid(initialValidation, initialAnswer)
   );
 
   const [errorMessage, setErrorMessage] = useState(

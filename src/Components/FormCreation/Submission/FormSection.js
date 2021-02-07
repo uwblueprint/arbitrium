@@ -6,6 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import FormCard from "./FormCard";
 import FormSettingsContext from "../FormSettingsContext";
 import InputBase from "@material-ui/core/InputBase";
+import SubmissionAnswersContext from "./../Submission/SubmissionAnswersContext";
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -89,12 +90,51 @@ function FormSection({
   const classes = useStyles({ themeColour });
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions] = useState(sectionData.questions);
+  const answers = useContext(SubmissionAnswersContext);
+
+  // helper function to check if a particular text input is valid
+  const isTextValid = (validation, answer) => {
+    if (validation && validation.active) {
+      if (validation.max !== 0) {
+        if (
+          (validation.type === "CHAR" && answer.length > validation.max) ||
+          (validation.type === "WORD" &&
+            answer.split(" ").length > validation.max)
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        if (
+          (validation.type === "CHAR" && answer.length < validation.min) ||
+          (validation.type === "WORD" &&
+            answer.split(" ").length < validation.min)
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+  };
 
   // check if section is valid
   const [isValid, setIsValid] = useState(
     questions.reduce(function(n, val) {
-      console.log(val);
-      return n + (val.validations && val.validations.min !== 0);
+      const initialAnswer = answers.find((ans) => {
+        return ans.questionId === val._id && ans.sectionId === sectionData._id;
+      });
+
+      return (
+        n +
+        (val.validations &&
+          val.validations.min !== 0 &&
+          !isTextValid(
+            val.validations,
+            initialAnswer ? initialAnswer.answerString : ""
+          ))
+      );
     }, 0)
   );
 
@@ -104,7 +144,7 @@ function FormSection({
     } else {
       onSectionUpdate(true);
     }
-  });
+  }, [isValid, onSectionUpdate, questions]);
 
   const onValidUpdate = (isVal) => {
     let newIsValidCount = isValid;
@@ -205,6 +245,7 @@ function FormSection({
             themeColour={themeColour}
             fileUploadURL={fileUploadURL}
             onValidUpdate={onValidUpdate}
+            isTextValid={isTextValid}
           />
         </CardWrapper>
       ))}
