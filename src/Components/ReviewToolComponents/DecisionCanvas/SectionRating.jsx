@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import RatingList from "../RatingList";
-import { UPDATE_RATING } from "../../ReviewToolLegacy/reviewReducer";
+import { UPDATE_RATING } from "../../../Reducers/reviewReducer";
 
 const SectionWrapper = styled.div`
   font-size: inherit;

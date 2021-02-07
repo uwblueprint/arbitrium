@@ -90,13 +90,6 @@ router.get("/all/:programId", (req, res) => {
         }
       },
       {
-        $project: {
-          identifier: 1,
-          formId: 1,
-          form: 1
-        }
-      },
-      {
         $match: {
           $expr: {
             $eq: [{ $toString: "$formId" }, { $toString: "$form._id" }]
@@ -159,13 +152,13 @@ router.get("/user/:userid/:programId", function(req, res) {
       {
         $lookup: {
           from: "Reviews",
-          let: { appId: "$_id" },
+          let: { submissionId: "$_id" },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$applicationId", "$$appId"] },
+                    { $eq: ["$submissionId", "$$submissionId"] },
                     { $eq: ["$userId", req.params.userid] }
                   ]
                 }

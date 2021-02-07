@@ -1,8 +1,7 @@
-import { GET } from "./Helper";
-import { createReview } from "../Components/ReviewToolLegacy/applicationDataHelpers";
+import { GET, POST } from "./Helper";
 
-async function getReview({ user, applicationId }) {
-  return GET(`/api/reviews/${user.userId}/${applicationId}`);
+async function getReview({ user, applicationId, program }) {
+  return GET(`/api/reviews/${user.userId}/${applicationId}/${program}`);
 }
 
 async function getReviewCount(userId, programId) {
@@ -12,13 +11,12 @@ async function getReviewCount(userId, programId) {
   );
 }
 
-async function getUserReviews(user, applicationId, programId) {
-  const result = GET(`/api/reviews/${user.uid}`);
-  if (result != null) {
-    return result;
-  } else {
-    return createReview(user, applicationId, programId);
-  }
+async function updateReview(databody) {
+  return POST("/api/reviews", databody);
 }
 
-export { getReview, getUserReviews, getReviewCount };
+async function getUserReviews(user, applicationId, programId) {
+  const result = GET(`/api/reviews/${user.uid}`);
+}
+
+export { getReview, getUserReviews, getReviewCount, updateReview };

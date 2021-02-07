@@ -8,11 +8,7 @@ import { connect } from "react-redux";
 import usePromise from "../../Hooks/usePromise";
 import { ProgramContext } from "../../Contexts/ProgramContext";
 
-import {
-  getApplicationTableData,
-  getReviewCountAPI,
-  getProgramByID
-} from "../../requests/get";
+import { getApplicationTableData } from "../../requests/get";
 
 import * as SUBMISSION from "../../requests/submission";
 
@@ -39,7 +35,7 @@ const Wrapper = styled.div`
   }
 `;
 
-function convertToTableData(fetched) {
+function convertToTableData(fetched, appVersion) {
   if (!fetched) {
     return;
   }
@@ -57,7 +53,13 @@ function convertToTableData(fetched) {
           application["identifier"],
         lastEdited: application["lastReviewed"],
         applicantLink: (
-          <a href={`/submissions/${application._id}`}>
+          <a
+            href={
+              appVersion === 1
+                ? `/submissions/legacy/${application._id}`
+                : `/submissions/${application._id}`
+            }
+          >
             <Button
               variant="contained"
               color="primary"
@@ -104,7 +106,7 @@ function AllApplications({ user, program }) {
     ) {
       return;
     }
-
+    console.log(loadApplications);
     setApplications(loadApplications.value);
     setReviewCount(programContext.reviewCount);
   }, [loadApplications, programContext]);
@@ -127,7 +129,10 @@ function AllApplications({ user, program }) {
               <AllApplicationsTable
                 reviewCount={reviewCount}
                 applicationCount={applications && applications.length}
-                data={convertToTableData(applications)}
+                data={convertToTableData(
+                  applications,
+                  programContext.appVersion
+                )}
               />
               <hr />
             </div>

@@ -8,6 +8,7 @@ const { isAuthenticated } = require("../middlewares/auth");
 
 router.use(isAuthenticated);
 
+//Get all app reviews by user and program
 router.get("/:userid/:programId", function(req, res) {
   try {
     if (req.query.count) {
@@ -23,7 +24,7 @@ router.get("/:userid/:programId", function(req, res) {
       return;
     }
     db["Authentication"].reviews
-      .find({ userId: req.params.userid })
+      .find({ userId: req.params.userid, programId: req.params.programId })
       .then(function(found) {
         res.json(found);
       });
@@ -58,7 +59,7 @@ router.get("/", function(req, res) {
       },
       {
         $lookup: {
-          from: "user",
+          from: "userstemp",
           let: { reviewUserId: "$userId" },
           pipeline: [
             {

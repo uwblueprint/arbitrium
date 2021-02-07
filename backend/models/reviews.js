@@ -11,7 +11,7 @@ const comment = new mongoose.Schema({
 
 const section = new mongoose.Schema({
   id: {
-    type: mongoose.Schema.ObjectId
+    type: String
   },
   notes: [comment],
   rating: {
@@ -37,7 +37,7 @@ const reviewSchema = new mongoose.Schema(
     lastReviewed: {
       type: String
     },
-    sectionList: [section]
+    questionList: [section]
   },
   { collection: "Reviews" }
 );

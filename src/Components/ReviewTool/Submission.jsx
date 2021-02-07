@@ -8,27 +8,19 @@ import React, {
 } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import Categories from "./Categories/Categories";
+import Categories from "../ReviewToolLegacy/Categories/Categories";
 import DecisionCanvas from "../ReviewToolComponents/DecisionCanvas/DecisionCanvas";
 import Rating from "../ReviewToolComponents/Rating";
 import Files from "../ReviewToolComponents/Files";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import { HEADER_HEIGHT } from "../Header/Header";
-//column categories
-import {
-  createReview,
-  transpileCategoryData,
-  transpileFileData,
-  transpileLongAnswerData,
-  transpileCheckBoxData
-} from "./applicationDataHelpers";
 import { reviewReducer } from "../../Reducers/reviewReducer";
 import { connect } from "react-redux";
 import { newReview, updateNavbar } from "../../Actions";
 import usePromise from "../../Hooks/usePromise";
-import { getReviewAPI } from "../../requests/get";
-import * as UPDATE from "../../requests/update";
+import { getReview, updateReview } from "../../requests/reviews";
 import { ProgramContext } from "../../Contexts/ProgramContext";
+import moment from "moment";
 
 const padding = HEADER_HEIGHT * 2 + "px";
 const PageWrapper = styled.div`
@@ -74,6 +66,32 @@ const ApplicationSelector = styled.div`
   }
 `;
 
+function createReview(user, appId, program, numSections) {
+  //Note we store the sections as questionList (legacy)
+  //Each section or item in the questionList is a card on the decision canvas
+  let review = {};
+  const comments = [];
+  const questionList = [];
+
+  for (let i = 0; i < numSections; i++) {
+    questionList.push({
+      id: i,
+      notes: [],
+      rating: -1
+    });
+  }
+  review = {
+    submissionId: appId,
+    userId: user.userId,
+    programId: program,
+    rating: -1,
+    comments: comments,
+    lastReviewed: moment(),
+    questionList: questionList
+  };
+  return review;
+}
+
 function Application({
   dispatchNavbarUpdate,
   dispatchNewReview,
@@ -82,21 +100,24 @@ function Application({
   user,
   program
 }) {
-  const appId = match.params.applicationId;
+  const appId = match.params.submissionId;
   const isRated = useRef(false);
   const [review, setReview] = useState(null);
-
   const loadedApplications = useContext(ProgramContext);
-  const blankReview = useMemo(() => createReview(user, appId), [appId, user]);
+  const applications = loadedApplications.applications;
+  const blankReview = useMemo(
+    () => createReview(user, appId, program, applications.length),
+    [appId, user, program, applications]
+  );
+
   const [loadedReview] = usePromise(
-    getReviewAPI,
-    { user, applicationId: appId },
+    getReview,
+    { user, applicationId: appId, program },
     null,
     [program]
   );
 
-  const applications = loadedApplications.applications;
-
+  //If the review doesn't exist, use a blank one
   useEffect(() => {
     if (loadedReview.isPending) return;
     const rev = loadedReview.value;
@@ -105,17 +126,18 @@ function Application({
       isRated.current = rev.rating > -1;
     }
     setReview(reviewExists ? rev : blankReview);
-  }, [loadedReview, blankReview]);
+  }, [loadedReview, blankReview, program]);
 
   const dispatchReviewUpdate = useCallback(
     async (action) => {
       try {
         const updatedReview = reviewReducer(review, action);
+        console.log(updatedReview);
         if (!isRated.current && updatedReview.rating > -1) {
           isRated.current = true;
           dispatchNewReview();
         }
-        const res = await UPDATE.updateReviewAPI(updatedReview);
+        const res = await updateReview(updatedReview);
         if (res.ok !== 1) {
           throw res;
         }
@@ -123,35 +145,25 @@ function Application({
         setReview(updatedReview);
       } catch (e) {
         alert("Error in saving your review!");
+        console.log(e);
       }
     },
     [review, dispatchNavbarUpdate, dispatchNewReview]
   );
 
-  const [application, appIndex, appData] = useMemo(() => {
-    const [_application, _appIndex] = getApplicationDetails(
-      applications,
-      appId
-    );
-    let _appData = null;
-    if (_application != null) {
-      _appData = {
-        categoryData: transpileCategoryData(_application, program),
-        fileData: transpileFileData(_application, program),
-        longAnswers: transpileLongAnswerData(_application, program),
-        checkBoxAnswers: transpileCheckBoxData(_application, program)
-      };
-    }
-    return [_application, _appIndex, _appData];
-  }, [applications, appId, program]);
+  console.log(applications);
+
+  const [application, appIndex] = getApplicationDetails(applications, appId);
+
+  console.log(application);
 
   const previousApplication =
     applications && appIndex > 0
-      ? "/submissions/legacy/" + applications[appIndex - 1]["_id"]
+      ? "/submissions/" + applications[appIndex - 1]["_id"]
       : null;
   const nextApplication =
     applications && appIndex < applications.length - 1
-      ? "/submissions/legacy" + applications[appIndex + 1]["_id"]
+      ? "/submissions/" + applications[appIndex + 1]["_id"]
       : null;
 
   return (
@@ -188,8 +200,7 @@ function Application({
         </ApplicationSelector>
         <h1>
           {application ? (
-            application["Organization Name"] ||
-            application["Organization Name (legal name)"]
+            application["identifier"]
           ) : (
             <div>
               <p> Loading... </p>
@@ -200,6 +211,7 @@ function Application({
         <hr />
         {applications.length > 0 && application != null ? (
           <div className="application-information">
+            {/*}
             <Categories categoryData={appData.categoryData} />
             <hr />
             <Files fileData={appData.fileData} />
@@ -209,6 +221,7 @@ function Application({
               update={dispatchReviewUpdate}
               review={review}
             />
+        */}
             <hr />
             <Rating review={review} update={dispatchReviewUpdate} />
             <hr />
@@ -246,6 +259,7 @@ function Application({
 function getApplicationDetails(appList, appId) {
   for (let i = 0; i < appList.length; ++i) {
     const app = appList[i];
+    console.log(appId);
     if (app["_id"] === appId) {
       return [app, i];
     }
