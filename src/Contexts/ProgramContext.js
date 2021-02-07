@@ -7,6 +7,7 @@ import {
 } from "../requests/get";
 import * as SUBMISSION from "../requests/submission";
 import * as REVIEWS from "../requests/reviews";
+import * as FORMS from "../requests/forms";
 import { AuthContext } from "../Authentication/Auth";
 import usePromise from "../Hooks/usePromise";
 
@@ -14,25 +15,31 @@ export const ProgramContext = React.createContext();
 
 async function fetchProgramData({ userId, program }) {
   if (!userId || !program) return { applications: [], reviewCount: 0 };
-  console.log(program);
 
   const programDocument = await getProgramByID({ programId: program });
-  console.log(programDocument.appVersion);
+
   const apps =
     programDocument.appVersion === 1
       ? await getAllApplicationsAPI()
       : await SUBMISSION.getAllSubmissions(program);
 
-  console.log(apps);
   const reviewCount =
     programDocument.appVersion === 1
-      ? await getReviewCountAPI(userId)
-      : await REVIEWS.getReviewCount(userId, program);
-  console.log(reviewCount);
+      ? await getReviewCountAPI({ userId })
+      : await REVIEWS.getReviewCount({ userId, programId: program });
+
+  //The form only exists for appVersion 2
+  //V1 was done via google forms
+  const form =
+    programDocument.appVersion === 1
+      ? {}
+      : await FORMS.getForm({ programId: program });
+
   return {
     applications: apps,
     reviewCount,
-    appVersion: programDocument.appVersion
+    appVersion: programDocument.appVersion,
+    form
   };
 }
 
@@ -44,7 +51,7 @@ function ProgramContextProvider({ program, children }) {
       userId: currentUser ? currentUser.uid : null,
       program
     },
-    { applications: [], reviewCount: 0, appVersion: 0 }
+    { applications: [], reviewCount: 0, appVersion: 0, form: {} }
   );
 
   const context = { isLoading: programData.isPending, ...programData.value };

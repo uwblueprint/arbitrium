@@ -78,8 +78,7 @@ router.get("/all/:programId", (req, res) => {
                   $eq: ["$programId", req.params.programId]
                 }
               }
-            },
-            { $project: { _id: 1 } }
+            }
           ],
           as: "form"
         }

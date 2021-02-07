@@ -33,7 +33,7 @@ async function getCandidateSubmissions() {
   return GET(`/api/admin/candidate-submissions`);
 }
 
-async function getReviewCountAPI(userId) {
+async function getReviewCountAPI({ userId }) {
   return GET(`/api/ratings/${userId}/?` + new URLSearchParams({ count: true }));
 }
 

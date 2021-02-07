@@ -4,7 +4,7 @@ async function getReview({ user, applicationId, program }) {
   return GET(`/api/reviews/${user.userId}/${applicationId}/${program}`);
 }
 
-async function getReviewCount(userId, programId) {
+async function getReviewCount({ userId, programId }) {
   return GET(
     `/api/reviews/${userId}/${programId}/?` +
       new URLSearchParams({ count: true })

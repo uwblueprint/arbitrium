@@ -9,7 +9,7 @@ import React, {
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Categories from "../ReviewToolLegacy/Categories/Categories";
-import DecisionCanvas from "../ReviewToolComponents/DecisionCanvas/DecisionCanvas";
+import DecisionCanvas from "../ReviewToolComponents/DecisionCanvas/DecisionCanvasUpdated";
 import Rating from "../ReviewToolComponents/Rating";
 import Files from "../ReviewToolComponents/Files";
 import LoadingOverlay from "../Common/LoadingOverlay";
@@ -132,7 +132,6 @@ function Application({
     async (action) => {
       try {
         const updatedReview = reviewReducer(review, action);
-        console.log(updatedReview);
         if (!isRated.current && updatedReview.rating > -1) {
           isRated.current = true;
           dispatchNewReview();
@@ -145,17 +144,69 @@ function Application({
         setReview(updatedReview);
       } catch (e) {
         alert("Error in saving your review!");
-        console.log(e);
+        console.error(e);
       }
     },
     [review, dispatchNavbarUpdate, dispatchNewReview]
   );
 
-  console.log(applications);
-
   const [application, appIndex] = getApplicationDetails(applications, appId);
-
+  let cards = [];
+  console.log(loadedApplications.form);
   console.log(application);
+
+  if (loadedApplications.form && application) {
+    cards = loadedApplications.form.sections.map((section) => {
+      return {
+        ...section,
+        questions: section.questions.map((question) => {
+          if (
+            question.type === "SHORT_ANSWER" ||
+            question.type === "PARAGRAPHS"
+          ) {
+            return {
+              ...question,
+              answer: application.answers.find((ans) => {
+                return (
+                  ans.questionId === question._id &&
+                  ans.sectionId === section._id
+                );
+              })?.answerString
+            };
+          }
+          if (
+            question.type === "CHECKBOXES" ||
+            question.type === "MULTIPLE_CHOICE"
+          ) {
+            const selected = application.answers.find((ans) => {
+              return (
+                ans.questionId === question._id && ans.sectionId === section._id
+              );
+            })?.answerArray;
+            return {
+              ...question,
+              answer: question.x_options.filter((option) => {
+                return selected.includes(option._id);
+              })
+            };
+          }
+          if (question.type === "FILE_UPLOAD") {
+            return {
+              ...question,
+              answer: application.answers.find((ans) => {
+                return (
+                  ans.questionId === question._id &&
+                  ans.sectionId === section._id
+                );
+              })?.answerArray
+            };
+          }
+        })
+      };
+    });
+  }
+
+  console.log(cards);
 
   const previousApplication =
     applications && appIndex > 0
@@ -211,6 +262,11 @@ function Application({
         <hr />
         {applications.length > 0 && application != null ? (
           <div className="application-information">
+            <DecisionCanvas
+              categoryData={cards}
+              update={dispatchReviewUpdate}
+              review={review}
+            />
             {/*}
             <Categories categoryData={appData.categoryData} />
             <hr />

@@ -82,7 +82,7 @@ function Application({
   user,
   program
 }) {
-  const appId = match.params.applicationId;
+  const appId = match.params.appId;
   const isRated = useRef(false);
   const [review, setReview] = useState(null);
 
@@ -145,13 +145,15 @@ function Application({
     return [_application, _appIndex, _appData];
   }, [applications, appId, program]);
 
+  console.log(application);
+
   const previousApplication =
     applications && appIndex > 0
       ? "/submissions/legacy/" + applications[appIndex - 1]["_id"]
       : null;
   const nextApplication =
     applications && appIndex < applications.length - 1
-      ? "/submissions/legacy" + applications[appIndex + 1]["_id"]
+      ? "/submissions/legacy/" + applications[appIndex + 1]["_id"]
       : null;
 
   return (

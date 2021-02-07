@@ -7,6 +7,9 @@ import { connect } from "react-redux";
 import { HEADER_HEIGHT, MIN_WIDTH } from "./Header";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { ProgramContext } from "../../Contexts/ProgramContext";
+import { getReviewCountAPI } from "../../requests/get";
+import usePromise from "../../Hooks/usePromise";
+import * as REVIEWS from "../../requests/reviews";
 
 const Container = styled.div`
   position: fixed;
@@ -119,6 +122,17 @@ function NavigationHeader({
 
   const programContext = useContext(ProgramContext);
 
+  const [reviewAmount] = usePromise(
+    programContext.appVersion === 1
+      ? getReviewCountAPI
+      : REVIEWS.getReviewCount,
+    { userId: appUser.userId, programId: program },
+    0,
+    [curRoute, updateNavbar]
+  );
+
+  console.log(reviewAmount.value);
+
   const classes = useStyles();
   return (
     <div>
@@ -142,9 +156,7 @@ function NavigationHeader({
               : classes.rankingsSelected, // class name, e.g. `classes-nesting-root-x`
             label: classes.label // class name, e.g. `classes-nesting-label-x`
           }}
-          disabled={
-            programContext.reviewCount < programContext.applications.length
-          }
+          disabled={reviewAmount.value < programContext.applications.length}
           onClick={() => {
             history.push("/rankings");
           }}
@@ -157,9 +169,7 @@ function NavigationHeader({
             style={{ float: "right", margin: "10px", marginRight: "30px" }}
             variant="contained"
             color="primary"
-            disabled={
-              programContext.reviewCount < programContext.applications.length
-            }
+            disabled={reviewAmount.value < programContext.applications.length}
             onClick={() => {
               history.push("/rankings");
             }}
@@ -172,9 +182,7 @@ function NavigationHeader({
             variant="determinate"
             value={Math.min(
               100,
-              (programContext.reviewCount /
-                programContext.applications.length) *
-                100
+              (reviewAmount.value / programContext.applications.length) * 100
             )}
           />
         ) : null}

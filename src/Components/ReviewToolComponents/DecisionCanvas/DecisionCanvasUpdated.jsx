@@ -107,78 +107,37 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
         ? categoryData.map((section, index) => (
             <CanvasCard
               expanded={expandArray[index]}
-              key={section.id}
-              id={"canvas_" + section.id}
+              key={section._id}
+              id={"canvas_" + index}
               onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
               onLinkClick={() => dispatch({ type: "EXPAND", index })}
-              review={categoryToReviewMap["canvas_" + section.id]}
-              title={section.title}
+              review={categoryToReviewMap["canvas_" + section._id]}
+              title={section.name}
               update={update}
             >
               <CardBody>
                 <h4> {section.description} </h4>
                 <div>
-                  {section.answers.map((item, i) => (
-                    <div key={i}>
-                      <div className="questions">
-                        <h4>{i + 1 + ". " + item.question}</h4>
+                  {section.questions.map((question, i) =>
+                    question ? (
+                      <div key={i}>
+                        {i + ". " + question.name}
+                        <br></br>
+                        {question.type === "SHORT_ANSWER" ||
+                        question.type === "PARAGRAPHS" ? (
+                          <div>{question.answer}</div>
+                        ) : null}
+                        {question.type === "CHECKBOXES" ||
+                        question.type === "MULTIPLE_CHOICE" ? (
+                          <div>
+                            {question.answer.map((ans) => (
+                              <div>{ans.value}</div>
+                            ))}
+                          </div>
+                        ) : null}
                       </div>
-                      <div className="answers">
-                        <h4>
-                          {typeof item.response === "object" ? (
-                            <React.Fragment key={i}>
-                              <ul>
-                                <li key={i + "Primary"}>
-                                  {"Primary (Select 3 Max):"}
-                                </li>
-                                {Object.keys(item.response).map((key, j) => {
-                                  if (
-                                    item.response[key].includes(
-                                      "Primary (Select 3 Max)"
-                                    )
-                                  ) {
-                                    return (
-                                      <ul
-                                        style={{ paddingLeft: "35px" }}
-                                        key={j + i + key + "Primary"}
-                                      ></ul>
-                                    );
-                                  }
-                                  return null;
-                                })}
-                                <li key={i + "All"}>
-                                  {"All Who Apply:"}
-                                  {Object.keys(item.response).map((key, j) => {
-                                    if (
-                                      item.response[key].includes(
-                                        "All Who Apply"
-                                      )
-                                    ) {
-                                      return (
-                                        <ul
-                                          style={{ paddingLeft: "35px" }}
-                                          key={j + i + key + "All"}
-                                        >
-                                          {key}
-                                        </ul>
-                                      );
-                                    }
-                                    return null;
-                                  })}
-                                </li>
-                              </ul>
-                              <h1> {"    "}</h1>
-                            </React.Fragment>
-                          ) : (
-                            <React.Fragment key={i}>
-                              {item.response}
-                              <h1> {"    "}</h1>
-                            </React.Fragment>
-                          )}
-                        </h4>
-                      </div>
-                    </div>
-                  ))}
+                    ) : null
+                  )}
                 </div>
               </CardBody>
             </CanvasCard>
