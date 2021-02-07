@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import Categories from "../Categories/Categories";
+import Categories from "./Categories/Categories";
 import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
 import Rating from "../Rating/Rating";
 import Files from "../Files/Files";
