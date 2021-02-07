@@ -321,7 +321,7 @@ function CreateSubmissionForm({ match }) {
     setIsSectionInvalid(isInvalid);
   };
 
-  const goBack = (newPageNum) => {
+  const pageChange = (newPageNum) => {
     setIsSectionInvalid(false);
     setPage(newPageNum);
   };
@@ -452,7 +452,7 @@ function CreateSubmissionForm({ match }) {
                     className={classes.button}
                     disabled={page === -1}
                     color="primary"
-                    onClick={() => goBack(page - 1)}
+                    onClick={() => pageChange(page - 1)}
                   >
                     Back
                   </Button>
@@ -476,7 +476,7 @@ function CreateSubmissionForm({ match }) {
                         page === sections.length - 1 || isSectionInvalid
                       }
                       color="primary"
-                      onClick={() => setPage(page + 1)}
+                      onClick={() => pageChange(page + 1)}
                     >
                       Next
                     </Button>

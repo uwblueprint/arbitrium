@@ -117,6 +117,8 @@ function FormSection({
         }
       }
     }
+
+    return true;
   };
 
   // check if section is valid
