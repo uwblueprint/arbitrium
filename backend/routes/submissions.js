@@ -62,7 +62,6 @@ router.patch("/:submissionId", (req, res) => {
 
 //Get all submissions
 router.get("/all/:programId", (req, res) => {
-  console.log("HERE");
   db["Authentication"].submissions
     .aggregate([
       {

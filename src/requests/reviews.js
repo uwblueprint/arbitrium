@@ -15,8 +15,9 @@ async function updateReview(databody) {
   return POST("/api/reviews", databody);
 }
 
-async function getUserReviews(user, applicationId, programId) {
-  const result = GET(`/api/reviews/${user.uid}`);
-}
+//Used right now
+// async function getUserReviews(user, applicationId, programId) {
+//   const result = GET(`/api/reviews/${user.uid}`);
+// }
 
-export { getReview, getUserReviews, getReviewCount, updateReview };
+export { getReview, getReviewCount, updateReview };

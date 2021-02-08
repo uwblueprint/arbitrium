@@ -6,7 +6,6 @@ import CanvasCard from "./CanvasCard";
 import InputBase from "@material-ui/core/InputBase";
 import Radio from "@material-ui/core/Radio";
 import Checkbox from "@material-ui/core/Checkbox";
-import FileLink from "../FileLink";
 
 const SectionWrapper = styled.div`
   text-align: left;
@@ -77,12 +76,7 @@ function expandArrayReducer(expandedArr, { type, index }) {
   });
 }
 
-function DecisionCanvasUpdated({
-  update,
-  review,
-  categoryData,
-  fileDownloadURL
-}) {
+function DecisionCanvasUpdated({ update, review, categoryData }) {
   const [expandArray, dispatch] = useReducer(
     expandArrayReducer,
     categoryData.map(() => false)
@@ -95,8 +89,6 @@ function DecisionCanvasUpdated({
       return reviewMap;
     }, {});
   }, [review]);
-
-  console.log(categoryData);
 
   return (
     <SectionWrapper>
@@ -162,7 +154,7 @@ function DecisionCanvasUpdated({
                           >
                             {question.answer.map((ans, j) => (
                               <div key={j}>
-                                {question.type == "CHECKBOXES" ? (
+                                {question.type === "CHECKBOXES" ? (
                                   <Checkbox
                                     color="default"
                                     checked={ans.selected}

@@ -145,8 +145,6 @@ function Application({
     return [_application, _appIndex, _appData];
   }, [applications, appId, program]);
 
-  console.log(application);
-
   const previousApplication =
     applications && appIndex > 0
       ? "/submissions/legacy/" + applications[appIndex - 1]["_id"]

@@ -8,7 +8,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import InputBase from "@material-ui/core/InputBase";
 import Radio from "@material-ui/core/Radio";
 import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -87,20 +86,20 @@ const useStyles = makeStyles({
   }
 });
 
-function validateEmail(email) {
-  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return regex.test(String(email).toLowerCase());
-}
+//TODO: Use when we add these as validations
+// function validateEmail(email) {
+//   const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//   return regex.test(String(email).toLowerCase());
+// }
 
-function validateURL(url) {
-  const regex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
-  return regex.test(String(url).toLowerCase());
-}
+// function validateURL(url) {
+//   const regex = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/;
+//   return regex.test(String(url).toLowerCase());
+// }
 
 const CategoriesUpdated = ({ categoryData }) => {
   const classes = useStyles();
 
-  console.log(categoryData);
   return (
     <Wrapper>
       <ExpansionPanel defaultExpanded>

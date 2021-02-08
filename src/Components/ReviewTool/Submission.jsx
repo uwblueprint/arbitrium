@@ -151,7 +151,6 @@ function Application({
   );
 
   const [application, appIndex] = getApplicationDetails(applications, appId);
-  console.log(application);
   const fileDownloadURL = useMemo(() => {
     if (!application) {
       return "";
@@ -161,8 +160,8 @@ function Application({
   const { files, categoryData, canvasData } = useMemo(() => {
     let groupedAnswersandQuestions = null;
     let files = [];
-    let categoryData = [];
-    let canvasData = [];
+    const categoryData = [];
+    const canvasData = [];
 
     //Loop through the form sections and questions and add the answers from the submission
     if (loadedApplications.form && application) {
@@ -212,9 +211,9 @@ function Application({
                     ans.sectionId === section._id
                   );
                 })?.answerArray;
-                console.log(fileAnswers);
                 files = files.concat(fileAnswers);
               }
+              return null;
             })
           };
         }
@@ -222,8 +221,8 @@ function Application({
 
       //Filter our questions that are not answered (maybe due to not being required)
       //Place the sections in the array based on if it is admin info or decision criteria
-      groupedAnswersandQuestions.map((section) => {
-        let newSection = {
+      groupedAnswersandQuestions.forEach((section) => {
+        const newSection = {
           ...section,
           questions: section.questions.filter((question) => question)
         };
@@ -235,11 +234,8 @@ function Application({
         }
       });
     }
-    console.log(files);
     return { files, categoryData, canvasData };
   }, [application, loadedApplications]);
-
-  console.log(files);
 
   const previousApplication =
     applications && appIndex > 0
@@ -368,7 +364,6 @@ function Application({
 function getApplicationDetails(appList, appId) {
   for (let i = 0; i < appList.length; ++i) {
     const app = appList[i];
-    console.log(appId);
     if (app["_id"] === appId) {
       return [app, i];
     }

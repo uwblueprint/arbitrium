@@ -35,8 +35,6 @@ function getFileName(awsFilePath) {
 }
 
 const FileLink = ({ awsFileUrl, fileDownloadURL }) => {
-  console.log({ awsFileUrl });
-
   //download a file from AWS
   const [loadFile] = usePromise(
     downloadFile,
@@ -47,8 +45,6 @@ const FileLink = ({ awsFileUrl, fileDownloadURL }) => {
     null,
     []
   );
-
-  console.log(loadFile);
 
   let link = "";
   //Create a link to download the file :)
@@ -62,7 +58,7 @@ const FileLink = ({ awsFileUrl, fileDownloadURL }) => {
     // headerImg!.src = link;
   }
 
-  let fileName = getFileName(awsFileUrl || "");
+  const fileName = getFileName(awsFileUrl || "");
 
   return (
     <div>
@@ -70,23 +66,23 @@ const FileLink = ({ awsFileUrl, fileDownloadURL }) => {
         <span role="img" aria-label="fileIcon">
           📎
         </span>
-        <span>
-          <a
-            key={fileName}
-            className="name"
-            target="_blank"
-            rel="noopener noreferrer"
-            download={fileName}
-            href={link}
-          >
-            {" "}
-            {fileName}
-          </a>
-        </span>
-        {/*
-            //The file sizes are currently hard coded
-          <span className="size">{`(${size.toLocaleString()} K)`}</span>
-          */}
+        {!loadFile.isPending ? (
+          <span>
+            <a
+              key={fileName}
+              className="name"
+              target="_blank"
+              rel="noopener noreferrer"
+              download={fileName}
+              href={link}
+            >
+              {" "}
+              {fileName}
+            </a>
+          </span>
+        ) : (
+          <CircularProgress size={20} />
+        )}
       </FileButton>
     </div>
   );
