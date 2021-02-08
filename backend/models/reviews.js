@@ -27,8 +27,9 @@ const reviewSchema = new mongoose.Schema(
     programId: {
       type: mongoose.Schema.ObjectId
     },
+    //Mongo gives a casting error when defined as an ObjectId
     userId: {
-      type: mongoose.Schema.ObjectId
+      type: String
     },
     rating: {
       type: Number
