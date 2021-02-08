@@ -66,20 +66,23 @@ const ApplicationSelector = styled.div`
   }
 `;
 
-function createReview(user, appId, program, numSections) {
+function createReview(user, appId, program, application) {
+  if (!application) return;
+
   //Note we store the sections as questionList (legacy)
   //Each section or item in the questionList is a card on the decision canvas
   let review = {};
   const comments = [];
   const questionList = [];
 
-  for (let i = 0; i < numSections; i++) {
+  application.form.sections.forEach((section) => {
     questionList.push({
-      id: "canvas_" + i,
+      id: section._id,
       notes: [],
       rating: -1
     });
-  }
+  });
+
   review = {
     submissionId: appId,
     userId: user.userId,
@@ -105,9 +108,11 @@ function Application({
   const [review, setReview] = useState(null);
   const loadedApplications = useContext(ProgramContext);
   const applications = loadedApplications.applications;
+  const [application, appIndex] = getApplicationDetails(applications, appId);
+
   const blankReview = useMemo(
-    () => createReview(user, appId, program, applications.length),
-    [appId, user, program, applications]
+    () => createReview(user, appId, program, application),
+    [appId, user, program, application]
   );
 
   const [loadedReview] = usePromise(
@@ -136,6 +141,7 @@ function Application({
           isRated.current = true;
           dispatchNewReview();
         }
+
         const res = await updateReview(updatedReview);
         if (res.ok !== 1) {
           throw res;
@@ -150,7 +156,6 @@ function Application({
     [review, dispatchNavbarUpdate, dispatchNewReview]
   );
 
-  const [application, appIndex] = getApplicationDetails(applications, appId);
   const fileDownloadURL = useMemo(() => {
     if (!application) {
       return "";
@@ -314,19 +319,6 @@ function Application({
                 review={review}
               />
             ) : null}
-            <hr />
-            {/*}
-            {categoryData ? <Categories categoryData={null} /> : null}
-            <Categories categoryData={appData.categoryData} />
-            <hr />
-            <Files fileData={appData.fileData} />
-            <hr />
-            <DecisionCanvas
-              categoryData={appData.longAnswers}
-              update={dispatchReviewUpdate}
-              review={review}
-            />
-        */}
             <hr />
             <Rating review={review} update={dispatchReviewUpdate} />
             <hr />
