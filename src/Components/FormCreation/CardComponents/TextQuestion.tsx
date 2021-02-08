@@ -98,7 +98,7 @@ function TextQuestion({
   };
 
   const [isValid, setIsValid] = useState(
-    initialValidation && isTextValid(initialValidation, initialAnswer)
+    submission && initialValidation && isTextValid(initialValidation, initialAnswer)
   );
 
   const [errorMessage, setErrorMessage] = useState(
