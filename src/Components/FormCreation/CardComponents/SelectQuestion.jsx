@@ -171,8 +171,17 @@ function SelectQuestion({
   };
 
   const handleMultipleChoiceSelect = (event) => {
-    setSelected({ ...selectedInit, [event.target.name]: event.target.checked });
-    onChange({ ...selectedInit, [event.target.name]: event.target.checked });
+    //Set all values to false
+    const selectedCopy = selected;
+    Object.keys(selectedCopy).forEach((value) => (selectedCopy[value] = false));
+    setSelected({
+      ...selectedCopy,
+      [event.target.name]: event.target.checked
+    });
+    onChange({
+      ...selectedCopy,
+      [event.target.name]: event.target.checked
+    });
   };
 
   // useEffect(() => {
