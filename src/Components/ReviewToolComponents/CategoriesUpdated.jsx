@@ -139,6 +139,7 @@ const CategoriesUpdated = ({ categoryData }) => {
                                         color: "Black"
                                       }}
                                       value={question.answer}
+                                      multiline={true}
                                       fullWidth={true}
                                     ></InputBase>
                                     <br></br>
