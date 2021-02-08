@@ -75,7 +75,7 @@ function createReview(user, appId, program, numSections) {
 
   for (let i = 0; i < numSections; i++) {
     questionList.push({
-      id: i,
+      id: "canvas_" + i,
       notes: [],
       rating: -1
     });

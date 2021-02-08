@@ -85,7 +85,6 @@ function CanvasCard({
   update
 }) {
   const index = parseInt(id.substring(7), 10);
-  console.log(index);
   const classes = useStyles(index);
   let rating = 0;
   let notes = [];

@@ -114,7 +114,7 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
               id={"canvas_" + index}
               onHeaderClick={() => dispatch({ type: "TOGGLE", index })}
               onLinkClick={() => dispatch({ type: "EXPAND", index })}
-              review={categoryToReviewMap["canvas_" + section._id]}
+              review={categoryToReviewMap["canvas_" + index]}
               title={section.name}
               update={update}
             >

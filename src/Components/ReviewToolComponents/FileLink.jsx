@@ -52,10 +52,6 @@ const FileLink = ({ awsFileUrl, fileDownloadURL }) => {
     const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
     const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
     link = window.URL.createObjectURL(blob);
-
-    // const headerImg = document?.querySelector<HTMLImageElement>("#image");
-    // // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    // headerImg!.src = link;
   }
 
   const fileName = getFileName(awsFileUrl || "");
