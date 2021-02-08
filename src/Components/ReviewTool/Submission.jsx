@@ -8,10 +8,9 @@ import React, {
 } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import Categories from "../ReviewToolLegacy/Categories/Categories";
+import Categories from "../ReviewToolComponents/CategoriesUpdated";
 import DecisionCanvas from "../ReviewToolComponents/DecisionCanvas/DecisionCanvasUpdated";
 import Rating from "../ReviewToolComponents/Rating";
-import Files from "../ReviewToolComponents/Files";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import { HEADER_HEIGHT } from "../Header/Header";
 import { reviewReducer } from "../../Reducers/reviewReducer";
@@ -21,6 +20,7 @@ import usePromise from "../../Hooks/usePromise";
 import { getReview, updateReview } from "../../requests/reviews";
 import { ProgramContext } from "../../Contexts/ProgramContext";
 import moment from "moment";
+import FileLink from "../ReviewToolComponents/FileLink";
 
 const padding = HEADER_HEIGHT * 2 + "px";
 const PageWrapper = styled.div`
@@ -151,62 +151,95 @@ function Application({
   );
 
   const [application, appIndex] = getApplicationDetails(applications, appId);
-  let cards = [];
-  console.log(loadedApplications.form);
   console.log(application);
+  const fileDownloadURL = useMemo(() => {
+    if (!application) {
+      return "";
+    } else return "forms/" + application.formId + "/" + application._id + "/";
+  }, [application]);
 
-  if (loadedApplications.form && application) {
-    cards = loadedApplications.form.sections.map((section) => {
-      return {
-        ...section,
-        questions: section.questions.map((question) => {
-          if (
-            question.type === "SHORT_ANSWER" ||
-            question.type === "PARAGRAPHS"
-          ) {
-            return {
-              ...question,
-              answer: application.answers.find((ans) => {
-                return (
-                  ans.questionId === question._id &&
-                  ans.sectionId === section._id
-                );
-              })?.answerString
-            };
-          }
-          if (
-            question.type === "CHECKBOXES" ||
-            question.type === "MULTIPLE_CHOICE"
-          ) {
-            const selected = application.answers.find((ans) => {
-              return (
-                ans.questionId === question._id && ans.sectionId === section._id
-              );
-            })?.answerArray;
-            return {
-              ...question,
-              answer: question.x_options.filter((option) => {
-                return selected.includes(option._id);
-              })
-            };
-          }
-          if (question.type === "FILE_UPLOAD") {
-            return {
-              ...question,
-              answer: application.answers.find((ans) => {
-                return (
-                  ans.questionId === question._id &&
-                  ans.sectionId === section._id
-                );
-              })?.answerArray
-            };
-          }
-        })
-      };
-    });
-  }
+  const { files, categoryData, canvasData } = useMemo(() => {
+    let groupedAnswersandQuestions = null;
+    let files = [];
+    let categoryData = [];
+    let canvasData = [];
 
-  console.log(cards);
+    //Loop through the form sections and questions and add the answers from the submission
+    if (loadedApplications.form && application) {
+      groupedAnswersandQuestions = loadedApplications.form.sections.map(
+        (section) => {
+          return {
+            ...section,
+            questions: section.questions.map((question) => {
+              if (
+                question.type === "SHORT_ANSWER" ||
+                question.type === "PARAGRAPHS"
+              ) {
+                return {
+                  ...question,
+                  answer: application.answers.find((ans) => {
+                    return (
+                      ans.questionId === question._id &&
+                      ans.sectionId === section._id
+                    );
+                  })?.answerString
+                };
+              }
+              if (
+                question.type === "CHECKBOXES" ||
+                question.type === "MULTIPLE_CHOICE"
+              ) {
+                const selected = application.answers.find((ans) => {
+                  return (
+                    ans.questionId === question._id &&
+                    ans.sectionId === section._id
+                  );
+                })?.answerArray;
+                return {
+                  ...question,
+                  answer: question.x_options.map((option) => {
+                    return {
+                      ...option,
+                      selected: selected.includes(option._id)
+                    };
+                  })
+                };
+              }
+              if (question.type === "FILE_UPLOAD") {
+                const fileAnswers = application.answers.find((ans) => {
+                  return (
+                    ans.questionId === question._id &&
+                    ans.sectionId === section._id
+                  );
+                })?.answerArray;
+                console.log(fileAnswers);
+                files = files.concat(fileAnswers);
+              }
+            })
+          };
+        }
+      );
+
+      //Filter our questions that are not answered (maybe due to not being required)
+      //Place the sections in the array based on if it is admin info or decision criteria
+      groupedAnswersandQuestions.map((section) => {
+        let newSection = {
+          ...section,
+          questions: section.questions.filter((question) => question)
+        };
+        if (section.sectionType === "Decision Criteria") {
+          canvasData.push(newSection);
+        }
+        if (section.sectionType === "Admin Info") {
+          categoryData.push(newSection);
+        }
+      });
+    }
+    console.log(files);
+    return { files, categoryData, canvasData };
+  }, [application, loadedApplications]);
+
+  console.log(files);
 
   const previousApplication =
     applications && appIndex > 0
@@ -262,12 +295,32 @@ function Application({
         <hr />
         {applications.length > 0 && application != null ? (
           <div className="application-information">
-            <DecisionCanvas
-              categoryData={cards}
-              update={dispatchReviewUpdate}
-              review={review}
-            />
+            {categoryData ? <Categories categoryData={categoryData} /> : null}
+            {files ? (
+              <div>
+                <h2>Files</h2>
+                {files.map((file, i) => {
+                  return (
+                    <FileLink
+                      key={i}
+                      fileDownloadURL={fileDownloadURL}
+                      awsFileUrl={file}
+                    />
+                  );
+                })}
+              </div>
+            ) : null}
+            <hr />
+            {canvasData ? (
+              <DecisionCanvas
+                categoryData={canvasData}
+                update={dispatchReviewUpdate}
+                review={review}
+              />
+            ) : null}
+            <hr />
             {/*}
+            {categoryData ? <Categories categoryData={null} /> : null}
             <Categories categoryData={appData.categoryData} />
             <hr />
             <Files fileData={appData.fileData} />

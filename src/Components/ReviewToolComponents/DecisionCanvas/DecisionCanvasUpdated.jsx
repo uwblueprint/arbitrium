@@ -3,6 +3,10 @@ import { produce } from "immer";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
 import CanvasCard from "./CanvasCard";
+import InputBase from "@material-ui/core/InputBase";
+import Radio from "@material-ui/core/Radio";
+import Checkbox from "@material-ui/core/Checkbox";
+import FileLink from "../FileLink";
 
 const SectionWrapper = styled.div`
   text-align: left;
@@ -73,7 +77,12 @@ function expandArrayReducer(expandedArr, { type, index }) {
   });
 }
 
-function DecisionCanvasUpdated({ update, review, categoryData }) {
+function DecisionCanvasUpdated({
+  update,
+  review,
+  categoryData,
+  fileDownloadURL
+}) {
   const [expandArray, dispatch] = useReducer(
     expandArrayReducer,
     categoryData.map(() => false)
@@ -86,6 +95,8 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
       return reviewMap;
     }, {});
   }, [review]);
+
+  console.log(categoryData);
 
   return (
     <SectionWrapper>
@@ -121,17 +132,60 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
                   {section.questions.map((question, i) =>
                     question ? (
                       <div key={i}>
-                        {i + ". " + question.name}
+                        {<b>{i + 1 + ". " + question.name}</b>}
                         <br></br>
                         {question.type === "SHORT_ANSWER" ||
                         question.type === "PARAGRAPHS" ? (
-                          <div>{question.answer}</div>
+                          <div>
+                            <InputBase
+                              disabled={true}
+                              error={false}
+                              style={{
+                                fontSize: "14px",
+                                marginBottom: "16px",
+                                color: "Black"
+                              }}
+                              value={question.answer}
+                              fullWidth={true}
+                            ></InputBase>
+                            <br></br>
+                          </div>
                         ) : null}
                         {question.type === "CHECKBOXES" ||
                         question.type === "MULTIPLE_CHOICE" ? (
-                          <div>
-                            {question.answer.map((ans) => (
-                              <div>{ans.value}</div>
+                          <div
+                            style={{
+                              fontSize: "14px",
+                              marginBottom: "16px",
+                              color: "Black"
+                            }}
+                          >
+                            {question.answer.map((ans, j) => (
+                              <div key={j}>
+                                {question.type == "CHECKBOXES" ? (
+                                  <Checkbox
+                                    color="default"
+                                    checked={ans.selected}
+                                    size="small"
+                                    inputProps={{
+                                      "aria-label":
+                                        "checkbox with default color"
+                                    }}
+                                  />
+                                ) : (
+                                  <Radio
+                                    color="default"
+                                    checked={ans.selected}
+                                    size="small"
+                                    inputProps={{
+                                      "aria-label":
+                                        "checkbox with default color"
+                                    }}
+                                  />
+                                )}
+
+                                {ans.value}
+                              </div>
                             ))}
                           </div>
                         ) : null}
