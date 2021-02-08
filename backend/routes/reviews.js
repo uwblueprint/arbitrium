@@ -9,12 +9,12 @@ const { isAuthenticated } = require("../middlewares/auth");
 router.use(isAuthenticated);
 
 //Get all app reviews by user and program
-router.get("/:userid/:programId", function(req, res) {
+router.get("/:userId/:programId", function(req, res) {
   try {
     if (req.query.count) {
       db["Authentication"].reviews
         .countDocuments({
-          userId: req.params.userid,
+          userId: req.params.userId,
           rating: { $ne: -1 },
           programId: req.params.programId
         })
