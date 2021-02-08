@@ -95,7 +95,7 @@ function CreateSubmissionForm({ match }) {
     customSubmissionAnswerReducer,
     []
   );
-  const [isValid, setIsValid] = useState(0);
+  const [isSectionInvalid, setIsSectionInvalid] = useState(false);
 
   //----------------------------------------------------------------------------
   //Check to see if Preview or closed
@@ -317,12 +317,13 @@ function CreateSubmissionForm({ match }) {
     });
   }, [page]);
 
-  const onValidUpdate = (isValid) => {
-    if (isValid) {
-      setIsValid(isValid - 1);
-    } else {
-      setIsValid(isValid + 1);
-    }
+  const onSectionUpdate = (isInvalid) => {
+    setIsSectionInvalid(isInvalid);
+  };
+
+  const pageChange = (newPageNum) => {
+    setIsSectionInvalid(false);
+    setPage(newPageNum);
   };
 
   const norm_progress = (pageNum) => {
@@ -432,7 +433,7 @@ function CreateSubmissionForm({ match }) {
                     sectionNum={page + 1}
                     sectionData={sections[page]}
                     fileUploadURL={fileUploadURL}
-                    onValidUpdate={onValidUpdate}
+                    onSectionUpdate={onSectionUpdate}
                   />
                 ) : null}
                 {page === sections.length - 1 && !loadForm.isPending ? (
@@ -451,7 +452,7 @@ function CreateSubmissionForm({ match }) {
                     className={classes.button}
                     disabled={page === -1}
                     color="primary"
-                    onClick={() => setPage(page - 1)}
+                    onClick={() => pageChange(page - 1)}
                   >
                     Back
                   </Button>
@@ -459,7 +460,7 @@ function CreateSubmissionForm({ match }) {
                     <Button
                       variant="contained"
                       className={classes.button}
-                      disabled={isValid !== 0}
+                      disabled={isSectionInvalid}
                       color="primary"
                       onClick={() => {
                         handleSubmit();
@@ -471,9 +472,11 @@ function CreateSubmissionForm({ match }) {
                     <Button
                       variant="contained"
                       className={classes.button}
-                      disabled={page === sections.length - 1 || isValid !== 0}
+                      disabled={
+                        page === sections.length - 1 || isSectionInvalid
+                      }
                       color="primary"
-                      onClick={() => setPage(page + 1)}
+                      onClick={() => pageChange(page + 1)}
                     >
                       Next
                     </Button>

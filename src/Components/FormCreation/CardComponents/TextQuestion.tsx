@@ -21,6 +21,7 @@ type Props = {
   onChange: (text: string) => void;
   initialAnswer: string;
   onValidUpdate: (isValid: boolean) => void;
+  isTextValid: (validation: Validation, text: string) => boolean;
 };
 
 //TODO: Add Response Validation
@@ -31,7 +32,8 @@ function TextQuestion({
   initialValidation,
   onChange,
   initialAnswer = "",
-  onValidUpdate
+  onValidUpdate,
+  isTextValid
 }: Props): React.ReactElement {
   const [text, setText] = useState(initialAnswer);
 
@@ -96,19 +98,23 @@ function TextQuestion({
   };
 
   const [isValid, setIsValid] = useState(
-    !initialValidation || initialValidation?.min === 0
+    submission && initialValidation && isTextValid(initialValidation, initialAnswer)
   );
 
   const [errorMessage, setErrorMessage] = useState(
-    !initialValidation ||
-      !initialValidation?.active ||
-      initialValidation?.min === 0
+    !initialValidation || !initialValidation?.active
       ? ""
-      : "Entered text is below the minimum " +
-          initialValidation?.type.toLowerCase() +
-          " count of " +
-          initialValidation?.min +
-          "."
+      : initialValidation?.max === 0
+      ? "Entered text is below the minimum " +
+        initialValidation?.type.toLowerCase() +
+        " count of " +
+        initialValidation?.min +
+        "."
+      : "Entered text exceeds the maximum " +
+        initialValidation?.type.toLowerCase() +
+        " count of " +
+        initialValidation?.max +
+        "."
   );
 
   const [validationType, setValidationType] = useState(

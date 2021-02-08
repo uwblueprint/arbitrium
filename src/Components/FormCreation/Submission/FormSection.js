@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
@@ -6,6 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import FormCard from "./FormCard";
 import FormSettingsContext from "../FormSettingsContext";
 import InputBase from "@material-ui/core/InputBase";
+import SubmissionAnswersContext from "./../Submission/SubmissionAnswersContext";
 
 const useStyles = makeStyles(() => ({
   content: {
@@ -83,12 +84,86 @@ function FormSection({
   sectionData,
   saveAnswer,
   fileUploadURL,
-  onValidUpdate
+  onSectionUpdate
 }) {
   const { themeColour } = useContext(FormSettingsContext);
   const classes = useStyles({ themeColour });
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions] = useState(sectionData.questions);
+  const answers = useContext(SubmissionAnswersContext);
+
+  // helper function to check if a particular text input is valid
+  const isTextValid = (validation, answer) => {
+    if (validation && validation.active) {
+      if (validation.max !== 0) {
+        if (
+          (validation.type === "CHAR" && answer.length > validation.max) ||
+          (validation.type === "WORD" &&
+            answer.split(" ").length > validation.max)
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        if (
+          (validation.type === "CHAR" && answer.length < validation.min) ||
+          (validation.type === "WORD" &&
+            answer.split(" ").length < validation.min)
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+
+    return true;
+  };
+
+  // check if section is valid
+  const [isValid, setIsValid] = useState(
+    questions.reduce(function(n, val) {
+      const initialAnswer = answers.find((ans) => {
+        return ans.questionId === val._id && ans.sectionId === sectionData._id;
+      });
+
+      return (
+        n +
+        (val.validations &&
+          !isTextValid(
+            val.validations,
+            initialAnswer ? initialAnswer.answerString : ""
+          ))
+      );
+    }, 0)
+  );
+
+  useEffect(() => {
+    if (isValid === 0) {
+      onSectionUpdate(false);
+    } else {
+      onSectionUpdate(true);
+    }
+  }, [isValid, onSectionUpdate, questions]);
+
+  const onValidUpdate = (isVal) => {
+    let newIsValidCount = isValid;
+
+    if (isVal) {
+      newIsValidCount -= 1;
+      setIsValid(newIsValidCount);
+    } else {
+      newIsValidCount += 1;
+      setIsValid(newIsValidCount);
+    }
+
+    if (newIsValidCount === 0) {
+      onSectionUpdate(false);
+    } else {
+      onSectionUpdate(true);
+    }
+  };
 
   function updateActiveQuestion(sectionKey, questionKey) {
     if (activeQuestion !== questionKey) {
@@ -171,6 +246,7 @@ function FormSection({
             themeColour={themeColour}
             fileUploadURL={fileUploadURL}
             onValidUpdate={onValidUpdate}
+            isTextValid={isTextValid}
           />
         </CardWrapper>
       ))}
