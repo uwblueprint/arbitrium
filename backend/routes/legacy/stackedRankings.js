@@ -2,9 +2,9 @@ const express = require("express");
 
 // allows routes to be sent out
 const router = express.Router();
-const db = require("../mongo.js");
+const db = require("../../mongo.js");
 
-const { isAuthenticated } = require("../middlewares/auth");
+const { isAuthenticated } = require("../../middlewares/auth");
 
 router.use(isAuthenticated);
 
@@ -20,7 +20,10 @@ router.get("/:userid", function(req, res) {
       {
         $lookup: {
           from: "Reviews",
-          let: { appId: "$applications.appId", userId: "$userId" },
+          let: {
+            appId: "$applications.appId",
+            userId: "$userId"
+          },
           pipeline: [
             {
               $match: {

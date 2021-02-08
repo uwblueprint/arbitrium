@@ -15,6 +15,10 @@ import SectionRating from "./SectionRating";
 // Note that a rating of '0' is not possible.
 const ratingColour = [
   "#55A94E",
+  "#51ACB9",
+  "#EB9546",
+  "#FCD717",
+  "#DE5252",
   "#55A94E",
   "#51ACB9",
   "#EB9546",
@@ -78,10 +82,10 @@ function CanvasCard({
   onLinkClick,
   review,
   title,
-  update
+  update,
+  color
 }) {
-  const index = parseInt(id.substring(7), 10);
-  const classes = useStyles(index);
+  const classes = useStyles(color);
   let rating = 0;
   let notes = [];
 

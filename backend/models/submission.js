@@ -47,7 +47,7 @@ const answer = new mongoose.Schema({
 const submissionsSchema = new mongoose.Schema(
   {
     formId: {
-      type: String
+      type: mongoose.Schema.ObjectId
     },
     linkId: {
       type: String

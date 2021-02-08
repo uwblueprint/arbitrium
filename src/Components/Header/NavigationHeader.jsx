@@ -4,10 +4,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { AuthContext } from "../../Authentication/Auth.js";
 import { connect } from "react-redux";
-import usePromise from "../../Hooks/usePromise";
 import { HEADER_HEIGHT, MIN_WIDTH } from "./Header";
-import { getApplicationTableData, getReviewCountAPI } from "../../requests/get";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { ProgramContext } from "../../Contexts/ProgramContext";
+import { getReviewCountAPI } from "../../requests/get";
+import usePromise from "../../Hooks/usePromise";
+import * as REVIEWS from "../../requests/reviews";
 
 const Container = styled.div`
   position: fixed;
@@ -102,14 +104,7 @@ const useStyles = makeStyles({
 
 //The navigation header is loaded dynamically based on the url.
 //It does NOT contain a state.
-function NavigationHeader({
-  program,
-  history,
-  admin,
-  curRoute,
-  reviewCount,
-  updateNavbar
-}) {
+function NavigationHeader({ program, history, curRoute, updateNavbar }) {
   //AuthContext returns two values {currentUser, appUser}. We are only using appUser
   const { appUser } = useContext(AuthContext);
   const stage =
@@ -118,17 +113,14 @@ function NavigationHeader({
       ? true
       : false;
 
-  const [applications] = usePromise(
-    getApplicationTableData,
-    { user: appUser },
-    [],
-    [program]
-  );
+  const programContext = useContext(ProgramContext);
 
   const [reviewAmount] = usePromise(
-    getReviewCountAPI,
-    appUser.userId,
-    [],
+    programContext.appVersion === 1
+      ? getReviewCountAPI
+      : REVIEWS.getReviewCount,
+    { userId: appUser.userId, programId: program },
+    0,
     [curRoute, updateNavbar]
   );
 
@@ -155,7 +147,7 @@ function NavigationHeader({
               : classes.rankingsSelected, // class name, e.g. `classes-nesting-root-x`
             label: classes.label // class name, e.g. `classes-nesting-label-x`
           }}
-          disabled={reviewAmount.value < applications.value.length}
+          disabled={reviewAmount.value < programContext.applications.length}
           onClick={() => {
             history.push("/rankings");
           }}
@@ -168,7 +160,7 @@ function NavigationHeader({
             style={{ float: "right", margin: "10px", marginRight: "30px" }}
             variant="contained"
             color="primary"
-            disabled={reviewAmount.value < applications.value.length}
+            disabled={reviewAmount.value < programContext.applications.length}
             onClick={() => {
               history.push("/rankings");
             }}
@@ -176,12 +168,12 @@ function NavigationHeader({
             Next Step &gt;
           </Button>
         ) : null}
-        {!reviewAmount.isPending || !applications.isPending ? (
+        {programContext ? (
           <LinearProgress
             variant="determinate"
             value={Math.min(
               100,
-              (reviewAmount.value / applications.value.length) * 100
+              (reviewAmount.value / programContext.applications.length) * 100
             )}
           />
         ) : null}

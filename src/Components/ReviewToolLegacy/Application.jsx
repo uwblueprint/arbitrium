@@ -8,10 +8,10 @@ import React, {
 } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import Categories from "../Categories/Categories";
-import DecisionCanvas from "../DecisionCanvas/DecisionCanvas";
-import Rating from "../Rating/Rating";
-import Files from "../Files/Files";
+import Categories from "./Categories/Categories";
+import DecisionCanvas from "../ReviewToolComponents/DecisionCanvas/DecisionCanvas";
+import Rating from "../ReviewToolComponents/Rating";
+import Files from "../ReviewToolComponents/Files";
 import LoadingOverlay from "../Common/LoadingOverlay";
 import { HEADER_HEIGHT } from "../Header/Header";
 //column categories
@@ -22,7 +22,7 @@ import {
   transpileLongAnswerData,
   transpileCheckBoxData
 } from "./applicationDataHelpers";
-import { reviewReducer } from "./reviewReducer";
+import { reviewReducer } from "../../Reducers/reviewReducer";
 import { connect } from "react-redux";
 import { newReview, updateNavbar } from "../../Actions";
 import usePromise from "../../Hooks/usePromise";
@@ -82,7 +82,7 @@ function Application({
   user,
   program
 }) {
-  const appId = match.params.organizationId;
+  const appId = match.params.appId;
   const isRated = useRef(false);
   const [review, setReview] = useState(null);
 
@@ -147,11 +147,11 @@ function Application({
 
   const previousApplication =
     applications && appIndex > 0
-      ? "/submissions/" + applications[appIndex - 1]["_id"]
+      ? "/submissions/legacy/" + applications[appIndex - 1]["_id"]
       : null;
   const nextApplication =
     applications && appIndex < applications.length - 1
-      ? "/submissions/" + applications[appIndex + 1]["_id"]
+      ? "/submissions/legacy/" + applications[appIndex + 1]["_id"]
       : null;
 
   return (

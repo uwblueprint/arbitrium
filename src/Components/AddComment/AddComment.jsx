@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
-import { INSERT_COMMENT } from "../Application/reviewReducer";
+import { INSERT_COMMENT } from "../../Reducers/reviewReducer";
 
 const CommentForm = styled.form`
   margin-top: 20px;

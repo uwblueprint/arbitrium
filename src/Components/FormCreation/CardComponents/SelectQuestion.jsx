@@ -244,7 +244,7 @@ function SelectQuestion({
                             <CustomColourRadio
                               checked={selected[data]}
                               onChange={handleMultipleChoiceSelect}
-                              size="large"
+                              size="small"
                               name={data}
                               inputProps={{
                                 "aria-label": "checkbox with default color"

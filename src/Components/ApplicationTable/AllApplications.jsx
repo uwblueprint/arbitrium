@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Paper from "@material-ui/core/Paper";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import Spinner from "react-spinner-material";
 import AllApplicationsTable from "./AllApplicationsTable";
 import { connect } from "react-redux";
+import usePromise from "../../Hooks/usePromise";
+import { ProgramContext } from "../../Contexts/ProgramContext";
 
-import usePromise from "../../../Hooks/usePromise";
+import { getApplicationTableData } from "../../requests/get";
 
-import {
-  getApplicationTableData,
-  getReviewCountAPI,
-  getProgramByID
-} from "../../../requests/get";
-
-import * as SUBMISSION from "../../../requests/submission";
+import * as SUBMISSION from "../../requests/submission";
 
 const Wrapper = styled.div`
   margin-top: 100px;
@@ -39,7 +35,7 @@ const Wrapper = styled.div`
   }
 `;
 
-function convertToTableData(fetched) {
+function convertToTableData(fetched, appVersion) {
   if (!fetched) {
     return;
   }
@@ -57,7 +53,13 @@ function convertToTableData(fetched) {
           application["identifier"],
         lastEdited: application["lastReviewed"],
         applicantLink: (
-          <a href={`/submissions/${application._id}`}>
+          <a
+            href={
+              appVersion === 1
+                ? `/submissions/legacy/${application._id}`
+                : `/submissions/${application._id}`
+            }
+          >
             <Button
               variant="contained"
               color="primary"
@@ -82,64 +84,38 @@ function AllApplications({ user, program }) {
   const [applications, setApplications] = useState(null);
   const [reviewCount, setReviewCount] = useState(0);
 
-  const [loadProgram] = usePromise(getProgramByID, { programId: program }, {}, [
-    program
-  ]);
+  const programContext = useContext(ProgramContext);
 
-  // Applications, with reviews attached
-  // loadApplication.error will be true until loadProgram.value loads
+  // Applications, with rating attached
+  //We don't use the applications in the program Context because it doesn't include reviews
+  //And we want it to be read only as we don't want to reload the context (and the entire app) each review
   const [loadApplications] = usePromise(
-    loadProgram.value.appVersion === 1
-      ? getApplicationTableData
-      : SUBMISSION.getSubmissionTableData,
+    programContext.appVersion !== 1
+      ? SUBMISSION.getSubmissionTableData
+      : getApplicationTableData,
     { user, program },
     null,
-    [program, loadProgram]
-  );
-
-  //TODO: Update the review count based on version
-  const [loadReviewCount] = usePromise(
-    getReviewCountAPI,
-    user.userId,
-    [],
     [program]
   );
 
   useEffect(() => {
     if (
-      loadProgram.isPending ||
-      loadReviewCount.isPending ||
       loadApplications.isPending ||
-      !loadProgram.value ||
       !loadApplications.value ||
       loadApplications.error
     ) {
       return;
     }
 
-    if (loadProgram.value.appVersion === 2) {
-      setApplications(
-        loadApplications.value.filter(
-          (application) => application.formId === application.form._id
-        )
-      );
-    } else {
-      setApplications(loadApplications.value);
-    }
-
-    setReviewCount(loadReviewCount.value);
-  }, [loadReviewCount, loadApplications, loadProgram]);
+    setApplications(loadApplications.value);
+    setReviewCount(programContext.reviewCount);
+  }, [loadApplications, programContext]);
 
   return (
     <div>
       <Wrapper>
         <Paper>
-          {!loadProgram.isPending &&
-          !loadReviewCount.isPending &&
-          !loadApplications.isPending &&
-          loadProgram.value &&
-          loadReviewCount.value !== null &&
-          loadApplications.value ? (
+          {!loadApplications.isPending && loadApplications.value ? (
             <div>
               <h1 style={{ fontSize: "24px" }}>Candidate Submissions</h1>
               <p style={{ fontSize: "14px" }}>
@@ -153,7 +129,10 @@ function AllApplications({ user, program }) {
               <AllApplicationsTable
                 reviewCount={reviewCount}
                 applicationCount={applications && applications.length}
-                data={convertToTableData(applications)}
+                data={convertToTableData(
+                  applications,
+                  programContext.appVersion
+                )}
               />
               <hr />
             </div>

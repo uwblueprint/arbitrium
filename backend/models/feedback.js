@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const feedbackSchema = new Schema({
   id: mongoose.Schema.Types.ObjectId,
   userId: {
-    type: String,
+    type: mongoose.Schema.ObjectId,
     required: true
   },
 

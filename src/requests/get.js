@@ -1,5 +1,5 @@
 import { GET } from "./Helper";
-import { createReview } from "../Components/Application/applicationDataHelpers";
+import { createReview } from "../Components/ReviewToolLegacy/applicationDataHelpers";
 
 async function getReviewAPI({ user, applicationId }) {
   return GET(`/api/ratings/${user.userId}/${applicationId}`);
@@ -33,7 +33,7 @@ async function getCandidateSubmissions() {
   return GET(`/api/admin/candidate-submissions`);
 }
 
-async function getReviewCountAPI(userId) {
+async function getReviewCountAPI({ userId }) {
   return GET(`/api/ratings/${userId}/?` + new URLSearchParams({ count: true }));
 }
 

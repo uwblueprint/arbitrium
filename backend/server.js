@@ -32,23 +32,23 @@ if (db != null && realtime != null) {
 //------------------------------------------------------------------------------
 //CORS
 //------------------------------------------------------------------------------
+//CORS must load before everything else
 
 //A list of websites that can access the data for the api calls.(CORS)
 const whitelist = [
   "http://localhost:3000",
-  "https://decision-io.firebaseapp.com",
-  "https://decision-io.web.app",
-  "https://qa-blueprint.firebaseapp.com",
-  "https://emergencyfund.firebaseapp.com",
-  "https://qa.gregmaxin.com"
+  "https://localhost:3000",
+  "https://arbitrium.web.app",
+  "https://arbitrium.firebaseapp.com",
+  "https://qa-blueprint.firebaseapp",
+  "https://qa-blueprint.web.app"
 ];
 //Include "cors(corsOptions)" to protect the endpoint
 //Example: app.get('/api/questions', cors(corsOptions), (req, res) => {
 const corsOptions = {
   origin: function(origin, callback) {
-    //TODO: should we get rid of this check?
-    // eslint-disable-next-line no-constant-condition
-    if (whitelist.indexOf(origin) !== -1 || true) {
+    //If the url trying to query our endpoints is not in the whitelist, deny access
+    if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error("Access Denied by the 'Cookie Monster' NOM NOM NOM"));
@@ -59,14 +59,12 @@ const corsOptions = {
 //------------------------------------------------------------------------------
 //MONGO INIT
 //------------------------------------------------------------------------------
-//This section must be in this order. CORS must load before everything else
 
 //Routes are endpoints defined for a specific collection
 //Each has their own file (models/routes/...)
 const programRoutes = require("./routes/programs");
-const applicationRoutes = require("./routes/applications");
-const ratingsRoutes = require("./routes/ratings");
-const stackedRoutes = require("./routes/stackedRankings");
+const reviewRoutes = require("./routes/reviews");
+const rankingRoutes = require("./routes/rankings");
 const usersRoutes = require("./routes/users");
 const adminRoutes = require("./routes/admin");
 const organizationRoutes = require("./routes/organizations");
@@ -76,7 +74,12 @@ const emailRoutes = require("./routes/email");
 const filesRoutes = require("./routes/files");
 const submissionsRoutes = require("./routes/submissions");
 
-//Allows us to access request body in a post or put
+//legacy
+const applicationLegacyRoutes = require("./routes/legacy/applications");
+const ratingsLegacyRoutes = require("./routes/legacy/ratings");
+const stackedLegacyRoutes = require("./routes/legacy/stackedRankings");
+
+//Allows us to access request body in a post or put (max size of 5mb payload)
 app.use(cors(corsOptions));
 app.use(bodyParser.json({ limit: "5mb" }));
 app.use(bodyParser.urlencoded({ limit: "5mb", extended: true }));
@@ -92,14 +95,17 @@ app.use("/api/users", usersRoutes);
 app.use("/api/organizations", organizationRoutes);
 app.use("/api/forms", formsRoutes);
 app.use("/api/submissions", submissionsRoutes);
-
-app.use("/api/applications", applicationRoutes);
-app.use("/api/ratings", ratingsRoutes);
-app.use("/api/stackings", stackedRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/rankings", rankingRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/files", filesRoutes);
+
+//legacy
+app.use("/api/applications", applicationLegacyRoutes);
+app.use("/api/ratings", ratingsLegacyRoutes);
+app.use("/api/stackings", stackedLegacyRoutes);
 
 app.listen(4000, () => {
   console.info("Server is listening on port:4000");

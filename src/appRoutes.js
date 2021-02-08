@@ -1,5 +1,5 @@
-import Application from "./Components/Application/Application";
-import AllApplications from "./Components/List/ApplicationList/AllApplications";
+import Application from "./Components/ReviewToolLegacy/Application";
+import AllApplications from "./Components/ApplicationTable/AllApplications";
 import UserManagement from "./Components/Admin/ProgramUserManagement";
 import StackedRankings from "./Components/StackedRankings/StackedRankings";
 import AllCandidates from "./Components/AllCandidates/AllCandidates";
@@ -7,6 +7,7 @@ import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
 import CreateEditForm from "./Components/FormCreation/CreateEditForm";
 import CreateSubmissionForm from "./Components/FormCreation/Submission/CreateSubmissionForm";
 import ProgramManagement from "./Components/ProgramManagement/ProgramManagement";
+import Submission from "./Components/ReviewTool/Submission";
 
 /*
 path: "/",          =>Add the path to the switch in app.js (makes it a valid route)
@@ -35,9 +36,16 @@ const routes = [
     programGroup: ""
   },
   {
-    path: "/submissions/:organizationId",
+    path: "/submissions/legacy/:appId",
     component: Application,
     title: "Applications View",
+    header: false,
+    programGroup: "REVIEWER"
+  },
+  {
+    path: "/submissions/:submissionId",
+    component: Submission,
+    title: "Submission View",
     header: false,
     programGroup: "REVIEWER"
   },
