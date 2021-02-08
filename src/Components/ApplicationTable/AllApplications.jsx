@@ -106,7 +106,7 @@ function AllApplications({ user, program }) {
     ) {
       return;
     }
-    console.log(loadApplications);
+
     setApplications(loadApplications.value);
     setReviewCount(programContext.reviewCount);
   }, [loadApplications, programContext]);
