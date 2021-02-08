@@ -152,6 +152,7 @@ function FormSection({
 
       if (question.required) {
         if (
+          //Check to see if any text exists in the answer
           (question.type === "SHORT_ANSWER" ||
             question.type === "PARAGRAPHS" ||
             question.type === "IDENTIFIER") &&
@@ -159,9 +160,15 @@ function FormSection({
         ) {
           numQuestionsAnswered++;
         } else if (
-          (question.type === "MULTIPLE_CHOICE" ||
-            question.type === "FILE_UPLOAD") &&
-          answer?.answerArray.length === 1
+          //Check to see if an option was selected (if there is any options)
+          question.type === "MULTIPLE_CHOICE" &&
+          (answer?.answerArray.length === 1 || question.x_options.length === 0)
+        ) {
+          numQuestionsAnswered++;
+        } else if (
+          //Check to see that a file has been uploaded (We only allow 1 right now)
+          question.type === "FILE_UPLOAD" &&
+          answer?.answerArray.length > 0
         ) {
           numQuestionsAnswered++;
         } else if (question.type === "CHECKBOXES") {
@@ -231,6 +238,7 @@ function FormSection({
     });
   };
 
+  //Sometimes the user will no add any options to an selectQuestion, so we won't display them
   const filteredEmptyQuestions = questions.filter((question) => {
     if (
       (question.type === "CHECKBOXES" || question.type === "MULTIPLE_CHOICE") &&

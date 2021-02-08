@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
     boxShadow: "0 1px 0 #DADADA"
   },
   submissionOptions: {
-    fontSize: "12px"
+    fontSize: "14px"
   }
 }));
 
@@ -75,7 +75,6 @@ const OptionNameInput = styled(InputBase)`
 const GreyRadio = withStyles({
   root: {
     color: "rgba(0, 0, 0, 0.38)",
-    paddingBottom: "5px",
     paddingLeft: "24px"
   }
 })((props) => <Radio color="default" disabled checked={false} {...props} />);
@@ -83,8 +82,7 @@ const GreyRadio = withStyles({
 const GreyCheckbox = withStyles({
   root: {
     color: "rgba(0, 0, 0, 0.38)",
-    paddingLeft: "24px",
-    paddingBottom: "5px"
+    paddingLeft: "24px"
   }
 })((props) => <Checkbox color="default" disabled checked={false} {...props} />);
 
@@ -139,6 +137,13 @@ function SelectQuestion({
     ];
     setOptions(newOptions);
     onChange(newOptions);
+  };
+
+  const saveOptions = (options) => {
+    //If the option is empty (added it without entering text or removed text) then remove it
+    const removeEmpty = options.filter((opt) => opt !== "" && opt[0] !== "");
+    setOptions(removeEmpty);
+    onChange(removeEmpty);
   };
 
   const onDragEnd = (result) => {
@@ -199,8 +204,7 @@ function SelectQuestion({
       "&$checked": {
         color: `#${themeColour}`
       },
-      paddingLeft: "24px",
-      paddingBottom: "5px"
+      paddingLeft: "24px"
     },
     checked: {}
   })((props) => <Checkbox color="default" disabled={!submission} {...props} />);
@@ -211,8 +215,7 @@ function SelectQuestion({
       "&$checked": {
         color: `#${themeColour}`
       },
-      paddingLeft: "24px",
-      paddingBottom: "5px"
+      paddingLeft: "24px"
     },
     checked: {}
   })((props) => <Radio color="default" disabled={!submission} {...props} />);
@@ -249,6 +252,7 @@ function SelectQuestion({
                         ></FormControlLabel>
                       ) : (
                         <FormControlLabel
+                          classes={{ label: styles.submissionOptions }}
                           control={
                             <CustomColourRadio
                               checked={selected[data]}
@@ -317,7 +321,7 @@ function SelectQuestion({
                                 classes={{ focused: styles.inputFocused }}
                                 autoFocus={true}
                                 onBlur={() => {
-                                  onChange(options);
+                                  saveOptions(options);
                                 }}
                                 placeholder="Option..."
                                 value={data}
