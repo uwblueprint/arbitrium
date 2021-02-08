@@ -22,8 +22,7 @@ router.get("/:userid", function(req, res) {
           from: "Reviews",
           let: {
             appId: "$applications.appId",
-            userId: "$userId",
-            programId: "$programId"
+            userId: "$userId"
           },
           pipeline: [
             {
