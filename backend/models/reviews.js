@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const comment = new mongoose.Schema({
   lastReviewed: {
-    type: String
+    type: Date
   },
   value: {
     type: String
