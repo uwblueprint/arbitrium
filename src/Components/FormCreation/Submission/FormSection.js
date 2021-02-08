@@ -140,12 +140,45 @@ function FormSection({
   );
 
   useEffect(() => {
-    if (isValid === 0) {
+    //Loop through the questions in this section and find an answer if it exists
+    //Count valid questions based on if it is required and answerType
+    const numQuestionsinSection = questions.length;
+    let numQuestionsAnswered = 0;
+    questions.forEach((question) => {
+      const answer = answers.find(
+        (ans) =>
+          ans.questionId === question._id && ans.sectionId === sectionData._id
+      );
+
+      if (question.required) {
+        if (
+          (question.type === "SHORT_ANSWER" ||
+            question.type === "PARAGRAPHS" ||
+            question.type === "IDENTIFIER") &&
+          answer?.answerString.length > 0
+        ) {
+          numQuestionsAnswered++;
+        } else if (
+          (question.type === "MULTIPLE_CHOICE" ||
+            question.type === "FILE_UPLOAD") &&
+          answer?.answerArray.length === 1
+        ) {
+          numQuestionsAnswered++;
+        } else if (question.type === "CHECKBOXES") {
+          //Checkboxes can be empty even when required.
+          //TODO: Update once we have validations for checkboxes
+          numQuestionsAnswered++;
+        }
+      } else {
+        numQuestionsAnswered++;
+      }
+    });
+    if (isValid === 0 && numQuestionsAnswered === numQuestionsinSection) {
       onSectionUpdate(false);
     } else {
       onSectionUpdate(true);
     }
-  }, [isValid, onSectionUpdate, questions]);
+  }, [isValid, onSectionUpdate, questions, answers, sectionData._id]);
 
   const onValidUpdate = (isVal) => {
     let newIsValidCount = isValid;
