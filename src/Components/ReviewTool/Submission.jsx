@@ -77,7 +77,7 @@ function createReview(user, appId, program, application) {
 
   application.form.sections.forEach((section) => {
     questionList.push({
-      id: section._id,
+      sectionId: section._id,
       notes: [],
       rating: -1
     });
@@ -292,7 +292,6 @@ function Application({
             </div>
           )}
         </h1>
-        {/*}<Rubric />*/}
         <hr />
         {applications.length > 0 && application != null ? (
           <div className="application-information">

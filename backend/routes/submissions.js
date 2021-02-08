@@ -73,9 +73,7 @@ router.get("/all/:programId", (req, res) => {
           pipeline: [
             {
               $match: {
-                $expr: {
-                  $eq: ["$programId", req.params.programId]
-                }
+                programId: req.params.programId
               }
             }
           ],

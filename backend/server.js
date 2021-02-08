@@ -37,6 +37,7 @@ if (db != null && realtime != null) {
 //A list of websites that can access the data for the api calls.(CORS)
 const whitelist = [
   "http://localhost:3000",
+  "https://localhost:3000",
   "https://arbitrium.web.app",
   "https://arbitrium.firebaseapp.com",
   "https://qa-blueprint.firebaseapp",

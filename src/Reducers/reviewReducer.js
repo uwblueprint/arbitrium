@@ -39,7 +39,7 @@ export function reviewReducer(review, action) {
         }
         for (let i = 0; i < review.questionList.length; ++i) {
           const item = draftReview.questionList[i];
-          if (item.id === action.id) {
+          if (item.sectionId === action.id) {
             item.notes = [...item.notes, comment];
             break;
           }
@@ -52,7 +52,7 @@ export function reviewReducer(review, action) {
         }
         for (let i = 0; i < review.questionList.length; ++i) {
           const item = draftReview.questionList[i];
-          if (item.id === action.id) {
+          if (item.sectionId === action.id) {
             item.rating = action.rating;
             break;
           }

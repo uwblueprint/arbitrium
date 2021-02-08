@@ -88,11 +88,11 @@ router.get("/", function(req, res) {
     });
 });
 
-router.get("/:userid/:submissionId/:programId", function(req, res) {
+router.get("/:userId/:submissionId/:programId", function(req, res) {
   db["Authentication"].reviews
     .findOne({
       submissionId: req.params.submissionId,
-      userId: req.params.userid,
+      userId: req.params.userId,
       programId: req.params.programId
     })
     .then(function(found) {

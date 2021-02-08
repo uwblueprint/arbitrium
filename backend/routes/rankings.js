@@ -8,11 +8,11 @@ const { isAuthenticated } = require("../middlewares/auth");
 
 router.use(isAuthenticated);
 
-router.get("/:userid/:programId", function(req, res) {
+router.get("/:userId/:programId", function(req, res) {
   db["Authentication"].rankings
     .aggregate([
       {
-        $match: { userId: req.params.userid, programId: req.params.programId }
+        $match: { userId: req.params.userId, programId: req.params.programId }
       },
       {
         $unwind: "$applications"
@@ -74,8 +74,7 @@ router.get("/:userid/:programId", function(req, res) {
             { $match: { $expr: { $eq: ["$_id", "$$appId"] } } },
             {
               $project: {
-                "Organization Name": 1,
-                "Organization Name (legal name)": 1
+                Identifier: 1
               }
             }
           ],
@@ -106,9 +105,9 @@ router.get("/:userid/:programId", function(req, res) {
 });
 
 //Admin stats
-router.get("/", function(req, res) {
+router.get("/:programId", function(req, res) {
   db["Authentication"].rankings
-    .find()
+    .find({ programId: req.params.programId })
     .then(function(found) {
       res.json(found);
     })
