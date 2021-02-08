@@ -3,8 +3,7 @@ import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Select from "@material-ui/core/Select";
-import { fileUpload, downloadFile, deleteFile } from "../../../requests/file";
-import usePromise from "../../../Hooks/usePromise";
+import { fileUpload, deleteFile } from "../../../requests/file";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import CloudDoneIcon from "@material-ui/icons/CloudDone";
@@ -109,30 +108,6 @@ function FileQuestion({
     onChange(updatedFiles);
   }
 
-  //download a file from AWS
-  //TODO: use for displaying download links on decision canvas
-  const [loadFile] = usePromise(
-    downloadFile,
-    {
-      bucketname: "arbitrium",
-      filename: "about.png"
-    },
-    null,
-    []
-  );
-
-  // let link = "";
-  // //Create a link to download the file :)
-  // if (!loadFile.isPending && loadFile.value && loadFile.value.Body) {
-  //   const bytes = new Uint8Array(loadFile.value.Body.data); // pass your byte response to this constructor
-  //   const blob = new Blob([bytes], { type: "application/octet-stream" }); // change resultByte to bytes
-  //   link = window.URL.createObjectURL(blob);
-
-  //   // const headerImg = document?.querySelector<HTMLImageElement>("#image");
-  //   // // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  //   // headerImg!.src = link;
-  // }
-
   return (
     <Wrapper>
       {!submission ? (
@@ -174,7 +149,7 @@ function FileQuestion({
             </Button>{" "}
           </div>
         )
-      ) : !loadFile.isPending ? (
+      ) : (
         <div>
           <p className={classes.title}>
             {"Maximum of " + initialNumFiles + " files"}
@@ -209,7 +184,7 @@ function FileQuestion({
             </div>
           ))}
         </div>
-      ) : null}
+      )}
     </Wrapper>
   );
 }

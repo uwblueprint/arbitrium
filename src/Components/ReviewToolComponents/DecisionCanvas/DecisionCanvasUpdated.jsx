@@ -120,7 +120,8 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
               update={update}
             >
               <CardBody>
-                <h4> {section.description} </h4>
+                <h4> {section.rubric}</h4>
+                <br></br>
                 <div>
                   {section.questions.map((question, i) =>
                     question ? (
