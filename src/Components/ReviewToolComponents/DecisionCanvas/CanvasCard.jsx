@@ -82,10 +82,10 @@ function CanvasCard({
   onLinkClick,
   review,
   title,
-  update
+  update,
+  color
 }) {
-  const index = parseInt(id.substring(7), 10);
-  const classes = useStyles(index);
+  const classes = useStyles(color);
   let rating = 0;
   let notes = [];
 
