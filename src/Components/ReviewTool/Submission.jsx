@@ -251,6 +251,12 @@ function Application({
       ? "/submissions/" + applications[appIndex + 1]["_id"]
       : null;
 
+  console.log(review);
+  console.log(application);
+  if (!application && !loadedReview.isPending && !loadedReview.value) {
+    history.push("/applications");
+  }
+
   return (
     <PageWrapper>
       <LoadingOverlay show={!review} />
