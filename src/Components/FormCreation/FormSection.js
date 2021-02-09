@@ -138,6 +138,7 @@ function FormSection({
   handleAddSection,
   handleTitleUpdate,
   handleDescriptionUpdate,
+  handleRubricUpdate,
   handleSectionTypeUpdate,
   handleDeleteSection,
   setShowMoveSectionsDialog,
@@ -160,6 +161,7 @@ function FormSection({
   //States to manage content of section card
   const [title, setTitle] = useState(sectionData.name);
   const [description, setDescription] = useState(sectionData.description);
+  const [rubric, setRubric] = useState(sectionData.rubric);
   const [sectionType, setSectionType] = useState(sectionData.sectionType);
   const questionData = sectionData ? sectionData.questions : null;
 
@@ -346,16 +348,32 @@ function FormSection({
               ) : null}
             </div>
             {active ? (
-              <TextField
-                className={classes.sectionDescription}
-                placeholder="New Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                multiline
-                onBlur={() => handleDescriptionUpdate(description)}
-                rowsMax={10}
-                type="string"
-              ></TextField>
+              <div>
+                <TextField
+                  className={classes.sectionDescription}
+                  placeholder="New Description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  multiline
+                  onBlur={() => handleDescriptionUpdate(description)}
+                  rowsMax={10}
+                  type="string"
+                ></TextField>
+                <br></br>
+                {sectionType === "Decision Criteria" ? (
+                  <TextField
+                    className={classes.sectionDescription}
+                    style={{ marginTop: 16 }}
+                    placeholder="This text is for the reviewers and will appear on the review tool"
+                    value={rubric}
+                    onChange={(e) => setRubric(e.target.value)}
+                    multiline
+                    onBlur={() => handleRubricUpdate(rubric)}
+                    rowsMax={10}
+                    type="string"
+                  ></TextField>
+                ) : null}
+              </div>
             ) : null}
           </CardContent>
           <Menu

@@ -24,6 +24,7 @@ export const sectionsStarter: FormSectionBase[] = [
     name: "About Your Charity",
     description:
       "This section is used to uniquely identify each applicant (Change me)",
+    rubric: "",
     deleted: 0,
     sectionType: "Admin Info",
     required: true,
@@ -44,6 +45,7 @@ export const sectionsStarter: FormSectionBase[] = [
   {
     name: "Untitled Section2",
     description: "",
+    rubric: "",
     deleted: 0,
     required: false,
     sectionType: "Decision Criteria",
@@ -54,6 +56,7 @@ export const sectionsStarter: FormSectionBase[] = [
 export const defaultNewSection: FormSectionBase = {
   name: "Untitled Section",
   description: "",
+  rubric: "",
   deleted: 0,
   sectionType: "Decision Criteria",
   required: false,

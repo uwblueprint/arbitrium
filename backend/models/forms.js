@@ -118,6 +118,10 @@ const section = new mongoose.Schema({
   description: {
     type: String
   },
+  rubric: {
+    type: String,
+    default: ""
+  },
   questions: {
     type: [question]
   },

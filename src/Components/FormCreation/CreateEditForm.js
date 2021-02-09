@@ -346,6 +346,14 @@ function CreateEditForm({ programId }) {
     });
   }
 
+  function handleRubricUpdate(rubric) {
+    dispatchSectionsUpdate({
+      type: "EDIT_RUBRIC",
+      index: activeSection,
+      rubric: rubric
+    });
+  }
+
   function handleSectionTypeUpdate(sectionType) {
     dispatchSectionsUpdate({
       type: "EDIT_SECTION_TYPE",
@@ -633,6 +641,7 @@ function CreateEditForm({ programId }) {
                     handleAddSection={handleAddSection}
                     handleTitleUpdate={handleTitleUpdate}
                     handleDescriptionUpdate={handleDescriptionUpdate}
+                    handleRubricUpdate={handleRubricUpdate}
                     handleSectionTypeUpdate={handleSectionTypeUpdate}
                     handleMoveSection={handleMoveSection}
                     handleDeleteSection={handleDeleteSection}

@@ -26,6 +26,11 @@ export type EditSectionsAction =
       description: string;
     }
   | {
+      type: "EDIT_RUBRIC";
+      index: number;
+      rubric: string;
+    }
+  | {
       type: "EDIT_SECTION_TYPE";
       index: number;
       sectionType: string;
@@ -143,6 +148,7 @@ export type Link = {
 export interface FormSectionBase {
   name: string;
   description: string;
+  rubric: string;
   questions: Array<QuestionCard>;
   deleted: number;
   sectionType: string;
