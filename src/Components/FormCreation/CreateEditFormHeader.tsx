@@ -88,7 +88,6 @@ const SettingsButton = styled(Button)`
 const FormSettingsOutlineIcon = styled(SettingsOutlinedIcon)``;
 
 type Props = {
-  atTheTop: boolean;
   name: string;
   description: string;
   previewLink: string;
@@ -98,7 +97,6 @@ type Props = {
 };
 
 function CreateEditFormHeader({
-  atTheTop,
   name,
   description,
   previewLink,
@@ -166,7 +164,7 @@ function CreateEditFormHeader({
             onBlur={updateHeader}
           />
           <DescriptionInput
-            multiline={atTheTop}
+            multiline
             placeholder="Form description..."
             value={formDescription}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

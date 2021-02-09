@@ -78,7 +78,6 @@ function CreateEditForm({ programId }) {
     customFormSectionsReducer,
     []
   );
-  const [atTheTop, setAtTheTop] = useState(true);
 
   const [showFormSettings, setShowFormSettings] = useState(false);
   const [showMoveSectionsDialog, setShowMoveSectionsDialog] = useState(false);
@@ -503,16 +502,6 @@ function CreateEditForm({ programId }) {
     refetch({ programId: programId });
   }
 
-  useEffect(() => {
-    window.onscroll = function() {
-      if (window.pageYOffset === 0 && !atTheTop) {
-        setAtTheTop(true);
-      } else {
-        setAtTheTop(false);
-      }
-    };
-  }, [atTheTop]);
-
   async function handleSaveFormAccess(date) {
     const newForm = loadForm.value;
     newForm.sections = sections;
@@ -583,7 +572,6 @@ function CreateEditForm({ programId }) {
           <div>
             <CreateEditFormHeader
               {...headerData}
-              atTheTop={atTheTop}
               onChange={updateHeader}
               previewLink={previewLink}
               handlePublish={publishForm}
