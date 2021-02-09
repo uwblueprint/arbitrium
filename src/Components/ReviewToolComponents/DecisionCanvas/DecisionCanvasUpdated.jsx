@@ -194,6 +194,7 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
                                 ) : (
                                   <Radio
                                     color="default"
+                                    disabled
                                     disableRipple
                                     checked={ans.selected}
                                     size="small"
