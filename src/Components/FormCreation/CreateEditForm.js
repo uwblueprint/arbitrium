@@ -572,7 +572,7 @@ function CreateEditForm({ programId }) {
               onFormSettingsClick={handleOpenFormSettings}
             />
             <FormSettingsDrawer
-              key={formSettings.headerImage}
+              key={formSettings._id}
               open={showFormSettings}
               handleCloseFormSettings={handleCloseFormSettings}
               onSave={onFormSettingsSave}

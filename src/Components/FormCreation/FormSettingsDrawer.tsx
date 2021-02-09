@@ -81,7 +81,6 @@ const ImageOutlinedIconStyled = styled(ImageOutlinedIcon)`
 `;
 
 type Props = {
-  settingsInit: FormSettingsType;
   open: boolean;
   handleCloseFormSettings: () => void;
   onSave: (settings: FormSettingsType) => void;

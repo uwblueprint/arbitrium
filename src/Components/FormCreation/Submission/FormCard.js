@@ -290,16 +290,17 @@ function FormCard({
                 ""
               )}
             </NameField>
-
-            <DescriptionField
-              style={{ color: "black" }}
-              className={classes.description}
-              disabled={true}
-              placeholder=""
-              value={card.description ? card.description : ""}
-              multiline
-              type="string"
-            ></DescriptionField>
+            {card.description ? (
+              <DescriptionField
+                style={{ color: "black" }}
+                className={classes.description}
+                disabled={true}
+                placeholder=""
+                value={card.description ? card.description : ""}
+                multiline
+                type="string"
+              ></DescriptionField>
+            ) : null}
           </TitleWrapper>
           {card
             ? questionTypes
