@@ -31,7 +31,7 @@ function getFileName(awsFilePath) {
     return null;
   }
   const split = awsFilePath.split("/");
-  return split[split.length - 1];
+  return split[split.length - 1].replace("%20", " ");
 }
 
 const FileLink = ({ awsFileUrl, fileDownloadURL }) => {

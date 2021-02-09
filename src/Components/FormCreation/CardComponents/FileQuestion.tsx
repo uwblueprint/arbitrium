@@ -174,7 +174,7 @@ function FileQuestion({
           <hr></hr>
           {files.map((file, index) => (
             <div style={{ display: "flex", alignItems: "center" }} key={index}>
-              {getFileName(file)}{" "}
+              {getFileName(file)?.replace("%20", " ")}{" "}
               {spinner ? <CircularProgress size={20} /> : null}
               <CloudDoneIcon style={{ paddingLeft: "50px" }} />
               <Button key={index} onClick={() => handleRemoveFile(index)}>
