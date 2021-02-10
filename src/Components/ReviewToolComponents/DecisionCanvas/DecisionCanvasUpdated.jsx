@@ -143,7 +143,12 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
                   {section.questions.map((question, i) =>
                     question ? (
                       <div key={i}>
-                        {<b>{i + 1 + ". " + question.name}</b>}
+                        {
+                          <b>
+                            {question.name +
+                              (question.required ? "" : " (optional)")}
+                          </b>
+                        }
                         <br></br>
                         {question.type === "SHORT_ANSWER" ||
                         question.type === "PARAGRAPHS" ? (
@@ -177,6 +182,8 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
                                 {question.type === "CHECKBOXES" ? (
                                   <Checkbox
                                     color="default"
+                                    disabled
+                                    disableRipple
                                     checked={ans.selected}
                                     size="small"
                                     inputProps={{
@@ -187,6 +194,8 @@ function DecisionCanvasUpdated({ update, review, categoryData }) {
                                 ) : (
                                   <Radio
                                     color="default"
+                                    disabled
+                                    disableRipple
                                     checked={ans.selected}
                                     size="small"
                                     inputProps={{

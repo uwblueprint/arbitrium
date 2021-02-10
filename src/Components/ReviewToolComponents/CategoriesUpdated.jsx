@@ -121,12 +121,16 @@ const CategoriesUpdated = ({ categoryData }) => {
                       classes={{ root: classes.secondaryDetailsPanel }}
                     >
                       <CategoryWrapper>
-                        <div>
-                          {section.questions.map((question, i) =>
-                            question ? (
-                              <div key={i}>
-                                {<b>{i + 1 + ". " + question.name}</b>}
-                                <br></br>
+                        {section.questions.map((question, i) =>
+                          question ? (
+                            <div key={i} className="category">
+                              <div className="title">
+                                <b>
+                                  {question.name +
+                                    (question.required ? "" : " (optional)")}
+                                </b>
+                              </div>
+                              <div className="value">
                                 {question.type === "SHORT_ANSWER" ||
                                 question.type === "PARAGRAPHS" ? (
                                   <div>
@@ -155,7 +159,10 @@ const CategoriesUpdated = ({ categoryData }) => {
                                     }}
                                   >
                                     {question.answer.map((ans, j) => (
-                                      <div key={j}>
+                                      <div
+                                        key={j}
+                                        style={{ alignContent: "center" }}
+                                      >
                                         {question.type === "CHECKBOXES" ? (
                                           <Checkbox
                                             color="default"
@@ -177,16 +184,15 @@ const CategoriesUpdated = ({ categoryData }) => {
                                             }}
                                           />
                                         )}
-
                                         {ans.value}
                                       </div>
                                     ))}
                                   </div>
                                 ) : null}
                               </div>
-                            ) : null
-                          )}
-                        </div>
+                            </div>
+                          ) : null
+                        )}
                       </CategoryWrapper>
                     </ExpansionPanelDetails>
                   </SecondaryExpansionPanel>
