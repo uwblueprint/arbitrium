@@ -117,7 +117,9 @@ function SelectQuestion({
   //Form Creation Related
   //----------------------------------------------------------------------------
   const onAddOption = (event) => {
-    setOptions(options.concat(""));
+    const newOptions = [...options, ""];
+    setOptions(newOptions);
+    onChange(newOptions);
     event.target.blur();
   };
 
@@ -128,6 +130,7 @@ function SelectQuestion({
       ...options.slice(index + 1)
     ];
     setOptions(newOptions);
+    onChange(newOptions);
   };
 
   const onDeleteOption = (index) => {
