@@ -152,6 +152,14 @@ function CreateEditFormHeader({
     setCopiedPreviewLink(true);
   };
 
+  useEffect(() => {
+    if (formTitle !== name || formDescription !== description) {
+      return () => {
+        updateHeader();
+      };
+    }
+  });
+
   return (
     <Header>
       <ThemeProvider theme={theme}>

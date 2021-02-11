@@ -209,20 +209,10 @@ function FormCard({
   };
 
   useEffect(() => {
-    if (card.description !== description && card.name !== title) {
+    if (card.description !== description || card.name !== title) {
       return () => {
         handleQuestionTitleUpdate(title);
-        handleQuestionDescriptionUpdate(title);
-      };
-    }
-    if (card.name !== title) {
-      return () => {
-        handleQuestionTitleUpdate(title);
-      };
-    }
-    if (card.description !== description) {
-      return () => {
-        handleQuestionDescriptionUpdate(title);
+        handleQuestionDescriptionUpdate(description);
       };
     }
   });
