@@ -152,7 +152,9 @@ function CreateEditForm({ programId }) {
     ) {
       const newForm = loadForm.value;
       newForm.sections = sections;
+      console.log("Saving Form");
       FORM.updateForm(loadForm.value._id, newForm);
+      console.log("Done Saving Form");
     }
   }, [sections, loadForm.value, loadForm.isPending, deletedSection]);
 

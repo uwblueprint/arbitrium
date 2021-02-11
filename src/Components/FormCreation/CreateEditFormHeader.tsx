@@ -59,6 +59,7 @@ const ButtonWrapper = styled.div`
 const LinkPreviewButton = styled(Button)`
   && {
     margin-right: 16px;
+    margin-left: 16px;
 
     text-transform: none;
     letter-spacing: 1.25px;
@@ -175,6 +176,9 @@ function CreateEditFormHeader({
         </InputWrapper>
         <ButtonWrapper>
           <div>
+            <PublishButton variant="contained" color="primary">
+              Save
+            </PublishButton>
             <LinkPreviewButton
               variant="outlined"
               onClick={() => {

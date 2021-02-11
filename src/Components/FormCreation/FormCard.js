@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Button, Divider, Typography } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
@@ -208,6 +208,25 @@ function FormCard({
     }
   };
 
+  useEffect(() => {
+    if (card.description !== description && card.name !== title) {
+      return () => {
+        handleQuestionTitleUpdate(title);
+        handleQuestionDescriptionUpdate(title);
+      };
+    }
+    if (card.name !== title) {
+      return () => {
+        handleQuestionTitleUpdate(title);
+      };
+    }
+    if (card.description !== description) {
+      return () => {
+        handleQuestionDescriptionUpdate(title);
+      };
+    }
+  });
+
   const onValidationUpdate = (options) => {
     if (card.type === "PARAGRAPHS") {
       handleQuestionValidationsUpdate(options);
@@ -359,6 +378,7 @@ function FormCard({
                     }
                   >
                     <InputBase
+                      key={card._id}
                       className={
                         active
                           ? classes.questionTitleActive
@@ -367,7 +387,10 @@ function FormCard({
                       placeholder="Question"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      onBlur={() => handleQuestionTitleUpdate(title)}
+                      onBlur={() => {
+                        console.log("On Blur" + title);
+                        handleQuestionTitleUpdate(title);
+                      }}
                       multiline={!active}
                       type="string"
                     ></InputBase>

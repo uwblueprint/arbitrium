@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -98,7 +98,9 @@ function TextQuestion({
   };
 
   const [isValid, setIsValid] = useState(
-    submission && initialValidation && isTextValid(initialValidation, initialAnswer)
+    submission &&
+      initialValidation &&
+      isTextValid(initialValidation, initialAnswer)
   );
 
   const [errorMessage, setErrorMessage] = useState(
@@ -190,6 +192,12 @@ function TextQuestion({
       onValidation(validation);
     }
   };
+
+  useEffect(() => {
+    if (text !== initialAnswer) {
+      onChange(text);
+    }
+  });
 
   return (
     <Wrapper>

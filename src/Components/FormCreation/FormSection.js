@@ -235,6 +235,7 @@ function FormSection({
   //----------------------------------------------------------------------------
 
   function handleQuestionTitleUpdate(title) {
+    console.log("DISPATCH TITLE UPDATE: " + title);
     dispatchQuestionsUpdate({
       type: "EDIT_TITLE",
       index: activeQuestion,
@@ -299,17 +300,25 @@ function FormSection({
         formId &&
         questions !== questionData
       ) {
+        console.log("Saving Questions");
+        console.log("---------------");
+        questions.forEach((q) => console.log(q.name));
+        console.log("---------------");
         await FORM.updateQuestions(formId, sectionData._id, questions);
+        console.log("Done saving questions");
 
         //The length changes when a question is added/deleted
         //The parent needs to know so it can properly drag/drop
         if (questions.length !== questionData.length) {
-          updateParent();
+          await updateParent();
         }
       }
     }
     save();
-  }, [questions, formId, sectionData, updateParent, questionData]);
+    return () => {
+      FORM.updateQuestions(formId, sectionData._id, questions);
+    };
+  }, [questions, formId, sectionData._id, updateParent, questionData]);
 
   return (
     <div>

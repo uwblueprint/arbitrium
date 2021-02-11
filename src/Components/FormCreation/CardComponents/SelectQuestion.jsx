@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import Close from "@material-ui/icons/Close";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
@@ -112,6 +112,12 @@ function SelectQuestion({
     ));
   });
   const [selected, setSelected] = useState(selectedInit);
+
+  useEffect(() => {
+    if (initialOptions !== options) {
+      onChange(options);
+    }
+  });
 
   //----------------------------------------------------------------------------
   //Form Creation Related

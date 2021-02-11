@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
@@ -66,6 +66,12 @@ function FileQuestion({
     onChange(value as number);
   };
   const [files, setFiles] = useState(initialAnswer as Array<string>);
+
+  useEffect(() => {
+    if (initialAnswer !== files) {
+      return onChange(files);
+    }
+  });
 
   const numFileOptions = [1, 2, 3, 5, 10];
 
