@@ -187,6 +187,8 @@ function FormSection({
             behavior: "smooth",
             block: "center"
           });
+          window.blur();
+          element.focus();
         }
       });
       setActiveQuestion(questionKey);
