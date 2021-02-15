@@ -193,8 +193,8 @@ function FormSection({
         }
       });
       setActiveQuestion(questionKey);
-      updateActiveSection(sectionKey);
     }
+    updateActiveSection(sectionKey);
   }
 
   function setSectionAsActive(sectionKey) {
