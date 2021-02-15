@@ -7,7 +7,6 @@ import CommitteeReview from "./Components/AllCandidates/CommitteeReview";
 import CreateEditForm from "./Components/FormCreation/CreateEditForm";
 import CreateSubmissionForm from "./Components/FormCreation/Submission/CreateSubmissionForm";
 import ProgramManagement from "./Components/ProgramManagement/ProgramManagement";
-import FirstLogIn from "./Authentication/logincards/firstlogin/FirstLogIn";
 import Submission from "./Components/ReviewTool/Submission";
 
 /*
@@ -34,13 +33,6 @@ const routes = [
     component: ProgramManagement,
     header: false,
     title: "Programs List",
-    programGroup: ""
-  },
-  {
-    path: "/firstlogin",
-    component: FirstLogIn,
-    header: false,
-    title: "First Login",
     programGroup: ""
   },
   {

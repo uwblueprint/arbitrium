@@ -3,14 +3,11 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import React, { useCallback, useState, useContext } from "react";
+import React, { useCallback, useState } from "react";
 import firebaseApp from "../../firebase.js";
-import {
-  defaultRouteAfterLogin,
-  noNameRouteAfterLogin
-} from "../../PrivateRoute";
+import { defaultRouteAfterLogin } from "../../PrivateRoute";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { AuthContext } from "../../Authentication/Auth.js";
+import { getUserAPI } from "../../../requests/get";
 
 import styled from "styled-components";
 
@@ -64,22 +61,22 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
   const errorPasswordMessage =
     "Wrong password. Try again or click Forgot password";
 
-  const { appUser } = useContext(AuthContext);
-
   const handleLogin = useCallback(
     async (event) => {
       setLoading(true);
       event.preventDefault();
       const { email, password } = event.target.elements;
       try {
-        await firebaseApp
+        const userCredentials = await firebaseApp
           .auth()
           .signInWithEmailAndPassword(email.value, password.value);
 
-        if (appUser && appUser.name !== "") {
+        const appUser = await getUserAPI(userCredentials.user);
+
+        if (appUser && appUser.name) {
           history.push(defaultRouteAfterLogin);
         } else {
-          history.push(noNameRouteAfterLogin);
+          setLoginFlowState("firstLogin");
         }
       } catch (error) {
         alert("Wrong user name or password!");
@@ -87,7 +84,7 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
         console.error(error); //We should really get a logging system going
       }
     },
-    [appUser, history]
+    [history, setLoginFlowState]
   );
 
   const validateForm = () => {

@@ -7,6 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import styled from "styled-components";
 import LoginFieldsCard from "./logincards/loginfieldscard/LoginFieldsCard";
+import FirstLogin from "./logincards/firstlogin/FirstLogIn";
 import PasswordResetEmailCard from "./logincards/passwordresetemailcard/PasswordResetEmailCard";
 import PasswordResetResponseCard from "./logincards/passwordresetresponsecard/PasswordResetResponseCard";
 import { defaultRouteAfterLogin } from "./PrivateRoute";
@@ -51,7 +52,7 @@ function Login({ history, initialCardType }) {
     setLoginFlowState("loginFields");
   };
 
-  if (currentUser != null) {
+  if (currentUser != null && currentUser.displayName) {
     return <Redirect to={defaultRouteAfterLogin} />;
   }
 
@@ -68,6 +69,8 @@ function Login({ history, initialCardType }) {
         return (
           <PasswordResetResponseCard setLoginFlowState={setLoginFlowState} />
         );
+      case "firstLogin":
+        return <FirstLogin history={history} />;
       default:
         return (
           <LoginFieldsCard
