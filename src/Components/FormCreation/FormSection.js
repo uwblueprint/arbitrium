@@ -173,21 +173,6 @@ function FormSection({
     setAnchorEl(null);
   };
 
-  const titleOnChange = (newTitle) => {
-    setTitle(newTitle);
-    handleTitleUpdate(newTitle);
-  };
-
-  const descriptionOnChange = (newDesc) => {
-    setDescription(newDesc);
-    handleDescriptionUpdate(newDesc);
-  };
-
-  const rubricOnChange = (newRubric) => {
-    setRubric(newRubric);
-    handleRubricUpdate(newRubric);
-  };
-
   function updateActiveQuestion(sectionKey, questionKey) {
     //Saving is done on focus change
     //Every question change updates the active section
@@ -345,7 +330,8 @@ function FormSection({
                 className={classes.sectionTitle}
                 placeholder="Untitled Section"
                 value={title}
-                onChange={(e) => titleOnChange(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={() => handleTitleUpdate(title)}
                 rowsMax={1}
                 type="string"
               ></InputBase>
@@ -367,8 +353,9 @@ function FormSection({
                   className={classes.sectionDescription}
                   placeholder="New Description"
                   value={description}
-                  onChange={(e) => descriptionOnChange(e.target.value)}
+                  onChange={(e) => setDescription(e.target.value)}
                   multiline
+                  onBlur={() => handleDescriptionUpdate(description)}
                   rowsMax={10}
                   type="string"
                 ></TextField>
@@ -379,8 +366,9 @@ function FormSection({
                     style={{ marginTop: 16 }}
                     placeholder="This text is for the reviewers and will appear on the review tool"
                     value={rubric}
-                    onChange={(e) => rubricOnChange(e.target.value)}
+                    onChange={(e) => setRubric(e.target.value)}
                     multiline
+                    onBlur={() => handleRubricUpdate(rubric)}
                     rowsMax={10}
                     type="string"
                   ></TextField>
