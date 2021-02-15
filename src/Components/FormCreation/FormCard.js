@@ -182,8 +182,8 @@ function FormCard({
   isPublished = false
 }) {
   const classes = useStyles();
-  const [title, setTitle] = useState(card.name);
-  const [description, setDescription] = useState(card.description);
+  const [title, setTitle] = useState(card.name || "");
+  const [description, setDescription] = useState(card.description || "");
   const [questionMenuAnchor, setQuestionMenuAnchor] = useState(null);
 
   const onQuestionUpdate = (options) => {
@@ -334,10 +334,13 @@ function FormCard({
       )
     }
   ];
-
   return (
     <div>
-      <Draggable draggableId={String(card._id)} index={questionKey}>
+      <Draggable
+        draggableId={String(card._id)}
+        index={questionKey}
+        key={questionKey}
+      >
         {(provided) => (
           <div
             ref={provided.innerRef}
@@ -359,6 +362,8 @@ function FormCard({
                     }
                   >
                     <InputBase
+                      key={"Question_title_" + questionKey}
+                      id={"Question_title_" + questionKey + "_" + sectionKey}
                       className={
                         active
                           ? classes.questionTitleActive
@@ -367,7 +372,11 @@ function FormCard({
                       placeholder="Question"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      onBlur={() => handleQuestionTitleUpdate(title)}
+                      onBlur={() =>
+                        title !== card.name
+                          ? handleQuestionTitleUpdate(title)
+                          : null
+                      }
                       multiline={!active}
                       type="string"
                     ></InputBase>
@@ -438,12 +447,15 @@ function FormCard({
                   {active ? (
                     <div>
                       <TextField
+                        key={"Question_description_" + questionKey}
                         placeholder="New Description"
                         className={classes.questionDescription}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         onBlur={() =>
-                          handleQuestionDescriptionUpdate(description)
+                          description !== card.description
+                            ? handleQuestionDescriptionUpdate(description)
+                            : null
                         }
                         multiline
                         rowsMax={10}

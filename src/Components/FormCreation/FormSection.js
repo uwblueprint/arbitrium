@@ -177,7 +177,10 @@ function FormSection({
     //Saving is done on focus change
     //Every question change updates the active section
 
-    if (activeQuestion !== questionKey) {
+    if (activeQuestion !== questionKey || sectionKey !== sectionNum - 1) {
+      //Blur the current element so it saves properly
+      document.activeElement.blur();
+
       window.requestAnimationFrame(() => {
         const element = document.getElementById(
           "question_" + questionKey + "_" + sectionKey
@@ -187,13 +190,11 @@ function FormSection({
             behavior: "smooth",
             block: "center"
           });
-          window.blur();
-          element.focus();
         }
       });
       setActiveQuestion(questionKey);
+      updateActiveSection(sectionKey);
     }
-    updateActiveSection(sectionKey);
   }
 
   function setSectionAsActive(sectionKey) {
