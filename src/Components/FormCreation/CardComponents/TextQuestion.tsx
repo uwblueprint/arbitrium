@@ -95,13 +95,10 @@ function TextQuestion({
       }
     }
     setText(event.target.value);
-    onChange(event.target.value);
   };
 
   const [isValid, setIsValid] = useState(
-    submission &&
-      initialValidation &&
-      isTextValid(initialValidation, initialAnswer)
+    submission && initialValidation && isTextValid(initialValidation, initialAnswer)
   );
 
   const [errorMessage, setErrorMessage] = useState(
@@ -202,6 +199,7 @@ function TextQuestion({
         placeholder={short_answer ? "Short answer text" : "Long answer text"}
         style={{ fontSize: "14px" }}
         value={text}
+        onBlur={() => onChange(text)}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           handleTextChange(event)
         }

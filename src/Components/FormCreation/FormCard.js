@@ -236,16 +236,6 @@ function FormCard({
     }
   };
 
-  const titleOnChange = (newTitle) => {
-    setTitle(newTitle);
-    handleQuestionTitleUpdate(newTitle);
-  };
-
-  const descriptionOnChange = (newDesc) => {
-    setDescription(newDesc);
-    handleQuestionDescriptionUpdate(newDesc);
-  };
-
   const questionTypes = [
     {
       name: "IDENTIFIER",
@@ -376,7 +366,8 @@ function FormCard({
                       }
                       placeholder="Question"
                       value={title}
-                      onChange={(e) => titleOnChange(e.target.value)}
+                      onChange={(e) => setTitle(e.target.value)}
+                      onBlur={() => handleQuestionTitleUpdate(title)}
                       multiline={!active}
                       type="string"
                     ></InputBase>
@@ -450,7 +441,10 @@ function FormCard({
                         placeholder="New Description"
                         className={classes.questionDescription}
                         value={description}
-                        onChange={(e) => descriptionOnChange(e.target.value)}
+                        onChange={(e) => setDescription(e.target.value)}
+                        onBlur={() =>
+                          handleQuestionDescriptionUpdate(description)
+                        }
                         multiline
                         rowsMax={10}
                         type="string"
