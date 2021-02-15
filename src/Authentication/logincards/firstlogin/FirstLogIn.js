@@ -3,14 +3,10 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import React, { useCallback, useState, useContext } from "react";
+import React, { useCallback, useState } from "react";
 import firebaseApp from "../../firebase.js";
-import {
-  defaultRouteAfterLogin,
-  noNameRouteAfterLogin
-} from "../../PrivateRoute";
+import { defaultRouteAfterLogin } from "../../PrivateRoute";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { AuthContext } from "../../Authentication/Auth.js";
 
 import styled from "styled-components";
 
@@ -51,7 +47,7 @@ const CommentForm = styled.form`
   }
 `;
 
-const LoginFieldsCard = ({ history, setLoginFlowState }) => {
+const FirstLogIn = ({ history, setLoginFlowState }) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -64,8 +60,6 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
   const errorPasswordMessage =
     "Wrong password. Try again or click Forgot password";
 
-  const { appUser } = useContext(AuthContext);
-
   const handleLogin = useCallback(
     async (event) => {
       setLoading(true);
@@ -75,19 +69,14 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
         await firebaseApp
           .auth()
           .signInWithEmailAndPassword(email.value, password.value);
-
-        if (appUser && appUser.name !== "") {
-          history.push(defaultRouteAfterLogin);
-        } else {
-          history.push(noNameRouteAfterLogin);
-        }
+        history.push(defaultRouteAfterLogin);
       } catch (error) {
         alert("Wrong user name or password!");
         setLoading(false);
         console.error(error); //We should really get a logging system going
       }
     },
-    [appUser, history]
+    [history]
   );
 
   const validateForm = () => {
@@ -152,4 +141,4 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
   );
 };
 
-export default LoginFieldsCard;
+export default FirstLogIn;

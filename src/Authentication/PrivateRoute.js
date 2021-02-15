@@ -14,6 +14,9 @@ import * as userRoles from "../Constants/UserRoles";
 //This route must only require the user to be logged in. (no groups needed)
 export const defaultRouteAfterLogin = "/programs";
 
+//This route is used if no name in database after a user logs in
+export const noNameRouteAfterLogin = "/firstlogin";
+
 function doesRoleProvideAccess(routeRole, userRole) {
   if (routeRole === userRoles.ADMIN) {
     return (
