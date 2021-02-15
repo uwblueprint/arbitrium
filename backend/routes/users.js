@@ -116,7 +116,7 @@ router.get("/:userid", function(req, res) {
 
 router.use(isAuthenticated);
 
-//Update a user (Not sued for creating a new user)
+//Update a user (Not used for creating a new user)
 router.patch("/:userId/current-program", function(req, res) {
   db["Authentication"].users.findOneAndUpdate(
     { userId: req.params.userId },
@@ -126,6 +126,25 @@ router.patch("/:userId/current-program", function(req, res) {
       if (error) {
         console.error(
           `Error updating current program of user with ID = ${req.params.userId}`
+        );
+        res.status(500).send(error);
+      } else {
+        res.status(200).json(result);
+      }
+    }
+  );
+});
+
+//Update a user's name
+router.patch("/:userId/name", function(req, res) {
+  db["Authentication"].users.findOneAndUpdate(
+    { userId: req.params.userId },
+    { $set: { name: req.body.name } },
+    { upsert: false },
+    (error, result) => {
+      if (error) {
+        console.error(
+          `Error updating name of user with ID = ${req.params.userId}`
         );
         res.status(500).send(error);
       } else {

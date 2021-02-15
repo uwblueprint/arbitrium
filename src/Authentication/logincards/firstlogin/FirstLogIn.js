@@ -3,9 +3,10 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import React, { useCallback, useState } from "react";
-// import firebaseApp from "../../firebase.js";
 import { defaultRouteAfterLogin } from "../../PrivateRoute";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { updateUserNameAPI } from "../../../requests/update";
+import { getUserAPI } from "../../../requests/get";
 
 import styled from "styled-components";
 
@@ -41,7 +42,7 @@ const CommentForm = styled.form`
   }
 `;
 
-const FirstLogIn = ({ history }) => {
+const FirstLogIn = ({ history, userCredentials }) => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -50,20 +51,14 @@ const FirstLogIn = ({ history }) => {
       setLoading(true);
       event.preventDefault();
 
-      // TODO: update user name in database
-      // const { email, password } = event.target.elements;
-      // try {
-      //   await firebaseApp
-      //     .auth()
-      //     .signInWithEmailAndPassword(email.value, password.value);
-      // } catch (error) {
-      //   alert("Wrong user name or password!");
-      //   setLoading(false);
-      //   console.error(error); //We should really get a logging system going
-      // }
-      history.push(defaultRouteAfterLogin);
+      // update user name and update route
+      if (userCredentials) {
+        const appUser = await getUserAPI(userCredentials.user);
+        await updateUserNameAPI(appUser.userId, { name: name });
+        history.push(defaultRouteAfterLogin);
+      }
     },
-    [history]
+    [history, name, userCredentials]
   );
 
   const validateForm = () => {

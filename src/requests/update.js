@@ -48,6 +48,10 @@ async function updateUserProgramRoleAPI(programId, userId, databody) {
   return PATCH(`/api/programs/${programId}/user/${userId}`, databody);
 }
 
+async function updateUserNameAPI(userId, databody) {
+  return PATCH(`/api/users/${userId}/name`, databody);
+}
+
 export {
   createFeedbackAPI,
   updateReviewAPI,
@@ -60,5 +64,6 @@ export {
   updateUserProgramMembershipAPI,
   createOrAddUserProgramAPI,
   updateUserProgramRoleAPI,
+  updateUserNameAPI,
   sendFeedbackEmail
 };

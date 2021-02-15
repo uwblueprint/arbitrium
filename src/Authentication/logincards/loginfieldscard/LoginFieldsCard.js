@@ -48,7 +48,11 @@ const CommentForm = styled.form`
   }
 `;
 
-const LoginFieldsCard = ({ history, setLoginFlowState }) => {
+const LoginFieldsCard = ({
+  history,
+  setLoginFlowState,
+  setUserCredentials
+}) => {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -77,6 +81,7 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
           history.push(defaultRouteAfterLogin);
         } else {
           setLoginFlowState("firstLogin");
+          setUserCredentials(userCredentials);
         }
       } catch (error) {
         alert("Wrong user name or password!");
@@ -84,7 +89,7 @@ const LoginFieldsCard = ({ history, setLoginFlowState }) => {
         console.error(error); //We should really get a logging system going
       }
     },
-    [history, setLoginFlowState]
+    [history, setLoginFlowState, setUserCredentials]
   );
 
   const validateForm = () => {

@@ -43,6 +43,7 @@ function Login({ history, initialCardType }) {
   const [loginFlowState, setLoginFlowState] = useState(
     initialCardType ? initialCardType : "loginFields"
   );
+  const [userCredentials, setUserCredentials] = useState(null);
 
   function onResetPassword() {
     setLoginFlowState("passwordResetResponse");
@@ -70,12 +71,15 @@ function Login({ history, initialCardType }) {
           <PasswordResetResponseCard setLoginFlowState={setLoginFlowState} />
         );
       case "firstLogin":
-        return <FirstLogin history={history} />;
+        return (
+          <FirstLogin history={history} userCredentials={userCredentials} />
+        );
       default:
         return (
           <LoginFieldsCard
             history={history}
             setLoginFlowState={setLoginFlowState}
+            setUserCredentials={setUserCredentials}
           />
         );
     }
