@@ -363,7 +363,6 @@ function FormCard({
                   >
                     <InputBase
                       key={"Question_title_" + questionKey}
-                      id={"Question_title_" + questionKey + "_" + sectionKey}
                       className={
                         active
                           ? classes.questionTitleActive
