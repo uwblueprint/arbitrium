@@ -204,7 +204,7 @@ function Application({
                   answer: question.x_options.map((option) => {
                     return {
                       ...option,
-                      selected: selected.includes(option._id)
+                      selected: selected?.includes(option._id)
                     };
                   })
                 };
@@ -251,7 +251,11 @@ function Application({
       ? "/submissions/" + applications[appIndex + 1]["_id"]
       : null;
 
-  if (!application && !loadedReview.isPending && !loadedReview.value) {
+  if (
+    !loadedApplications.isLoading &&
+    !loadedReview.isPending &&
+    (!application || loadedApplications.applications.length === 0)
+  ) {
     history.push("/applications");
   }
 
